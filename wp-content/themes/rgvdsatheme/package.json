@@ -1,0 +1,16 @@
+{
+  "name": "vite-project",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node_modules/.bin/vite",
+    "build": "node_modules/.bin/tsc && vite build",
+    "preview": "node_modules/.bin/vite preview"
+  },
+  "devDependencies": {
+    "sass": "^1.99.0",
+    "typescript": "~6.0.2",
+    "vite": "^8.0.10"
+  }
+}
