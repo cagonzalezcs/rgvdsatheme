@@ -51,12 +51,5 @@ wp-config.php
 .DS_Store
 .idea/
 
-# Vendor Files
-node_modules/
-vendor/
-
-# Dist
-dist/
-
 # Secrets
 .env
