@@ -1,3 +1,3 @@
-import '../scss/app.scss';
+import "../scss/app.scss";
 
-console.log('testing')
+console.log("testing");
