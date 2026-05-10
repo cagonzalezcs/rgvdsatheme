@@ -1,6 +1,7 @@
 <?php
 
 use Timber\Site;
+use Kucrut\Vite;
 
 /**
  * Class StarterSite
@@ -10,6 +11,8 @@ class StarterSite extends Site {
 		add_action( 'after_setup_theme', array( $this, 'theme_supports' ) );
 		add_action( 'init', array( $this, 'register_post_types' ) );
 		add_action( 'init', array( $this, 'register_taxonomies' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'theme_enqueue_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'theme_enqueue_styles' ) );
 
 		add_filter( 'timber/context', array( $this, 'add_to_context' ) );
 		add_filter( 'timber/twig', array( $this, 'add_to_twig' ) );
@@ -142,4 +145,31 @@ class StarterSite extends Site {
 
 	    return $options;
 	}
+
+    /**
+     * Enqueue scripts used within the theme
+     */
+    public function theme_enqueue_scripts() {
+        Vite\enqueue_asset(
+            dirname( __DIR__ )  . '/dist',
+            'src/ts/app.ts',
+            [
+                'handle' => 'main-app-script',
+                'in-footer' => true,
+            ]
+        );
+    }
+
+    /*
+     * Enqueue styles used within the theme
+     */
+     public function theme_enqueue_styles() {
+        wp_enqueue_style(
+            'main-app-stylesheet',
+            get_template_directory_uri() . '/dist/app.css',
+            array(),
+            wp_get_theme()->get( 'Version' ),
+            'all'
+        );
+     }
 }
