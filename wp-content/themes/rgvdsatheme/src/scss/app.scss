@@ -1,3 +1,8 @@
-body {
-  background-color: white;
-}
+@use 'global/a11y';
+@use 'global/fonts';
+@use 'global/global';
+@use 'global/typography';
+@use 'ui/header/nav-menu';
+@use 'components/site-header/header';
+@use 'components/site-header/menu';
+@use 'pages/home';
