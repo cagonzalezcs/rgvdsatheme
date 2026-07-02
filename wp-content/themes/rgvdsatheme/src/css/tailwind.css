@@ -269,3 +269,60 @@
   line-height: 1.8;
   color: var(--color-text-strong);
 }
+
+/* ---------------------------------------------------------------------------
+ * View Transitions (client navigation — ts/navigation.ts)
+ *
+ * Only <main> animates; the sticky header/footer get their own named groups so
+ * they stay put (no cross-fade) while content swaps. All motion is gated behind
+ * prefers-reduced-motion (the JS also skips startViewTransition when reduced).
+ * ------------------------------------------------------------------------- */
+main#main {
+  view-transition-name: vt-main;
+}
+.site-header {
+  view-transition-name: vt-header;
+}
+.site-footer {
+  view-transition-name: vt-footer;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(vt-main) {
+    animation-duration: 0.28s;
+  }
+  ::view-transition-old(vt-main) {
+    animation: vt-fade-out 0.16s ease both;
+  }
+  ::view-transition-new(vt-main) {
+    animation: vt-fade-in 0.28s ease both;
+  }
+
+  /* Shared-element morph: post card image → single-post hero (Phase 3).
+     No cross-fade so the image reads as one element moving/resizing. */
+  ::view-transition-old(post-hero),
+  ::view-transition-new(post-hero) {
+    animation: none;
+    mix-blend-mode: normal;
+    height: 100%;
+  }
+
+  @keyframes vt-fade-out {
+    to {
+      opacity: 0;
+    }
+  }
+  @keyframes vt-fade-in {
+    from {
+      opacity: 0;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}

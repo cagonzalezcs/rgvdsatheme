@@ -1,0 +1,42 @@
+{% extends "base.twig" %}
+
+{#
+  Single event template — the `event` CPT single. Routed by the WP-style Timber
+  cascade in single.php (single-event.twig sits above single.twig), so every
+  /events/{slug} permalink lands here. Context is injected by
+  rgvdsa_events_single_context() on the `rgvdsa/context/single` filter
+  (inc/events.php): single_event (SingleEventData) + categories + related +
+  calendar/home URLs + show-related toggle.
+
+  The SingleEvent island renders its own red hero, so no PageHeader here. The
+  server-rendered article inside the mount element is the crawlable/no-JS
+  fallback — createApp().mount() replaces it on hydration.
+#}
+
+{% block content %}
+	{% set event_props = {
+		event: single_event,
+		categories: single_event_categories,
+		related: single_event_related,
+		showRelated: single_event_show_related,
+		homeUrl: single_event_home_url,
+		calendarUrl: single_event_calendar_url
+	} %}
+	<div data-vue-island="SingleEvent" data-props='{{ event_props|json_encode|e("html_attr") }}'>
+		{# Server-rendered fallback: crawlable + readable without JS. Prose/a11y
+		   HTML is kses-sanitized at serialize time (inc/events.php). #}
+		<article class="mx-auto max-w-[74ch] px-4 py-12 md:px-6">
+			<h1 class="font-display text-[clamp(2rem,4.6vw,3.3rem)] font-black leading-[1.12]">{{ single_event.title }}</h1>
+			{% if single_event.summary %}
+				<p class="text-[1.2rem] leading-[1.5] text-text-muted">{{ single_event.summary }}</p>
+			{% endif %}
+			<div class="prose-rgv">
+				{% for block in single_event.blocks %}
+					{% if block.type == 'prose' or block.type == 'a11y_note' %}
+						{{ block.html|raw }}
+					{% endif %}
+				{% endfor %}
+			</div>
+		</article>
+	</div>
+{% endblock %}

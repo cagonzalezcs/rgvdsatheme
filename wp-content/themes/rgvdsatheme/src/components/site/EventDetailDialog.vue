@@ -70,11 +70,13 @@ const dateLine = computed(() => {
           {{ event.desc }}
         </DialogDescription>
         <div class="mt-1.5 flex flex-wrap gap-2.5">
+          <!-- Primary action navigates to the full Single Event page — the modal
+               is an optional fast preview, not the RSVP endpoint (04 §3d). -->
           <a
-            :href="event.rsvpUrl ?? '#'"
+            :href="event.url ?? '/calendar/'"
             class="rounded-full bg-red px-6 py-[11px] text-[0.92rem] font-bold text-white no-underline transition-colors hover:bg-red-hover"
           >
-            RSVP
+            View event
           </a>
           <a
             :href="event.gcalUrl ?? '#'"

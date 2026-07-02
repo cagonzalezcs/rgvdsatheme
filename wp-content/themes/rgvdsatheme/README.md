@@ -46,7 +46,8 @@ Twig renders page shells; Vue mounts on `[data-vue-island]` elements:
 | `inc/categories.php` | canonical category registry (`categories.json`), term-name/color merge, canonical-slug rename guard |
 | `inc/cache.php` | `rgvdsa_cache_remember()` transient helper + content-version invalidation |
 | `inc/options.php` | "Chapter Settings" ACF options page (committees, counties, contact email, newsletter URL…), the front-page Home hero group, menu locations, chrome props |
-| `inc/interior.php` | governing-documents repeater, page lede override, and the grievance callout (toggle + wysiwyg) on pages |
+| `inc/interior.php` | governing-documents repeater, page lede + search-description overrides, and the grievance callout (toggle + wysiwyg) on pages |
+| `inc/seo.php` | head SEO output: meta description, canonical, robots, Open Graph/Twitter cards, JSON-LD (`wp_head` priority 5) |
 
 Template routers (`front-page.php`, `page.php`, `index.php`, `single.php`, …) expose filters (`rgvdsa/context/front_page`, `…/page`, `…/blog_archive`, `…/single`) the domain files hook to inject island props.
 
@@ -88,6 +89,18 @@ Anonymous responses carry `Cache-Control: public, max-age=300, stale-while-reval
 ```bash
 RGVDSA_WRITE_FIXTURES=1 vendor/bin/phpunit --filter TestContracts
 ```
+
+### SEO (`inc/seo.php`)
+
+Hand-rolled head output (no SEO plugin) hooked once at `wp_head` priority 5; every copy/image source is the same first-party data the islands use. Emitted on every page: `<meta name="description">`, `rel=canonical`, OG set (`og:site_name/type/title/description/url/image` + `width/height/alt` when known), `twitter:card`, and one JSON-LD `@graph` script.
+
+**Description ladder** (plain-text, ~155 chars, word-boundary trim): post → dek → excerpt; page → `seo_description` (interior group) → lede → tagline; posts page uses the page ladder on the `page_for_posts` page; event → post content; front page → hero lede. Empty tagline bottoms out at the hero-lede design copy — never empty.
+
+**Canonical + robots:** singular pages get their permalink (core's `rel_canonical` is removed — this file owns the tag); island filter params (`?s=` / `?category=` / `?paged=`) canonicalize to the clean posts-page URL while server-paged `/page/N/` keeps its own. `noindex,follow` (merged into core's `wp_robots` meta) on search, filtered archive states, date/author archives, and 404.
+
+**Share image ladder:** featured image (`large`) → Chapter Settings **Default share image** (seeded as the theme logo) → `static/images/logos/logo-lg.png`. A per-content image cards as `summary_large_image`; fallbacks card as `summary`.
+
+**JSON-LD:** `Organization` site-wide (name/url/logo/`sameAs` from the socials options); `Article` on posts (author is a Person, or the committee as an Organization per byline mode); `Event` on event permalinks (chapter-tz ISO-8601 start/end, `Place` from venue/city, `offers` → RSVP URL — same fields as the ICS feed).
 
 ## Testing
 

@@ -17,7 +17,7 @@ const category = computed(() => (props.event ? categoryById(props.event.cat) : n
 <template>
   <div
     v-if="event && date && category"
-    class="block-event-embed grid w-[min(74ch,100%)] items-center gap-5 rounded-[16px] bg-white px-6 py-5 shadow-gallery [grid-template-columns:72px_1fr_auto]"
+    class="block-event-embed grid w-[min(74ch,100%)] items-center gap-5 rounded-[16px] bg-white px-6 py-5 shadow-gallery [grid-template-columns:auto_1fr] md:[grid-template-columns:72px_1fr_auto]"
   >
     <div
       aria-hidden="true"
@@ -40,7 +40,7 @@ const category = computed(() => (props.event ? categoryById(props.event.cat) : n
     </div>
     <a
       :href="event.rsvpUrl ?? '/calendar/'"
-      class="whitespace-nowrap rounded-full border-2 border-red px-5 py-2 text-[0.9rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash"
+      class="col-span-2 justify-self-start whitespace-nowrap rounded-full border-2 border-red px-5 py-2 text-[0.9rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash md:col-span-1 md:justify-self-auto"
     >
       RSVP
     </a>

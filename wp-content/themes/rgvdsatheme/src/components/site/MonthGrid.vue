@@ -70,7 +70,7 @@ function chipColor(ev: ChapterEvent): string {
       <div
         v-for="day in cells"
         :key="day.key"
-        class="flex min-h-[112px] min-w-0 flex-col gap-1.5 p-2"
+        class="flex min-h-[86px] min-w-0 flex-col gap-1.5 p-1.5 lg:min-h-[112px] lg:p-2"
         :class="day.inMonth ? 'bg-white' : 'bg-[#f5f3ef]'"
       >
         <div class="flex justify-end">
@@ -95,7 +95,7 @@ function chipColor(ev: ChapterEvent): string {
             type="button"
             :title="`${ev.title} — ${ev.time}`"
             :style="{ background: chipColor(ev) }"
-            class="block w-full cursor-pointer truncate rounded-[6px] border-none px-[7px] py-1 text-left text-[0.74rem] font-bold leading-[1.25] text-white hover:outline-2 hover:outline-offset-1 hover:outline-ink"
+            class="block w-full cursor-pointer truncate rounded-[6px] border-none px-[7px] py-1 text-left text-[0.68rem] font-bold leading-[1.25] text-white hover:outline-2 hover:outline-offset-1 hover:outline-ink lg:text-[0.74rem]"
             @click="emit('select', ev.id)"
           >
             {{ ev.title }}

@@ -2,8 +2,10 @@ import type { z } from "zod";
 import {
   eventsEnvelopeSchema,
   postsEnvelopeSchema,
+  singlePostEnvelopeSchema,
   type EventsEnvelope,
   type PostsEnvelope,
+  type SinglePostEnvelope,
 } from "@/lib/schemas";
 
 /** Normalized error for any failed API call (WP error envelope or network). */
@@ -86,6 +88,19 @@ export function fetchPosts(
 
   return getJson(endpoint(apiBase, "/posts", params), signal).then((data) =>
     validate(postsEnvelopeSchema, data),
+  );
+}
+
+/** Single post by slug (JSON fast-path for archive → single client navigation).
+ * Throws ApiError(404, "rgvdsa_post_not_found") for an unknown/unpublished slug. */
+export function fetchSinglePost(
+  apiBase: string,
+  slug: string,
+  signal?: AbortSignal,
+): Promise<SinglePostEnvelope> {
+  const path = `/posts/${encodeURIComponent(slug)}`;
+  return getJson(endpoint(apiBase, path, new URLSearchParams()), signal).then((data) =>
+    validate(singlePostEnvelopeSchema, data),
   );
 }
 

@@ -16,8 +16,18 @@
 	} %}
 	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
 
-	<section class="bg-white px-6 pb-24 pt-16" data-tone="cream">
-		<div class="mx-auto grid max-w-[1140px] items-start gap-14 lg:[grid-template-columns:minmax(300px,1fr)_300px]">
+	<section class="bg-white px-4 pb-20 pt-12 md:px-6 md:pb-24 md:pt-16" data-tone="cream">
+		<div class="mx-auto grid max-w-[1140px] items-start gap-10 md:gap-14 lg:[grid-template-columns:minmax(300px,1fr)_300px]">
+
+			{# On-this-page nav hoisted above the article for <lg (05 §4): list on mobile,
+			   chip row on tablet. Sticky sidebar copy below is lg-only. #}
+			<nav aria-label="On this page" class="flex flex-col gap-0.5 rounded-[14px] bg-off-white p-3 md:flex-row md:flex-wrap md:items-center md:gap-2 lg:hidden">
+				<div class="mb-1 px-3.5 py-1.5 font-display text-[0.82rem] font-bold uppercase tracking-[0.08em] text-text-muted md:mb-0 md:py-0">On this page</div>
+				<a href="#join" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">How to join</a>
+				<a href="#committees" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">Committees</a>
+				<a href="#channels" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">Communication channels</a>
+				<a href="#faq" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">Common questions</a>
+			</nav>
 
 			<article class="flex min-w-0 flex-col gap-7">
 
@@ -31,7 +41,7 @@
 				] %}
 				<div class="flex flex-col gap-3.5">
 					{% for step in steps %}
-						<div class="grid gap-5 rounded-[16px] bg-white p-6 shadow-card [grid-template-columns:64px_1fr] max-sm:[grid-template-columns:52px_1fr] max-sm:gap-4">
+						<div class="grid grid-cols-[52px_1fr] gap-4 rounded-[16px] bg-white p-6 shadow-card sm:gap-5 sm:[grid-template-columns:64px_1fr]">
 							<div class="flex size-[52px] items-center justify-center rounded-[12px] bg-brand-red font-display text-[1.6rem] font-extrabold text-white">{{ step.num }}</div>
 							<div class="flex flex-col gap-2">
 								<div class="text-[1.1rem] font-bold">{{ step.title }}</div>
@@ -59,21 +69,21 @@
 				<h2 id="channels" class="mx-0 mb-0 mt-4 {{ h2class }}">Communication channels</h2>
 
 				<div class="flex flex-col gap-3.5">
-					<div class="flex flex-wrap items-center justify-between gap-5 rounded-[14px] bg-white px-6 py-5 shadow-card">
+					<div class="flex flex-col items-start gap-4 rounded-[14px] bg-white px-6 py-5 shadow-card sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-5">
 						<div class="flex flex-col gap-[3px]">
 							<span class="text-[1.05rem] font-bold">WhatsApp</span>
 							<span class="text-[0.9rem] text-text-muted">Our main channel &mdash; members receive an invite during onboarding</span>
 						</div>
 						<span class="rounded-full border border-dashed border-border-muted px-4 py-2 text-[0.8rem] font-bold text-text-muted">Members only</span>
 					</div>
-					<div class="flex flex-wrap items-center justify-between gap-5 rounded-[14px] bg-white px-6 py-5 shadow-card">
+					<div class="flex flex-col items-start gap-4 rounded-[14px] bg-white px-6 py-5 shadow-card sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-5">
 						<div class="flex flex-col gap-[3px]">
 							<span class="text-[1.05rem] font-bold">Instagram &mdash; @dsa_rgv</span>
 							<span class="text-[0.9rem] text-text-muted">Events, actions, and updates for everyone</span>
 						</div>
 						<a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener" class="whitespace-nowrap rounded-full border-2 border-red px-5 py-2 text-[0.9rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash">Follow</a>
 					</div>
-					<div class="flex flex-wrap items-center justify-between gap-5 rounded-[14px] bg-white px-6 py-5 shadow-card">
+					<div class="flex flex-col items-start gap-4 rounded-[14px] bg-white px-6 py-5 shadow-card sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-5">
 						<div class="flex flex-col gap-[3px]">
 							<span class="text-[1.05rem] font-bold">Email</span>
 							<span class="text-[0.9rem] text-text-muted">Questions, press, and anything else</span>
@@ -113,7 +123,7 @@
 
 			{# ---- Sidebar ---- #}
 			<aside aria-label="Page navigation" class="flex flex-col gap-7 lg:sticky lg:top-[calc(110px+var(--wp-admin--admin-bar--height,0px))]">
-				<nav aria-label="On this page" class="flex flex-col gap-0.5 rounded-[14px] bg-off-white p-3">
+				<nav aria-label="On this page" class="hidden flex-col gap-0.5 rounded-[14px] bg-off-white p-3 lg:flex">
 					<div class="mb-1 px-3.5 py-1.5 font-display text-[0.82rem] font-bold uppercase tracking-[0.08em] text-text-muted">On this page</div>
 					<a href="#join" class="{{ nav_link }}">How to join</a>
 					<a href="#committees" class="{{ nav_link }}">Committees</a>

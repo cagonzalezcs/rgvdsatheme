@@ -10,7 +10,8 @@ const category = computed(() => postCategoryById(props.post.cat));
 <template>
   <a
     :href="post.url"
-    class="post-result-row grid items-center gap-5 rounded-[16px] bg-white px-6 py-5 text-ink no-underline shadow-card transition-[box-shadow,transform] duration-150 [grid-template-columns:auto_1fr_auto] hover:-translate-y-0.5 hover:shadow-card-hover"
+    data-blog-link
+    class="post-result-row grid items-center gap-5 rounded-[16px] bg-white px-6 py-5 text-ink no-underline shadow-card transition-[box-shadow,transform] duration-150 [grid-template-columns:auto_1fr] hover:-translate-y-0.5 hover:shadow-card-hover md:[grid-template-columns:auto_1fr_auto]"
   >
     <span
       aria-hidden="true"
@@ -27,6 +28,6 @@ const category = computed(() => postCategoryById(props.post.cat));
       <span class="font-display text-[1.15rem] font-bold leading-[1.3]">{{ post.title }}</span>
       <span class="text-[0.95rem] leading-[1.55] text-text-muted">{{ post.excerpt }}</span>
     </span>
-    <span aria-hidden="true" class="text-[1.1rem] font-bold text-red">→</span>
+    <span aria-hidden="true" class="hidden text-[1.1rem] font-bold text-red md:block">→</span>
   </a>
 </template>

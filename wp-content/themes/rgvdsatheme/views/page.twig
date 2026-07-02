@@ -23,8 +23,8 @@
 	} %}
 	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
 
-	<section class="interior-page bg-white px-6 pb-24 pt-16" data-tone="cream">
-		<div class="mx-auto grid max-w-[1140px] items-start gap-14 lg:[grid-template-columns:minmax(300px,1fr)_300px]">
+	<section class="interior-page bg-white px-4 pb-20 pt-12 md:px-6 md:pb-24 md:pt-16" data-tone="cream">
+		<div class="mx-auto grid max-w-[1140px] items-start gap-10 md:gap-14 lg:[grid-template-columns:minmax(300px,1fr)_300px]">
 
 			<article id="post-{{ post.ID }}" class="post-type-{{ post.post_type }} flex min-w-0 flex-col gap-7">
 
@@ -39,7 +39,7 @@
 				<h2 id="documents" class="mx-0 mb-0 mt-4 {{ h2class }}">Governing documents</h2>
 				<div class="flex flex-col gap-3.5">
 					{% for doc in documents %}
-						<div class="flex flex-wrap items-center justify-between gap-5 rounded-[14px] bg-white px-[22px] py-[18px] shadow-card">
+						<div class="flex flex-col items-start gap-4 rounded-[14px] bg-white px-[22px] py-[18px] shadow-card sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-5">
 							<div class="flex items-center gap-4">
 								<span aria-hidden="true" class="rounded-[10px] border-2 border-red px-2.5 py-2 font-mono text-[0.8rem] font-bold text-red">PDF</span>
 								<div class="flex flex-col gap-[3px]">
@@ -82,7 +82,8 @@
 			</article>
 
 			{# ---- Sidebar ---- #}
-			<aside aria-label="Page navigation" class="flex flex-col gap-7 max-lg:hidden lg:sticky lg:top-[calc(110px+var(--wp-admin--admin-bar--height,0px))]">
+			{# Rail drops below the article on mobile/tablet (05 §6), sticky beside only at lg. #}
+			<aside aria-label="Page navigation" class="flex flex-col gap-7 lg:sticky lg:top-[calc(110px+var(--wp-admin--admin-bar--height,0px))]">
 				<nav aria-label="On this page" class="flex flex-col gap-0.5 rounded-[14px] bg-off-white p-3">
 					<div class="mb-1 px-3.5 py-1.5 font-display text-[0.82rem] font-bold uppercase tracking-[0.08em] text-text-muted">On this page</div>
 					<a href="#documents" class="{{ nav_link }}">Governing documents</a>

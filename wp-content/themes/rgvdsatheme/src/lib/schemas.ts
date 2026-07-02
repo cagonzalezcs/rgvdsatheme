@@ -33,6 +33,8 @@ export const chapterEventSchema = z.object({
   rsvpUrl: z.string().optional(),
   /** Google Calendar render?action=TEMPLATE URL */
   gcalUrl: z.string().optional(),
+  /** Single Event permalink — the modal/chip "View event" destination (04 §3d) */
+  url: z.string().optional(),
 });
 
 export const blogPostSchema = z.object({
@@ -143,6 +145,67 @@ export const singlePostDataSchema = z.object({
   tags: z.array(z.string()),
 });
 
+/* ---- Single Event (inc/events.php → SingleEvent island) ---- */
+
+/** event_body flexible-content layouts (the event-appropriate block set). */
+export const eventBlockSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("prose"), html: z.string() }),
+  z.object({
+    type: z.literal("agenda"),
+    items: z.array(z.object({ title: z.string(), desc: z.string().optional() })),
+  }),
+  z.object({ type: z.literal("good_to_know"), items: z.array(z.string()) }),
+  z.object({ type: z.literal("a11y_note"), html: z.string() }),
+  /** address auto-derived from venue/city; only present when locationType !== "online" */
+  z.object({ type: z.literal("map"), address: z.string() }),
+]);
+
+export const eventContactSchema = z.object({
+  name: z.string(),
+  email: z.string(),
+  phone: z.string(),
+});
+
+/** Related-events card (rail-free; carries its own permalink). */
+export const relatedEventSchema = z.object({
+  id: z.string(),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  time: z.string(),
+  cat: postCatSchema,
+  title: z.string(),
+  location: z.string(),
+  url: z.string(),
+});
+
+export const singleEventDataSchema = z.object({
+  title: z.string(),
+  summary: z.string(),
+  cat: postCatSchema,
+  /** ISO yyyy-mm-dd — date block + full date line derive from this */
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  /** display range, e.g. "2:00–4:00 PM" */
+  time: z.string(),
+  /** display doors time, e.g. "1:30 PM"; "" when unset */
+  doorsTime: z.string(),
+  locationType: z.enum(["in-person", "online", "hybrid"]),
+  venue: z.string(),
+  city: z.string(),
+  cost: z.string(),
+  rsvpRequired: z.boolean(),
+  /** "" when unset (button falls back to #rsvp) */
+  rsvpUrl: z.string(),
+  capacity: z.number().nullable(),
+  /** maps URL from venue/city; "" when online / no location */
+  directionsUrl: z.string(),
+  /** Google Calendar render URL; "" when no start time */
+  gcalUrl: z.string(),
+  /** per-event iCal URL; "" = no endpoint exposed (button hidden) */
+  icsUrl: z.string(),
+  contact: eventContactSchema,
+  featuredImage: postImageSchema,
+  blocks: z.array(eventBlockSchema),
+});
+
 /* ---- REST envelopes (inc/rest.php) ---- */
 
 export const postsEnvelopeSchema = z.object({
@@ -175,6 +238,10 @@ export type BlogPost = z.infer<typeof blogPostSchema>;
 export type PostImage = z.infer<typeof postImageSchema>;
 export type PostBlock = z.infer<typeof postBlockSchema>;
 export type SinglePostData = z.infer<typeof singlePostDataSchema>;
+export type EventBlock = z.infer<typeof eventBlockSchema>;
+export type EventContact = z.infer<typeof eventContactSchema>;
+export type RelatedEvent = z.infer<typeof relatedEventSchema>;
+export type SingleEventData = z.infer<typeof singleEventDataSchema>;
 export type PostsEnvelope = z.infer<typeof postsEnvelopeSchema>;
 export type SinglePostEnvelope = z.infer<typeof singlePostEnvelopeSchema>;
 export type EventsEnvelope = z.infer<typeof eventsEnvelopeSchema>;

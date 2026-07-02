@@ -112,6 +112,179 @@ function rgvdsa_events_register_fields() {
 					'name'  => 'rsvp_url',
 					'type'  => 'url',
 				),
+				array(
+					'key'          => 'field_rgvdsa_events_summary',
+					'label'        => 'Summary',
+					'name'         => 'event_summary',
+					'type'         => 'textarea',
+					'rows'         => 3,
+					'instructions' => 'Hero lede under the title (max ~52ch reads best).',
+				),
+				array(
+					'key'            => 'field_rgvdsa_events_doors_time',
+					'label'          => 'Doors open',
+					'name'           => 'doors_time',
+					'type'           => 'time_picker',
+					'return_format'  => 'g:i A',
+					'display_format' => 'g:i a',
+				),
+				array(
+					'key'           => 'field_rgvdsa_events_location_type',
+					'label'         => 'Location type',
+					'name'          => 'location_type',
+					'type'          => 'select',
+					'choices'       => array(
+						'in-person' => 'In person',
+						'online'    => 'Online',
+						'hybrid'    => 'Hybrid',
+					),
+					'default_value' => 'in-person',
+					'return_format' => 'value',
+				),
+				array(
+					'key'          => 'field_rgvdsa_events_cost',
+					'label'        => 'Cost',
+					'name'         => 'cost',
+					'type'         => 'text',
+					'instructions' => 'e.g. “Free · open to the public”.',
+				),
+				array(
+					'key'           => 'field_rgvdsa_events_rsvp_required',
+					'label'         => 'RSVP required',
+					'name'          => 'rsvp_required',
+					'type'          => 'true_false',
+					'default_value' => 0,
+					'ui'            => 1,
+				),
+				array(
+					'key'   => 'field_rgvdsa_events_capacity',
+					'label' => 'Capacity',
+					'name'  => 'capacity',
+					'type'  => 'number',
+					'min'   => 1,
+					'step'  => 1,
+				),
+				array(
+					'key'   => 'field_rgvdsa_events_contact_name',
+					'label' => 'Contact name',
+					'name'  => 'contact_name',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_rgvdsa_events_contact_email',
+					'label' => 'Contact email',
+					'name'  => 'contact_email',
+					'type'  => 'text',
+				),
+				array(
+					'key'   => 'field_rgvdsa_events_contact_phone',
+					'label' => 'Contact phone',
+					'name'  => 'contact_phone',
+					'type'  => 'text',
+				),
+				array(
+					'key'          => 'field_rgvdsa_events_body',
+					'label'        => 'Event body',
+					'name'         => 'event_body',
+					'type'         => 'flexible_content',
+					'button_label' => 'Add block',
+					'instructions' => 'Reorderable content blocks. Section accents inherit the category color.',
+					'layouts'      => array(
+						'layout_rgvdsa_event_prose'        => array(
+							'key'        => 'layout_rgvdsa_event_prose',
+							'name'       => 'prose',
+							'label'      => 'Prose',
+							'display'    => 'block',
+							'sub_fields' => array(
+								array(
+									'key'          => 'field_rgvdsa_event_prose_content',
+									'label'        => 'Content',
+									'name'         => 'content',
+									'type'         => 'wysiwyg',
+									'media_upload' => 0,
+								),
+							),
+						),
+						'layout_rgvdsa_event_agenda'       => array(
+							'key'        => 'layout_rgvdsa_event_agenda',
+							'name'       => 'agenda',
+							'label'      => 'Agenda',
+							'display'    => 'block',
+							'sub_fields' => array(
+								array(
+									'key'          => 'field_rgvdsa_event_agenda_items',
+									'label'        => 'Items',
+									'name'         => 'items',
+									'type'         => 'repeater',
+									'layout'       => 'block',
+									'button_label' => 'Add agenda item',
+									'sub_fields'   => array(
+										array(
+											'key'      => 'field_rgvdsa_event_agenda_title',
+											'label'    => 'Title',
+											'name'     => 'title',
+											'type'     => 'text',
+											'required' => 1,
+										),
+										array(
+											'key'   => 'field_rgvdsa_event_agenda_desc',
+											'label' => 'Description',
+											'name'  => 'desc',
+											'type'  => 'text',
+										),
+									),
+								),
+							),
+						),
+						'layout_rgvdsa_event_good_to_know' => array(
+							'key'        => 'layout_rgvdsa_event_good_to_know',
+							'name'       => 'good_to_know',
+							'label'      => 'Good to know',
+							'display'    => 'block',
+							'sub_fields' => array(
+								array(
+									'key'          => 'field_rgvdsa_event_gtk_items',
+									'label'        => 'Items',
+									'name'         => 'items',
+									'type'         => 'repeater',
+									'layout'       => 'table',
+									'button_label' => 'Add item',
+									'sub_fields'   => array(
+										array(
+											'key'      => 'field_rgvdsa_event_gtk_text',
+											'label'    => 'Text',
+											'name'     => 'text',
+											'type'     => 'text',
+											'required' => 1,
+										),
+									),
+								),
+							),
+						),
+						'layout_rgvdsa_event_a11y_note'    => array(
+							'key'        => 'layout_rgvdsa_event_a11y_note',
+							'name'       => 'a11y_note',
+							'label'      => 'Accessibility & childcare',
+							'display'    => 'block',
+							'sub_fields' => array(
+								array(
+									'key'          => 'field_rgvdsa_event_a11y_content',
+									'label'        => 'Content',
+									'name'         => 'content',
+									'type'         => 'wysiwyg',
+									'media_upload' => 0,
+								),
+							),
+						),
+						'layout_rgvdsa_event_map'          => array(
+							'key'        => 'layout_rgvdsa_event_map',
+							'name'       => 'map',
+							'label'      => 'Getting there / map',
+							'display'    => 'block',
+							'sub_fields' => array(),
+						),
+					),
+				),
 			),
 			'location' => array(
 				array(
@@ -244,6 +417,8 @@ function rgvdsa_event_to_chapter_event( $post ) {
 		'title'    => html_entity_decode( get_the_title( $wp_post ), ENT_QUOTES, 'UTF-8' ),
 		'location' => $location,
 		'desc'     => trim( wp_strip_all_tags( $wp_post->post_content ) ),
+		// Single Event permalink — the modal/chip "View event" destination (04 §3d).
+		'url'      => (string) get_permalink( $wp_post ),
 	);
 
 	$rsvp = trim( (string) rgvdsa_events_get_field( $post_id, 'rsvp_url' ) );
@@ -304,6 +479,310 @@ function rgvdsa_events_query( $args = array() ) {
 			)
 		)
 	);
+}
+
+/* -------------------------------------------------------------------------
+ * Single event → SingleEvent island contract (src/lib/schemas.ts).
+ * ---------------------------------------------------------------------- */
+
+/**
+ * kses helpers: reuse the blog allowlists when inc/blog.php is loaded,
+ * otherwise fall back to core sanitizers (defense-in-depth on both paths).
+ */
+function rgvdsa_events_kses_prose( $html ) {
+	return function_exists( 'rgvdsa_blog_kses_prose' )
+		? rgvdsa_blog_kses_prose( $html )
+		: wp_kses_post( (string) $html );
+}
+
+function rgvdsa_events_kses_plain( $text ) {
+	return function_exists( 'rgvdsa_blog_kses_plain' )
+		? rgvdsa_blog_kses_plain( $text )
+		: trim( wp_strip_all_tags( (string) $text ) );
+}
+
+/**
+ * First canonical event_category slug on the event, fallback "chapter".
+ *
+ * @param int $post_id Event post ID.
+ * @return string
+ */
+function rgvdsa_events_single_cat( $post_id ) {
+	$registry = rgvdsa_category_registry();
+	$terms    = get_the_terms( $post_id, 'event_category' );
+	if ( $terms && ! is_wp_error( $terms ) ) {
+		foreach ( $terms as $term ) {
+			if ( isset( $registry[ $term->slug ] ) ) {
+				return $term->slug;
+			}
+		}
+	}
+
+	return 'chapter';
+}
+
+/**
+ * event_body flexible content → EventBlock[] (eventBlockSchema union). The
+ * `map` layout has no fields — its address is derived from the location and
+ * it is dropped for online-only events.
+ *
+ * @param int    $post_id       Event post ID.
+ * @param string $location_type in-person|online|hybrid.
+ * @param string $address       Derived "venue, city" line for the map block.
+ * @return array
+ */
+function rgvdsa_events_map_event_body( $post_id, $location_type, $address ) {
+	if ( ! function_exists( 'get_field' ) ) {
+		return array();
+	}
+	$rows = get_field( 'event_body', $post_id );
+	if ( ! is_array( $rows ) ) {
+		return array();
+	}
+
+	$blocks = array();
+	foreach ( $rows as $row ) {
+		switch ( $row['acf_fc_layout'] ?? '' ) {
+			case 'prose':
+				$html = trim( rgvdsa_events_kses_prose( $row['content'] ?? '' ) );
+				if ( '' !== $html ) {
+					$blocks[] = array(
+						'type' => 'prose',
+						'html' => $html,
+					);
+				}
+				break;
+
+			case 'agenda':
+				$items = array();
+				foreach ( (array) ( $row['items'] ?? array() ) as $item ) {
+					$title = rgvdsa_events_kses_plain( $item['title'] ?? '' );
+					if ( '' === $title ) {
+						continue;
+					}
+					$entry = array( 'title' => $title );
+					$desc  = rgvdsa_events_kses_plain( $item['desc'] ?? '' );
+					if ( '' !== $desc ) {
+						$entry['desc'] = $desc;
+					}
+					$items[] = $entry;
+				}
+				if ( $items ) {
+					$blocks[] = array(
+						'type'  => 'agenda',
+						'items' => $items,
+					);
+				}
+				break;
+
+			case 'good_to_know':
+				$items = array();
+				foreach ( (array) ( $row['items'] ?? array() ) as $item ) {
+					$text = rgvdsa_events_kses_plain( $item['text'] ?? '' );
+					if ( '' !== $text ) {
+						$items[] = $text;
+					}
+				}
+				if ( $items ) {
+					$blocks[] = array(
+						'type'  => 'good_to_know',
+						'items' => $items,
+					);
+				}
+				break;
+
+			case 'a11y_note':
+				$html = trim( rgvdsa_events_kses_prose( $row['content'] ?? '' ) );
+				if ( '' !== $html ) {
+					$blocks[] = array(
+						'type' => 'a11y_note',
+						'html' => $html,
+					);
+				}
+				break;
+
+			case 'map':
+				if ( 'online' !== $location_type && '' !== $address ) {
+					$blocks[] = array(
+						'type'    => 'map',
+						'address' => $address,
+					);
+				}
+				break;
+		}
+	}
+
+	return $blocks;
+}
+
+/**
+ * Serialize an event post to the SingleEventData island contract. Reuses the
+ * ChapterEvent parse/format/gcal plumbing; prose is kses-sanitized.
+ *
+ * @param int|WP_Post|\Timber\Post $post Event post (ID or object).
+ * @return array SingleEventData assoc array, or empty array if the post is gone.
+ */
+function rgvdsa_event_to_single( $post ) {
+	$post_id = is_object( $post ) ? (int) $post->ID : (int) $post;
+	$wp_post = get_post( $post_id );
+	if ( ! $wp_post ) {
+		return array();
+	}
+
+	$title = html_entity_decode( get_the_title( $wp_post ), ENT_QUOTES, 'UTF-8' );
+	$start = rgvdsa_events_parse_datetime( rgvdsa_events_get_field( $post_id, 'start_datetime' ) );
+	$end   = rgvdsa_events_parse_datetime( rgvdsa_events_get_field( $post_id, 'end_datetime' ) );
+
+	$venue = trim( (string) rgvdsa_events_get_field( $post_id, 'venue' ) );
+	$city  = trim( (string) rgvdsa_events_get_field( $post_id, 'city' ) );
+
+	$location_type = (string) rgvdsa_events_get_field( $post_id, 'location_type' );
+	if ( ! in_array( $location_type, array( 'in-person', 'online', 'hybrid' ), true ) ) {
+		$location_type = 'in-person';
+	}
+
+	$address    = trim( implode( ', ', array_filter( array( $venue, $city ) ) ) );
+	$directions = '';
+	if ( 'online' !== $location_type && '' !== $address ) {
+		$directions = 'https://maps.google.com/?q=' . rawurlencode( $address );
+	}
+
+	$capacity_raw = rgvdsa_events_get_field( $post_id, 'capacity' );
+	$capacity     = ( null === $capacity_raw || '' === $capacity_raw ) ? null : (int) $capacity_raw;
+
+	// gcalUrl reuses the single ChapterEvent builder (no second query string).
+	$chapter_event = rgvdsa_event_to_chapter_event( $post_id );
+	$gcal_url      = $chapter_event['gcalUrl'] ?? '';
+
+	// Contact card: per-event fields, chapter contact_email as the fallback.
+	$contact_email = trim( (string) rgvdsa_events_get_field( $post_id, 'contact_email' ) );
+	if ( '' === $contact_email && function_exists( 'get_field' ) ) {
+		$chapter_email = get_field( 'contact_email', 'option' );
+		if ( is_string( $chapter_email ) ) {
+			$contact_email = trim( $chapter_email );
+		}
+	}
+
+	$thumb_id  = get_post_thumbnail_id( $wp_post );
+	$thumb_alt = $thumb_id ? (string) get_post_meta( $thumb_id, '_wp_attachment_image_alt', true ) : '';
+
+	$featured_image = array(
+		'src' => get_the_post_thumbnail_url( $wp_post, 'large' ) ?: null,
+		'alt' => '' !== $thumb_alt ? $thumb_alt : $title,
+	);
+	if ( $thumb_id ) {
+		$caption = rgvdsa_events_kses_plain( wp_get_attachment_caption( $thumb_id ) );
+		if ( '' !== $caption ) {
+			$featured_image['caption'] = $caption;
+		}
+		$credit = rgvdsa_events_kses_plain( get_post_meta( $thumb_id, 'credit', true ) );
+		if ( '' !== $credit ) {
+			$featured_image['credit'] = $credit;
+		}
+	}
+
+	return array(
+		'title'         => $title,
+		'summary'       => rgvdsa_events_kses_plain( rgvdsa_events_get_field( $post_id, 'event_summary' ) ),
+		'cat'           => rgvdsa_events_single_cat( $post_id ),
+		'date'          => $start ? $start->format( 'Y-m-d' ) : get_the_date( 'Y-m-d', $wp_post ),
+		'time'          => rgvdsa_events_format_time_range( $start, $end ),
+		'doorsTime'     => trim( (string) rgvdsa_events_get_field( $post_id, 'doors_time' ) ),
+		'locationType'  => $location_type,
+		'venue'         => $venue,
+		'city'          => $city,
+		'cost'          => trim( (string) rgvdsa_events_get_field( $post_id, 'cost' ) ),
+		'rsvpRequired'  => (bool) rgvdsa_events_get_field( $post_id, 'rsvp_required' ),
+		'rsvpUrl'       => trim( (string) rgvdsa_events_get_field( $post_id, 'rsvp_url' ) ),
+		'capacity'      => $capacity,
+		'directionsUrl' => $directions,
+		'gcalUrl'       => $gcal_url,
+		// No per-event iCal endpoint is exposed (the only ICS feed is the
+		// whole-calendar subscribe feed); the island hides the button on "".
+		'icsUrl'        => '',
+		'contact'       => array(
+			'name'  => trim( (string) rgvdsa_events_get_field( $post_id, 'contact_name' ) ),
+			'email' => $contact_email,
+			'phone' => trim( (string) rgvdsa_events_get_field( $post_id, 'contact_phone' ) ),
+		),
+		'featuredImage' => $featured_image,
+		'blocks'        => rgvdsa_events_map_event_body( $post_id, $location_type, $address ),
+	);
+}
+
+/**
+ * Permalink of the Calendar page (assigned template), fallback "/calendar/".
+ *
+ * @return string
+ */
+function rgvdsa_events_calendar_url() {
+	$pages = get_posts(
+		array(
+			'post_type'      => 'page',
+			'post_status'    => 'publish',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'meta_key'       => '_wp_page_template',
+			'meta_value'     => 'page-templates/calendar.php',
+			'no_found_rows'  => true,
+		)
+	);
+
+	return $pages ? get_permalink( $pages[0] ) : home_url( '/calendar/' );
+}
+
+// Single event — the SingleEvent island payload (sibling of blog's single).
+add_filter( 'rgvdsa/context/single', 'rgvdsa_events_single_context', 10, 2 );
+
+function rgvdsa_events_single_context( $context, $timber_post ) {
+	if ( ! $timber_post || 'event' !== $timber_post->post_type ) {
+		return $context;
+	}
+
+	$context['single_event']            = rgvdsa_event_to_single( $timber_post->ID );
+	$context['single_event_categories'] = rgvdsa_event_categories();
+	$context['single_event_calendar_url'] = rgvdsa_events_calendar_url();
+	$context['single_event_home_url']     = home_url( '/' );
+	// Template-level setting (not per-event); the band hides when false.
+	$context['single_event_show_related'] = true;
+
+	// More upcoming events: next 3 by start_datetime, excluding the current
+	// event. Each carries its own permalink (ChapterEvent has no url field).
+	$now   = new DateTimeImmutable( 'now', rgvdsa_events_timezone() );
+	$posts = rgvdsa_events_query(
+		array(
+			'posts_per_page' => 3,
+			'post__not_in'   => array( (int) $timber_post->ID ),
+			'meta_query'     => array(
+				array(
+					'key'     => 'start_datetime',
+					'value'   => $now->format( 'Y-m-d H:i:s' ),
+					'compare' => '>=',
+					'type'    => 'DATETIME',
+				),
+			),
+		)
+	);
+
+	$related = array();
+	foreach ( $posts as $event_post ) {
+		$chapter_event = rgvdsa_event_to_chapter_event( $event_post );
+		if ( empty( $chapter_event ) ) {
+			continue;
+		}
+		$related[] = array(
+			'id'       => $chapter_event['id'],
+			'date'     => $chapter_event['date'],
+			'time'     => $chapter_event['time'],
+			'cat'      => $chapter_event['cat'],
+			'title'    => $chapter_event['title'],
+			'location' => $chapter_event['location'],
+			'url'      => get_permalink( $event_post ),
+		);
+	}
+	$context['single_event_related'] = $related;
+
+	return $context;
 }
 
 /**

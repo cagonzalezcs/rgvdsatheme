@@ -3,7 +3,14 @@ import categoriesJson from "../../categories.json";
 import type { EventCategory } from "@/lib/schemas";
 
 /* Contract types live in lib/schemas.ts (zod, one definition point). */
-export type { ChapterEvent, EventCategory } from "@/lib/schemas";
+export type {
+  ChapterEvent,
+  EventBlock,
+  EventCategory,
+  EventContact,
+  RelatedEvent,
+  SingleEventData,
+} from "@/lib/schemas";
 
 /* Default categories come from the canonical registry (categories.json at
  * the theme root — shared with PHP and drift-tested against the
@@ -28,6 +35,16 @@ export function setCategories(cats: EventCategory[]): void {
 
 export function categoryById(id: string): EventCategory {
   return EVENT_CATEGORIES.find((c) => c.id === id) ?? EVENT_CATEGORIES[0];
+}
+
+/** #RRGGBB → rgba() with the given alpha; passes non-hex strings through. */
+export function hexToRgba(hex: string, alpha: number): string {
+  const h = hex.replace("#", "");
+  if (h.length !== 6) return hex;
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r},${g},${b},${alpha})`;
 }
 
 /** Local-time date from ISO yyyy-mm-dd (avoids UTC shift of new Date(iso)). */

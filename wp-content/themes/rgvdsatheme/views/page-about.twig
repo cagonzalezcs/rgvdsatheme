@@ -18,15 +18,27 @@
 	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
 
 	{# ---- Mission band ---- #}
-	<section class="bg-ink px-6 py-16 text-white" data-tone="ink">
+	<section class="bg-ink px-4 py-12 text-white md:px-6 md:py-16" data-tone="ink">
 		<div class="mx-auto flex max-w-[1140px] flex-col gap-[18px]">
 			<div class="font-display text-[0.85rem] font-bold uppercase tracking-[0.12em] text-pink">What we believe</div>
 			<p class="m-0 max-w-[34ch] font-display text-[clamp(1.35rem,2.8vw,2rem)] font-bold leading-[1.4]">Democratic socialists believe that our economy should be built democratically, by and for working people &mdash; not by billionaires for profit.</p>
 		</div>
 	</section>
 
-	<section class="bg-white px-6 pb-24 pt-16" data-tone="cream">
-		<div class="mx-auto grid max-w-[1140px] items-start gap-14 lg:[grid-template-columns:minmax(300px,1fr)_300px]">
+	<section class="bg-white px-4 pb-20 pt-12 md:px-6 md:pb-24 md:pt-16" data-tone="cream">
+		<div class="mx-auto grid max-w-[1140px] items-start gap-10 md:gap-14 lg:[grid-template-columns:minmax(300px,1fr)_300px]">
+
+			{# On-this-page nav hoisted above the article for <lg (05 §4): vertical list on
+			   mobile, chip row on tablet. The sticky sidebar copy below is lg-only. #}
+			<nav aria-label="On this page" class="flex flex-col gap-0.5 rounded-[14px] bg-off-white p-3 md:flex-row md:flex-wrap md:items-center md:gap-2 lg:hidden">
+				<div class="mb-1 px-3.5 py-1.5 font-display text-[0.82rem] font-bold uppercase tracking-[0.08em] text-text-muted md:mb-0 md:py-0">On this page</div>
+				<a href="#chapter" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">About the Chapter</a>
+				<a href="#mission" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">Mission &amp; History</a>
+				<a href="#counties" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">Counties We Serve</a>
+				<a href="#committees" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">Committees</a>
+				<a href="#bylaws" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">Bylaws &amp; Code of Conduct</a>
+				<a href="#faq" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">FAQ</a>
+			</nav>
 
 			<article class="flex min-w-0 flex-col gap-7">
 
@@ -60,7 +72,7 @@
 				] %}
 				<div class="flex flex-col overflow-hidden rounded-[14px] bg-white shadow-card">
 					{% for row in timeline %}
-						<div class="grid items-baseline gap-4 border-b border-divider px-[22px] py-[18px] last:border-b-0 [grid-template-columns:110px_1fr]">
+						<div class="grid grid-cols-1 items-baseline gap-1 border-b border-divider px-[22px] py-[18px] last:border-b-0 sm:gap-4 sm:[grid-template-columns:90px_1fr]">
 							<span class="font-display text-[1.05rem] font-extrabold text-red">{{ row.year }}</span>
 							<span class="text-base leading-[1.65] text-text-body">{{ row.text }} {% if row.note %}<em class="text-[#78716c]">(Year and details to be filled in by the chapter.)</em>{% endif %}</span>
 						</div>
@@ -119,7 +131,17 @@
 					{ title: "Grievance Policy", covers: "How to report harm and how the chapter handles conflict, confidentially and fairly.", action: "Read", url: "/bylaws-code-of-conduct/#grievance" },
 					{ title: "Meeting Minutes", covers: "Records and resolutions from general meetings, available to all members.", action: "Browse", url: "/bylaws-code-of-conduct/#documents" }
 				] %}
-				<div class="overflow-x-auto">
+				{# Mobile: stack of cards; sm+: the real table (05 §4 About bylaws). #}
+				<div class="flex flex-col gap-3 sm:hidden">
+					{% for doc in governance_docs %}
+						<div class="flex flex-col gap-1.5 rounded-[14px] bg-white p-[18px] shadow-card">
+							<div class="font-display text-[1rem] font-bold">{{ doc.title }}</div>
+							<p class="m-0 text-[0.92rem] leading-[1.6] text-text-body">{{ doc.covers }}</p>
+							<a href="{{ doc.url }}" class="self-start text-[0.92rem] font-bold text-red no-underline hover:underline hover:underline-offset-[3px]">{{ doc.action }} &rarr;</a>
+						</div>
+					{% endfor %}
+				</div>
+				<div class="hidden overflow-x-auto sm:block">
 				<table class="w-full border-separate border-spacing-0 overflow-hidden rounded-[14px] bg-white text-[0.95rem] shadow-card">
 					<thead>
 						<tr class="bg-ink text-left text-white">
@@ -171,7 +193,7 @@
 
 			{# ---- Sidebar ---- #}
 			<aside aria-label="Page navigation" class="flex flex-col gap-7 lg:sticky lg:top-[calc(110px+var(--wp-admin--admin-bar--height,0px))]">
-				<nav aria-label="On this page" class="flex flex-col gap-0.5 rounded-[14px] bg-off-white p-3">
+				<nav aria-label="On this page" class="hidden flex-col gap-0.5 rounded-[14px] bg-off-white p-3 lg:flex">
 					<div class="mb-1 px-3.5 py-1.5 font-display text-[0.82rem] font-bold uppercase tracking-[0.08em] text-text-muted">On this page</div>
 					<a href="#chapter" class="{{ nav_link }}">About the Chapter</a>
 					<a href="#mission" class="{{ nav_link }}">Mission &amp; History</a>

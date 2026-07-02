@@ -15,7 +15,7 @@ const sizes: { value: TextSize; label: string }[] = [
 <template>
   <Popover>
     <PopoverTrigger
-      class="a11y-widget cursor-pointer rounded-full bg-white px-4 py-2 text-[0.95rem] font-bold text-red hover:text-red-hover hover:shadow-[0_0_0_3px_rgba(28,25,23,0.25)]"
+      class="a11y-widget inline-flex min-h-11 cursor-pointer items-center rounded-full bg-white px-4 py-2 text-[0.95rem] font-bold text-red hover:text-red-hover hover:shadow-[0_0_0_3px_rgba(28,25,23,0.25)]"
       aria-label="Accessibility options"
       title="Accessibility options"
     >

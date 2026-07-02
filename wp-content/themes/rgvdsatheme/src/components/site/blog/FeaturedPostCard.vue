@@ -10,7 +10,7 @@ defineProps<{ post: BlogPost }>();
   <article
     class="featured-post-card grid overflow-hidden rounded-[20px] bg-white shadow-featured md:[grid-template-columns:minmax(300px,1.1fr)_minmax(300px,1fr)]"
   >
-    <div class="min-h-[240px] md:min-h-[340px]">
+    <div class="min-h-[240px] md:min-h-[340px]" data-post-image>
       <ImageSlot :src="post.image?.src" :alt="post.image?.alt" label="Featured photo" />
     </div>
     <div class="flex flex-col justify-center gap-4 px-6 py-8 md:px-10 md:py-9">
@@ -20,6 +20,7 @@ defineProps<{ post: BlogPost }>();
       </div>
       <a
         :href="post.url"
+        data-blog-link
         class="font-display text-[clamp(1.5rem,2.8vw,2rem)] font-extrabold leading-[1.2] tracking-[-0.01em] text-ink no-underline [text-wrap:balance] hover:text-red"
       >
         {{ post.title }}
@@ -32,6 +33,7 @@ defineProps<{ post: BlogPost }>();
       </div>
       <a
         :href="post.url"
+        data-blog-link
         class="mt-1 self-start rounded-full bg-red px-[26px] py-[11px] text-[0.92rem] font-bold text-white no-underline transition-colors hover:bg-red-hover"
       >
         Read the post

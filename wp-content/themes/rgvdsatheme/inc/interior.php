@@ -35,6 +35,14 @@ add_action( 'acf/init', function () {
 				'instructions' => 'Optional override for the page-header lede. Falls back to the excerpt when empty.',
 			),
 			array(
+				'key'          => 'field_rgvdsa_interior_seo_description',
+				'label'        => 'Search description',
+				'name'         => 'seo_description',
+				'type'         => 'textarea',
+				'rows'         => 2,
+				'instructions' => 'Optional meta description for search engines and link previews (~155 characters). Falls back to the lede, then the site tagline.',
+			),
+			array(
 				'key'           => 'field_rgvdsa_interior_show_grievance',
 				'label'         => 'Show grievance callout',
 				'name'          => 'show_grievance',

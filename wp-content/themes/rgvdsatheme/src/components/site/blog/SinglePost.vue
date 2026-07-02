@@ -99,7 +99,7 @@ const mailShareUrl = computed(
         <h1 class="m-0 max-w-[24ch] font-display text-[clamp(2rem,4.6vw,3.3rem)] font-black leading-[1.12] tracking-[-0.01em] [text-wrap:balance]">
           {{ post.title }}
         </h1>
-        <p class="m-0 max-w-[48ch] text-[1.5rem] leading-[1.5]">{{ post.dek }}</p>
+        <p class="m-0 max-w-[48ch] text-[1.05rem] leading-[1.5] md:text-[1.3rem] lg:text-[1.5rem]">{{ post.dek }}</p>
         <div class="flex flex-wrap items-center gap-3 text-[0.92rem] font-semibold">
           <div v-if="isNamed" class="flex items-center gap-2.5 rounded-full bg-white py-1.5 pl-1.5 pr-[18px] text-ink">
             <div class="size-10 flex-none overflow-hidden rounded-full bg-off-white">
@@ -118,8 +118,8 @@ const mailShareUrl = computed(
       <div class="mx-auto flex max-w-[1140px] items-start gap-14">
         <article class="mx-auto flex min-w-0 max-w-[980px] flex-[1_1_auto] flex-col items-center gap-8">
           <!-- Featured image, pulled up over the red band -->
-          <figure class="m-0 -mt-[100px] flex w-full flex-col">
-            <div class="h-[clamp(280px,44vw,500px)] overflow-hidden rounded-[18px] bg-white shadow-[0_16px_44px_rgba(28,25,23,0.24)]">
+          <figure class="m-0 -mt-16 flex w-full flex-col md:-mt-[84px] lg:-mt-[100px]">
+            <div class="h-[clamp(280px,44vw,500px)] overflow-hidden rounded-[18px] bg-white shadow-[0_16px_44px_rgba(28,25,23,0.24)]" data-post-hero>
               <ImageSlot :src="post.featuredImage.src" :alt="post.featuredImage.alt" label="Featured photo" />
             </div>
             <figcaption class="px-1 pt-3 text-[0.9rem] leading-[1.5] text-text-muted">

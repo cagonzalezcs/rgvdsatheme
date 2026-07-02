@@ -26,10 +26,11 @@ const titleClass = computed(
 <template>
   <a
     :href="post.url"
+    data-blog-link
     class="post-card flex flex-1 flex-col overflow-hidden rounded-[16px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] duration-150 hover:-translate-y-0.5 hover:shadow-card-hover"
   >
     <div class="flex aspect-video items-start" aria-hidden="true">
-      <div class="relative size-full">
+      <div class="relative size-full" data-post-image>
         <ImageSlot class="absolute inset-0" :src="post.image?.src" :alt="post.image?.alt" />
         <CategoryTag :cat-id="post.cat" size="sm" class="absolute left-3 top-3" />
       </div>

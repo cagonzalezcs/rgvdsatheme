@@ -85,9 +85,9 @@ const a11yContactHref = computed(() =>
     data-tone="cream"
   >
     <div
-      class="mx-auto grid max-w-[1140px] gap-10 px-6 pb-14 sm:[grid-template-columns:minmax(240px,1.2fr)_repeat(auto-fit,minmax(160px,1fr))]"
+      class="mx-auto grid max-w-[1140px] grid-cols-1 gap-10 px-4 pb-14 md:grid-cols-2 md:px-6 lg:[grid-template-columns:minmax(240px,1.2fr)_repeat(auto-fit,minmax(160px,1fr))]"
     >
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 md:col-span-2 lg:col-span-1">
         <img
           :src="logoUrl"
           alt="Rio Grande Valley Democratic Socialists of America"

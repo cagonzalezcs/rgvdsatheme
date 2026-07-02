@@ -216,12 +216,13 @@ const gridPosts = computed(() =>
 
         <section class="bg-white px-6 pb-12 pt-10" data-tone="cream">
           <div class="mx-auto flex max-w-[1200px] flex-col">
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-6">
+            <!-- tablet = clean 2-col; the 6-col span rhythm is a lg-only flourish (05 §4 Blog) -->
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-6">
               <div
                 v-for="{ post, span } in gridPosts"
                 :key="post.id"
                 class="flex"
-                :class="span === 3 ? 'md:col-span-3' : 'md:col-span-2'"
+                :class="span === 3 ? 'lg:col-span-3' : 'lg:col-span-2'"
               >
                 <PostCard :post="post" :variant="span === 3 ? 'grid-lg' : 'grid'" />
               </div>

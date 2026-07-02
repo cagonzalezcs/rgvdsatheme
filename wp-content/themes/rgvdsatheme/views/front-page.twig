@@ -32,37 +32,37 @@
 {% block content %}
 
 	{# ============ HERO ============ #}
-	<section class="home-hero bg-brand-red px-6 py-[88px] text-white" data-tone="red">
-		<div class="mx-auto flex max-w-[1140px] items-center gap-12">
-			<div class="flex flex-[1_1_520px] flex-col items-start gap-7 shrink-0">
+	<section class="home-hero bg-brand-red px-4 py-14 text-white md:px-6 md:py-20 lg:py-[88px]" data-tone="red">
+		<div class="mx-auto flex max-w-[1140px] flex-col items-start gap-8 md:flex-row md:items-center md:gap-12">
+			<div class="flex w-full flex-none flex-col items-start gap-6 md:w-auto md:flex-[1_1_520px] md:gap-7">
 				<span class="rounded-full bg-white px-[18px] py-[7px] text-[0.85rem] font-bold uppercase tracking-[0.1em] text-red">Rio Grande Valley Democratic Socialists</span>
 				<h1 class="m-0 max-w-[18ch] font-display text-[clamp(2.3rem,5.6vw,4rem)] font-black leading-[1.08] tracking-[-0.01em] [text-wrap:balance]">
 					{{ hero.heading }}
 				</h1>
-				<p class="m-0 max-w-[44ch] text-[1.5rem] font-normal leading-[1.5]">
+				<p class="m-0 max-w-[44ch] text-[1.02rem] font-normal leading-[1.5] md:text-[1.15rem] lg:text-[1.5rem]">
 					{{ hero.lede }}
 				</p>
-				<div class="flex flex-wrap items-center gap-3.5">
+				<div class="flex w-full flex-col items-stretch gap-3 md:w-auto md:flex-row md:flex-wrap md:items-center md:gap-3.5">
 					<a href="{{ hero.cta_primary_url }}" target="_blank" rel="noopener"
-						class="rounded-full bg-white px-[34px] py-4 text-[1.05rem] font-bold text-red no-underline shadow-[0_4px_14px_rgba(28,25,23,0.25)] transition-transform hover:-translate-y-px hover:text-red-hover">
+						class="w-full rounded-full bg-white px-[34px] py-4 text-center text-[1.05rem] font-bold text-red no-underline shadow-[0_4px_14px_rgba(28,25,23,0.25)] transition-transform hover:-translate-y-px hover:text-red-hover md:w-auto">
 						{{ hero.cta_primary_label }}
 					</a>
 					<a href="{{ hero.cta_secondary_url }}"
-						class="rounded-full bg-ink px-[34px] py-4 text-[1.05rem] font-bold text-white no-underline transition-colors hover:bg-ink-soft">
+						class="w-full rounded-full bg-ink px-[34px] py-4 text-center text-[1.05rem] font-bold text-white no-underline transition-colors hover:bg-ink-soft md:w-auto">
 						{{ hero.cta_secondary_label }}
 					</a>
 				</div>
 				<span class="rounded-full bg-[rgba(28,25,23,0.85)] px-[18px] py-2 text-[0.95rem]">New here? Start with <strong>RGV-DSA 101</strong> — no experience needed.</span>
 			</div>
 			<img src="{{ site.theme.link }}/static/images/logos/logo-lg.png" alt="" aria-hidden="true"
-				class="mx-auto h-auto w-full max-w-[800px] flex-[1_1_360px]">
+				class="mx-auto block h-auto w-full max-w-[150px] md:max-w-[190px] md:flex-[1_1_360px] lg:max-w-[800px]">
 		</div>
 	</section>
 
 	{# ============ COUNTIES STRIP ============ #}
 	{% if show_counties_strip %}
-		<section id="counties" class="counties-strip bg-ink px-6 py-5 text-white" data-tone="ink" aria-label="Communities we serve">
-			<div class="mx-auto flex max-w-[1200px] flex-wrap justify-center gap-x-[18px] gap-y-2 font-display text-[0.92rem] font-bold uppercase tracking-[0.05em]">
+		<section id="counties" class="counties-strip bg-ink px-4 py-5 text-white md:px-6" data-tone="ink" aria-label="Communities we serve">
+			<div class="mx-auto flex max-w-[1200px] flex-wrap justify-center gap-x-[18px] gap-y-2 font-display text-[0.75rem] font-bold uppercase tracking-[0.05em] md:text-[0.92rem]">
 				{% for county in counties %}
 					<span>{{ county }}</span>{% if not loop.last %}<span aria-hidden="true" class="text-brand-red">★</span>{% endif %}
 				{% endfor %}
@@ -71,8 +71,8 @@
 	{% endif %}
 
 	{# ============ WHO WE ARE ============ #}
-	<section id="about" class="who-we-are bg-white px-6 py-24" data-tone="cream">
-		<div class="mx-auto grid max-w-[1140px] items-center gap-16 [grid-template-columns:minmax(300px,1.1fr)_minmax(280px,0.9fr)] max-md:[grid-template-columns:1fr]">
+	<section id="about" class="who-we-are bg-white px-4 py-16 md:px-6 md:py-24" data-tone="cream">
+		<div class="mx-auto grid max-w-[1140px] grid-cols-1 items-center gap-10 md:gap-16 md:[grid-template-columns:minmax(300px,1.1fr)_minmax(280px,0.9fr)]">
 			<div class="flex flex-col gap-5">
 				<div class="text-[0.82rem] font-bold uppercase tracking-[0.14em] text-red">Who we are</div>
 				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">We are DSA-RGV</h2>
@@ -91,7 +91,7 @@
 	</section>
 
 	{# ============ UPCOMING EVENTS ============ #}
-	<section id="events" class="upcoming-events bg-off-white px-6 py-[88px]" data-tone="cream">
+	<section id="events" class="upcoming-events bg-off-white px-4 py-14 md:px-6 md:py-[88px]" data-tone="cream">
 		<div class="mx-auto flex max-w-[1140px] flex-col gap-9">
 			<div class="flex flex-wrap items-baseline justify-between gap-4">
 				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">Upcoming events</h2>
@@ -105,7 +105,10 @@
 			{% endif %}
 			<div class="flex flex-col gap-3">
 				{% for ev in home_events|slice(0, event_count) %}
-					<div class="grid items-center gap-6 rounded-[14px] bg-white px-[22px] py-[18px] shadow-subtle [grid-template-columns:76px_1fr_auto] max-sm:[grid-template-columns:64px_1fr] max-sm:gap-4">
+					{# Whole row is the tap target on mobile (05 §4 Home); the pill becomes a
+					   visual span at md+ and an inline "View event →" shows on mobile. #}
+					<a href="/calendar/" aria-label="View event: {{ ev.title }}"
+						class="group grid grid-cols-[64px_1fr] items-center gap-4 rounded-[14px] bg-white px-[22px] py-[18px] text-ink no-underline shadow-subtle transition-shadow hover:shadow-card md:[grid-template-columns:76px_1fr_auto] md:gap-6">
 						<div aria-hidden="true" class="flex flex-col rounded-[12px] bg-brand-red px-1 py-2.5 text-center text-white">
 							<span class="font-display text-[1.4rem] font-extrabold leading-[1.1]">{{ ev.day }}</span>
 							<span class="text-[0.72rem] font-bold tracking-[0.1em]">{{ ev.month }}</span>
@@ -113,27 +116,28 @@
 						<div class="flex flex-col gap-1">
 							<div class="text-[1.12rem] font-bold">{{ ev.title }}</div>
 							<div class="text-[0.95rem] text-text-muted">{{ ev.when }} · {{ ev.where }}</div>
+							<span class="mt-1 text-[0.92rem] font-bold text-red md:hidden">View event →</span>
 						</div>
-						<a href="/calendar/" aria-label="View event: {{ ev.title }}"
-							class="whitespace-nowrap rounded-full border-2 border-red px-5 py-[9px] text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash max-sm:hidden">
+						<span aria-hidden="true"
+							class="hidden whitespace-nowrap rounded-full border-2 border-red px-5 py-[9px] text-[0.92rem] font-bold text-red transition-colors group-hover:border-red-hover group-hover:bg-wash md:inline-block">
 							View event
-						</a>
-					</div>
+						</span>
+					</a>
 				{% endfor %}
 			</div>
 		</div>
 	</section>
 
 	{# ============ FROM THE BLOG ============ #}
-	<section id="blog" class="from-the-blog bg-white px-6 py-[88px]" data-tone="cream">
+	<section id="blog" class="from-the-blog bg-white px-4 py-14 md:px-6 md:py-[88px]" data-tone="cream">
 		<div class="mx-auto flex max-w-[1140px] flex-col gap-9">
 			<div class="flex flex-wrap items-baseline justify-between gap-4">
 				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">From the blog</h2>
 				<a href="/blog/" class="text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">All posts →</a>
 			</div>
 			{% if blog_featured %}
-				<div class="grid items-stretch gap-8 [grid-template-columns:minmax(300px,1.15fr)_minmax(280px,1fr)] max-md:[grid-template-columns:1fr]">
-					<a href="/blog/" class="flex flex-col overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card-hover-lg">
+				<div class="grid grid-cols-1 items-stretch gap-8 md:grid-cols-2 lg:[grid-template-columns:minmax(300px,1.15fr)_minmax(280px,1fr)]">
+					<a href="/blog/" class="flex flex-col overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card-hover-lg md:col-span-2 lg:col-span-1">
 						<div aria-hidden="true" class="flex aspect-video items-start p-3.5 {{ stripe }}">
 							<span class="{{ cat_featured_pill[blog_featured.cat] }} text-white rounded-full px-3.5 py-[5px] text-[0.75rem] font-bold uppercase tracking-[0.06em]">{{ blog_featured.cat_label }}</span>
 						</div>
@@ -144,9 +148,9 @@
 							<span class="mt-1 text-[0.95rem] font-bold text-red">Read the post →</span>
 						</div>
 					</a>
-					<div class="flex flex-col gap-5">
+					<div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-1">
 						{% for row in blog_rows %}
-							<a href="/blog/" class="grid flex-1 overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] [grid-template-columns:130px_1fr] hover:-translate-y-0.5 hover:shadow-card-hover-lg max-sm:[grid-template-columns:100px_1fr]">
+							<a href="/blog/" class="grid flex-1 grid-cols-[100px_1fr] overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card-hover-lg sm:[grid-template-columns:130px_1fr]">
 								<span aria-hidden="true" class="min-h-[130px] {{ stripe }}"></span>
 								<span class="flex flex-col justify-center gap-[9px] px-6 py-5">
 									<span class="{{ cat_row_pill[row.cat] }} self-start rounded-full border-2 px-3 py-[3px] text-[0.72rem] font-bold uppercase tracking-[0.06em]">{{ row.cat_label }}</span>
@@ -167,13 +171,13 @@
 	</section>
 
 	{# ============ GET INVOLVED STEPS ============ #}
-	<section id="get-involved" class="get-involved-steps bg-ink px-6 py-24 text-white" data-tone="ink">
+	<section id="get-involved" class="get-involved-steps bg-ink px-4 py-16 text-white md:px-6 md:py-24" data-tone="ink">
 		<div class="mx-auto flex max-w-[1140px] flex-col gap-12">
 			<div class="flex flex-col gap-3.5">
 				<div class="text-[0.82rem] font-bold uppercase tracking-[0.14em] text-pink">Get involved</div>
 				<h2 class="m-0 max-w-[20ch] font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">Three steps to start organizing</h2>
 			</div>
-			<div class="grid gap-7 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
+			<div class="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-7">
 				{% set steps = [
 					{ num: '01', title: 'Join DSA', body: 'Become a national DSA member — dues are sliding-scale, and membership automatically connects you to our chapter.', link_label: 'Sign up at dsausa.org →', href: chapter.join_url, external: true },
 					{ num: '02', title: 'Come to RGV-DSA 101', body: 'Our intro session for new and curious folks — what we do, how the chapter works, and how you can plug in. Virtual and in-person options.', link_label: 'Find a session →', href: '#events', external: false },
@@ -191,14 +195,14 @@
 					</div>
 				{% endfor %}
 			</div>
-			<div class="flex flex-wrap items-center gap-4 border-t border-ink-soft pt-8">
+			<div class="flex flex-col items-stretch gap-3 border-t border-ink-soft pt-8 md:flex-row md:flex-wrap md:items-center md:gap-4">
 				<span class="text-[0.95rem] font-bold text-muted-on-ink">Follow along:</span>
 				<a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener"
-					class="rounded-full bg-white px-[22px] py-2.5 text-[0.95rem] font-bold text-ink no-underline transition-colors hover:bg-pink">
+					class="w-full rounded-full bg-white px-[22px] py-2.5 text-center text-[0.95rem] font-bold text-ink no-underline transition-colors hover:bg-pink md:w-auto">
 					Instagram @dsa_rgv
 				</a>
 				<a href="mailto:{{ chapter.contact_email }}"
-					class="rounded-full border-2 border-[#57534e] px-[21px] py-[9px] text-[0.95rem] font-bold text-white no-underline transition-colors hover:border-white">
+					class="w-full rounded-full border-2 border-[#57534e] px-[21px] py-[9px] text-center text-[0.95rem] font-bold text-white no-underline transition-colors hover:border-white md:w-auto">
 					Email us
 				</a>
 			</div>

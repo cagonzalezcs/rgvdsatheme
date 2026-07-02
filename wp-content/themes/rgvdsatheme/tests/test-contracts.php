@@ -218,7 +218,7 @@ class TestContracts extends BaseTestCase {
 		$this->assert_matches_fixture(
 			'chapter-event',
 			rgvdsa_event_to_chapter_event( $id ),
-			array( array( 'id' ) )
+			array( array( 'id' ), array( 'url' ) )
 		);
 	}
 

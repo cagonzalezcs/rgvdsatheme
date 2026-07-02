@@ -355,6 +355,65 @@ function rgvdsa_seed_placeholder_pdf() {
 
 $rgvdsa_seed_pdf_id = rgvdsa_seed_placeholder_pdf();
 
+/* --- Default share image (Chapter Settings → og:image fallback, inc/seo.php). */
+
+function rgvdsa_seed_default_share_image() {
+	$existing = get_posts( array(
+		'post_type'      => 'attachment',
+		'name'           => 'rgvdsa-default-share',
+		'post_status'    => 'inherit',
+		'posts_per_page' => 1,
+		'fields'         => 'ids',
+	) );
+	if ( $existing ) {
+		return (int) $existing[0];
+	}
+
+	// Placeholder: the theme logo as a real attachment so the seeded site
+	// exercises the attachment branch of the share-image ladder.
+	$logo = get_theme_file_path( 'static/images/logos/logo-lg.png' );
+	if ( ! is_readable( $logo ) ) {
+		rgvdsa_seed_log( 'ERROR default share image: theme logo not readable' );
+		return 0;
+	}
+
+	$upload = wp_upload_bits( 'rgvdsa-default-share.png', null, (string) file_get_contents( $logo ) );
+	if ( ! empty( $upload['error'] ) ) {
+		rgvdsa_seed_log( 'ERROR default share image upload: ' . $upload['error'] );
+		return 0;
+	}
+
+	$att_id = wp_insert_attachment( array(
+		'post_title'     => 'RGV DSA Default Share Image',
+		'post_name'      => 'rgvdsa-default-share',
+		'post_mime_type' => 'image/png',
+		'post_status'    => 'inherit',
+	), $upload['file'] );
+
+	if ( is_wp_error( $att_id ) || ! $att_id ) {
+		rgvdsa_seed_log( 'ERROR default share image attachment insert failed' );
+		return 0;
+	}
+
+	update_post_meta( $att_id, '_wp_attachment_image_alt', 'Rio Grande Valley DSA logo' );
+
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+	$meta = wp_generate_attachment_metadata( $att_id, $upload['file'] );
+	if ( $meta ) {
+		wp_update_attachment_metadata( $att_id, $meta );
+	}
+
+	rgvdsa_seed_log( "attachment created: rgvdsa-default-share (#{$att_id})" );
+
+	return (int) $att_id;
+}
+
+$rgvdsa_seed_share_id = rgvdsa_seed_default_share_image();
+if ( $rgvdsa_seed_share_id && ! get_field( 'default_share_image', 'option' ) ) {
+	update_field( 'field_rgvdsa_options_default_share_image', $rgvdsa_seed_share_id, 'option' );
+	rgvdsa_seed_log( "option set: default_share_image (#{$rgvdsa_seed_share_id})" );
+}
+
 /* --- p1: block markup using every block type (SAMPLE_SINGLE fixture). */
 
 if ( $rgvdsa_seed_p1_id ) {

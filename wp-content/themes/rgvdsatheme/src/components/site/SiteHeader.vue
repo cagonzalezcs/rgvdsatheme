@@ -1,19 +1,15 @@
 <script setup lang="ts">
-import { Menu } from "lucide-vue-next";
+import { ref, computed, watch } from "vue";
+import { Menu, X } from "lucide-vue-next";
+import { location } from "@/lib/location";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
 import A11yWidget from "@/components/site/A11yWidget.vue";
+import LanguageToggle from "@/components/site/LanguageToggle.vue";
 
 interface NavLink {
   label: string;
@@ -48,6 +44,7 @@ const props = withDefaults(
     ],
     navItems: () => [
       { label: "Calendar", href: "/calendar/" },
+      { label: "Blog", href: "/blog/" },
       { label: "Get Involved", href: "/get-involved/" },
     ],
     currentPath: "",
@@ -58,9 +55,42 @@ const props = withDefaults(
 const navLinkClass =
   "rounded-[10px] px-4 py-2.5 font-display text-[1.17rem] font-bold text-white no-underline hover:bg-[rgba(28,25,23,0.18)]";
 
-function isCurrent(href: string): boolean {
-  return props.currentPath !== "" && href === props.currentPath;
+// Below lg the About▾ hover-dropdown collapses to a plain About link (05 §3a).
+const flatNav = computed<NavLink[]>(() => [
+  { label: "About", href: "/about/" },
+  ...props.navItems,
+]);
+
+const isMenuOpen = ref(false);
+
+// Reactive current path so active state updates during client-side navigation
+// (the header stays mounted across swaps). Falls back to the SSR prop first paint.
+const currentPath = computed(() => location.path || props.currentPath);
+
+/** Normalize to a comparable pathname: strip origin from absolute menu hrefs,
+ * drop hash/query, and normalize the trailing slash. */
+function normalizePath(href: string): string {
+  let path = href;
+  try {
+    path = new URL(href, window.location.origin).pathname;
+  } catch {
+    /* relative fragment or malformed — compare as-is */
+  }
+  return path !== "/" ? path.replace(/\/$/, "") : path;
 }
+
+function isCurrent(href: string): boolean {
+  if (currentPath.value === "") return false;
+  return normalizePath(href) === normalizePath(currentPath.value);
+}
+
+// Close the mobile menu whenever a client navigation commits.
+watch(
+  () => location.path,
+  () => {
+    isMenuOpen.value = false;
+  },
+);
 </script>
 
 <template>
@@ -68,10 +98,130 @@ function isCurrent(href: string): boolean {
     class="site-header sticky top-0 z-100 bg-brand-red shadow-header [.admin-bar_&]:top-[var(--wp-admin--admin-bar--height,32px)]"
     data-tone="red"
   >
+    <!-- ============ MOBILE (base → md): logo + hamburger + drop panel ============ -->
+    <div class="md:hidden">
+      <div
+        class="mx-auto flex min-h-14 max-w-[1220px] items-center justify-between gap-3 px-4 py-2.5"
+      >
+        <a
+          :href="homeUrl"
+          aria-label="RGV DSA home"
+          class="flex flex-none items-center"
+        >
+          <img
+            :src="logoUrl"
+            alt="Rio Grande Valley Democratic Socialists of America"
+            class="block h-10 w-auto"
+            width="931"
+            height="358"
+          />
+        </a>
+        <button
+          type="button"
+          class="flex size-11 cursor-pointer items-center justify-center rounded-[10px] border-2 border-white/65 bg-transparent text-white hover:bg-[rgba(28,25,23,0.18)]"
+          :aria-expanded="isMenuOpen"
+          aria-controls="mobile-menu-panel"
+          aria-label="Menu"
+          @click="isMenuOpen = !isMenuOpen"
+        >
+          <X v-if="isMenuOpen" class="size-6" />
+          <Menu v-else class="size-6" />
+        </button>
+      </div>
+
+      <nav
+        v-show="isMenuOpen"
+        id="mobile-menu-panel"
+        aria-label="Main"
+        class="flex flex-col border-t border-pink bg-white shadow-[0_18px_30px_rgba(28,25,23,0.25)]"
+      >
+        <a
+          v-for="item in flatNav"
+          :key="item.label"
+          :href="item.href"
+          class="border-b border-hairline px-5 py-[15px] font-display text-[1.05rem] font-bold text-ink no-underline hover:bg-tint hover:text-red"
+          :aria-current="isCurrent(item.href) ? 'page' : undefined"
+        >
+          {{ item.label }}
+        </a>
+        <div class="flex items-center justify-between gap-3 px-5 py-3.5">
+          <LanguageToggle :es-enabled="esEnabled" :es-url="esUrl" />
+          <A11yWidget />
+        </div>
+        <div class="px-5 pb-5 pt-1">
+          <a
+            :href="joinUrl"
+            target="_blank"
+            rel="noopener"
+            class="block rounded-full bg-red px-6 py-3.5 text-center text-base font-bold text-white no-underline hover:bg-red-hover"
+          >
+            Join DSA
+          </a>
+        </div>
+      </nav>
+    </div>
+
+    <!-- ============ TABLET (md → lg): two-tier, red nav strip ============ -->
+    <div class="hidden md:block lg:hidden">
+      <div
+        class="mx-auto flex min-h-[60px] max-w-[1220px] items-center justify-between gap-4 px-7 py-2.5"
+      >
+        <a
+          :href="homeUrl"
+          aria-label="RGV DSA home"
+          class="flex flex-none items-center"
+        >
+          <img
+            :src="logoUrl"
+            alt="Rio Grande Valley Democratic Socialists of America"
+            class="block h-[46px] w-auto"
+            width="931"
+            height="358"
+          />
+        </a>
+        <div class="flex items-center gap-2.5">
+          <LanguageToggle :es-enabled="esEnabled" :es-url="esUrl" />
+          <A11yWidget />
+          <a
+            :href="joinUrl"
+            target="_blank"
+            rel="noopener"
+            class="rounded-full bg-white px-5 py-2.5 text-[0.95rem] font-bold text-red no-underline hover:text-red-hover hover:shadow-[0_0_0_3px_rgba(28,25,23,0.25)]"
+          >
+            Join DSA
+          </a>
+        </div>
+      </div>
+      <nav
+        aria-label="Main"
+        class="flex items-center justify-center gap-1 bg-red px-4 py-0.5"
+      >
+        <a
+          v-for="item in flatNav"
+          :key="item.label"
+          :href="item.href"
+          class="rounded-[10px] px-[18px] py-[11px] font-display text-base font-bold text-white no-underline hover:bg-[rgba(28,25,23,0.22)]"
+          :class="
+            isCurrent(item.href)
+              ? 'underline decoration-2 underline-offset-[6px]'
+              : ''
+          "
+          :aria-current="isCurrent(item.href) ? 'page' : undefined"
+        >
+          {{ item.label }}
+        </a>
+      </nav>
+    </div>
+
+    <!-- ============ DESKTOP (lg+): single row, About▾ hover dropdown ============ -->
     <div
-      class="mx-auto flex min-h-[64px] max-w-[1220px] flex-wrap items-center justify-between gap-6 px-6 py-2.5"
+      class="mx-auto hidden min-h-[64px] max-w-[1220px] flex-wrap items-center justify-between gap-6 px-6 py-2.5 lg:flex"
     >
-      <a :href="homeUrl" aria-label="RGV DSA home" class="flex flex-none items-center">
+      <a
+        :href="homeUrl"
+        aria-label="RGV DSA home"
+        class="flex flex-none items-center"
+      >
         <img
           :src="logoUrl"
           alt="Rio Grande Valley Democratic Socialists of America"
@@ -81,7 +231,7 @@ function isCurrent(href: string): boolean {
         />
       </a>
 
-      <nav aria-label="Main" class="hidden items-center gap-0.5 lg:flex">
+      <nav aria-label="Main" class="flex items-center gap-0.5">
         <DropdownMenu>
           <DropdownMenuTrigger
             :class="`cursor-pointer border-0 bg-transparent ${navLinkClass}`"
@@ -90,7 +240,7 @@ function isCurrent(href: string): boolean {
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
-            class="min-w-[256px] rounded-[14px] border-none bg-white p-2 shadow-popover"
+            class="z-[200] min-w-[256px] rounded-[14px] border-none bg-white p-2 shadow-popover"
           >
             <DropdownMenuItem
               v-for="item in aboutItems"
@@ -111,7 +261,12 @@ function isCurrent(href: string): boolean {
           v-for="item in navItems"
           :key="item.label"
           :href="item.href"
-          :class="[navLinkClass, isCurrent(item.href) ? 'underline decoration-[3px] underline-offset-[6px]' : '']"
+          :class="[
+            navLinkClass,
+            isCurrent(item.href)
+              ? 'underline decoration-[3px] underline-offset-[6px]'
+              : '',
+          ]"
           :aria-current="isCurrent(item.href) ? 'page' : undefined"
         >
           {{ item.label }}
@@ -119,86 +274,16 @@ function isCurrent(href: string): boolean {
       </nav>
 
       <div class="flex flex-wrap items-center gap-2.5">
-        <div
-          role="group"
-          aria-label="Language"
-          class="hidden items-center gap-0.5 rounded-full bg-white p-[3px] text-[0.8rem] font-bold tracking-[0.04em] sm:flex"
-        >
-          <span class="rounded-full bg-red px-3 py-1 text-white">EN</span>
-          <a
-            v-if="esEnabled && esUrl"
-            :href="esUrl"
-            lang="es"
-            class="rounded-full px-3 py-1 text-red no-underline hover:bg-tint"
-            >ES</a
-          >
-          <span
-            v-else
-            lang="es"
-            class="rounded-full px-3 py-1 text-red/55"
-            title="Español — próximamente"
-            >ES</span
-          >
-        </div>
-
+        <LanguageToggle :es-enabled="esEnabled" :es-url="esUrl" />
         <A11yWidget />
-
         <a
           :href="joinUrl"
           target="_blank"
           rel="noopener"
-          class="hidden rounded-full bg-white px-[22px] py-2.5 text-[0.95rem] font-bold text-red no-underline hover:text-red-hover hover:shadow-[0_0_0_3px_rgba(28,25,23,0.25)] sm:block"
+          class="rounded-full bg-white px-[22px] py-2.5 text-[0.95rem] font-bold text-red no-underline hover:text-red-hover hover:shadow-[0_0_0_3px_rgba(28,25,23,0.25)]"
         >
           Join DSA
         </a>
-
-        <!-- Mobile menu -->
-        <Sheet>
-          <SheetTrigger
-            class="flex cursor-pointer items-center rounded-[10px] bg-transparent p-2 text-white hover:bg-[rgba(28,25,23,0.18)] lg:hidden"
-            aria-label="Open menu"
-          >
-            <Menu class="size-5" />
-          </SheetTrigger>
-          <SheetContent side="right" class="w-80">
-            <SheetHeader>
-              <SheetTitle>Menu</SheetTitle>
-            </SheetHeader>
-            <nav aria-label="Mobile" class="flex flex-col gap-1 px-4">
-              <div
-                class="px-2 pb-1 pt-3 font-display text-xs font-bold uppercase tracking-[0.12em] text-text-muted"
-              >
-                About
-              </div>
-              <a
-                v-for="item in aboutItems"
-                :key="item.label"
-                :href="item.href"
-                class="rounded-[10px] px-2 py-2 font-display text-base font-semibold text-ink no-underline hover:bg-tint hover:text-red"
-              >
-                {{ item.label }}
-              </a>
-              <div class="my-2 border-t border-hairline" />
-              <a
-                v-for="item in navItems"
-                :key="item.label"
-                :href="item.href"
-                class="rounded-[10px] px-2 py-2 font-display text-base font-semibold text-ink no-underline hover:bg-tint hover:text-red"
-                :aria-current="isCurrent(item.href) ? 'page' : undefined"
-              >
-                {{ item.label }}
-              </a>
-              <a
-                :href="joinUrl"
-                target="_blank"
-                rel="noopener"
-                class="mt-4 rounded-full bg-red px-5 py-3 text-center text-[0.95rem] font-bold text-white no-underline hover:bg-red-hover"
-              >
-                Join DSA
-              </a>
-            </nav>
-          </SheetContent>
-        </Sheet>
       </div>
     </div>
   </header>

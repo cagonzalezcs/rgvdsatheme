@@ -74,6 +74,15 @@ add_action(
 						'type'  => 'url',
 					),
 					array(
+						'key'           => 'field_rgvdsa_options_default_share_image',
+						'label'         => 'Default share image',
+						'name'          => 'default_share_image',
+						'type'          => 'image',
+						'return_format' => 'id',
+						'preview_size'  => 'medium',
+						'instructions'  => 'Shown in link previews (social, messengers) when content has no featured image. Falls back to the theme logo.',
+					),
+					array(
 						'key'           => 'field_rgvdsa_options_es_enabled',
 						'label'         => 'Spanish site enabled',
 						'name'          => 'es_enabled',

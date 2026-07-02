@@ -19,7 +19,7 @@ withDefaults(
 
 <template>
   <section
-    class="page-header bg-brand-red px-6 pb-14 pt-12 text-white"
+    class="page-header bg-brand-red px-4 pb-10 pt-9 text-white md:px-6 md:pb-13 md:pt-12 lg:pb-14"
     data-tone="red"
   >
     <div class="mx-auto flex max-w-[1140px] flex-col items-start gap-[18px]">
@@ -44,7 +44,7 @@ withDefaults(
       >
         {{ title }}
       </h1>
-      <p v-if="lede" class="m-0 max-w-[48ch] text-[1.5rem] leading-[1.5]">
+      <p v-if="lede" class="m-0 max-w-[48ch] text-[1.02rem] leading-[1.5] md:text-[1.2rem] lg:text-[1.5rem]">
         {{ lede }}
       </p>
     </div>

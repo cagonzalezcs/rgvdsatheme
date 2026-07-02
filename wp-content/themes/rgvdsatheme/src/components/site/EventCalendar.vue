@@ -111,7 +111,7 @@ const selectedEvent = computed(
 
 <template>
   <div class="event-calendar">
-    <section class="bg-white px-6 pt-10" data-tone="cream">
+    <section class="bg-white px-4 pt-10 md:px-6" data-tone="cream">
       <div class="mx-auto flex max-w-[1200px] flex-col gap-5">
         <div class="flex flex-wrap items-center justify-between gap-5">
           <div class="flex items-stretch overflow-hidden rounded-[12px] bg-white shadow-card">
@@ -139,7 +139,8 @@ const selectedEvent = computed(
             </button>
           </div>
 
-          <div role="group" aria-label="View" class="flex gap-1 rounded-full bg-off-white p-1">
+          <!-- Month/List toggle is md+ only; mobile is agenda-list-only (05 §4 Calendar) -->
+          <div role="group" aria-label="View" class="hidden gap-1 rounded-full bg-off-white p-1 md:flex">
             <button
               type="button"
               :aria-pressed="view === 'month'"
@@ -185,18 +186,23 @@ const selectedEvent = computed(
     </section>
 
     <!-- Skeleton while the window loads -->
-    <section v-if="loading" class="bg-white px-6 pb-12 pt-6" data-tone="cream">
+    <section v-if="loading" class="bg-white px-4 pb-12 pt-6 md:px-6" data-tone="cream">
       <div aria-hidden="true" class="mx-auto max-w-[1200px]">
         <div class="h-11 animate-pulse rounded-t-[12px] bg-ink/10"></div>
-        <div class="grid grid-cols-7 gap-px pt-px">
-          <div v-for="n in 35" :key="n" class="h-20 animate-pulse bg-tint"></div>
+        <!-- mobile: stacked agenda rows -->
+        <div class="flex flex-col gap-2 pt-2 md:hidden">
+          <div v-for="n in 5" :key="`m${n}`" class="h-16 animate-pulse rounded-[12px] bg-tint"></div>
+        </div>
+        <!-- md+: month grid -->
+        <div class="hidden grid-cols-7 gap-px pt-px md:grid">
+          <div v-for="n in 35" :key="`g${n}`" class="h-20 animate-pulse bg-tint"></div>
         </div>
       </div>
       <p role="status" class="mx-auto mt-3.5 max-w-[1200px] text-[0.9rem] text-text-muted">Loading events…</p>
     </section>
 
     <!-- Error state: the calendar feed keeps working even when the API doesn't -->
-    <section v-else-if="failed" class="bg-white px-6 pb-12 pt-6" data-tone="cream">
+    <section v-else-if="failed" class="bg-white px-4 pb-12 pt-6 md:px-6" data-tone="cream">
       <div class="mx-auto max-w-[900px]">
         <div class="flex flex-col items-center gap-2.5 rounded-[16px] border-2 border-dashed border-border-control px-8 py-14 text-center">
           <div class="font-display text-[1.25rem] font-bold">We couldn&rsquo;t load the calendar</div>
@@ -217,7 +223,7 @@ const selectedEvent = computed(
     </section>
 
     <!-- Designed empty state (island-empty-states) -->
-    <section v-else-if="events.length === 0" class="bg-white px-6 pb-12 pt-6" data-tone="cream">
+    <section v-else-if="events.length === 0" class="bg-white px-4 pb-12 pt-6 md:px-6" data-tone="cream">
       <div class="mx-auto max-w-[900px]">
         <div class="flex flex-col items-center gap-2.5 rounded-[16px] border-2 border-dashed border-border-control px-8 py-14 text-center">
           <div class="font-display text-[1.25rem] font-bold">No events scheduled</div>
@@ -228,8 +234,18 @@ const selectedEvent = computed(
       </div>
     </section>
 
-    <section v-else-if="view === 'month'" class="bg-white px-6 pb-12 pt-6" data-tone="cream">
-      <div class="mx-auto max-w-[1200px]">
+    <section v-else class="bg-white px-4 pb-12 pt-6 md:px-6" data-tone="cream">
+      <!-- Mobile (<md): agenda list only — the month grid doesn't survive 320px (05 §4) -->
+      <div class="mx-auto max-w-[900px] md:hidden">
+        <EventListView
+          :events="monthEvents"
+          :show-category-colors="showCategoryColors"
+          @select="selectedId = $event"
+        />
+      </div>
+
+      <!-- Tablet+ (md): month grid or list per the toggle -->
+      <div v-if="view === 'month'" class="mx-auto hidden max-w-[1200px] md:block">
         <MonthGrid
           :year="visibleMonth.year"
           :month="visibleMonth.month"
@@ -241,10 +257,7 @@ const selectedEvent = computed(
           Select an event for details, location, and how to RSVP.
         </p>
       </div>
-    </section>
-
-    <section v-else class="bg-white px-6 pb-12 pt-6" data-tone="cream">
-      <div class="mx-auto max-w-[900px]">
+      <div v-else class="mx-auto hidden max-w-[900px] md:block">
         <EventListView
           :events="monthEvents"
           :show-category-colors="showCategoryColors"
@@ -259,8 +272,8 @@ const selectedEvent = computed(
       @close="selectedId = null"
     />
 
-    <section v-if="showSubscribe" class="bg-ink px-6 py-14 text-white" data-tone="ink">
-      <div class="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-8">
+    <section v-if="showSubscribe" class="bg-ink px-4 py-14 text-white md:px-6" data-tone="ink">
+      <div class="mx-auto flex max-w-[1200px] flex-col gap-6 md:flex-row md:flex-wrap md:items-center md:justify-between md:gap-8">
         <div class="flex max-w-[56ch] flex-col gap-2">
           <h2 class="m-0 font-display text-[1.6rem] font-extrabold tracking-[-0.01em]">Never miss a meeting</h2>
           <p class="m-0 text-base leading-[1.65] text-muted-on-ink">
