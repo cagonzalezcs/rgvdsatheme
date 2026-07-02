@@ -1,9 +1,3 @@
-{# This file demonstrates using most of the index.twig template and modifying 
-   just a small part. See `search.twig` for an example of another approach #}
-
+{# Category/date archives render the same BlogArchive island as the blog home;
+   the island reads ?category= from the URL. Real WP_Query wiring is Phase 6. #}
 {% extends "index.twig" %}
-
-{% block content %}
-  <h3>This is my archive</h3>
-  {{ parent() }}
-{% endblock %}

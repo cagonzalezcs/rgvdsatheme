@@ -224,3 +224,9 @@
   padding: 0.25em 0 0.25em 1.25em;
   color: var(--color-muted-on-cream);
 }
+
+/* Blog post prose blocks run larger than interior-page prose */
+.prose-post {
+  font-size: 1.15rem;
+  line-height: 1.8;
+}

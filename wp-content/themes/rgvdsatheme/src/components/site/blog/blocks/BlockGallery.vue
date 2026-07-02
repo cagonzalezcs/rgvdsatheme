@@ -1,0 +1,27 @@
+<script setup lang="ts">
+import ImageSlot from "@/components/site/blog/ImageSlot.vue";
+import { type PostImage } from "@/lib/posts";
+
+defineProps<{
+  layout: "essay" | "grid";
+  images: PostImage[];
+}>();
+</script>
+
+<template>
+  <div class="block-gallery grid w-full grid-cols-1 gap-4 sm:grid-cols-2">
+    <figure
+      v-for="(img, i) in images"
+      :key="i"
+      class="m-0 flex flex-col border-[3px] border-ink bg-white"
+      :class="layout === 'essay' && i === 0 ? 'sm:col-span-2' : ''"
+    >
+      <div :class="layout === 'essay' && i === 0 ? 'h-[clamp(220px,34vw,360px)]' : 'h-[clamp(180px,24vw,280px)]'">
+        <ImageSlot :src="img.src" :alt="img.alt" :label="layout === 'essay' && i === 0 ? 'Wide photo' : 'Photo'" />
+      </div>
+      <figcaption v-if="img.caption" class="border-t-2 border-ink bg-white px-3.5 py-2.5 text-[0.85rem] text-muted-on-cream">
+        {{ img.caption }}
+      </figcaption>
+    </figure>
+  </div>
+</template>

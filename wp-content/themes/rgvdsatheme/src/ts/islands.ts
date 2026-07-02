@@ -15,6 +15,8 @@ const registry: Record<string, () => Promise<{ default: Component }>> = {
   PageHeader: () => import("@/components/site/PageHeader.vue"),
   FaqAccordion: () => import("@/components/site/FaqAccordion.vue"),
   EventCalendar: () => import("@/components/site/EventCalendar.vue"),
+  BlogArchive: () => import("@/components/site/blog/BlogArchive.vue"),
+  SinglePost: () => import("@/components/site/blog/SinglePost.vue"),
 };
 
 export function mountIslands(root: ParentNode = document): void {

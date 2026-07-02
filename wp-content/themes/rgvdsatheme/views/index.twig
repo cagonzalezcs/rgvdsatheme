@@ -1,11 +1,22 @@
 {% extends "base.twig" %}
 
-{% block content %}
-	<h2>The Rio Grande Valley Democratic Socialists of America Chapter</h2>
-	<p>{{ qux }}</p>
-	{% for post in posts %}
-		{% include ['tease-'~post.post_type~'.twig', 'tease.twig'] %}
-	{% endfor %}
+{#
+  Blog archive (posts page). One BlogArchive island serves browse, category
+  filter, and search states; index/category/search templates all land here.
+  Posts are the prototype fixture (default prop inside the island) until
+  Phase 6 passes a Timber query via data-props, e.g. posts: posts_json.
+#}
 
-	{% include 'partial/pagination.twig' with { pagination: posts.pagination({show_all: false, mid_size: 3, end_size: 2}) } %}
+{% block content %}
+	{% set page_header_props = {
+		title: 'Chapter Blog',
+		lede: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+		crumbs: [{ label: 'Home', href: '/' }]
+	} %}
+	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
+
+	{% set archive_props = {
+		showSubscribe: true
+	} %}
+	<div data-vue-island="BlogArchive" data-props='{{ archive_props|json_encode|e("html_attr") }}'></div>
 {% endblock %}
