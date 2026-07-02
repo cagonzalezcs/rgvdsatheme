@@ -49,6 +49,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Toggle } from "@/components/ui/toggle";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import OverlaySections from "@/components/site/styleguide/OverlaySections.vue";
+import DataSections from "@/components/site/styleguide/DataSections.vue";
 
 const brandColors = [
   { name: "brand-red", hex: "#E9252E", class: "bg-brand-red" },
@@ -498,6 +500,12 @@ const sampleEvents = [
         <ToggleGroupItem value="list">List</ToggleGroupItem>
       </ToggleGroup>
     </section>
+
+    <!-- Batch B: overlays & nav -->
+    <OverlaySections />
+
+    <!-- Batch C: data & complex -->
+    <DataSections />
 
     <!-- Tone bands (a11y high-contrast hooks) -->
     <section :id="'sg-tones'" class="mb-16">
