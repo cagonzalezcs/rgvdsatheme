@@ -44,7 +44,7 @@ const segmentClass =
     role="group"
     aria-label="Language"
     :class="[
-      'flex items-center gap-0.5 rounded-full p-[3px]',
+      'notranslate flex items-center gap-0.5 rounded-full p-[3px]',
       onLight ? 'bg-off-white' : 'bg-white',
     ]"
   >

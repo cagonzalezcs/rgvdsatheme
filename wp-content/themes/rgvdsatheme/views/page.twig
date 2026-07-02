@@ -74,7 +74,7 @@
 						{% if grievance_body|default('') %}
 							<div class="prose-rgv text-base leading-[1.7] text-text-body">{{ grievance_body|raw }}</div>
 						{% else %}
-							<p class="m-0 text-base leading-[1.7] text-text-body">Our grievance officers are here for you. Reports are handled confidentially, and you can always bring a support person.{% if chapter.contact_email %} Email <a href="mailto:{{ chapter.contact_email }}" class="font-bold text-red hover:underline hover:underline-offset-[3px]">{{ chapter.contact_email }}</a> or speak to any grievance officer at a meeting.{% else %} Speak to any grievance officer at a meeting.{% endif %}</p>
+							<p class="m-0 text-base leading-[1.7] text-text-body">Our grievance officers are here for you. Reports are handled confidentially, and you can always bring a support person.{% if chapter.contact_email %} Email <a href="mailto:{{ chapter.contact_email }}" class="notranslate font-bold text-red hover:underline hover:underline-offset-[3px]">{{ chapter.contact_email }}</a> or speak to any grievance officer at a meeting.{% else %} Speak to any grievance officer at a meeting.{% endif %}</p>
 						{% endif %}
 					</aside>
 				{% endif %}
@@ -100,7 +100,7 @@
 
 				<div class="flex flex-col gap-3 rounded-[16px] bg-ink p-6 text-white" data-tone="ink">
 					<div class="font-display text-[0.98rem] font-bold">New here?</div>
-					<p class="m-0 text-[0.9rem] leading-[1.6] text-muted-on-ink">Come to an RGV-DSA 101 &mdash; our intro session for new and curious folks.</p>
+					<p class="m-0 text-[0.9rem] leading-[1.6] text-muted-on-ink">Come to an <span class="notranslate">RGV-DSA 101</span> &mdash; our intro session for new and curious folks.</p>
 					<a href="/calendar/" class="self-start rounded-full bg-white px-[18px] py-[9px] text-[0.88rem] font-bold text-ink no-underline transition-colors hover:bg-pink">Find a session</a>
 				</div>
 			</aside>

@@ -215,7 +215,7 @@ watch(
 
     <!-- ============ DESKTOP (lg+): single row, About▾ hover dropdown ============ -->
     <div
-      class="mx-auto hidden min-h-[64px] max-w-[1220px] flex-wrap items-center justify-between gap-6 px-6 py-2.5 lg:flex"
+      class="mx-auto hidden min-h-[64px] max-w-[1380px] items-center justify-between gap-6 px-6 py-2.5 lg:flex"
     >
       <a
         :href="homeUrl"
@@ -240,7 +240,7 @@ watch(
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
-            class="notranslate z-[200] min-w-[256px] rounded-[14px] border-none bg-white p-2 shadow-popover"
+            class="z-[200] min-w-[256px] rounded-[14px] border-none bg-white p-2 shadow-popover"
           >
             <DropdownMenuItem
               v-for="item in aboutItems"

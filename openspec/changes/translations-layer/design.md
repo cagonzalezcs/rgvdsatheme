@@ -23,8 +23,11 @@ In-place revert can leave `<font>` wrapper artifacts in the DOM. Expiring the co
 ### D3: SPA standdown while ES preference is set
 `navigation.ts` returns early from click interception (and prefetch) when `rgvdsa_lang=es`. One rule covers both failure modes: home→inner (MutationObserver would translate swapped EN content and race island mounts) and inner→home (a swap can't add the gtranslate scripts). Alternative considered: retranslate-on-swap hook — rejected as racy and dependent on Google internals. Because interception never happens under ES, `popstate` needs no special handling. `syncHead()` also syncs `data-translation-scope` so an EN user who SPA-navigates onto home can still flip ES (fallback path in D6 covers missing scripts).
 
-### D4: Chrome is `notranslate`; content islands are not
-`notranslate` on the SiteHeader/SiteFooter mount wrappers and on the portaled `DropdownMenuContent` (reka-ui portals it to `<body>`, escaping the wrapper) means Google never touches Vue-managed DOM on home. Consequence, explicit: nav/footer labels stay EN in v1 — a follow-up can add native ES strings driven by the existing reactive `language` ref (higher quality than machine translation). Content-island mounts (BlogArchive/SinglePost/etc.) stay translatable; when the gate lifts, their ES should come from data/props (REST-side fields), not DOM machine translation.
+### D4: Chrome translates except the language toggle (revised during apply)
+Originally all chrome was `notranslate`; per user direction the header and footer islands now translate — their labels are static text nodes Vue never re-patches after mount, so Google's `<font>` wrapping is reconciliation-safe. The LanguageToggle carries its own `notranslate` (EN/ES are language codes, not copy). Dynamically mounted chrome (mobile panel, portaled About dropdown) appears in EN and is translated a beat later by Google's MutationObserver — accepted. Content-island mounts (BlogArchive/SinglePost/etc.) stay translatable; when the gate lifts, their ES should come from data/props (REST-side fields), not DOM machine translation.
+
+### D4b: The theme must never pre-set `<html lang>` to the preference
+Found during apply: `useLanguagePreference` used to set `document.documentElement.lang = 'es'` on load/flip. Google's element then saw source language == target language and silently no-opped the entire translation (it still added `translated-ltr`). The composable now only writes the cookie; Google owns `<html lang>` while translating.
 
 ### D5: Inner-page toggle stays an interactive preference recorder
 Disabling the switch off-home would make the preference un-settable anywhere but home. It keeps writing `rgvdsa_lang`; tooltip copy changes from "próximamente" to "Español — disponible en la página de inicio" so scope is stated honestly.
@@ -54,7 +57,7 @@ Additive: ship gate + bridge behind the existing `es_enabled` option (default of
 
 ## Open Questions
 
-1. Chrome EN-only in v1 — acceptable, or add native ES nav/footer strings now?
+1. Machine-translated chrome is v1 — add native ES nav/footer strings later for quality?
 2. "Democratic Socialists of America" full name notranslate, or let it translate?
 3. Gate lift surface: filter only, or add per-page ACF "translation ready" field now?
 4. `es_url` ACF option obsolete under cookie approach — remove or keep dormant?

@@ -25,8 +25,10 @@
 			{% set header_props = header_props|merge({ navItems: header_nav_items }) %}
 		{% endif %}
 		{# `contents` removes the wrapper's box so the sticky <header> inside sticks against the body scroll, not this div.
-		   `notranslate`: Google Translate must never mutate Vue-managed DOM (chrome stays EN in v1). #}
-		<div class="contents notranslate" data-vue-island="SiteHeader" data-props='{{ header_props|json_encode|e("html_attr") }}'></div>
+		   The header island translates (nav labels are static text nodes Vue never
+		   re-patches, so Google's <font> wrapping is safe); the LanguageToggle inside
+		   carries its own notranslate — EN/ES are language codes, not copy. #}
+		<div class="contents" data-vue-island="SiteHeader" data-props='{{ header_props|json_encode|e("html_attr") }}'></div>
 
 		<main id="main" class="site-main">
 			{% block content %}
@@ -45,7 +47,8 @@
 			{% if chapter.contact_email %}
 				{% set footer_props = footer_props|merge({ contactEmail: chapter.contact_email }) %}
 			{% endif %}
-			<div class="notranslate" data-vue-island="SiteFooter" data-props='{{ footer_props|json_encode|e("html_attr") }}'></div>
+			{# Footer translates like the header — static text nodes, reconciliation-safe. #}
+			<div data-vue-island="SiteFooter" data-props='{{ footer_props|json_encode|e("html_attr") }}'></div>
 			{% if translation.active %}
 				{# GTranslate bootstrap: the hidden gt-link makes the plugin enqueue its
 				   own base.js + settings blob (no widget UI, no forked plugin code).

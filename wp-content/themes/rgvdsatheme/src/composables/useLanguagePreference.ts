@@ -20,19 +20,18 @@ export function readLanguageCookie(): Lang {
   return match ? (match[1] as Lang) : "en";
 }
 
-// Persist the preference (cookie) and flip the document language flag. Per the design
-// handoff, toggling language sets document.documentElement.lang even though Spanish
-// content does not exist yet — it is a flag-flip a future translation can honor.
+// Persist the preference (cookie only). Deliberately does NOT touch
+// document.documentElement.lang: Google's translate element owns <html lang>
+// while translating, and pre-setting it to "es" makes Google treat the (still
+// English) page as already Spanish — a source==target no-op that silently
+// disables translation. See src/ts/translation.ts.
 function apply(lang: Lang): void {
   if (typeof document === "undefined") return;
   document.cookie = `${COOKIE_NAME}=${lang}; path=/; max-age=${MAX_AGE}; samesite=lax`;
-  document.documentElement.lang = lang;
 }
 
 const language = ref<Lang>(readLanguageCookie());
 
-// Sync the persisted preference to <html lang> on first load, then on every change.
-apply(language.value);
 watch(language, apply);
 
 export function useLanguagePreference() {

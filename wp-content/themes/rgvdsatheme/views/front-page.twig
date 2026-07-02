@@ -55,7 +55,7 @@
 						{{ hero.cta_secondary_label }}
 					</a>
 				</div>
-				<span class="rounded-full bg-[rgba(28,25,23,0.85)] px-[18px] py-2 text-[0.95rem]">New here? Start with <strong>RGV-DSA 101</strong> — no experience needed.</span>
+				<span class="rounded-full bg-[rgba(28,25,23,0.85)] px-[18px] py-2 text-[0.95rem]">New here? Start with <strong class="notranslate">RGV-DSA 101</strong> — no experience needed.</span>
 			</div>
 			<img src="{{ site.theme.link }}/static/images/logos/logo-lg.png" alt="" aria-hidden="true"
 				class="mx-auto block h-auto w-full max-w-[150px] md:max-w-[190px] md:flex-[1_1_360px] lg:max-w-[800px]">
@@ -67,7 +67,7 @@
 		<section id="counties" class="counties-strip bg-ink px-4 py-5 text-white md:px-6" data-tone="ink" aria-label="Communities we serve">
 			<div class="mx-auto flex max-w-[1200px] flex-wrap justify-center gap-x-[18px] gap-y-2 font-display text-[0.75rem] font-bold uppercase tracking-[0.05em] md:text-[0.92rem]">
 				{% for county in counties %}
-					<span>{{ county }}</span>{% if not loop.last %}<span aria-hidden="true" class="text-brand-red">★</span>{% endif %}
+					<span class="notranslate">{{ county }}</span>{% if not loop.last %}<span aria-hidden="true" class="text-brand-red">★</span>{% endif %}
 				{% endfor %}
 			</div>
 		</section>
@@ -78,7 +78,7 @@
 		<div class="mx-auto grid max-w-[1140px] grid-cols-1 items-center gap-10 md:gap-16 md:[grid-template-columns:minmax(300px,1.1fr)_minmax(280px,0.9fr)]">
 			<div class="flex flex-col gap-5">
 				<div class="text-[0.82rem] font-bold uppercase tracking-[0.14em] text-red">Who we are</div>
-				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">We are DSA-RGV</h2>
+				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">We are <span class="notranslate">DSA-RGV</span></h2>
 				<p class="m-0 text-[1.08rem] leading-[1.75] text-text-body">
 					The RGV is one of the most economically unequal regions in the country — but it doesn&rsquo;t have to stay that way. As democratic socialists, we&rsquo;re building working-class power to challenge the dominance of the wealthy and the powerful across our border communities.
 				</p>
@@ -213,7 +213,7 @@
 				<span class="text-[0.95rem] font-bold text-muted-on-ink">Follow along:</span>
 				<a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener"
 					class="w-full rounded-full bg-white px-[22px] py-2.5 text-center text-[0.95rem] font-bold text-ink no-underline transition-colors hover:bg-pink md:w-auto">
-					Instagram @dsa_rgv
+					Instagram <span class="notranslate">@dsa_rgv</span>
 				</a>
 				<a href="mailto:{{ chapter.contact_email }}"
 					class="w-full rounded-full border-2 border-[#57534e] px-[21px] py-[9px] text-center text-[0.95rem] font-bold text-white no-underline transition-colors hover:border-white md:w-auto">

@@ -128,6 +128,22 @@ php -d error_reporting=0 -d display_errors=0 \
   eval-file wp-content/themes/rgvdsatheme/bin/seed.php
 ```
 
+## Translations (EN/ES)
+
+Home-only machine translation via the GTranslate plugin (free tier — client-side Google Translate, no `/es/` URLs). The header EN/ES toggle drives it.
+
+**Gate:** `inc/translation.php` — active when the Chapter Settings **Spanish site enabled** option is on AND `is_front_page()`. To extend translation to inner pages, hook `rgvdsa/translation/active` (or lift the `is_front_page()` predicate). Pages where the gate is off ship zero gtranslate assets — a stale cookie is inert.
+
+**Flow:** `base.twig` renders a hidden `[gt-link]` shortcode on active pages → plugin enqueues its `base.js` (defines `window.doGTranslate`, hides Google's UI). `src/ts/translation.ts` bridges the toggle: ES loads Google's `element.js` and fires `doGTranslate('en|es')` in place; EN expires the `googtrans` cookie variants and reloads (avoids `<font>` artifacts).
+
+**Cookie contract:** `rgvdsa_lang` (theme, authoritative) · `googtrans` (Google, derived). While the ES preference is set, the client-nav layer (`src/ts/navigation.ts`) stands down — full page loads only.
+
+**notranslate policy:** identifiers only (county names, `@dsa_rgv`, emails, "RGV DSA" tokens) plus the LanguageToggle (EN/ES are codes). Header and footer islands translate. Content-island mounts must stay translatable — future inner-page ES should come from data/props, not DOM machine translation.
+
+**Pinned plugin config** (`GTranslate` option, seeded by `bin/seed.php`): `default_language: en`, languages `en,es` only, `detect_browser_language` OFF (it fights the toggle), no widget placement.
+
+**Gotchas:** never pre-set `<html lang>` from the preference — Google then treats the page as already Spanish and silently skips translation (Google owns `<html lang>` while translating). Rapid automated flip/reload cycles trip Google's rate limiting (`element.js` → 503 + `/sorry/` interstitial); it clears on its own.
+
 ## Design reference
 
 The design handoff (specs, tokens, HTML prototypes) lives at the site root in `design_handoff_rgvdsa_vue/` — `03-DESIGN-SPEC.md` is the visual source of truth.
