@@ -24,6 +24,13 @@ export default defineConfig(({ mode }) => {
         "@": resolve(import.meta.dirname, "src"),
       },
     },
+    build: {
+      // The Styleguide island is a lazy dynamic import (src/ts/islands.ts) that
+      // pulls in the whole shadcn-vue demo library (~586 kB). It only loads on
+      // /styleguide — never on real pages — so the default 500 kB warning is
+      // cosmetic here. Raise the limit rather than split a dev-only chunk.
+      chunkSizeWarningLimit: 700,
+    },
     server: {
       host: env.VITE_LOCAL_DEV_HOST || "localhost",
       port: env.VITE_LOCAL_DEV_PORT || 3000,

@@ -127,7 +127,11 @@ function isCurrent(href: string): boolean {
             class="px-2.5 py-[5px] text-cream no-underline hover:bg-cream hover:text-brand-red"
             >ES</a
           >
-          <span v-else class="px-2.5 py-[5px] text-cream opacity-65" title="Español — próximamente"
+          <span
+            v-else
+            lang="es"
+            class="px-2.5 py-[5px] text-cream opacity-65"
+            title="Español — próximamente"
             >ES</span
           >
         </div>

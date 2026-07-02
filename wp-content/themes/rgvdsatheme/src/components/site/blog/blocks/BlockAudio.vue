@@ -39,6 +39,8 @@ const totalLabel = computed(() =>
 
 <template>
   <div class="block-audio flex w-[min(74ch,100%)] flex-col gap-3.5 border-[3px] border-ink bg-white px-[26px] py-[22px]">
+    <!-- Audio-only: WCAG wants a transcript (the "Read transcript" link below), not a video caption track. -->
+    <!-- eslint-disable-next-line vuejs-accessibility/media-has-caption -->
     <audio
       v-if="file"
       ref="audioEl"

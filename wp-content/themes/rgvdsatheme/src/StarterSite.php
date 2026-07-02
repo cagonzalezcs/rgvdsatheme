@@ -12,6 +12,8 @@ class StarterSite extends Site {
 		add_action( 'init', array( $this, 'register_post_types' ) );
 		add_action( 'init', array( $this, 'register_taxonomies' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'theme_enqueue_scripts' ) );
+		// Preload above-the-fold fonts before the stylesheet prints (wp_print_styles is priority 8).
+		add_action( 'wp_head', array( $this, 'preload_fonts' ), 2 );
 
 		add_filter( 'timber/context', array( $this, 'add_to_context' ) );
 		add_filter( 'timber/twig', array( $this, 'add_to_twig' ) );
@@ -278,5 +280,46 @@ class StarterSite extends Site {
                 'in-footer' => true,
             ]
         );
+    }
+
+    /**
+     * Emit <link rel="preload"> for the above-the-fold font faces so the
+     * browser fetches them in parallel with the stylesheet instead of
+     * discovering them only after the CSS parses.
+     *
+     * Vite content-hashes the filenames (they change every build), so the
+     * hashed paths are resolved from dist/manifest.json rather than hard-coded.
+     * Preload only the faces the first paint needs: Open Sans 400 (body) and
+     * Montserrat 700/800 (headings) — over-preloading wastes bandwidth.
+     */
+    public function preload_fonts() {
+        $manifest_path = dirname( __DIR__ ) . '/dist/manifest.json';
+        if ( ! is_readable( $manifest_path ) ) {
+            return;
+        }
+        $manifest = json_decode( file_get_contents( $manifest_path ), true );
+        if ( empty( $manifest['src/ts/app.ts']['assets'] ) ) {
+            return;
+        }
+
+        // Source basenames of the faces worth preloading (hash + extension appended by Vite).
+        $wanted   = array( 'OpenSans-Regular', 'Montserrat-Bold', 'Montserrat-ExtraBold' );
+        $base_url = trailingslashit( get_template_directory_uri() ) . 'dist/';
+
+        foreach ( $manifest['src/ts/app.ts']['assets'] as $asset ) {
+            if ( substr( $asset, -6 ) !== '.woff2' ) {
+                continue;
+            }
+            $name = basename( $asset );
+            foreach ( $wanted as $prefix ) {
+                if ( strpos( $name, $prefix . '-' ) === 0 ) {
+                    printf(
+                        '<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n",
+                        esc_url( $base_url . $asset )
+                    );
+                    break;
+                }
+            }
+        }
     }
 }
