@@ -11,8 +11,15 @@ import "../scss/app.scss";
 
 // Components
 import { initSiteHeader } from "./components/SiteHeader";
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initSiteHeader);
-} else {
+import { mountIslands } from "./islands";
+
+function init() {
   initSiteHeader();
+  mountIslands();
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
 }

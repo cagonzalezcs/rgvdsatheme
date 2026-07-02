@@ -2,14 +2,12 @@
   "$schema": "https://shadcn-vue.com/schema.json",
   "style": "new-york",
   "typescript": true,
-  "tsConfigPath": "./tsconfig.json",
   "tailwind": {
     "config": "",
     "css": "src/css/tailwind.css",
     "baseColor": "neutral",
     "cssVariables": true
   },
-  "framework": "vite",
   "iconLibrary": "lucide",
   "aliases": {
     "components": "@/components",

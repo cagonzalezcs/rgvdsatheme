@@ -1,9 +1,168 @@
-@import "tailwindcss";
+/*
+ * Expanded form of `@import "tailwindcss"`, with utilities left UNLAYERED:
+ * legacy src/scss is unlayered and would otherwise beat every layered
+ * utility class regardless of specificity. Collapse back to the one-line
+ * import when the legacy SCSS tree is deleted (Phase 7).
+ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+@import "tw-animate-css";
+
+/* ---------------------------------------------------------------------------
+ * Self-hosted fonts (weights per 03-DESIGN-SPEC.md § Typography)
+ * ------------------------------------------------------------------------ */
+@font-face {
+  font-family: "Montserrat";
+  src: url("../../static/fonts/montserrat/Montserrat-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Montserrat";
+  src: url("../../static/fonts/montserrat/Montserrat-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Montserrat";
+  src: url("../../static/fonts/montserrat/Montserrat-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Montserrat";
+  src: url("../../static/fonts/montserrat/Montserrat-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Montserrat";
+  src: url("../../static/fonts/montserrat/Montserrat-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("../../static/fonts/open-sans/OpenSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("../../static/fonts/open-sans/OpenSans-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("../../static/fonts/open-sans/OpenSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Open Sans";
+  src: url("../../static/fonts/open-sans/OpenSans-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------------------
+ * shadcn semantic variables — brutalist brand mapping (03-DESIGN-SPEC.md)
+ * ------------------------------------------------------------------------ */
+:root {
+  --background: #faf4ea;
+  --foreground: #1c1917;
+  --card: #ffffff;
+  --card-foreground: #1c1917;
+  --popover: #faf4ea;
+  --popover-foreground: #1c1917;
+  --primary: #e9252e;
+  --primary-foreground: #faf4ea;
+  --secondary: #1c1917;
+  --secondary-foreground: #faf4ea;
+  --muted: #f1e8d8;
+  --muted-foreground: #5c544a;
+  --accent: #9e0b13;
+  --accent-foreground: #ffffff;
+  --destructive: #9e0b13;
+  --destructive-foreground: #ffffff;
+  --border: #1c1917;
+  --input: #1c1917;
+  --ring: #e9252e;
+  --radius: 0px;
+}
+
+@theme inline {
+  /* semantic (consumed by shadcn/ui components) */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* neobrutalism: radius is 0 at every size */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+}
 
 @theme {
-  /* Brand tokens — full set lands in Phase 1 (see 03-DESIGN-SPEC.md) */
+  /* brand palette */
   --color-brand-red: #e9252e;
   --color-brand-red-deep: #9e0b13;
   --color-cream: #faf4ea;
   --color-ink: #1c1917;
+  --color-ink-soft: #3a352f;
+  --color-muted-on-ink: #cfc8bd;
+  --color-muted-on-cream: #5c544a;
+  --color-muted-2: #6b6257;
+  --color-border-muted: #b7ac9b;
+  --color-divider-cream: #e3d9c6;
+  --color-cell-outmonth: #f0e7d6;
+  --color-stripe-a: #f1e8d8;
+  --color-stripe-b: #e9dfcc;
+
+  /* event category colors (match WP taxonomy term colors) */
+  --color-cat-chapter: #e9252e;
+  --color-cat-poled: #3a5ba0;
+  --color-cat-mutual: #1f7a48;
+  --color-cat-labor: #a3641c;
+  --color-cat-electoral: #7c4396;
+  --color-cat-social: #0e7c86;
+
+  /* type */
+  --font-display: "Montserrat", sans-serif;
+  --font-sans: "Open Sans", system-ui, sans-serif;
+
+  /* hard offset shadows — zero blur, always */
+  --shadow-brutal: 5px 5px 0 var(--color-ink);
+  --shadow-brutal-sm: 3px 3px 0 var(--color-ink);
+  --shadow-brutal-md: 6px 6px 0 var(--color-ink);
+  --shadow-brutal-red: 8px 8px 0 var(--color-brand-red);
+  --shadow-brutal-lg: 10px 10px 0 var(--color-ink);
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
 }
