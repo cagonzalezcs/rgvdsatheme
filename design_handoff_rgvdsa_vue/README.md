@@ -19,10 +19,10 @@ Open any `designs/*.dc.html` in a browser to see the working prototype.
 3. **`03-DESIGN-SPEC.md`** — design tokens, typography scale, per-page component inventory, interaction specs, the shadcn-vue component mapping, and the **Accessibility (WCAG 2.1 AA)** requirements (contrast in every state incl. hover, focus, motion, targets, ARIA + a per-phase a11y gate).
 4. **`04-V2-HANDOFF-NOTES.md`** — **start here for the build.** Which files are the canonical v2 source, the v1→v2 re-skin delta, and the implementer gotchas (the Home-only functional EN/ES toggle, resolved cross-page anchor links, per-page tweak props, and corrections to stale "brutalist" wording in the phase docs).
 5. **`designs/`** — the seven HTML prototypes + runtime + logo assets.
-5. **`UPDATE-ABOUT-PAGE.md`** — delta brief for the About page (added 2026-07-02, after the phase docs were first written). If you are starting fresh, the phase docs already incorporate it; if a build is underway, paste this brief into the active Claude Code context.
+6. **`UPDATE-ABOUT-PAGE.md`** — delta brief for the About page (added 2026-07-02, after the phase docs were first written). If you are starting fresh, the phase docs already incorporate it; if a build is underway, paste this brief into the active Claude Code context.
 
 ## Screens
-- **Home** (`RGV DSA Home.dc.html`) — sticky red header w/ About dropdown + a11y widget; red hero; ink counties strip; Who We Are (text + photo placeholder); Upcoming Events list; From the Blog (1 featured card + 2 compact rows); three-step Get Involved section on ink; footer.
+- **Home** (`RGV DSA Home.dc.html`) — sticky red header w/ About dropdown + a11y widget; red hero (right-column art = `logo-lg.png`, the full DSA lockup on the red band; the older `cactus-mark-red.png` mark is retired for Home); ink counties strip; Who We Are (text + photo placeholder); Upcoming Events list; From the Blog (1 featured card + 2 compact rows); three-step Get Involved section on ink; footer.
 - **About** (`About.dc.html`) — the canonical target of the header About dropdown: red page header; ink mission band; content+sidebar layout with six anchored sections mirroring the dropdown 1:1 (`#chapter` About the Chapter, `#mission` Mission & History w/ timeline, `#counties` county cards, `#committees` committee rows, `#bylaws` governance-documents table, `#faq` tabular Q&A) + dues-switching callout. History timeline years are `20XX` placeholders for the chapter to fill in.
 - **Get Involved** (`Get Involved.dc.html`) — red page header w/ breadcrumb; two-column content+sidebar layout; How to Join; Committees; Communication Channels; FAQ accordion.
 - **Calendar** (`Calendar.dc.html`) — month-grid / list view toggle; category filter chips w/ color swatches; event chips; event detail modal; month navigation; subscribe strip.
@@ -35,8 +35,9 @@ Open any `designs/*.dc.html` in a browser to see the working prototype.
 ## Assets
 - `designs/assets/logo-red.png` — header logo (on red)
 - `designs/assets/logo-green.png` — footer logo (on cream/white)
-- `designs/assets/cactus-mark-red.png` — decorative hero mark (Home)
-- Fonts: **Montserrat** (400–900) and **Open Sans** (400–800), self-hosted TTFs in `designs/assets/fonts/`. The theme already has a `static/fonts/` directory — move them there (or swap to woff2).
+- `logo-lg.png` — **Home hero art** (full DSA lockup on the red band). This is canonical, per the shipped theme (`views/front-page.twig`). Note: `03-DESIGN-SPEC.md` and `04-V2-HANDOFF-NOTES.md` still name the hero art `cactus-mark-red.png` / `logo-vertical.png` respectively — both are stale; `logo-lg.png` wins.
+- `designs/assets/cactus-mark-red.png` — earlier decorative hero mark, retired for Home (kept for reference only)
+- Fonts: **Montserrat** (400–900) and **Open Sans** (400–800), self-hosted TTFs in `designs/assets/fonts/`. These are already in place in the theme at `static/fonts/{montserrat,open-sans}/` (swap to woff2 if desired).
 - `designs/image-slot.js` — design-time-only helper (drag-and-drop image placeholder used by the blog prototypes). Do **not** port it; in production those slots are ordinary `<img>` / featured-image fields.
 
 ## How to use this with Claude Code
