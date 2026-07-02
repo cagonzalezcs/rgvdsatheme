@@ -240,6 +240,15 @@ const mailShareUrl = computed(
                 </div>
               </div>
 
+              <!-- Space (capacity) -->
+              <div v-if="event.capacity !== null" class="flex items-start gap-3">
+                <span aria-hidden="true" class="flex-none text-[1.05rem] leading-[1.4]">👥</span>
+                <div class="flex min-w-0 flex-col gap-px">
+                  <span class="font-display text-[0.72rem] font-bold uppercase tracking-[0.08em] text-text-muted">Space</span>
+                  <span class="text-[0.98rem] font-semibold text-text-strong">{{ event.capacity }} spots</span>
+                </div>
+              </div>
+
               <!-- RSVP status -->
               <div class="flex items-start gap-3">
                 <span aria-hidden="true" class="flex-none text-[1.05rem] leading-[1.4]">✅</span>

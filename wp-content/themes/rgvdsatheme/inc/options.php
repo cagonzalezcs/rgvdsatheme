@@ -309,6 +309,29 @@ function rgvdsa_front_hero( $front_id ) {
 }
 
 /**
+ * "Who we are" photo: front-page ACF image, returned as { src, alt } or null
+ * so the Twig owns the stripe fallback (no fake placeholder caption).
+ *
+ * @param int $front_id Front page ID (get_option( 'page_on_front' )).
+ * @return array{src:string,alt:string}|null
+ */
+function rgvdsa_front_about_image( $front_id ) {
+	if ( ! function_exists( 'get_field' ) || ! $front_id ) {
+		return null;
+	}
+
+	$image = get_field( 'about_image', $front_id );
+	if ( empty( $image['url'] ) ) {
+		return null;
+	}
+
+	return array(
+		'src' => $image['url'],
+		'alt' => ! empty( $image['alt'] ) ? $image['alt'] : 'Chapter members organizing in the Rio Grande Valley',
+	);
+}
+
+/**
  * Front page: inject options-driven knobs early (priority 5) so the events
  * domain can read `event_count` / `show_counties_strip` at priority 10.
  */
@@ -334,6 +357,7 @@ add_filter(
 		$context['show_counties_strip'] = $show_counties_strip;
 		$context['counties']            = rgvdsa_chapter_counties();
 		$context['hero']                = rgvdsa_front_hero( (int) get_option( 'page_on_front' ) );
+		$context['about_image']         = rgvdsa_front_about_image( (int) get_option( 'page_on_front' ) );
 
 		return $context;
 	},
@@ -393,6 +417,15 @@ add_action(
 						'name'         => 'hero_cta_secondary_url',
 						'type'         => 'text',
 						'instructions' => 'An in-page anchor (e.g. #events) or a full URL.',
+					),
+					array(
+						'key'           => 'field_rgvdsa_about_image',
+						'label'         => 'Who we are photo',
+						'name'          => 'about_image',
+						'type'          => 'image',
+						'return_format' => 'array',
+						'preview_size'  => 'medium',
+						'instructions'  => 'Optional. Shown in the "Who we are" section; a decorative panel renders when empty.',
 					),
 				),
 				'location' => array(

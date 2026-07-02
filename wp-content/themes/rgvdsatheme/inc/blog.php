@@ -837,6 +837,23 @@ function rgvdsa_blog_single_context( $context, $timber_post ) {
 // Home "From the blog" teasers — blog_featured + blog_rows fixture keys.
 add_filter( 'rgvdsa/context/front_page', 'rgvdsa_blog_front_page_context' );
 
+/**
+ * Featured image for a home teaser card: { src, alt } or null when the post
+ * has no thumbnail (Twig falls back to the stripe placeholder). Mirrors the
+ * shape built by the detail serializer.
+ */
+function rgvdsa_blog_teaser_image( $post ) {
+	$src = get_the_post_thumbnail_url( $post, 'large' );
+	if ( ! $src ) {
+		return null;
+	}
+	$alt = (string) get_post_meta( get_post_thumbnail_id( $post ), '_wp_attachment_image_alt', true );
+	return array(
+		'src' => $src,
+		'alt' => '' !== $alt ? $alt : html_entity_decode( get_the_title( $post ), ENT_QUOTES, 'UTF-8' ),
+	);
+}
+
 function rgvdsa_blog_front_page_context( $context ) {
 	$query = rgvdsa_blog_posts_query( array( 'posts_per_page' => 3 ) );
 
@@ -875,6 +892,8 @@ function rgvdsa_blog_front_page_context( $context ) {
 		'read'      => rgvdsa_blog_read_minutes( $featured ) . ' min read',
 		'title'     => html_entity_decode( get_the_title( $featured ), ENT_QUOTES, 'UTF-8' ),
 		'excerpt'   => wp_strip_all_tags( get_the_excerpt( $featured ) ),
+		'url'       => get_permalink( $featured ),
+		'image'     => rgvdsa_blog_teaser_image( $featured ),
 	);
 
 	foreach ( $query->posts as $post ) {
@@ -887,6 +906,8 @@ function rgvdsa_blog_front_page_context( $context ) {
 			'cat_label' => $labels[ $cat ],
 			'title'     => html_entity_decode( get_the_title( $post ), ENT_QUOTES, 'UTF-8' ),
 			'date'      => get_the_date( 'F j, Y', $post ),
+			'url'       => get_permalink( $post ),
+			'image'     => rgvdsa_blog_teaser_image( $post ),
 		);
 	}
 

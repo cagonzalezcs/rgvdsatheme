@@ -166,6 +166,117 @@ foreach ( $rgvdsa_seed_events as $ev ) {
 	update_field( 'field_rgvdsa_events_city', $city, $post_id );
 }
 
+/* --- Enrich two demo events with the full field set so every field's
+ *     frontend section is visible live. One in-person (with the map block),
+ *     one online (map layout is dropped for online-only events). Idempotent:
+ *     update_field just overwrites. */
+
+$rgvdsa_seed_enriched = array(
+	// In-person — exercises the Location row, map block, and every rail row.
+	'Night School: What Is Democratic Socialism?' => array(
+		'event_summary' => 'Kick off our summer night school with a plain-language intro to democratic socialism — no reading, no jargon, just your questions and ours.',
+		'doors_time'    => '6:30 PM',
+		'location_type' => 'in-person',
+		'cost'          => 'Free · open to the public',
+		'rsvp_required' => 1,
+		'rsvp_url'      => 'https://act.dsausa.org/donate/membership',
+		'capacity'      => 40,
+		'contact_name'  => 'Political Education Committee',
+		'contact_email' => 'poled@example.org',
+		'contact_phone' => '(956) 555-0142',
+		'body'          => array(
+			array(
+				'acf_fc_layout' => 'prose',
+				'content'       => '<p>Curious about democratic socialism but not sure where to start? This is the session for you. We break down what democratic socialism actually means, where it comes from, and — most importantly — what it looks like organizing here in the Rio Grande Valley.</p><p>No prior reading is required and there are no wrong questions. Come as you are, bring a friend, and stay for the conversation afterward.</p>',
+			),
+			array(
+				'acf_fc_layout' => 'agenda',
+				'items'         => array(
+					array( 'title' => 'Welcome & introductions', 'desc' => 'New folks say hi and share what brought them.' ),
+					array( 'title' => 'What is democratic socialism?', 'desc' => 'A short, plain-language talk — no jargon.' ),
+					array( 'title' => 'Small-group discussion', 'desc' => 'Break out and talk through the ideas together.' ),
+					array( 'title' => 'Q&A and next steps', 'desc' => 'Ask anything; learn how to plug in.' ),
+				),
+			),
+			array(
+				'acf_fc_layout' => 'good_to_know',
+				'items'         => array(
+					array( 'text' => 'Doors open 30 minutes early — come early to mingle.' ),
+					array( 'text' => 'Free snacks and coffee provided.' ),
+					array( 'text' => 'Free parking in the library lot.' ),
+				),
+			),
+			array(
+				'acf_fc_layout' => 'a11y_note',
+				'content'       => '<p>The venue is wheelchair accessible. Childcare and Spanish interpretation are available on request — email us at least 48 hours ahead and we will make it happen.</p>',
+			),
+			array( 'acf_fc_layout' => 'map' ),
+		),
+	),
+	// Online — exercises the Online row; the map layout is dropped.
+	'Know Your Rights at Work'                    => array(
+		'event_summary' => 'A practical, worker-to-worker workshop on your rights on the job in Texas — what they are, and how to protect them.',
+		'doors_time'    => '',
+		'location_type' => 'online',
+		'cost'          => 'Free · open to the public',
+		'rsvp_required' => 1,
+		'rsvp_url'      => 'https://act.dsausa.org/donate/membership',
+		'capacity'      => 100,
+		'contact_name'  => 'Labor Committee',
+		'contact_email' => 'labor@example.org',
+		'contact_phone' => '',
+		'body'          => array(
+			array(
+				'acf_fc_layout' => 'prose',
+				'content'       => '<p>Whether you are salaried, hourly, or gig, you have rights on the job — and knowing them is the first step to defending them. This online workshop covers concerted activity, retaliation, and what to document, led by members of the Labor committee alongside guest organizers.</p><p>Bring your questions. The Zoom link is shared with everyone who RSVPs.</p>',
+			),
+			array(
+				'acf_fc_layout' => 'agenda',
+				'items'         => array(
+					array( 'title' => 'Your rights in Texas', 'desc' => 'Concerted activity and what it protects.' ),
+					array( 'title' => 'Spotting retaliation', 'desc' => 'What it looks like and what to do.' ),
+					array( 'title' => 'Documentation clinic', 'desc' => 'Practical habits for building a record.' ),
+					array( 'title' => 'Open Q&A', 'desc' => 'Bring your workplace questions.' ),
+				),
+			),
+			array(
+				'acf_fc_layout' => 'good_to_know',
+				'items'         => array(
+					array( 'text' => 'The Zoom link is emailed to everyone who RSVPs.' ),
+					array( 'text' => 'Live Spanish interpretation available on request.' ),
+				),
+			),
+			array(
+				'acf_fc_layout' => 'a11y_note',
+				'content'       => '<p>Auto-captions are enabled on the call. Need something else to take part? Email us and we will arrange it.</p>',
+			),
+			array( 'acf_fc_layout' => 'map' ),
+		),
+	),
+);
+
+foreach ( $rgvdsa_seed_enriched as $title => $fields ) {
+	if ( empty( $rgvdsa_seed_event_ids[ $title ] ) ) {
+		rgvdsa_seed_log( "WARN: enrich target not found: {$title}" );
+		continue;
+	}
+	$event_id = (int) $rgvdsa_seed_event_ids[ $title ];
+
+	update_field( 'field_rgvdsa_events_summary', $fields['event_summary'], $event_id );
+	update_field( 'field_rgvdsa_events_doors_time', $fields['doors_time'], $event_id );
+	update_field( 'field_rgvdsa_events_location_type', $fields['location_type'], $event_id );
+	update_field( 'field_rgvdsa_events_cost', $fields['cost'], $event_id );
+	update_field( 'field_rgvdsa_events_rsvp_required', $fields['rsvp_required'], $event_id );
+	update_field( 'field_rgvdsa_events_rsvp_url', $fields['rsvp_url'], $event_id );
+	update_field( 'field_rgvdsa_events_capacity', $fields['capacity'], $event_id );
+	update_field( 'field_rgvdsa_events_contact_name', $fields['contact_name'], $event_id );
+	update_field( 'field_rgvdsa_events_contact_email', $fields['contact_email'], $event_id );
+	update_field( 'field_rgvdsa_events_contact_phone', $fields['contact_phone'], $event_id );
+	update_field( 'field_rgvdsa_events_body', $fields['body'], $event_id );
+
+	rgvdsa_seed_log( "event enriched: {$title} (#{$event_id})" );
+}
+
 /* -------------------------------------------------------------------------
  * 3. Blog — posts page, the 9 SAMPLE_POSTS, p1 block markup.
  * ---------------------------------------------------------------------- */
@@ -617,7 +728,25 @@ update_field( 'field_rgvdsa_options_counties', array_map(
 		'Zapata', 'La Grulla', 'La Feria', 'Rio Hondo',
 	)
 ), 'option' );
+update_field( 'field_rgvdsa_options_es_enabled', 1, 'option' );
 rgvdsa_seed_log( 'chapter settings options seeded' );
+
+/* --- GTranslate plugin option, pinned (translations-layer). EN+ES only,
+ *     browser-language auto-switch OFF (it would fire doGTranslate on its own
+ *     and fight the header toggle + home-only gate), no widget placement —
+ *     the hidden gt-link bootstrap in base.twig is the only integration
+ *     surface. Merged over existing values so plugin-added keys survive. */
+$rgvdsa_seed_gt = get_option( 'GTranslate', array() );
+$rgvdsa_seed_gt = array_merge( is_array( $rgvdsa_seed_gt ) ? $rgvdsa_seed_gt : array(), array(
+	'default_language'           => 'en',
+	'incl_langs'                 => array( 'en', 'es' ),
+	'fincl_langs'                => array( 'en', 'es' ),
+	'detect_browser_language'    => '',
+	'floating_language_selector' => 'no',
+	'show_in_menu'               => '',
+) );
+update_option( 'GTranslate', $rgvdsa_seed_gt );
+rgvdsa_seed_log( 'GTranslate option pinned: en+es, detect_browser_language off, no widget placement' );
 
 /* --- Posts-page lede (interior `lede` field on the page_for_posts page). */
 if ( $blog_page_id ) {

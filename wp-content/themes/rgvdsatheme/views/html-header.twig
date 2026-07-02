@@ -16,5 +16,20 @@
       /* Critical: paint brand cream before Tailwind/JS loads so navigations
          never flash browser-white. Mirrors --background in src/css/tailwind.css. */
       html { background-color: #faf4ea; }
+      /* Cross-document view transitions: full-page loads (logged-in users bypass
+         the ts/navigation.ts SPA layer) cross-fade instead of hard-flashing.
+         Inline so the opt-in is parsed pre-render in dev and prod alike. */
+      @media not (prefers-reduced-motion: reduce) {
+        @view-transition { navigation: auto; }
+      }
+      /* Unique names lift the fixed chrome out of the root cross-fade — identical
+         pixels on both pages, so these hold still instead of fading. The header is
+         a client-mounted island: if it hasn't mounted when the transition starts,
+         its group falls back to the plain cross-fade (never worse). */
+      #wpadminbar { view-transition-name: admin-bar; }
+      .site-header { view-transition-name: site-header; }
+      /* Subtler than the ~250ms default blink. */
+      ::view-transition-old(root),
+      ::view-transition-new(root) { animation-duration: 120ms; }
     </style>
     {{function('wp_head')}}

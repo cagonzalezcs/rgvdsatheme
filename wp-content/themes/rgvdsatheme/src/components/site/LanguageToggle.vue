@@ -1,52 +1,70 @@
 <script setup lang="ts">
-// EN/ES language toggle — a real ShadCN Switch that records the visitor's language
-// preference in a cookie (see useLanguagePreference). The site is not translated to
-// Spanish yet, so flipping to ES only stores the preference; the "próximamente"
-// tooltip on the ES label signals that Spanish is coming. The shared module-level
-// preference keeps all three responsive header instances in sync.
-import { Switch } from "@/components/ui/switch";
-import { useLanguagePreference } from "@/composables/useLanguagePreference";
+// EN/ES language toggle — a segmented pill per the design handoff (03-DESIGN-SPEC.md
+// §SiteHeader; "RGV DSA Home.dc.html" langStyle). Two <button> segments; the active
+// language is a deep-red filled pill, the other is muted red text. Records the visitor's
+// preference in a cookie and flips <html lang> (see useLanguagePreference). On
+// translation-active pages (esEnabled, currently home only — inc/translation.php) it
+// also drives live GTranslate machine translation via src/ts/translation.ts; elsewhere
+// it stays a preference recorder and the ES tooltip states the scope. The shared
+// module-level preference keeps all three responsive header instances in sync.
+import { useLanguagePreference, type Lang } from "@/composables/useLanguagePreference";
+import { activateSpanish, restoreEnglish } from "@/ts/translation";
 
-// esEnabled / esUrl are kept as component API for the future-navigation hook in
-// onToggle, even though the current behavior is store-only.
-withDefaults(
+const props = withDefaults(
   defineProps<{
+    // True on pages where flipping ES translates live (fed from translation.active).
     esEnabled?: boolean;
+    // Kept for API stability (SiteHeader passes it); unused under cookie-based gtranslate.
     esUrl?: string;
+    // Off-white container for the mobile drop panel (white surface) vs white on the red bar.
+    onLight?: boolean;
   }>(),
   {
     esEnabled: false,
     esUrl: "",
+    onLight: false,
   },
 );
 
 const { isSpanish, setLanguage } = useLanguagePreference();
 
-function onToggle(next: boolean): void {
-  setLanguage(next ? "es" : "en");
-  // Future hook: once a Spanish site exists, opt-in could navigate instead of
-  // store-only, e.g. `if (next && esEnabled && esUrl) location.href = esUrl;`.
+function onSelect(lang: Lang): void {
+  setLanguage(lang);
+  if (!props.esEnabled) return;
+  if (lang === "es") activateSpanish();
+  else restoreEnglish();
 }
+
+const segmentClass =
+  "cursor-pointer rounded-full border-0 px-3 py-1 text-[0.8rem] font-bold tracking-[0.04em]";
 </script>
 
 <template>
   <div
     role="group"
     aria-label="Language"
-    class="flex items-center gap-2 rounded-full bg-white px-3 py-1 text-[0.8rem] font-bold tracking-[0.04em]"
+    :class="[
+      'flex items-center gap-0.5 rounded-full p-[3px]',
+      onLight ? 'bg-off-white' : 'bg-white',
+    ]"
   >
-    <span :class="isSpanish ? 'text-red/55' : 'text-red'">EN</span>
-    <Switch
-      :model-value="isSpanish"
-      aria-label="Switch site language to Spanish"
-      class="border-red data-[state=checked]:bg-red data-[state=unchecked]:bg-white"
-      @update:model-value="onToggle"
-    />
-    <span
-      lang="es"
-      title="Español — próximamente"
-      :class="isSpanish ? 'text-red' : 'text-red/55'"
-      >ES</span
+    <button
+      type="button"
+      :aria-pressed="!isSpanish"
+      :class="[segmentClass, isSpanish ? 'bg-transparent text-red' : 'bg-red text-white']"
+      @click="onSelect('en')"
     >
+      EN
+    </button>
+    <button
+      type="button"
+      lang="es"
+      :title="esEnabled ? 'Español' : 'Español — disponible en la página de inicio'"
+      :aria-pressed="isSpanish"
+      :class="[segmentClass, isSpanish ? 'bg-red text-white' : 'bg-transparent text-red']"
+      @click="onSelect('es')"
+    >
+      ES
+    </button>
   </div>
 </template>

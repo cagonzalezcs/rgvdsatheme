@@ -4,10 +4,12 @@ import "../css/tailwind.css";
 // Components
 import { mountIslands } from "./islands";
 import { initNavigation } from "./navigation";
+import { initTranslation } from "./translation";
 
 function init() {
   mountIslands();
   initNavigation();
+  initTranslation();
 }
 
 if (document.readyState === "loading") {

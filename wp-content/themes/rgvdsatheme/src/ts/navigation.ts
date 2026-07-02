@@ -13,6 +13,7 @@ import { nextTick } from "vue";
 import { ApiError, fetchSinglePost, isAbortError } from "@/lib/api";
 import { mountIslands, mountIslandsAsync, unmountIslands } from "./islands";
 import { setLocation } from "@/lib/location";
+import { isSpanishPreferred } from "./translation";
 
 /** Resolved destination content — either a parsed HTML document or a built,
  * ready-to-mount node from the JSON fast-path. */
@@ -58,6 +59,9 @@ function scrollKey(url: URL | Location = window.location): string {
 
 export function initNavigation(): void {
   if (!supportsFetch()) return; // nothing to enhance without fetch
+  // Logged-in chrome (admin bar) lives outside #main and can't survive partial
+  // swaps — its Edit link would keep pointing at the first-loaded page. Full loads.
+  if (document.getElementById("wpadminbar")) return;
   history.scrollRestoration = "manual";
   apiBase = readApiBase();
 
@@ -82,6 +86,11 @@ export function initNavigation(): void {
 function onClick(e: MouseEvent): void {
   if (e.defaultPrevented) return; // an island (pagination, dropdown) already handled it
   if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  // Under the ES preference the nav layer stands down entirely: partial swaps
+  // would splice untranslated EN content into a Google-translated page (home →
+  // inner) or land on home without the gtranslate bootstrap (inner → home).
+  // Full loads are correct-by-construction while translation is active.
+  if (isSpanishPreferred()) return;
 
   const a = (e.target as Element | null)?.closest("a");
   if (!a) return;
@@ -341,6 +350,12 @@ function syncHead(doc: Document): void {
   document.body.className = doc.body.className;
   const tmpl = doc.body.getAttribute("data-template");
   if (tmpl !== null) document.body.setAttribute("data-template", tmpl);
+
+  // Translation scope must track the destination so an EN visitor who swaps
+  // onto home can still flip ES (translation.ts falls back to cookie+reload
+  // there, since the swap can't add the gtranslate scripts).
+  const scope = doc.body.getAttribute("data-translation-scope");
+  if (scope !== null) document.body.setAttribute("data-translation-scope", scope);
 }
 
 /** Replace a single unique head element's attributes from the fetched doc. */
@@ -390,6 +405,7 @@ function queueScrollWrite(): void {
 // ---------------------------------------------------------------------------
 
 function onPrefetchIntent(e: Event): void {
+  if (isSpanishPreferred()) return; // standdown: clicks won't be intercepted
   if (!shouldPrefetch()) return;
   const a = (e.target as Element | null)?.closest("a");
   if (!a) return;

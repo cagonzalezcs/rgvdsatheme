@@ -62,6 +62,21 @@ function rgvdsa_events_register_post_type() {
 }
 
 /**
+ * Force the classic editor for the `event` CPT. The ACF "Event details" +
+ * "Event body" groups render as normal metaboxes below the title instead of
+ * being buried in Gutenberg's collapsed "Meta Boxes" drawer. `show_in_rest`
+ * stays true on the CPT (the calendar uses the rgvdsa/v1 endpoints).
+ *
+ * @param bool   $enabled   Whether the block editor is enabled.
+ * @param string $post_type Post type being edited.
+ * @return bool
+ */
+add_filter( 'use_block_editor_for_post_type', 'rgvdsa_events_disable_block_editor', 10, 2 );
+function rgvdsa_events_disable_block_editor( $enabled, $post_type ) {
+	return 'event' === $post_type ? false : $enabled;
+}
+
+/**
  * ACF field groups: event details + category term color.
  */
 add_action( 'acf/init', 'rgvdsa_events_register_fields' );
@@ -76,6 +91,24 @@ function rgvdsa_events_register_fields() {
 			'title'    => 'Event details',
 			'fields'   => array(
 				array(
+					'key'          => 'field_rgvdsa_events_intro',
+					'label'        => '',
+					'name'         => '',
+					'type'         => 'message',
+					'message'      => 'The <strong>Content</strong> box above is the short summary shown in the Calendar pop-up. The big lede at the top of the event page is the <strong>Summary</strong> field below (Details tab).',
+					'new_lines'    => 'wpautop',
+					'esc_html'     => 0,
+				),
+
+				/* ---- When -------------------------------------------------- */
+				array(
+					'key'         => 'field_rgvdsa_events_tab_when',
+					'label'       => 'When',
+					'name'        => '',
+					'type'        => 'tab',
+					'placement'   => 'top',
+				),
+				array(
 					'key'            => 'field_rgvdsa_events_start_datetime',
 					'label'          => 'Start date & time',
 					'name'           => 'start_datetime',
@@ -84,6 +117,7 @@ function rgvdsa_events_register_fields() {
 					'return_format'  => 'Y-m-d H:i:s',
 					'display_format' => 'M j, Y g:i a',
 					'first_day'      => 0,
+					'instructions'   => 'Drives the hero date chip, the Time row, the rail date block, and where the event lands on the calendar.',
 				),
 				array(
 					'key'            => 'field_rgvdsa_events_end_datetime',
@@ -93,32 +127,7 @@ function rgvdsa_events_register_fields() {
 					'return_format'  => 'Y-m-d H:i:s',
 					'display_format' => 'M j, Y g:i a',
 					'first_day'      => 0,
-				),
-				array(
-					'key'   => 'field_rgvdsa_events_venue',
-					'label' => 'Venue',
-					'name'  => 'venue',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_rgvdsa_events_city',
-					'label' => 'City',
-					'name'  => 'city',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_rgvdsa_events_rsvp_url',
-					'label' => 'RSVP URL',
-					'name'  => 'rsvp_url',
-					'type'  => 'url',
-				),
-				array(
-					'key'          => 'field_rgvdsa_events_summary',
-					'label'        => 'Summary',
-					'name'         => 'event_summary',
-					'type'         => 'textarea',
-					'rows'         => 3,
-					'instructions' => 'Hero lede under the title (max ~52ch reads best).',
+					'instructions'   => 'Completes the Time row range (e.g. “7:00–8:30 PM”). Leave blank for a start-only time.',
 				),
 				array(
 					'key'            => 'field_rgvdsa_events_doors_time',
@@ -127,6 +136,16 @@ function rgvdsa_events_register_fields() {
 					'type'           => 'time_picker',
 					'return_format'  => 'g:i A',
 					'display_format' => 'g:i a',
+					'instructions'   => 'Appended under the Time row as “Doors open …”.',
+				),
+
+				/* ---- Where ------------------------------------------------- */
+				array(
+					'key'         => 'field_rgvdsa_events_tab_where',
+					'label'       => 'Where',
+					'name'        => '',
+					'type'        => 'tab',
+					'placement'   => 'top',
 				),
 				array(
 					'key'           => 'field_rgvdsa_events_location_type',
@@ -140,13 +159,45 @@ function rgvdsa_events_register_fields() {
 					),
 					'default_value' => 'in-person',
 					'return_format' => 'value',
+					'instructions'  => 'Switches between the Location row, the Online row, and the map block. “Online” hides the address + map; “Hybrid” shows both rows.',
+				),
+				array(
+					'key'          => 'field_rgvdsa_events_venue',
+					'label'        => 'Venue',
+					'name'         => 'venue',
+					'type'         => 'text',
+					'instructions' => 'Location row + “Get directions” link + hero location chip. Also the map block address.',
+				),
+				array(
+					'key'          => 'field_rgvdsa_events_city',
+					'label'        => 'City',
+					'name'         => 'city',
+					'type'         => 'text',
+					'instructions' => 'Shown under the venue in the Location row and used for directions/map.',
+				),
+
+				/* ---- Details ----------------------------------------------- */
+				array(
+					'key'         => 'field_rgvdsa_events_tab_details',
+					'label'       => 'Details',
+					'name'        => '',
+					'type'        => 'tab',
+					'placement'   => 'top',
+				),
+				array(
+					'key'          => 'field_rgvdsa_events_summary',
+					'label'        => 'Summary',
+					'name'         => 'event_summary',
+					'type'         => 'textarea',
+					'rows'         => 3,
+					'instructions' => 'Hero lede shown under the title on the event page (max ~52ch reads best). Distinct from the Content box, which is the Calendar pop-up blurb.',
 				),
 				array(
 					'key'          => 'field_rgvdsa_events_cost',
 					'label'        => 'Cost',
 					'name'         => 'cost',
 					'type'         => 'text',
-					'instructions' => 'e.g. “Free · open to the public”.',
+					'instructions' => 'Cost row in the details rail; blank shows “Free · open to the public”.',
 				),
 				array(
 					'key'           => 'field_rgvdsa_events_rsvp_required',
@@ -155,32 +206,62 @@ function rgvdsa_events_register_fields() {
 					'type'          => 'true_false',
 					'default_value' => 0,
 					'ui'            => 1,
+					'instructions'  => 'Flips the RSVP status line (“RSVP required” vs “No RSVP needed”) and the RSVP button label.',
 				),
 				array(
-					'key'   => 'field_rgvdsa_events_capacity',
-					'label' => 'Capacity',
-					'name'  => 'capacity',
-					'type'  => 'number',
-					'min'   => 1,
-					'step'  => 1,
+					'key'          => 'field_rgvdsa_events_rsvp_url',
+					'label'        => 'RSVP URL',
+					'name'         => 'rsvp_url',
+					'type'         => 'url',
+					'instructions' => 'Destination for the RSVP button and, for online events, the “Get the link” join link.',
 				),
 				array(
-					'key'   => 'field_rgvdsa_events_contact_name',
-					'label' => 'Contact name',
-					'name'  => 'contact_name',
-					'type'  => 'text',
+					'key'          => 'field_rgvdsa_events_capacity',
+					'label'        => 'Capacity',
+					'name'         => 'capacity',
+					'type'         => 'number',
+					'min'          => 1,
+					'step'         => 1,
+					'instructions' => 'Shown as a “Space” line in the details rail (e.g. “40 spots”). Blank hides the row.',
+				),
+
+				/* ---- Contact ----------------------------------------------- */
+				array(
+					'key'         => 'field_rgvdsa_events_tab_contact',
+					'label'       => 'Contact',
+					'name'        => '',
+					'type'        => 'tab',
+					'placement'   => 'top',
 				),
 				array(
-					'key'   => 'field_rgvdsa_events_contact_email',
-					'label' => 'Contact email',
-					'name'  => 'contact_email',
-					'type'  => 'text',
+					'key'          => 'field_rgvdsa_events_contact_name',
+					'label'        => 'Contact name',
+					'name'         => 'contact_name',
+					'type'         => 'text',
+					'instructions' => 'Contact card in the rail. When all three contact fields are blank the card falls back to the chapter email.',
 				),
 				array(
-					'key'   => 'field_rgvdsa_events_contact_phone',
-					'label' => 'Contact phone',
-					'name'  => 'contact_phone',
-					'type'  => 'text',
+					'key'          => 'field_rgvdsa_events_contact_email',
+					'label'        => 'Contact email',
+					'name'         => 'contact_email',
+					'type'         => 'text',
+					'instructions' => 'Contact card email link; falls back to the chapter email when blank.',
+				),
+				array(
+					'key'          => 'field_rgvdsa_events_contact_phone',
+					'label'        => 'Contact phone',
+					'name'         => 'contact_phone',
+					'type'         => 'text',
+					'instructions' => 'Contact card phone link (optional).',
+				),
+
+				/* ---- Body -------------------------------------------------- */
+				array(
+					'key'         => 'field_rgvdsa_events_tab_body',
+					'label'       => 'Body',
+					'name'        => '',
+					'type'        => 'tab',
+					'placement'   => 'top',
 				),
 				array(
 					'key'          => 'field_rgvdsa_events_body',
@@ -188,7 +269,7 @@ function rgvdsa_events_register_fields() {
 					'name'         => 'event_body',
 					'type'         => 'flexible_content',
 					'button_label' => 'Add block',
-					'instructions' => 'Reorderable content blocks. Section accents inherit the category color.',
+					'instructions' => 'Reorderable article-body blocks: Prose, Agenda, Good to know, Accessibility &amp; childcare, and Getting there / map (the map is dropped for online-only events). Section accents inherit the category color.',
 					'layouts'      => array(
 						'layout_rgvdsa_event_prose'        => array(
 							'key'        => 'layout_rgvdsa_event_prose',
@@ -844,9 +925,14 @@ function rgvdsa_events_front_page_context( $context ) {
 			'title' => html_entity_decode( get_the_title( $event_post ), ENT_QUOTES, 'UTF-8' ),
 			'when'  => $start->format( 'l, F j' ) . ' · ' . $start->format( 'g:i A' ),
 			'where' => $city ? $city : $venue,
+			// Single Event permalink — the "View event" row destination.
+			'url'   => get_permalink( $event_post ),
 		);
 	}
 	$context['home_events'] = $home_events;
+	// Canonical calendar page (keys off the template, not a magic slug); falls
+	// back to home_url('/calendar/'). Powers "Full calendar →" + empty state.
+	$context['calendar_url'] = rgvdsa_events_calendar_url();
 
 	return $context;
 }

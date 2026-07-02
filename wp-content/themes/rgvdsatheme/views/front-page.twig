@@ -1,13 +1,16 @@
 {% extends "base.twig" %}
 
 {#
-  Home page — v2 (warm/rounded) skin. Content is hardcoded prototype copy until
-  WP data wiring lands (events, blog teasers, counties).
+  Home page — v2 (warm/rounded) skin. Hero, counties, events, and blog teasers
+  are WP/ACF-driven (see inc/options.php, inc/events.php, inc/blog.php); the
+  literals below are safe fallbacks for the pre-seed / preview render.
   Ported from design_handoff_rgvdsa_vue/designs/RGV DSA Home.dc.html.
 #}
 
 {% set show_counties_strip = show_counties_strip|default(true) %}
 {% set event_count = event_count|default(5) %}
+{# calendar_url comes from inc/events.php (rgvdsa_events_calendar_url()). #}
+{% set calendar_url = calendar_url|default('/calendar/') %}
 {# home_events comes from rgvdsa_events_front_page_context() — always set
    (possibly empty); the empty state below owns the pre-seed render. #}
 {% set home_events = home_events|default([]) %}
@@ -84,9 +87,13 @@
 				</p>
 				<a href="/about/" class="self-start text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">More about our chapter →</a>
 			</div>
-			<figure class="m-0 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[18px] shadow-photo {{ stripe }}">
-				<figcaption class="rounded-lg bg-white px-3.5 py-2 font-mono text-[0.85rem] text-text-muted shadow-subtle">photo: chapter members at an action</figcaption>
-			</figure>
+			{% if about_image %}
+				<figure class="m-0 aspect-[4/3] overflow-hidden rounded-[18px] shadow-photo">
+					<img src="{{ about_image.src }}" alt="{{ about_image.alt }}" class="h-full w-full object-cover">
+				</figure>
+			{% else %}
+				<figure class="m-0 aspect-[4/3] overflow-hidden rounded-[18px] shadow-photo {{ stripe }}" aria-hidden="true"></figure>
+			{% endif %}
 		</div>
 	</section>
 
@@ -95,19 +102,19 @@
 		<div class="mx-auto flex max-w-[1140px] flex-col gap-9">
 			<div class="flex flex-wrap items-baseline justify-between gap-4">
 				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">Upcoming events</h2>
-				<a href="/calendar/" class="text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">Full calendar →</a>
+				<a href="{{ calendar_url }}" class="text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">Full calendar →</a>
 			</div>
 			{% if home_events is empty %}
 				<div class="flex flex-col items-center gap-2.5 rounded-[16px] border-2 border-dashed border-border-control px-8 py-12 text-center">
 					<div class="font-display text-[1.2rem] font-bold">No events on the books yet</div>
-					<p class="m-0 max-w-[48ch] text-base leading-[1.6] text-text-muted">New meetings and actions land on the <a href="/calendar/" class="font-bold text-red">calendar</a> first — subscribe there and never miss one.</p>
+					<p class="m-0 max-w-[48ch] text-base leading-[1.6] text-text-muted">New meetings and actions land on the <a href="{{ calendar_url }}" class="font-bold text-red">calendar</a> first — subscribe there and never miss one.</p>
 				</div>
 			{% endif %}
 			<div class="flex flex-col gap-3">
 				{% for ev in home_events|slice(0, event_count) %}
 					{# Whole row is the tap target on mobile (05 §4 Home); the pill becomes a
 					   visual span at md+ and an inline "View event →" shows on mobile. #}
-					<a href="/calendar/" aria-label="View event: {{ ev.title }}"
+					<a href="{{ ev.url|default(calendar_url) }}" aria-label="View event: {{ ev.title }}"
 						class="group grid grid-cols-[64px_1fr] items-center gap-4 rounded-[14px] bg-white px-[22px] py-[18px] text-ink no-underline shadow-subtle transition-shadow hover:shadow-card md:[grid-template-columns:76px_1fr_auto] md:gap-6">
 						<div aria-hidden="true" class="flex flex-col rounded-[12px] bg-brand-red px-1 py-2.5 text-center text-white">
 							<span class="font-display text-[1.4rem] font-extrabold leading-[1.1]">{{ ev.day }}</span>
@@ -137,9 +144,12 @@
 			</div>
 			{% if blog_featured %}
 				<div class="grid grid-cols-1 items-stretch gap-8 md:grid-cols-2 lg:[grid-template-columns:minmax(300px,1.15fr)_minmax(280px,1fr)]">
-					<a href="/blog/" class="flex flex-col overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card-hover-lg md:col-span-2 lg:col-span-1">
-						<div aria-hidden="true" class="flex aspect-video items-start p-3.5 {{ stripe }}">
-							<span class="{{ cat_featured_pill[blog_featured.cat] }} text-white rounded-full px-3.5 py-[5px] text-[0.75rem] font-bold uppercase tracking-[0.06em]">{{ blog_featured.cat_label }}</span>
+					<a href="{{ blog_featured.url }}" class="flex flex-col overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card-hover-lg md:col-span-2 lg:col-span-1">
+						<div class="relative flex aspect-video items-start p-3.5 {% if not blog_featured.image %}{{ stripe }}{% endif %}">
+							{% if blog_featured.image %}
+								<img src="{{ blog_featured.image.src }}" alt="{{ blog_featured.image.alt }}" class="absolute inset-0 h-full w-full object-cover">
+							{% endif %}
+							<span class="relative {{ cat_featured_pill[blog_featured.cat] }} text-white rounded-full px-3.5 py-[5px] text-[0.75rem] font-bold uppercase tracking-[0.06em]">{{ blog_featured.cat_label }}</span>
 						</div>
 						<div class="flex flex-col gap-2.5 px-7 pb-[30px] pt-[26px]">
 							<span class="text-[0.82rem] font-semibold text-text-muted">{{ blog_featured.date }} · {{ blog_featured.read }}</span>
@@ -150,8 +160,12 @@
 					</a>
 					<div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-1">
 						{% for row in blog_rows %}
-							<a href="/blog/" class="grid flex-1 grid-cols-[100px_1fr] overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card-hover-lg sm:[grid-template-columns:130px_1fr]">
-								<span aria-hidden="true" class="min-h-[130px] {{ stripe }}"></span>
+							<a href="{{ row.url }}" class="grid flex-1 grid-cols-[100px_1fr] overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card-hover-lg sm:[grid-template-columns:130px_1fr]">
+								{% if row.image %}
+									<span class="min-h-[130px] overflow-hidden"><img src="{{ row.image.src }}" alt="{{ row.image.alt }}" class="h-full w-full object-cover"></span>
+								{% else %}
+									<span aria-hidden="true" class="min-h-[130px] {{ stripe }}"></span>
+								{% endif %}
 								<span class="flex flex-col justify-center gap-[9px] px-6 py-5">
 									<span class="{{ cat_row_pill[row.cat] }} self-start rounded-full border-2 px-3 py-[3px] text-[0.72rem] font-bold uppercase tracking-[0.06em]">{{ row.cat_label }}</span>
 									<span class="font-display text-[1.08rem] font-bold leading-[1.35]">{{ row.title }}</span>

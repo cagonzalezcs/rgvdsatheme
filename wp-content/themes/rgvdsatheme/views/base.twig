@@ -6,7 +6,9 @@
 	</head>
 {% endblock %}
 
-	<body class="{{body_class}}" data-template="base.twig">
+	{# translation-scope tells client scripts (src/ts/translation.ts) whether this
+	   page may machine-translate; the gate itself lives in inc/translation.php. #}
+	<body class="{{body_class}}" data-template="base.twig" data-translation-scope="{{ translation.active ? 'page' : 'none' }}">
 		{{ function('wp_body_open') }}
 		<a class="skip-link absolute -left-[9999px] top-3 z-200 bg-ink px-[18px] py-2.5 text-[0.95rem] font-bold text-cream no-underline focus:left-4" href="#main">Skip to main content</a>
 
@@ -14,7 +16,7 @@
 			joinUrl: chapter.join_url,
 			logoUrl: site.theme.link ~ '/static/images/logos/logo-red.png',
 			homeUrl: site.url,
-			esEnabled: chapter.es_enabled,
+			esEnabled: translation.active,
 			esUrl: chapter.es_url,
 			currentPath: current_path|default('')
 		} %}
@@ -22,8 +24,9 @@
 		{% if header_nav_items %}
 			{% set header_props = header_props|merge({ navItems: header_nav_items }) %}
 		{% endif %}
-		{# `contents` removes the wrapper's box so the sticky <header> inside sticks against the body scroll, not this div. #}
-		<div class="contents" data-vue-island="SiteHeader" data-props='{{ header_props|json_encode|e("html_attr") }}'></div>
+		{# `contents` removes the wrapper's box so the sticky <header> inside sticks against the body scroll, not this div.
+		   `notranslate`: Google Translate must never mutate Vue-managed DOM (chrome stays EN in v1). #}
+		<div class="contents notranslate" data-vue-island="SiteHeader" data-props='{{ header_props|json_encode|e("html_attr") }}'></div>
 
 		<main id="main" class="site-main">
 			{% block content %}
@@ -42,7 +45,14 @@
 			{% if chapter.contact_email %}
 				{% set footer_props = footer_props|merge({ contactEmail: chapter.contact_email }) %}
 			{% endif %}
-			<div data-vue-island="SiteFooter" data-props='{{ footer_props|json_encode|e("html_attr") }}'></div>
+			<div class="notranslate" data-vue-island="SiteFooter" data-props='{{ footer_props|json_encode|e("html_attr") }}'></div>
+			{% if translation.active %}
+				{# GTranslate bootstrap: the hidden gt-link makes the plugin enqueue its
+				   own base.js + settings blob (no widget UI, no forked plugin code).
+				   Pages without this render zero gtranslate assets — that absence is
+				   how the home-only gate is enforced. #}
+				<div class="notranslate" hidden aria-hidden="true">{{ function('do_shortcode', '[gt-link lang="es" label="Español" widget_look="lang_names"]') }}</div>
+			{% endif %}
 			{{ function('wp_footer') }}
 		{% endblock %}
 	</body>

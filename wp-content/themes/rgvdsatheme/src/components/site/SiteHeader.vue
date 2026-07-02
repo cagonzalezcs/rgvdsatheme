@@ -145,7 +145,7 @@ watch(
           {{ item.label }}
         </a>
         <div class="flex items-center justify-between gap-3 px-5 py-3.5">
-          <LanguageToggle :es-enabled="esEnabled" :es-url="esUrl" />
+          <LanguageToggle :es-enabled="esEnabled" :es-url="esUrl" on-light />
           <A11yWidget />
         </div>
         <div class="px-5 pb-5 pt-1">
@@ -240,7 +240,7 @@ watch(
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
-            class="z-[200] min-w-[256px] rounded-[14px] border-none bg-white p-2 shadow-popover"
+            class="notranslate z-[200] min-w-[256px] rounded-[14px] border-none bg-white p-2 shadow-popover"
           >
             <DropdownMenuItem
               v-for="item in aboutItems"
