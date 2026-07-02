@@ -29,7 +29,7 @@ const props = withDefaults(
       {
         title: "About",
         links: [
-          { label: "About the Chapter", href: "/about/#chapter" },
+          { label: "About the Chapter", href: "/about/" },
           { label: "Mission & History", href: "/about/#mission" },
           { label: "Counties We Serve", href: "/about/#counties" },
           { label: "Bylaws & Code of Conduct", href: "/about/#bylaws" },

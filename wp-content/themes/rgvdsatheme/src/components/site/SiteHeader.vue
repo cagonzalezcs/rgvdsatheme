@@ -39,7 +39,7 @@ const props = withDefaults(
     esEnabled: false,
     esUrl: "",
     aboutItems: () => [
-      { label: "About the Chapter", href: "/about/#chapter" },
+      { label: "About the Chapter", href: "/about/" },
       { label: "Mission & History", href: "/about/#mission" },
       { label: "Counties We Serve", href: "/about/#counties" },
       { label: "Committees", href: "/about/#committees" },
