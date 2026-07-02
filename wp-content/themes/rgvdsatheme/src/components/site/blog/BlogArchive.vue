@@ -20,12 +20,15 @@ const props = withDefaults(
     /** WP_Query paging — turns the static pager into real links when provided */
     pagination?: { newerUrl?: string; olderUrl?: string };
     showSubscribe?: boolean;
+    /** Action Network newsletter form URL (from Chapter Settings) */
+    newsletterUrl?: string;
   }>(),
   {
     posts: () => SAMPLE_POSTS,
     categories: undefined,
     pagination: undefined,
     showSubscribe: true,
+    newsletterUrl: undefined,
   },
 );
 
@@ -216,6 +219,6 @@ const gridPosts = computed(() =>
       </div>
     </section>
 
-    <EmailSubscribeStrip v-if="showSubscribe" />
+    <EmailSubscribeStrip v-if="showSubscribe" :newsletter-url="newsletterUrl" />
   </div>
 </template>

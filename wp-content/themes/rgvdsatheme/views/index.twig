@@ -11,13 +11,14 @@
 	{# archive.twig / search.twig override page_header_props with the computed context title. #}
 	{% set page_header_props = page_header_props|default({
 		title: 'Chapter Blog',
-		lede: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+		lede: posts_page_lede|default('News, analysis, and dispatches from RGV-DSA organizers across the Valley.'),
 		crumbs: [{ label: 'Home', href: '/' }]
 	}) %}
 	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
 
 	{% set archive_props = {
-		showSubscribe: true
+		showSubscribe: true,
+		newsletterUrl: chapter.newsletter_url
 	} %}
 	{% if archive_posts is defined %}
 		{% set archive_props = archive_props|merge({ posts: archive_posts }) %}

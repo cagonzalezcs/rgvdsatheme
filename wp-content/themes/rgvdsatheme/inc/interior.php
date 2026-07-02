@@ -35,6 +35,22 @@ add_action( 'acf/init', function () {
 				'instructions' => 'Optional override for the page-header lede. Falls back to the excerpt when empty.',
 			),
 			array(
+				'key'           => 'field_rgvdsa_interior_show_grievance',
+				'label'         => 'Show grievance callout',
+				'name'          => 'show_grievance',
+				'type'          => 'true_false',
+				'default_value' => 1,
+				'ui'            => 1,
+			),
+			array(
+				'key'          => 'field_rgvdsa_interior_grievance_body',
+				'label'        => 'Grievance callout body',
+				'name'         => 'grievance_body',
+				'type'         => 'wysiwyg',
+				'media_upload' => 0,
+				'instructions' => 'Shown in the grievance callout. Leave empty to use the default copy (with the chapter contact email).',
+			),
+			array(
 				'key'          => 'field_rgvdsa_interior_documents',
 				'label'        => 'Documents',
 				'name'         => 'documents',
@@ -122,6 +138,15 @@ add_filter( 'rgvdsa/context/page', function ( $context, $timber_post ) {
 	$lede = get_field( 'lede', $timber_post->ID );
 	if ( is_string( $lede ) && '' !== trim( $lede ) ) {
 		$context['page_lede'] = trim( $lede );
+	}
+
+	// Grievance callout: toggle (default on) + optional editor body.
+	$show_grievance            = get_field( 'show_grievance', $timber_post->ID );
+	$context['show_grievance'] = ( null === $show_grievance || '' === $show_grievance ) ? true : (bool) $show_grievance;
+
+	$grievance_body = get_field( 'grievance_body', $timber_post->ID );
+	if ( is_string( $grievance_body ) && '' !== trim( $grievance_body ) ) {
+		$context['grievance_body'] = wp_kses_post( $grievance_body );
 	}
 
 	$rows = get_field( 'documents', $timber_post->ID );

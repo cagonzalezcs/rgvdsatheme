@@ -1083,6 +1083,16 @@ add_filter( 'rgvdsa/context/blog_archive', 'rgvdsa_blog_archive_context' );
 function rgvdsa_blog_archive_context( $context ) {
 	$context['archive_categories'] = rgvdsa_post_categories();
 
+	// Editable posts-page lede (interior `lede` field on the page_for_posts
+	// page) → PageHeader; replaces the index.twig lorem when set.
+	$posts_page_id = (int) get_option( 'page_for_posts' );
+	if ( $posts_page_id && function_exists( 'get_field' ) ) {
+		$lede = get_field( 'lede', $posts_page_id );
+		if ( is_string( $lede ) && '' !== trim( $lede ) ) {
+			$context['posts_page_lede'] = trim( $lede );
+		}
+	}
+
 	$paged = max( 1, (int) get_query_var( 'paged' ) );
 
 	$args = array(

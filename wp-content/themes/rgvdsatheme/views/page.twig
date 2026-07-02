@@ -68,11 +68,17 @@
 					<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">Any member in good standing may propose an amendment. Proposals are read at a general meeting and voted on at the following one. Reach out to the steering committee if you&rsquo;d like help drafting a proposal.</p>
 				{% endif %}
 
-				{# ---- Grievance callout ---- #}
-				<aside id="grievance" class="callout-card mt-3 flex scroll-mt-[calc(110px+var(--wp-admin--admin-bar--height,0px))] flex-col gap-2.5 rounded-[16px] border-l-[5px] border-brand-red bg-tint px-7 py-[26px]">
-					<div class="font-display text-base font-extrabold text-red">Need to report something?</div>
-					<p class="m-0 text-base leading-[1.7] text-text-body">Our grievance officers are here for you. Reports are handled confidentially, and you can always bring a support person. Email <a href="mailto:hello@example.org" class="font-bold text-red hover:underline hover:underline-offset-[3px]">hello@example.org</a> or speak to any grievance officer at a meeting.</p>
-				</aside>
+				{# ---- Grievance callout (toggle + editable body; email from chapter settings) ---- #}
+				{% if show_grievance is not defined or show_grievance %}
+					<aside id="grievance" class="callout-card mt-3 flex scroll-mt-[calc(110px+var(--wp-admin--admin-bar--height,0px))] flex-col gap-2.5 rounded-[16px] border-l-[5px] border-brand-red bg-tint px-7 py-[26px]">
+						<div class="font-display text-base font-extrabold text-red">Need to report something?</div>
+						{% if grievance_body is defined and grievance_body %}
+							<div class="prose-rgv text-base leading-[1.7] text-text-body">{{ grievance_body|raw }}</div>
+						{% else %}
+							<p class="m-0 text-base leading-[1.7] text-text-body">Our grievance officers are here for you. Reports are handled confidentially, and you can always bring a support person.{% if chapter.contact_email %} Email <a href="mailto:{{ chapter.contact_email }}" class="font-bold text-red hover:underline hover:underline-offset-[3px]">{{ chapter.contact_email }}</a> or speak to any grievance officer at a meeting.{% else %} Speak to any grievance officer at a meeting.{% endif %}</p>
+						{% endif %}
+					</aside>
+				{% endif %}
 
 			</article>
 

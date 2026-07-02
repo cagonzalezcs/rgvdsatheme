@@ -16,7 +16,8 @@
 	{ day: '25', month: 'JUL', title: 'Chapter Social — Harlingen', when: 'Saturday, July 25 · 6:00 PM', where: 'Harlingen' },
 	{ day: '29', month: 'JUL', title: 'RGV-DSA 101 (Virtual)', when: 'Wednesday, July 29 · 7:00 PM', where: 'Zoom' }
 ]) %}
-{% set counties = ['McAllen', 'Edinburg', 'Brownsville', 'Harlingen', 'Pharr', 'San Juan', 'San Benito', 'Raymondville', 'Roma', 'La Joya', 'Rio Grande City', 'Zapata', 'La Grulla', 'La Feria', 'Rio Hondo'] %}
+{# counties + hero come from inc/options.php (rgvdsa_chapter_counties / rgvdsa_front_hero). #}
+{% set counties = counties|default([]) %}
 {#
   blog_featured (map|null) and blog_rows (array) come from
   rgvdsa_blog_front_page_context() with a raw `cat` slug. Literal class maps
@@ -41,19 +42,19 @@
 			<div class="flex flex-[1_1_520px] flex-col items-start gap-7 shrink-0">
 				<span class="rounded-full bg-white px-[18px] py-[7px] text-[0.85rem] font-bold uppercase tracking-[0.1em] text-red">Rio Grande Valley Democratic Socialists</span>
 				<h1 class="m-0 max-w-[18ch] font-display text-[clamp(2.3rem,5.6vw,4rem)] font-black leading-[1.08] tracking-[-0.01em] [text-wrap:balance]">
-					A better world is possible. We&rsquo;re building it in the Valley.
+					{{ hero.heading }}
 				</h1>
 				<p class="m-0 max-w-[44ch] text-[1.5rem] font-normal leading-[1.5]">
-					We&rsquo;re the Rio Grande Valley chapter of the Democratic Socialists of America — the largest socialist organization in the United States — organizing working-class power across our border communities.
+					{{ hero.lede }}
 				</p>
 				<div class="flex flex-wrap items-center gap-3.5">
-					<a href="{{ chapter.join_url }}" target="_blank" rel="noopener"
+					<a href="{{ hero.cta_primary_url }}" target="_blank" rel="noopener"
 						class="rounded-full bg-white px-[34px] py-4 text-[1.05rem] font-bold text-red no-underline shadow-[0_4px_14px_rgba(28,25,23,0.25)] transition-transform hover:-translate-y-px hover:text-red-hover">
-						Join DSA
+						{{ hero.cta_primary_label }}
 					</a>
-					<a href="#events"
+					<a href="{{ hero.cta_secondary_url }}"
 						class="rounded-full bg-ink px-[34px] py-4 text-[1.05rem] font-bold text-white no-underline transition-colors hover:bg-ink-soft">
-						Come to a meeting ↓
+						{{ hero.cta_secondary_label }}
 					</a>
 				</div>
 				<span class="rounded-full bg-[rgba(28,25,23,0.85)] px-[18px] py-2 text-[0.95rem]">New here? Start with <strong>RGV-DSA 101</strong> — no experience needed.</span>

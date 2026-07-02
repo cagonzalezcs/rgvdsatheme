@@ -40,7 +40,7 @@
 				{% set footer_props = footer_props|merge({ columns: footer_columns }) %}
 			{% endif %}
 			{% if chapter.contact_email %}
-				{% set footer_props = footer_props|merge({ a11yContactHref: 'mailto:' ~ chapter.contact_email }) %}
+				{% set footer_props = footer_props|merge({ contactEmail: chapter.contact_email }) %}
 			{% endif %}
 			<div data-vue-island="SiteFooter" data-props='{{ footer_props|json_encode|e("html_attr") }}'></div>
 			{{ function('wp_footer') }}

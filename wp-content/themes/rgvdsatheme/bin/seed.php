@@ -532,7 +532,37 @@ update_field( 'field_rgvdsa_options_committees', array(
 	array( 'name' => 'Electoral', 'desc' => 'Backing candidates and ballot measures that fight for working people.' ),
 	array( 'name' => 'Membership & Onboarding', 'desc' => 'Welcoming new members and making sure no one falls through the cracks.' ),
 ), 'option' );
+update_field( 'field_rgvdsa_options_counties', array_map(
+	static function ( $name ) {
+		return array( 'name' => $name );
+	},
+	array(
+		'McAllen', 'Edinburg', 'Brownsville', 'Harlingen', 'Pharr', 'San Juan',
+		'San Benito', 'Raymondville', 'Roma', 'La Joya', 'Rio Grande City',
+		'Zapata', 'La Grulla', 'La Feria', 'Rio Hondo',
+	)
+), 'option' );
 rgvdsa_seed_log( 'chapter settings options seeded' );
+
+/* --- Posts-page lede (interior `lede` field on the page_for_posts page). */
+if ( $blog_page_id ) {
+	update_field( 'field_rgvdsa_interior_lede', 'News, analysis, and dispatches from RGV-DSA organizers across the Valley.', $blog_page_id );
+	rgvdsa_seed_log( "posts-page lede seeded (#{$blog_page_id})" );
+}
+
+/* --- Home hero copy (front-page ACF group). Needs a front page assigned. */
+$rgvdsa_seed_front_id = (int) get_option( 'page_on_front' );
+if ( $rgvdsa_seed_front_id ) {
+	update_field( 'field_rgvdsa_hero_heading', 'A better world is possible. We’re building it in the Valley.', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_hero_lede', 'We’re the Rio Grande Valley chapter of the Democratic Socialists of America — the largest socialist organization in the United States — organizing working-class power across our border communities.', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_hero_cta_primary_label', 'Join DSA', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_hero_cta_primary_url', 'https://act.dsausa.org/donate/membership', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_hero_cta_secondary_label', 'Come to a meeting ↓', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_hero_cta_secondary_url', '#events', $rgvdsa_seed_front_id );
+	rgvdsa_seed_log( "home hero copy seeded (#{$rgvdsa_seed_front_id})" );
+} else {
+	rgvdsa_seed_log( 'WARN: no page_on_front — home hero copy not seeded (assign a static front page)' );
+}
 
 /* -------------------------------------------------------------------------
  * 6. Interior — bylaws page governing-documents repeater.

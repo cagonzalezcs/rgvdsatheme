@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from "vue";
+
 interface NavLink {
   label: string;
   href: string;
@@ -10,17 +12,19 @@ interface FooterColumn {
   links: NavLink[];
 }
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     logoUrl?: string;
     tagline?: string;
     columns?: FooterColumn[];
     orgName?: string;
-    a11yContactHref?: string;
+    /** Chapter contact email (from Chapter Settings); empty hides the link. */
+    contactEmail?: string;
   }>(),
   {
     logoUrl: "",
     tagline: "Organizing across Hidalgo, Cameron, Willacy, and Starr counties.",
+    contactEmail: "",
     columns: () => [
       {
         title: "About",
@@ -57,7 +61,6 @@ withDefaults(
       {
         title: "Contact",
         links: [
-          { label: "Email", href: "mailto:hello@example.org" },
           {
             label: "Instagram",
             href: "https://www.instagram.com/dsa_rgv/",
@@ -67,8 +70,12 @@ withDefaults(
       },
     ],
     orgName: "Rio Grande Valley Democratic Socialists of America",
-    a11yContactHref: "mailto:hello@example.org",
   },
+);
+
+/** Accessibility-feedback mailto — hidden entirely when no email is set. */
+const a11yContactHref = computed(() =>
+  props.contactEmail ? `mailto:${props.contactEmail}` : "",
 );
 </script>
 
@@ -122,7 +129,7 @@ withDefaults(
         class="mx-auto flex max-w-[1140px] flex-wrap justify-between gap-4 text-[0.85rem]"
       >
         <span>{{ orgName }}</span>
-        <span>
+        <span v-if="a11yContactHref">
           Built to be accessible —
           <a :href="a11yContactHref" class="font-bold text-white hover:text-pink">
             tell us how we can do better
