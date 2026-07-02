@@ -198,7 +198,7 @@ const mailShareUrl = computed(
         <aside
           v-if="showMetaRail"
           aria-label="Post details"
-          class="sticky top-[100px] mt-10 flex w-[280px] flex-none flex-col gap-6 max-lg:hidden"
+          class="sticky top-[calc(100px+var(--wp-admin--admin-bar--height,0px))] mt-10 flex w-[280px] flex-none flex-col gap-6 max-lg:hidden"
         >
           <div class="flex flex-col gap-2.5 border-l-[3px] pl-4" :style="{ borderColor: accent }">
             <div class="font-display text-[0.85rem] font-extrabold uppercase tracking-[0.08em]">Posted in</div>
