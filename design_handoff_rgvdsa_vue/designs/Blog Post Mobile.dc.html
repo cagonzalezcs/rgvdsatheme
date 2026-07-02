@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="design_doc_mode" content="canvas">
+  <style>
+    @font-face{font-family:'Open Sans';src:url('assets/fonts/OpenSans-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+    @font-face{font-family:'Open Sans';src:url('assets/fonts/OpenSans-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;font-display:swap}
+    @font-face{font-family:'Open Sans';src:url('assets/fonts/OpenSans-Bold.ttf') format('truetype');font-weight:700 800;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-ExtraBold.ttf') format('truetype');font-weight:800;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-Black.ttf') format('truetype');font-weight:900;font-style:normal;font-display:swap}
+    body{margin:0;font-family:'Open Sans',system-ui,sans-serif;background:#E7E3DC;color:#1C1917;-webkit-font-smoothing:antialiased}
+    ::selection{background:#E9252E;color:#FFFFFF}
+  </style>
+</helmet>
+
+<div style="display:flex; align-items:flex-start; gap:72px; padding:56px; min-width:max-content">
+
+  <!-- ================================================================ -->
+  <!-- 320 MOBILE                                                        -->
+  <!-- ================================================================ -->
+  <div id="mobile" data-screen-label="Blog Post — Mobile 320" style="display:flex; flex-direction:column; gap:14px; flex:none">
+    <div style="font-family:ui-monospace, Menlo, monospace; font-size:0.8rem; font-weight:600; color:#57534E; display:flex; align-items:center; gap:8px"><span style="background:#1C1917; color:#FFFFFF; border-radius:6px; padding:3px 9px">320</span> Blog Post · Mobile</div>
+    <div style="width:320px; background:#FFFFFF; border-radius:6px; overflow:hidden; box-shadow:0 18px 50px rgba(28,25,23,0.22)">
+
+      <!-- Header -->
+      <header data-tone="red" style="background:#E9252E; box-shadow:0 2px 14px rgba(28,25,23,0.22); position:relative; z-index:20">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 16px; min-height:56px">
+          <a href="Blog Post.dc.html" aria-label="RGV DSA home" style="display:flex; align-items:center; flex:none">
+            <img src="assets/logo-red.png" alt="Rio Grande Valley Democratic Socialists of America" style="height:40px; width:auto; display:block">
+          </a>
+          <button onClick="{{ toggleM }}" aria-expanded="{{ mOpen }}" aria-label="Menu" style="width:44px; height:44px; display:flex; align-items:center; justify-content:center; background:transparent; border:2px solid rgba(255,255,255,0.65); border-radius:10px; color:#FFFFFF; font-size:1.15rem; cursor:pointer; padding:0" style-hover="background:rgba(28,25,23,0.18)">{{ mIcon }}</button>
+        </div>
+        <sc-if value="{{ mOpen }}" hint-placeholder-val="{{ false }}">
+          <nav aria-label="Main" style="background:#FFFFFF; border-top:1px solid #F0908F; display:flex; flex-direction:column; box-shadow:0 18px 30px rgba(28,25,23,0.25)">
+            <a href="About.dc.html" style="padding:15px 20px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:700; font-size:1.05rem; border-bottom:1px solid #ECE6DA" style-hover="background:#FDF0EE; color:#B01B22">About</a>
+            <a href="Calendar.dc.html" style="padding:15px 20px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:700; font-size:1.05rem; border-bottom:1px solid #ECE6DA" style-hover="background:#FDF0EE; color:#B01B22">Calendar</a>
+            <a href="Blog.dc.html" style="padding:15px 20px; color:#B01B22; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:700; font-size:1.05rem; border-bottom:1px solid #ECE6DA; background:#FDF0EE">Blog</a>
+            <a href="Get Involved.dc.html" style="padding:15px 20px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:700; font-size:1.05rem; border-bottom:1px solid #ECE6DA" style-hover="background:#FDF0EE; color:#B01B22">Get Involved</a>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 20px">
+              <div role="group" aria-label="Language" style="display:flex; align-items:center; background:#F7F5F2; border-radius:999px; padding:3px; gap:2px">
+                <button style="font-family:inherit; font-size:0.8rem; font-weight:700; letter-spacing:0.04em; padding:6px 14px; border:none; border-radius:999px; cursor:pointer; background:#B01B22; color:#FFFFFF">EN</button>
+                <button lang="es" title="Español" style="font-family:inherit; font-size:0.8rem; font-weight:700; letter-spacing:0.04em; padding:6px 14px; border:none; border-radius:999px; cursor:pointer; background:transparent; color:#B01B22">ES</button>
+              </div>
+              <button aria-label="Accessibility options" style="font-family:inherit; font-size:0.95rem; font-weight:700; color:#B01B22; background:#F7F5F2; border:none; border-radius:999px; padding:8px 16px; cursor:pointer">Aa</button>
+            </div>
+            <div style="padding:4px 20px 20px">
+              <a href="https://www.dsausa.org/join" target="_blank" rel="noopener" style="display:block; text-align:center; font-size:1rem; font-weight:700; color:#FFFFFF; background:#B01B22; text-decoration:none; padding:14px 24px; border-radius:999px" style-hover="background:#8F151B">Join DSA</a>
+            </div>
+          </nav>
+        </sc-if>
+      </header>
+
+      <!-- Post hero -->
+      <section data-tone="red" style="background:#E9252E; color:#FFFFFF; padding:32px 20px 90px; display:flex; flex-direction:column; gap:16px; align-items:flex-start">
+        <nav aria-label="Breadcrumb" style="display:flex; align-items:center; gap:8px; background:#FFFFFF; border-radius:999px; padding:5px 14px; font-size:0.78rem; font-weight:700; flex-wrap:wrap">
+          <a href="RGV DSA Home.dc.html" style="color:#B01B22; text-decoration:none" style-hover="text-decoration:underline">Home</a>
+          <span aria-hidden="true" style="color:#57534E">/</span>
+          <a href="Blog.dc.html" style="color:#B01B22; text-decoration:none" style-hover="text-decoration:underline">Blog</a>
+          <span aria-hidden="true" style="color:#57534E">/</span>
+          <span aria-current="page" style="color:#1C1917">Post</span>
+        </nav>
+        <a href="Blog.dc.html" style="background:#1B6B40; color:#FFFFFF; border-radius:999px; padding:5px 14px; font-size:0.7rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; text-decoration:none" style-hover="background:#1C1917">Mutual Aid</a>
+        <h1 style="font-family:Montserrat,sans-serif; font-weight:900; font-size:1.6rem; line-height:1.15; letter-spacing:-0.01em; margin:0; text-wrap:balance">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod</h1>
+        <p style="font-size:1.02rem; line-height:1.55; margin:0">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <div style="display:flex; flex-direction:column; gap:8px; align-items:flex-start">
+          <div style="display:flex; align-items:center; gap:8px; background:#FFFFFF; color:#1C1917; border-radius:999px; padding:5px 14px 5px 5px; font-size:0.8rem; font-weight:600">
+            <span aria-hidden="true" style="border-radius:50%; flex:none; width:30px; height:30px; background:repeating-linear-gradient(45deg, #F5F1EA 0 6px, #ECE6DA 6px 12px)"></span>
+            <span>By <strong>Author Name</strong> · Mutual Aid Committee</span>
+          </div>
+          <span style="background:rgba(28,25,23,0.85); color:#FFFFFF; border-radius:999px; padding:7px 14px; font-size:0.8rem; font-weight:600">June 14, 2026 · 6 min read</span>
+          <a href="#mobile" style="background:rgba(28,25,23,0.85); color:#FFFFFF; border-radius:999px; padding:7px 14px; font-size:0.8rem; font-weight:700; text-decoration:underline; text-underline-offset:3px" lang="es" style-hover="background:#1C1917">Léelo en español →</a>
+        </div>
+      </section>
+
+      <!-- Article -->
+      <section style="background:#FFFFFF; padding:0 20px 56px">
+        <article style="display:flex; flex-direction:column; gap:24px">
+
+          <!-- Featured image pulled up -->
+          <figure style="margin:-64px 0 0; display:flex; flex-direction:column">
+            <div aria-hidden="true" style="border-radius:14px; overflow:hidden; box-shadow:0 12px 32px rgba(28,25,23,0.24); background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); height:180px; display:flex; align-items:center; justify-content:center">
+              <span style="font-family:ui-monospace, Menlo, monospace; font-size:0.7rem; color:#57534E; background:#FFFFFF; border-radius:8px; padding:5px 10px">featured photo</span>
+            </div>
+            <figcaption style="font-size:0.8rem; color:#57534E; padding:10px 2px 0; line-height:1.5">Lorem ipsum dolor sit amet, consectetur adipiscing elit. <span style="color:#78716C">Photo: RGV DSA</span></figcaption>
+          </figure>
+
+          <!-- Prose -->
+          <p style="font-size:1rem; line-height:1.75; margin:0; color:#292524">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p style="font-size:1rem; line-height:1.75; margin:0; color:#292524">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+
+          <!-- Image block -->
+          <figure style="margin:0; display:flex; flex-direction:column">
+            <div aria-hidden="true" style="border-radius:14px; overflow:hidden; box-shadow:0 6px 20px rgba(28,25,23,0.14); background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); height:170px; display:flex; align-items:center; justify-content:center">
+              <span style="font-family:ui-monospace, Menlo, monospace; font-size:0.7rem; color:#57534E; background:#FFFFFF; border-radius:8px; padding:5px 10px">photo</span>
+            </div>
+            <figcaption style="font-size:0.8rem; color:#57534E; padding:10px 2px 0; line-height:1.5">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.</figcaption>
+          </figure>
+
+          <!-- Pull quote -->
+          <aside style="border-radius:14px; background:#FFFFFF; box-shadow:0 6px 20px rgba(28,25,23,0.14); border-left:5px solid #1B6B40; padding:20px 22px; display:flex; flex-direction:column; gap:10px">
+            <blockquote style="margin:0; font-family:Montserrat,sans-serif; font-weight:700; font-size:1.1rem; line-height:1.42">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt."</blockquote>
+            <div style="font-size:0.74rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#1B6B40">— Attribution line</div>
+          </aside>
+
+          <!-- Gallery: stacked -->
+          <div style="display:flex; flex-direction:column; gap:12px">
+            <figure style="margin:0; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(28,25,23,0.12); background:#FFFFFF; display:flex; flex-direction:column">
+              <span aria-hidden="true" style="height:150px; background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); display:block"></span>
+              <figcaption style="font-size:0.78rem; color:#57534E; padding:9px 14px">Lorem ipsum dolor sit amet.</figcaption>
+            </figure>
+            <figure style="margin:0; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(28,25,23,0.12); background:#FFFFFF; display:flex; flex-direction:column">
+              <span aria-hidden="true" style="height:150px; background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); display:block"></span>
+              <figcaption style="font-size:0.78rem; color:#57534E; padding:9px 14px">Consectetur adipiscing elit.</figcaption>
+            </figure>
+            <figure style="margin:0; border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(28,25,23,0.12); background:#FFFFFF; display:flex; flex-direction:column">
+              <span aria-hidden="true" style="height:150px; background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); display:block"></span>
+              <figcaption style="font-size:0.78rem; color:#57534E; padding:9px 14px">Sed do eiusmod tempor.</figcaption>
+            </figure>
+          </div>
+
+          <!-- Person quote -->
+          <div style="border-radius:14px; background:#FFFFFF; box-shadow:0 6px 20px rgba(28,25,23,0.14); padding:20px; display:flex; flex-direction:column; gap:12px">
+            <span aria-hidden="true" style="border-radius:50%; flex:none; width:64px; height:64px; background:repeating-linear-gradient(45deg, #F5F1EA 0 8px, #ECE6DA 8px 16px); box-shadow:0 2px 8px rgba(28,25,23,0.15)"></span>
+            <blockquote lang="es" style="margin:0; font-size:1.05rem; line-height:1.6; font-weight:600">"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</blockquote>
+            <div style="font-size:0.9rem; line-height:1.6; color:#57534E">"Translation of the quote appears here."</div>
+            <div style="font-size:0.74rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase"><span style="color:#1B6B40">Person Name</span> <span style="color:#57534E">· Role or affiliation</span></div>
+          </div>
+
+          <!-- Video -->
+          <figure style="margin:0; display:flex; flex-direction:column">
+            <div style="position:relative; border-radius:14px; overflow:hidden; box-shadow:0 6px 20px rgba(28,25,23,0.14); background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); aspect-ratio:16/9; display:flex; align-items:center; justify-content:center">
+              <button aria-label="Play video" style="width:56px; height:56px; background:#B01B22; color:#FFFFFF; border:none; border-radius:50%; box-shadow:0 6px 18px rgba(28,25,23,0.3); font-size:1.2rem; cursor:pointer" style-hover="background:#8F151B">▶</button>
+              <span style="position:absolute; bottom:10px; right:10px; background:#FFFFFF; color:#1C1917; font-size:0.68rem; font-weight:700; letter-spacing:0.06em; padding:3px 8px; border-radius:5px">CC</span>
+            </div>
+            <figcaption style="display:flex; flex-direction:column; gap:4px; font-size:0.8rem; color:#57534E; padding:10px 2px 0; line-height:1.5">
+              <span>Watch: lorem ipsum dolor sit amet. Captioned in English and Spanish.</span>
+              <a href="#mobile" style="color:#B01B22; font-weight:700" style-hover="text-decoration:underline">Read transcript</a>
+            </figcaption>
+          </figure>
+
+          <!-- Prose w/ heading -->
+          <h2 style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.3rem; letter-spacing:-0.01em; margin:8px 0 0; padding-bottom:10px; border-bottom:3px solid #E9252E">Lorem ipsum dolor sit amet</h2>
+          <p style="font-size:1rem; line-height:1.75; margin:0; color:#292524">Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+
+          <!-- Audio -->
+          <div style="border-radius:14px; background:#FFFFFF; box-shadow:0 6px 20px rgba(28,25,23,0.14); padding:18px; display:flex; flex-direction:column; gap:12px">
+            <div style="display:flex; align-items:center; gap:14px">
+              <button aria-label="Play audio, 3 minutes 12 seconds" style="width:44px; height:44px; flex:none; background:#B01B22; color:#FFFFFF; border:none; border-radius:50%; box-shadow:0 4px 12px rgba(28,25,23,0.25); font-size:0.95rem; cursor:pointer" style-hover="background:#8F151B">▶</button>
+              <div style="font-weight:700; font-size:0.92rem; line-height:1.35">Listen: lorem ipsum audio title</div>
+            </div>
+            <div aria-hidden="true" style="height:8px; background:#F0EDE8; border-radius:999px; position:relative; overflow:hidden">
+              <div style="position:absolute; inset:0; width:30%; background:#1B6B40; border-radius:999px"></div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-family:ui-monospace, Menlo, monospace; font-size:0.72rem; color:#57534E"><span>0:58</span><span>3:12</span></div>
+            <a href="#mobile" style="font-size:0.82rem; color:#B01B22; font-weight:700" style-hover="text-decoration:underline">Read transcript</a>
+          </div>
+
+          <!-- Document -->
+          <div style="border-radius:12px; background:#FFFFFF; box-shadow:0 2px 10px rgba(28,25,23,0.10); padding:16px; display:flex; flex-direction:column; gap:12px">
+            <div style="display:flex; align-items:center; gap:12px">
+              <span aria-hidden="true" style="font-family:ui-monospace, Menlo, monospace; font-size:0.72rem; font-weight:700; color:#B01B22; border:2px solid #B01B22; border-radius:9px; padding:7px 9px; flex:none">PDF</span>
+              <div style="display:flex; flex-direction:column; gap:2px">
+                <span style="font-weight:700; font-size:0.95rem; line-height:1.35">Lorem ipsum document title</span>
+                <span style="font-size:0.78rem; color:#57534E">Bilingual · 2 pages · 340 KB</span>
+              </div>
+            </div>
+            <a href="#mobile" style="text-align:center; font-weight:700; color:#B01B22; text-decoration:none; font-size:0.88rem; border:2px solid #B01B22; border-radius:999px; padding:9px 20px" style-hover="background:#F7D7D3">Download</a>
+          </div>
+
+          <!-- Related event -->
+          <div style="border-radius:14px; background:#FFFFFF; box-shadow:0 4px 16px rgba(28,25,23,0.12); padding:16px; display:flex; flex-direction:column; gap:12px">
+            <div style="display:flex; gap:12px; align-items:center">
+              <div aria-hidden="true" style="background:#1B6B40; color:#FFFFFF; border-radius:10px; text-align:center; padding:7px 4px; display:flex; flex-direction:column; flex:none; width:50px">
+                <span style="font-size:0.6rem; font-weight:700; letter-spacing:0.1em">SAT</span>
+                <span style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.15rem; line-height:1.1">18</span>
+                <span style="font-size:0.6rem; font-weight:700; letter-spacing:0.1em">JUL</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:3px; min-width:0">
+                <span style="font-size:0.66rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#1B6B40">Upcoming event · Mutual Aid</span>
+                <span style="font-size:0.95rem; font-weight:700; line-height:1.35">Lorem ipsum event title dolor sit amet</span>
+                <span style="font-size:0.8rem; color:#57534E">7:00 AM · Location name</span>
+              </div>
+            </div>
+            <a href="Calendar.dc.html" style="text-align:center; font-weight:700; color:#B01B22; text-decoration:none; font-size:0.88rem; border:2px solid #B01B22; border-radius:999px; padding:9px 20px" style-hover="background:#F7D7D3">RSVP</a>
+          </div>
+
+          <!-- Action callout -->
+          <aside data-tone="ink" style="border-radius:16px; background:#1C1917; color:#FFFFFF; padding:24px 22px; display:flex; flex-direction:column; gap:14px">
+            <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.3rem; letter-spacing:-0.01em; line-height:1.22">Lorem ipsum dolor sit amet</div>
+            <p style="font-size:0.92rem; line-height:1.65; margin:0; color:#CFC8BD">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <div style="display:flex; flex-direction:column; gap:10px">
+              <a href="Get Involved.dc.html" style="text-align:center; font-size:0.9rem; font-weight:700; color:#1C1917; background:#FFFFFF; text-decoration:none; padding:12px 26px; border-radius:999px" style-hover="background:#F0908F">Primary action</a>
+              <a href="#mobile" style="text-align:center; font-size:0.9rem; font-weight:700; color:#FFFFFF; text-decoration:none; padding:11px 24px; border:2px solid #57534E; border-radius:999px" style-hover="border-color:#FFFFFF">Secondary action</a>
+            </div>
+          </aside>
+
+          <!-- Tags + share -->
+          <div style="display:flex; flex-direction:column; gap:14px; border-top:3px solid #E9252E; padding-top:20px; margin-top:4px">
+            <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
+              <a href="Blog.dc.html" style="background:#1B6B40; color:#FFFFFF; border-radius:999px; padding:5px 13px; font-size:0.7rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; text-decoration:none" style-hover="background:#1C1917">Mutual Aid</a>
+              <a href="Blog.dc.html" style="color:#1C1917; border:1px solid #D6D0C4; border-radius:999px; padding:5px 13px; font-size:0.7rem; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; text-decoration:none" style-hover="border-color:#1C1917">tag one</a>
+              <a href="Blog.dc.html" style="color:#1C1917; border:1px solid #D6D0C4; border-radius:999px; padding:5px 13px; font-size:0.7rem; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; text-decoration:none" style-hover="border-color:#1C1917">tag two</a>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px">
+              <button onClick="{{ mCopy }}" style="flex:1; font-family:inherit; font-weight:700; font-size:0.85rem; color:#B01B22; border:2px solid #B01B22; border-radius:999px; padding:9px 14px; cursor:pointer; background:transparent" style-hover="background:#F7D7D3">{{ mCopyLabel }}</button>
+              <a href="mailto:?subject=Post title — RGV DSA" style="flex:1; text-align:center; font-weight:700; font-size:0.85rem; color:#B01B22; border:2px solid #B01B22; border-radius:999px; padding:9px 14px; text-decoration:none" style-hover="background:#F7D7D3">Email it</a>
+            </div>
+          </div>
+
+          <!-- Author card -->
+          <div style="border-radius:14px; background:#F7F5F2; padding:20px; display:flex; flex-direction:column; gap:10px">
+            <span aria-hidden="true" style="border-radius:50%; flex:none; width:60px; height:60px; background:repeating-linear-gradient(45deg, #FFFFFF 0 8px, #ECE6DA 8px 16px); box-shadow:0 2px 8px rgba(28,25,23,0.15)"></span>
+            <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#B01B22">About the author</div>
+            <div style="font-weight:700; font-size:1rem">Author Name</div>
+            <p style="font-size:0.88rem; line-height:1.6; margin:0; color:#57534E">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            <a href="Get Involved.dc.html" style="font-weight:700; color:#B01B22; text-decoration:none; font-size:0.85rem" style-hover="text-decoration:underline">More about the Mutual Aid Committee →</a>
+          </div>
+
+        </article>
+      </section>
+
+      <!-- Read next -->
+      <section style="background:#F7F5F2; padding:48px 20px 64px; display:flex; flex-direction:column; gap:18px">
+        <h2 style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.4rem; line-height:1.18; letter-spacing:-0.01em; margin:0">Read next</h2>
+        <sc-for list="{{ readNext }}" as="p" hint-placeholder-count="3">
+          <a href="Blog.dc.html" style="display:flex; flex-direction:column; border-radius:14px; background:#FFFFFF; text-decoration:none; color:#1C1917; overflow:hidden; box-shadow:0 2px 10px rgba(28,25,23,0.10)" style-hover="box-shadow:0 12px 28px rgba(28,25,23,0.16)">
+            <span aria-hidden="true" style="height:96px; background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); display:flex; align-items:flex-start; padding:10px">
+              <span style="{{ p.tagStyle }}">{{ p.cat }}</span>
+            </span>
+            <span style="display:flex; flex-direction:column; gap:6px; padding:15px 17px 19px">
+              <span style="font-size:0.76rem; font-weight:600; color:#57534E">{{ p.date }}</span>
+              <span style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.98rem; line-height:1.33">{{ p.title }}</span>
+            </span>
+          </a>
+        </sc-for>
+        <a href="Blog.dc.html" style="font-weight:700; color:#B01B22; text-decoration:none; font-size:0.95rem" style-hover="text-decoration:underline; text-underline-offset:4px">All posts →</a>
+      </section>
+
+      <!-- Footer -->
+      <footer style="background:#FFFFFF; border-top:1px solid #ECE6DA; padding:48px 20px 0">
+        <div style="display:flex; flex-direction:column; gap:32px; padding-bottom:40px">
+          <div style="display:flex; flex-direction:column; gap:12px">
+            <img src="assets/logo-green.png" alt="Rio Grande Valley Democratic Socialists of America" style="width:170px; height:auto; display:block">
+            <p style="font-size:0.9rem; line-height:1.6; margin:0; color:#57534E">Organizing across Hidalgo, Cameron, Willacy, and Starr counties.</p>
+          </div>
+          <nav aria-label="About" style="display:flex; flex-direction:column; gap:9px">
+            <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.82rem; letter-spacing:0.06em; text-transform:uppercase; color:#57534E">About</div>
+            <a href="About.dc.html#mission" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Mission &amp; History</a>
+            <a href="About.dc.html#counties" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Counties We Serve</a>
+            <a href="About.dc.html#faq" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">FAQ</a>
+          </nav>
+          <nav aria-label="Get involved" style="display:flex; flex-direction:column; gap:9px">
+            <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.82rem; letter-spacing:0.06em; text-transform:uppercase; color:#57534E">Get involved</div>
+            <a href="https://www.dsausa.org/join" target="_blank" rel="noopener" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Join DSA</a>
+            <a href="Calendar.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Event Calendar</a>
+            <a href="Get Involved.dc.html#committees" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Committees</a>
+          </nav>
+          <nav aria-label="Resources" style="display:flex; flex-direction:column; gap:9px">
+            <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.82rem; letter-spacing:0.06em; text-transform:uppercase; color:#57534E">Resources</div>
+            <a href="Blog.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Blog</a>
+            <a href="Interior Page Template.dc.html#documents" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Documents &amp; Minutes</a>
+            <a href="Interior Page Template.dc.html#grievance" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Grievance Contact</a>
+          </nav>
+          <nav aria-label="Contact" style="display:flex; flex-direction:column; gap:9px">
+            <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.82rem; letter-spacing:0.06em; text-transform:uppercase; color:#57534E">Contact</div>
+            <a href="mailto:hello@example.org" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Email</a>
+            <a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Instagram</a>
+          </nav>
+        </div>
+        <div data-tone="ink" style="background:#1C1917; color:#CFC8BD; padding:16px 20px; display:flex; flex-direction:column; gap:8px; font-size:0.8rem">
+          <span>Rio Grande Valley Democratic Socialists of America</span>
+          <span>Built to be accessible — <a href="#mobile" style="color:#FFFFFF; font-weight:700" style-hover="color:#F0908F">tell us how we can do better</a></span>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <!-- ================================================================ -->
+  <!-- 768 TABLET                                                        -->
+  <!-- ================================================================ -->
+  <div id="tablet" data-screen-label="Blog Post — Tablet 768" style="display:flex; flex-direction:column; gap:14px; flex:none">
+    <div style="font-family:ui-monospace, Menlo, monospace; font-size:0.8rem; font-weight:600; color:#57534E; display:flex; align-items:center; gap:8px"><span style="background:#1C1917; color:#FFFFFF; border-radius:6px; padding:3px 9px">768</span> Blog Post · Tablet</div>
+    <div style="width:768px; background:#FFFFFF; border-radius:6px; overflow:hidden; box-shadow:0 18px 50px rgba(28,25,23,0.22)">
+
+      <!-- Header: two-tier -->
+      <header data-tone="red" style="background:#E9252E; box-shadow:0 2px 14px rgba(28,25,23,0.22); position:relative; z-index:20">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; padding:10px 28px; min-height:60px">
+          <a href="Blog Post.dc.html" aria-label="RGV DSA home" style="display:flex; align-items:center; flex:none">
+            <img src="assets/logo-red.png" alt="Rio Grande Valley Democratic Socialists of America" style="height:46px; width:auto; display:block">
+          </a>
+          <div style="display:flex; align-items:center; gap:10px">
+            <div role="group" aria-label="Language" style="display:flex; align-items:center; background:#FFFFFF; border-radius:999px; padding:3px; gap:2px">
+              <button style="font-family:inherit; font-size:0.78rem; font-weight:700; letter-spacing:0.04em; padding:4px 12px; border:none; border-radius:999px; cursor:pointer; background:#B01B22; color:#FFFFFF">EN</button>
+              <button lang="es" title="Español" style="font-family:inherit; font-size:0.78rem; font-weight:700; letter-spacing:0.04em; padding:4px 12px; border:none; border-radius:999px; cursor:pointer; background:transparent; color:#B01B22">ES</button>
+            </div>
+            <button aria-label="Accessibility options" style="font-family:inherit; font-size:0.9rem; font-weight:700; color:#B01B22; background:#FFFFFF; border:none; border-radius:999px; padding:7px 14px; cursor:pointer" style-hover="color:#8F151B">Aa</button>
+            <a href="https://www.dsausa.org/join" target="_blank" rel="noopener" style="font-size:0.9rem; font-weight:700; color:#B01B22; background:#FFFFFF; text-decoration:none; padding:9px 20px; border-radius:999px" style-hover="color:#8F151B">Join DSA</a>
+          </div>
+        </div>
+        <nav aria-label="Main" style="background:#B01B22; display:flex; align-items:center; justify-content:center; gap:4px; padding:2px 16px">
+          <a href="About.dc.html" style="font-family:Montserrat,sans-serif; font-size:1rem; font-weight:700; color:#FFFFFF; text-decoration:none; padding:11px 18px; border-radius:10px" style-hover="background:rgba(28,25,23,0.22)">About</a>
+          <a href="Calendar.dc.html" style="font-family:Montserrat,sans-serif; font-size:1rem; font-weight:700; color:#FFFFFF; text-decoration:none; padding:11px 18px; border-radius:10px" style-hover="background:rgba(28,25,23,0.22)">Calendar</a>
+          <a href="Blog.dc.html" style="font-family:Montserrat,sans-serif; font-size:1rem; font-weight:700; color:#FFFFFF; text-decoration:none; padding:11px 18px; border-radius:10px; background:rgba(28,25,23,0.22)">Blog</a>
+          <a href="Get Involved.dc.html" style="font-family:Montserrat,sans-serif; font-size:1rem; font-weight:700; color:#FFFFFF; text-decoration:none; padding:11px 18px; border-radius:10px" style-hover="background:rgba(28,25,23,0.22)">Get Involved</a>
+        </nav>
+      </header>
+
+      <!-- Post hero -->
+      <section data-tone="red" style="background:#E9252E; color:#FFFFFF; padding:40px 40px 120px; display:flex; flex-direction:column; gap:18px; align-items:flex-start">
+        <nav aria-label="Breadcrumb" style="display:flex; align-items:center; gap:8px; background:#FFFFFF; border-radius:999px; padding:6px 16px; font-size:0.82rem; font-weight:700; flex-wrap:wrap">
+          <a href="RGV DSA Home.dc.html" style="color:#B01B22; text-decoration:none" style-hover="text-decoration:underline">Home</a>
+          <span aria-hidden="true" style="color:#57534E">/</span>
+          <a href="Blog.dc.html" style="color:#B01B22; text-decoration:none" style-hover="text-decoration:underline">Blog</a>
+          <span aria-hidden="true" style="color:#57534E">/</span>
+          <span aria-current="page" style="color:#1C1917">Post title</span>
+        </nav>
+        <a href="Blog.dc.html" style="background:#1B6B40; color:#FFFFFF; border-radius:999px; padding:6px 15px; font-size:0.76rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; text-decoration:none" style-hover="background:#1C1917">Mutual Aid</a>
+        <h1 style="font-family:Montserrat,sans-serif; font-weight:900; font-size:2.2rem; line-height:1.14; letter-spacing:-0.01em; margin:0; max-width:24ch; text-wrap:balance">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod</h1>
+        <p style="font-size:1.2rem; line-height:1.5; max-width:48ch; margin:0">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+          <div style="display:flex; align-items:center; gap:9px; background:#FFFFFF; color:#1C1917; border-radius:999px; padding:5px 16px 5px 5px; font-size:0.85rem; font-weight:600">
+            <span aria-hidden="true" style="border-radius:50%; flex:none; width:34px; height:34px; background:repeating-linear-gradient(45deg, #F5F1EA 0 6px, #ECE6DA 6px 12px)"></span>
+            <span>By <strong>Author Name</strong> · Mutual Aid Committee</span>
+          </div>
+          <span style="background:rgba(28,25,23,0.85); color:#FFFFFF; border-radius:999px; padding:8px 16px; font-size:0.85rem; font-weight:600">June 14, 2026 · 6 min read</span>
+          <a href="#tablet" style="background:rgba(28,25,23,0.85); color:#FFFFFF; border-radius:999px; padding:8px 16px; font-size:0.85rem; font-weight:700; text-decoration:underline; text-underline-offset:3px" lang="es" style-hover="background:#1C1917">Léelo en español →</a>
+        </div>
+      </section>
+
+      <!-- Article -->
+      <section style="background:#FFFFFF; padding:0 48px 64px">
+        <article style="display:flex; flex-direction:column; gap:28px">
+
+          <!-- Featured image pulled up -->
+          <figure style="margin:-84px 0 0; display:flex; flex-direction:column">
+            <div aria-hidden="true" style="border-radius:16px; overflow:hidden; box-shadow:0 14px 40px rgba(28,25,23,0.24); background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); height:320px; display:flex; align-items:center; justify-content:center">
+              <span style="font-family:ui-monospace, Menlo, monospace; font-size:0.75rem; color:#57534E; background:#FFFFFF; border-radius:8px; padding:6px 11px">featured photo</span>
+            </div>
+            <figcaption style="font-size:0.85rem; color:#57534E; padding:11px 2px 0; line-height:1.5">Lorem ipsum dolor sit amet, consectetur adipiscing elit. <span style="color:#78716C">Photo: RGV DSA</span></figcaption>
+          </figure>
+
+          <!-- Prose -->
+          <div style="width:min(62ch, 100%); margin:0 auto; display:flex; flex-direction:column; gap:20px">
+            <p style="font-size:1.08rem; line-height:1.78; margin:0; color:#292524">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p style="font-size:1.08rem; line-height:1.78; margin:0; color:#292524">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          </div>
+
+          <!-- Image block -->
+          <figure style="margin:0; display:flex; flex-direction:column">
+            <div aria-hidden="true" style="border-radius:16px; overflow:hidden; box-shadow:0 8px 24px rgba(28,25,23,0.14); background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); height:300px; display:flex; align-items:center; justify-content:center">
+              <span style="font-family:ui-monospace, Menlo, monospace; font-size:0.75rem; color:#57534E; background:#FFFFFF; border-radius:8px; padding:6px 11px">photo</span>
+            </div>
+            <figcaption style="font-size:0.85rem; color:#57534E; padding:11px 2px 0; line-height:1.5">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.</figcaption>
+          </figure>
+
+          <!-- Pull quote -->
+          <aside style="width:min(64ch, 100%); margin:0 auto; border-radius:16px; background:#FFFFFF; box-shadow:0 8px 24px rgba(28,25,23,0.14); border-left:6px solid #1B6B40; padding:26px 30px; display:flex; flex-direction:column; gap:12px">
+            <blockquote style="margin:0; font-family:Montserrat,sans-serif; font-weight:700; font-size:1.3rem; line-height:1.4">"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt."</blockquote>
+            <div style="font-size:0.8rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#1B6B40">— Attribution line</div>
+          </aside>
+
+          <!-- Gallery: wide + 2-col -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px">
+            <figure style="grid-column:1 / -1; margin:0; border-radius:14px; overflow:hidden; box-shadow:0 4px 18px rgba(28,25,23,0.12); background:#FFFFFF; display:flex; flex-direction:column">
+              <span aria-hidden="true" style="height:260px; background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); display:block"></span>
+              <figcaption style="font-size:0.82rem; color:#57534E; padding:10px 15px">Lorem ipsum dolor sit amet.</figcaption>
+            </figure>
+            <figure style="margin:0; border-radius:14px; overflow:hidden; box-shadow:0 4px 18px rgba(28,25,23,0.12); background:#FFFFFF; display:flex; flex-direction:column">
+              <span aria-hidden="true" style="height:190px; background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); display:block"></span>
+              <figcaption style="font-size:0.82rem; color:#57534E; padding:10px 15px">Consectetur adipiscing elit.</figcaption>
+            </figure>
+            <figure style="margin:0; border-radius:14px; overflow:hidden; box-shadow:0 4px 18px rgba(28,25,23,0.12); background:#FFFFFF; display:flex; flex-direction:column">
+              <span aria-hidden="true" style="height:190px; background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); display:block"></span>
+              <figcaption style="font-size:0.82rem; color:#57534E; padding:10px 15px">Sed do eiusmod tempor.</figcaption>
+            </figure>
+          </div>
+
+          <!-- Person quote -->
+          <div style="width:min(64ch, 100%); margin:0 auto; border-radius:16px; background:#FFFFFF; box-shadow:0 8px 24px rgba(28,25,23,0.14); padding:24px 28px; display:flex; gap:20px; align-items:flex-start">
+            <span aria-hidden="true" style="border-radius:50%; flex:none; width:80px; height:80px; background:repeating-linear-gradient(45deg, #F5F1EA 0 8px, #ECE6DA 8px 16px); box-shadow:0 2px 8px rgba(28,25,23,0.15)"></span>
+            <div style="display:flex; flex-direction:column; gap:10px; min-width:0">
+              <blockquote lang="es" style="margin:0; font-size:1.15rem; line-height:1.6; font-weight:600">"Lorem ipsum dolor sit amet, consectetur adipiscing elit."</blockquote>
+              <div style="font-size:0.95rem; line-height:1.6; color:#57534E">"Translation of the quote appears here."</div>
+              <div style="font-size:0.78rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase"><span style="color:#1B6B40">Person Name</span> <span style="color:#57534E">· Role or affiliation</span></div>
+            </div>
+          </div>
+
+          <!-- Video -->
+          <figure style="margin:0; display:flex; flex-direction:column">
+            <div style="position:relative; border-radius:16px; overflow:hidden; box-shadow:0 8px 24px rgba(28,25,23,0.14); background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); aspect-ratio:16/9; display:flex; align-items:center; justify-content:center">
+              <button aria-label="Play video" style="width:72px; height:72px; background:#B01B22; color:#FFFFFF; border:none; border-radius:50%; box-shadow:0 8px 22px rgba(28,25,23,0.3); font-size:1.5rem; cursor:pointer" style-hover="background:#8F151B">▶</button>
+              <span style="position:absolute; bottom:12px; right:12px; background:#FFFFFF; color:#1C1917; font-size:0.72rem; font-weight:700; letter-spacing:0.06em; padding:4px 9px; border-radius:6px">CC</span>
+            </div>
+            <figcaption style="display:flex; justify-content:space-between; gap:14px; flex-wrap:wrap; font-size:0.85rem; color:#57534E; padding:11px 2px 0; line-height:1.5">
+              <span>Watch: lorem ipsum dolor sit amet. Captioned in English and Spanish.</span>
+              <a href="#tablet" style="color:#B01B22; font-weight:700" style-hover="text-decoration:underline">Read transcript</a>
+            </figcaption>
+          </figure>
+
+          <!-- Prose w/ heading -->
+          <div style="width:min(62ch, 100%); margin:0 auto; display:flex; flex-direction:column; gap:20px">
+            <h2 style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.4rem; letter-spacing:-0.01em; margin:8px 0 0; padding-bottom:10px; border-bottom:3px solid #E9252E">Lorem ipsum dolor sit amet</h2>
+            <p style="font-size:1.08rem; line-height:1.78; margin:0; color:#292524">Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+          </div>
+
+          <!-- Audio -->
+          <div style="width:min(64ch, 100%); margin:0 auto; border-radius:16px; background:#FFFFFF; box-shadow:0 8px 24px rgba(28,25,23,0.14); padding:20px 24px; display:flex; flex-direction:column; gap:12px">
+            <div style="display:flex; align-items:center; gap:16px">
+              <button aria-label="Play audio, 3 minutes 12 seconds" style="width:52px; height:52px; flex:none; background:#B01B22; color:#FFFFFF; border:none; border-radius:50%; box-shadow:0 4px 14px rgba(28,25,23,0.25); font-size:1.05rem; cursor:pointer" style-hover="background:#8F151B">▶</button>
+              <div style="flex:1; display:flex; flex-direction:column; gap:9px">
+                <div style="font-weight:700; font-size:1rem">Listen: lorem ipsum audio title</div>
+                <div aria-hidden="true" style="height:9px; background:#F0EDE8; border-radius:999px; position:relative; overflow:hidden">
+                  <div style="position:absolute; inset:0; width:30%; background:#1B6B40; border-radius:999px"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; font-family:ui-monospace, Menlo, monospace; font-size:0.75rem; color:#57534E"><span>0:58</span><span>3:12</span></div>
+              </div>
+            </div>
+            <a href="#tablet" style="font-size:0.85rem; color:#B01B22; font-weight:700; align-self:flex-start" style-hover="text-decoration:underline">Read transcript</a>
+          </div>
+
+          <!-- Document -->
+          <div style="width:min(64ch, 100%); margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:18px; border-radius:14px; background:#FFFFFF; box-shadow:0 2px 10px rgba(28,25,23,0.10); padding:16px 20px">
+            <div style="display:flex; align-items:center; gap:14px">
+              <span aria-hidden="true" style="font-family:ui-monospace, Menlo, monospace; font-size:0.76rem; font-weight:700; color:#B01B22; border:2px solid #B01B22; border-radius:10px; padding:8px 10px">PDF</span>
+              <div style="display:flex; flex-direction:column; gap:2px">
+                <span style="font-weight:700; font-size:1rem">Lorem ipsum document title</span>
+                <span style="font-size:0.82rem; color:#57534E">Bilingual · 2 pages · 340 KB</span>
+              </div>
+            </div>
+            <a href="#tablet" style="font-weight:700; color:#B01B22; text-decoration:none; font-size:0.88rem; border:2px solid #B01B22; border-radius:999px; padding:8px 18px; white-space:nowrap" style-hover="background:#F7D7D3">Download</a>
+          </div>
+
+          <!-- Related event -->
+          <div style="width:min(64ch, 100%); margin:0 auto; border-radius:14px; background:#FFFFFF; box-shadow:0 4px 18px rgba(28,25,23,0.12); padding:18px 22px; display:grid; grid-template-columns:60px 1fr auto; gap:16px; align-items:center">
+            <div aria-hidden="true" style="background:#1B6B40; color:#FFFFFF; border-radius:11px; text-align:center; padding:7px 4px; display:flex; flex-direction:column">
+              <span style="font-size:0.62rem; font-weight:700; letter-spacing:0.1em">SAT</span>
+              <span style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.25rem; line-height:1.1">18</span>
+              <span style="font-size:0.62rem; font-weight:700; letter-spacing:0.1em">JUL</span>
+            </div>
+            <div style="display:flex; flex-direction:column; gap:3px; min-width:0">
+              <span style="font-size:0.7rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#1B6B40">Upcoming event · Mutual Aid</span>
+              <span style="font-size:1rem; font-weight:700">Lorem ipsum event title dolor sit amet</span>
+              <span style="font-size:0.85rem; color:#57534E">7:00 AM · Location name</span>
+            </div>
+            <a href="Calendar.dc.html" style="font-weight:700; color:#B01B22; text-decoration:none; font-size:0.88rem; border:2px solid #B01B22; border-radius:999px; padding:8px 18px; white-space:nowrap" style-hover="background:#F7D7D3">RSVP</a>
+          </div>
+
+          <!-- Action callout -->
+          <aside data-tone="ink" style="border-radius:18px; background:#1C1917; color:#FFFFFF; padding:30px 32px; display:flex; flex-direction:column; gap:16px">
+            <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.5rem; letter-spacing:-0.01em; line-height:1.2; max-width:24ch">Lorem ipsum dolor sit amet</div>
+            <p style="font-size:0.98rem; line-height:1.7; margin:0; color:#CFC8BD; max-width:56ch">Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+            <div style="display:flex; gap:12px; flex-wrap:wrap">
+              <a href="Get Involved.dc.html" style="font-size:0.92rem; font-weight:700; color:#1C1917; background:#FFFFFF; text-decoration:none; padding:12px 26px; border-radius:999px" style-hover="background:#F0908F">Primary action</a>
+              <a href="#tablet" style="font-size:0.92rem; font-weight:700; color:#FFFFFF; text-decoration:none; padding:10px 24px; border:2px solid #57534E; border-radius:999px" style-hover="border-color:#FFFFFF">Secondary action</a>
+            </div>
+          </aside>
+
+          <!-- Tags + share -->
+          <div style="width:min(64ch, 100%); margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; border-top:3px solid #E9252E; padding-top:22px">
+            <div style="display:flex; align-items:center; gap:9px; flex-wrap:wrap">
+              <a href="Blog.dc.html" style="background:#1B6B40; color:#FFFFFF; border-radius:999px; padding:5px 14px; font-size:0.74rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; text-decoration:none" style-hover="background:#1C1917">Mutual Aid</a>
+              <a href="Blog.dc.html" style="color:#1C1917; border:1px solid #D6D0C4; border-radius:999px; padding:5px 14px; font-size:0.74rem; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; text-decoration:none" style-hover="border-color:#1C1917">tag one</a>
+              <a href="Blog.dc.html" style="color:#1C1917; border:1px solid #D6D0C4; border-radius:999px; padding:5px 14px; font-size:0.74rem; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; text-decoration:none" style-hover="border-color:#1C1917">tag two</a>
+            </div>
+            <div style="display:flex; align-items:center; gap:9px">
+              <button onClick="{{ tCopy }}" style="font-family:inherit; font-weight:700; font-size:0.86rem; color:#B01B22; border:2px solid #B01B22; border-radius:999px; padding:8px 16px; cursor:pointer; background:transparent" style-hover="background:#F7D7D3">{{ tCopyLabel }}</button>
+              <a href="mailto:?subject=Post title — RGV DSA" style="font-weight:700; font-size:0.86rem; color:#B01B22; border:2px solid #B01B22; border-radius:999px; padding:8px 16px; text-decoration:none" style-hover="background:#F7D7D3">Email it</a>
+            </div>
+          </div>
+
+          <!-- Author card -->
+          <div style="width:min(64ch, 100%); margin:0 auto; border-radius:16px; background:#F7F5F2; padding:22px 26px; display:flex; gap:18px; align-items:center">
+            <span aria-hidden="true" style="border-radius:50%; flex:none; width:64px; height:64px; background:repeating-linear-gradient(45deg, #FFFFFF 0 8px, #ECE6DA 8px 16px); box-shadow:0 2px 8px rgba(28,25,23,0.15)"></span>
+            <div style="display:flex; flex-direction:column; gap:5px; min-width:0">
+              <div style="font-size:0.74rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#B01B22">About the author</div>
+              <div style="font-weight:700; font-size:1.02rem">Author Name</div>
+              <p style="font-size:0.9rem; line-height:1.6; margin:0; color:#57534E">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
+              <a href="Get Involved.dc.html" style="font-weight:700; color:#B01B22; text-decoration:none; font-size:0.86rem; margin-top:2px" style-hover="text-decoration:underline">More about the Mutual Aid Committee →</a>
+            </div>
+          </div>
+
+        </article>
+      </section>
+
+      <!-- Read next -->
+      <section style="background:#F7F5F2; padding:56px 40px 72px; display:flex; flex-direction:column; gap:22px">
+        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px">
+          <h2 style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.6rem; line-height:1.15; letter-spacing:-0.01em; margin:0">Read next</h2>
+          <a href="Blog.dc.html" style="font-weight:700; color:#B01B22; text-decoration:none; font-size:0.95rem; white-space:nowrap" style-hover="text-decoration:underline; text-underline-offset:4px">All posts →</a>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px">
+          <sc-for list="{{ readNext }}" as="p" hint-placeholder-count="3">
+            <a href="Blog.dc.html" style="display:flex; flex-direction:column; border-radius:14px; background:#FFFFFF; text-decoration:none; color:#1C1917; overflow:hidden; box-shadow:0 2px 10px rgba(28,25,23,0.10)" style-hover="box-shadow:0 12px 28px rgba(28,25,23,0.16)">
+              <span aria-hidden="true" style="height:100px; background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); display:flex; align-items:flex-start; padding:10px">
+                <span style="{{ p.tagStyle }}">{{ p.cat }}</span>
+              </span>
+              <span style="display:flex; flex-direction:column; gap:6px; padding:15px 16px 19px">
+                <span style="font-size:0.76rem; font-weight:600; color:#57534E">{{ p.date }}</span>
+                <span style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.95rem; line-height:1.35">{{ p.title }}</span>
+              </span>
+            </a>
+          </sc-for>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer style="background:#FFFFFF; border-top:1px solid #ECE6DA; padding:56px 40px 0">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:36px 40px; padding-bottom:48px">
+          <div style="display:flex; flex-direction:column; gap:14px">
+            <img src="assets/logo-green.png" alt="Rio Grande Valley Democratic Socialists of America" style="width:180px; height:auto; display:block">
+            <p style="font-size:0.92rem; line-height:1.6; margin:0; color:#57534E; max-width:32ch">Organizing across Hidalgo, Cameron, Willacy, and Starr counties.</p>
+          </div>
+          <nav aria-label="About" style="display:flex; flex-direction:column; gap:9px">
+            <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.85rem; letter-spacing:0.06em; text-transform:uppercase; color:#57534E">About</div>
+            <a href="About.dc.html#mission" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Mission &amp; History</a>
+            <a href="About.dc.html#counties" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Counties We Serve</a>
+            <a href="About.dc.html#bylaws" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Bylaws &amp; Code of Conduct</a>
+            <a href="About.dc.html#faq" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">FAQ</a>
+          </nav>
+          <nav aria-label="Get involved" style="display:flex; flex-direction:column; gap:9px">
+            <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.85rem; letter-spacing:0.06em; text-transform:uppercase; color:#57534E">Get involved</div>
+            <a href="https://www.dsausa.org/join" target="_blank" rel="noopener" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Join DSA</a>
+            <a href="Calendar.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Event Calendar</a>
+            <a href="Get Involved.dc.html#committees" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Committees</a>
+            <a href="Get Involved.dc.html#channels" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Communication Channels</a>
+          </nav>
+          <nav aria-label="Resources and contact" style="display:flex; flex-direction:column; gap:9px">
+            <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.85rem; letter-spacing:0.06em; text-transform:uppercase; color:#57534E">Resources</div>
+            <a href="Blog.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Blog</a>
+            <a href="Interior Page Template.dc.html#documents" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Documents &amp; Minutes</a>
+            <a href="Interior Page Template.dc.html#grievance" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Grievance Contact</a>
+            <a href="mailto:hello@example.org" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Email</a>
+            <a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener" style="color:#1C1917; text-decoration:none; font-size:0.92rem" style-hover="color:#B01B22">Instagram</a>
+          </nav>
+        </div>
+        <div data-tone="ink" style="background:#1C1917; color:#CFC8BD; padding:16px 28px; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font-size:0.83rem">
+          <span>Rio Grande Valley Democratic Socialists of America</span>
+          <span>Built to be accessible — <a href="#tablet" style="color:#FFFFFF; font-weight:700" style-hover="color:#F0908F">tell us how we can do better</a></span>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: &quot;1280px&quot; },
+  &quot;mobileMenuOpen&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Mobile&quot; }
+}">
+class Component extends DCLogic {
+  state = { mOverride: null, mCopied: false, tCopied: false };
+
+  copy(key) {
+    try { navigator.clipboard.writeText(location.href); } catch (e) {}
+    this.setState({ [key]: true });
+    clearTimeout(this['_t' + key]);
+    this['_t' + key] = setTimeout(() => this.setState({ [key]: false }), 2000);
+  }
+
+  renderVals() {
+    const mOpen = this.state.mOverride ?? (this.props.mobileMenuOpen ?? false);
+    return {
+      mOpen,
+      mIcon: mOpen ? '✕' : '☰',
+      toggleM: () => this.setState({ mOverride: !mOpen }),
+      mCopy: () => this.copy('mCopied'),
+      mCopyLabel: this.state.mCopied ? 'Copied ✓' : 'Copy link',
+      tCopy: () => this.copy('tCopied'),
+      tCopyLabel: this.state.tCopied ? 'Copied ✓' : 'Copy link',
+      readNext: [
+        { title: 'At vero eos et accusamus et iusto odio', cat: 'Mutual Aid', date: 'May 2, 2026', tagStyle: { background: '#1B6B40', color: '#FFFFFF', borderRadius: '999px', padding: '3px 10px', fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' } },
+        { title: 'Temporibus autem quibusdam et aut officiis debitis', cat: 'Labor', date: 'May 16, 2026', tagStyle: { background: '#8F5715', color: '#FFFFFF', borderRadius: '999px', padding: '3px 10px', fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' } },
+        { title: 'Sed ut perspiciatis unde omnis iste natus', cat: 'Political Ed', date: 'Jun 28, 2026', tagStyle: { background: '#33518F', color: '#FFFFFF', borderRadius: '999px', padding: '3px 10px', fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase' } }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

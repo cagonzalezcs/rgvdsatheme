@@ -32,8 +32,10 @@ If you see cream `#FAF4EA`, `6px 6px 0` / `8px 8px 0` shadows, or uppercase `h1`
 There are three copies of these screens in the project. Only one set is v2, and it exists in two identical forms:
 
 **v2 (warm/rounded) — the build target:**
-- Project root: `RGV DSA Home v2.dc.html`, `About v2.dc.html`, `Get Involved v2.dc.html`, `Calendar v2.dc.html`, `Blog v2.dc.html`, `Blog Post v2.dc.html`, plus `Interior Page Template.dc.html` (single version — already v2).
+- Project root: `RGV DSA Home v2.dc.html`, `About v2.dc.html`, `Get Involved v2.dc.html`, `Calendar v2.dc.html`, `Blog v2.dc.html`, `Blog Post v2.dc.html`, plus `Interior Page Template.dc.html` and `Single Event.dc.html` (single versions — already v2, no ` v2` suffix).
 - `design_handoff_rgvdsa_vue/designs/*.dc.html` — **byte-for-byte the same v2 files**, differing only in internal link filenames (they link to `About.dc.html` etc. instead of `About v2.dc.html`). Either set is fine to read; the `designs/` folder is the one the phase docs reference.
+
+> **Single Event (added 2026-07-02)** is the eighth screen — the single-post template for the `event` CPT. It has no ` v2` suffix (it was authored directly in v2). Full delta brief: **`UPDATE-SINGLE-EVENT-PAGE.md`**; page anatomy in `03-DESIGN-SPEC.md` § Single Event.
 
 **v1 (neobrutalist) — do NOT implement:**
 - The root files **without** the ` v2` suffix (`RGV DSA Home.dc.html`, `About.dc.html`, `Blog.dc.html`, `Blog Post.dc.html`, `Calendar.dc.html`, `Get Involved.dc.html`). These are the earlier look, kept only for reference. Deleting them is safe once the team agrees v2 is final.
@@ -57,6 +59,9 @@ This is the one real inconsistency to resolve before you build the shared header
 
 **Decision needed / recommended resolution:** build **one** `LanguageToggle.vue` and use the Home behavior everywhere (buttons, `aria-pressed`, `document.documentElement.lang`, `rgv-dsa-lang` persistence), with ES still deferred (no i18n yet). Don't reproduce two different headers. Note `01-ARCHITECTURE.md` §a11y and `02-PHASES.md` still describe the toggle as "present-but-disabled" — the Home page has already moved past that; follow Home.
 
+### 3d. Events now have a full single-event page (not just the Calendar modal) ⚠️
+Added 2026-07-02. Previously the only event detail was the Calendar's `EventDetailDialog`. There is now a full **Single Event** template (`single-event.twig` → `SingleEvent.vue`) — the canonical RSVP surface. Calendar chips/List rows and the blog `acf/event_embed` block should link **to it**; keep the modal only as an optional fast preview whose primary action navigates to the page. The `event` CPT gains two ACF structures — `event_body` (flexible content: prose · agenda · logistics · a11y note · map) and `event_details` (group: date/times/location/rsvp/cost/capacity) — and its whole accent palette is driven by the event's category term color. Details: **`UPDATE-SINGLE-EVENT-PAGE.md`** + `03-DESIGN-SPEC.md` § Single Event / § Data types.
+
 ### 3c. A11y widget — unchanged, and it's the shared-header keystone
 Identical behavior across all v2 pages (this part is consistent): text size A/A+/A++ → root font 16/18/20px; High-contrast and Reduce-motion toggles; persisted to `localStorage['rgv-dsa-a11y']` as `{textSize, highContrast, reduceMotion}` and re-applied on load. High-contrast keys off each band's `data-tone` attribute (`red` → `#9E0B13`, `ink` → black/white, `cream` → white/black). Implement once as `useA11ySettings()` + `A11yWidget.vue` (already specced in `01`/`03`). Keep the `data-tone` attributes on every section — they're the high-contrast hook.
 
@@ -73,6 +78,7 @@ These are the `data-props` on each prototype → map to WP options / ACF fields 
 - **Blog** — `specMode` (bool, def false — the "</> ACF spec" annotation overlay; prototype-only, don't ship).
 - **Blog Post** — `bylineMode` (`named`|`committee`, def named — per-post ACF select) · `showMetaRail` (bool, def false) · `specMode` (bool, prototype-only).
 - **Interior Page Template** — `pageTitle` · `breadcrumbSection` (def "About") · `lede` · `showSidebar`.
+- **Single Event** — `category` (enum `chapter|poled|mutual|labor|electoral|social`, def chapter — sets the accent/term color for the whole page) · `locationType` (enum `in-person|online|hybrid`, def hybrid — toggles the Location row, Online row, and map block) · `rsvpRequired` (bool, def false — flips RSVP status + button label) · `showRelated` (bool, def true) · `specMode` (bool, prototype-only overlay, don't ship). In production the first three come from the event's own fields, not global options.
 
 `specMode` on the two blog files drives the in-prototype field-mapping overlay for implementers; it is **not** a production setting — read it, then drop it.
 

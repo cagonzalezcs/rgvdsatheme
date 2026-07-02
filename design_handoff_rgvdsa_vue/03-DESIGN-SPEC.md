@@ -166,7 +166,7 @@ The generic v2 shell for all interior/governance pages — same header/footer/a1
 Toolbar: month label (Montserrat 900) + prev/next (ghost, hover `tint`); view toggle Month | List (segmented, active ink fill); filter chips — "Filter:" label + All events + 6 category chips (pill, inactive white/`#D6D0C4` border, active ink fill, 10px color swatch).
 - **Month grid**: white cells min-height 112px (out-of-month `#F5F3EF` @ 0.6 opacity); today's date number = `red` fill / white pill; event chips = category-color fill, white 0.74rem 700 text, ellipsized, hover `outline:2px solid #1C1917`; full title + time in `title`.
 - **List view** (current month, date-sorted): white rows (16px radius, `0 2px 10px`), 72px date block in category color, category tag, title + `time · location` meta; hover `0 12px 30px` + `translateY(-2px)`. Empty state: dashed `#B7AC9B` border, "No events in this category this month…".
-- **EventDetailDialog**: overlay `rgba(28,25,23,0.55)`; white panel, 18px radius; header bar in category color (category label + close ✕); body: title, full date line, time, location, description, [RSVP `primary`] [Add to calendar `outline-red`]. Esc/overlay closes; focus trapped.
+- **EventDetailDialog**: overlay `rgba(28,25,23,0.55)`; white panel, 18px radius; header bar in category color (category label + close ✕); body: title, full date line, time, location, description, [RSVP `primary`] [Add to calendar `outline-red`]. Esc/overlay closes; focus trapped. **The primary action (RSVP / View event) now navigates to the full Single Event page** (added 2026-07-02) — the modal is an optional fast preview, not the RSVP endpoint. Event chips and List-view rows link to the same permalink.
 - **Subscribe strip** (ink): heading + [Google Calendar (white pill, hover pink)] [iCal / Outlook (`outline-on-ink`)] — hrefs stubbed until Phase 6.
 - State: `view` (via `defaultView`), `monthOffset`, `activeCat`, `selectedId`. `showCategoryColors`, `showSubscribe` props. Sample data: 14 events across Jul–Aug 2026 — use as the fixture and WP seed.
 
@@ -197,6 +197,18 @@ Toolbar: month label (Montserrat 900) + prev/next (ghost, hover `tint`); view to
 - **Meta rail** (optional, `showMetaRail`, default off): sticky 280px right rail — "Posted in" tag, share links, ink subscribe mini-card (14–16px radius panels).
 - **Read Next** (off-white band): `h2` + `link-accent` "All posts →"; 3 cards `repeat(auto-fit,minmax(260px,1fr))` (16px radius, hover lift) — same anatomy as the archive grid. Query: same category, latest 3, excluding current.
 
+### Single Event (`Single Event.dc.html`)
+The single-post template for the `event` CPT — the full detail/RSVP page that Calendar chips, List rows, and the blog `event_embed` block link to. Shared chrome (Calendar link `aria-current`). **No author/byline** (events aren't posts). One value threads the whole page: the event's **category term color** = `accent` (+ 10%-alpha `accentSoft`), driving the section `h2` underlines, agenda badges, the a11y aside, the details-card header, the date badge, and the RSVP button. A bottom-left **"</> ACF spec"** toggle overlays field mapping (prototype-only).
+- **Event hero** (`brand-red`, `data-tone="red"`, padding `44/24/150` — deep bottom pad so content overlaps up into it): white-pill breadcrumb Home / **Calendar** / event; category tag (ink pill + `accent` dot) → Calendar; Montserrat 900 `h1` `clamp(2rem,4.6vw,3.3rem)` (max 24ch, balanced); **event_summary** lede (1.5rem, max 52ch); meta-chip row — date / time / location chips (`rgba(28,25,23,0.85)` fills) + white **RSVP →** pill to `#rsvp`.
+- **Content + details rail**: grid `minmax(300px,1fr) 340px`, gap 56, max 1140px.
+  - **Main column** (`<article>`): **featured image** first, pulled up over the red band (`margin-top:-108px`, 18px radius, `0 16px 44px` shadow, `image-slot` → `<img>`+`alt_text`) + figcaption (caption · credit). Then the **event_body** flexible-content stack (accents inherit `accent`): `prose` ("About this event", in-content `h2` = 3px `accent` underline) · `agenda` (ordered rows: round `accentSoft` badge w/ `accent` numeral + bold lead) · `good-to-know` (bulleted logistics) · **accessibility & childcare** aside (`accentSoft` bg, `border-left:5px solid accent`, accommodation mailto) · **getting there / map** (`showMap`, shown when `location_type ≠ online`: `h2` + striped map-embed placeholder from geocoded `location_address` + address ¶).
+  - **Details rail** (`<aside>`, `position:sticky; top:110px`, also `margin-top:-108px` to overlap the band beside the image):
+    - **Event details card** (`#rsvp`, 18px radius, `0 10px 34px` shadow): header bar in `accent` + category pill; date block (weekday / big day / month in `accent`) + full date; field rows — **Time** (start–end + "Doors open" from `doors_time`), **Location** (`location_type ≠ online`: venue + address + "Get directions →"), **Online** (`location_type ≠ in-person`: Zoom label + join link), **Cost**, **RSVP** status; **RSVP button** (`accent` fill, label flips on `rsvp_required`); **Add to calendar** Google / iCal `outline-red` (hrefs stubbed).
+    - **Contact card** (off-white 16px radius): name + email + phone.
+    - **Share card** (off-white): "Copy link" → "Copied ✓" (`navigator.clipboard`, reuse Blog Post interaction) + "Email this event" mailto.
+- **More upcoming events** (off-white `#F7F5F2` band, toggle `showRelated`): `h2` + "Full calendar →"; 3 cards (category date block + tag + title + meta) → sibling event pages. **No ACF field** — query = next 3 events by `event_date`, exclude current.
+- Props: `category` · `locationType` · `rsvpRequired` · `showRelated` · `specMode` (see § Tweakable settings). In production the first three come from the event's own fields.
+
 ## Data types
 ```ts
 interface ChapterEvent {
@@ -204,9 +216,22 @@ interface ChapterEvent {
   time: string;                        // display string, e.g. "7:00–8:30 PM"
   cat: 'chapter'|'poled'|'mutual'|'labor'|'electoral'|'social';
   title: string; location: string; desc: string; rsvpUrl?: string;
+  // Single Event template adds (event_details ACF group + event_body):
+  summary?: string;                    // event_summary — hero lede
+  startTime?: string; endTime?: string; doorsTime?: string;
+  locationType?: 'in-person' | 'online' | 'hybrid';
+  locationName?: string; locationAddress?: string; onlineUrl?: string;
+  cost?: string; rsvpRequired?: boolean; capacity?: number;
+  featuredImage?: string; alt?: string;
+  body?: EventBlock[];                  // event_body flexible content
 }
+type EventBlock =
+  | { type: 'prose'; html: string }
+  | { type: 'agenda'; items: { title: string; desc?: string }[] }
+  | { type: 'good_to_know'; items: string[] }
+  | { type: 'a11y_note'; html: string }
+  | { type: 'map'; address: string };  // rendered when locationType !== 'online'
 interface EventCategory { id: string; label: string; color: string | null }
-interface BlogPost {
   id: string; title: string; slug: string;
   cat: ChapterEvent['cat'];            // same taxonomy color set
   date: string; excerpt: string; dek?: string;
@@ -216,7 +241,7 @@ interface BlogPost {
 ```
 
 ## Tweakable settings (→ WP options in Phase 6)
-`joinUrl` (default `https://www.dsausa.org/join`) · `eventCount` on Home (1–6, default 5) · `showCountiesStrip` (bool) · About `showSidebar` / `showPhoto` (bool) · Get Involved `showFaq` (bool) · Calendar `defaultView` (`month|list`) · `showCategoryColors` (bool) · `showSubscribe` (bool) · Blog Post: `bylineMode` (`named|committee`, per-post ACF select) · `showMetaRail` (bool, default off).
+`joinUrl` (default `https://www.dsausa.org/join`) · `eventCount` on Home (1–6, default 5) · `showCountiesStrip` (bool) · About `showSidebar` / `showPhoto` (bool) · Get Involved `showFaq` (bool) · Calendar `defaultView` (`month|list`) · `showCategoryColors` (bool) · `showSubscribe` (bool) · Blog Post: `bylineMode` (`named|committee`, per-post ACF select) · `showMetaRail` (bool, default off) · Single Event: `category` (enum, per-event term color) · `locationType` (`in-person|online|hybrid`, per-event) · `rsvpRequired` (bool, per-event) · `showRelated` (bool, default on).
 
 ## Known placeholders (flag for the chapter, don't invent)
 About-page history timeline `20XX` years/milestones · `hello@example.org` email · Instagram `@dsa_rgv` (real) · WhatsApp invite links · subscribe/RSS endpoints · the Who-We-Are & chapter photos (`image-slot` drop zones in the prototypes → real featured images in production) · **all blog copy (titles, excerpts, prose, quotes, captions, author names) is intentionally lorem ipsum** · Spanish translations ("Léelo en español" / ES toggle are stubs — ES is `title="Español — próximamente"`).

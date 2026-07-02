@@ -88,20 +88,21 @@ Components (`src/components/site/`, Composition API, inline Tailwind, block clas
 
 ---
 
-## Phase 5 — Events Calendar
-**Agent brief:** Build the calendar page — the most stateful surface. Spec: `03-DESIGN-SPEC.md` § Calendar. Reference `designs/Calendar.dc.html` including its script block.
+## Phase 5 — Events Calendar + Single Event
+**Agent brief:** Build the calendar page — the most stateful surface — **and the single-event template it links to**. Spec: `03-DESIGN-SPEC.md` § Calendar and § Single Event. Reference `designs/Calendar.dc.html` and `designs/Single Event.dc.html` (toggle the latter's bottom-left "</> ACF spec" for field mapping) including their script blocks.
 
 `EventCalendar.vue` island composed of:
 - Toolbar: month prev/next + current month label; Month/List view toggle (ToggleGroup); category filter chips with color swatches (aria-pressed).
 - `MonthGrid.vue` — 7-col CSS grid on ink gap lines; day cells cream (adjacent-month cells muted); event chips (category-colored, truncated, clickable).
 - `EventListView.vue` — stacked rows: date block + title/when/where + hover soft-shadow lift (`0 12px 30px` + `translateY(-2px)`); empty state (dashed border).
-- `EventDetailDialog.vue` — Dialog: category tag, title, datetime, venue, description, RSVP CTA.
+- `EventDetailDialog.vue` — Dialog: category tag, title, datetime, venue, description, RSVP CTA. **Its primary action navigates to the Single Event permalink** (the modal is an optional fast preview, not the RSVP endpoint); event chips and list rows link to the same permalink.
+- `SingleEvent.vue` island (`single-event.twig`) — the full event detail/RSVP page. Red hero (breadcrumb Home / Calendar / event, category tag, sentence-case H1, `event_summary` lede, meta chips + RSVP anchor); featured image pulled up over the red band (negative margin); a **content + 340px sticky details rail** grid. Main column renders the `event_body` flexible-content stack (prose · agenda · good-to-know · a11y aside · getting-there/map, map shown when `location_type ≠ online`). Details rail = event-details card (`event_details` ACF group: date block, time + doors, location/online rows toggled by `location_type`, cost, RSVP status, RSVP button whose label flips on `rsvp_required`, Add-to-calendar) + contact card + share card (copy-link → "Copied ✓", reuse the Blog Post interaction). **More upcoming events** band (`showRelated`) = next 3 events by date excluding current (no ACF field). Every accent (h2 underlines, agenda badges, aside, details header, RSVP button) is threaded from the event's **category term color** — wire it once. Props `category` / `locationType` / `rsvpRequired` come from the event's own fields in production.
 - Subscribe strip (ink band, ICS/Google links — hrefs stubbed).
 - State: current month, view mode, active category, selected event. View + filter survive reload (URL params preferred over localStorage).
 - Data: typed `ChapterEvent[]` prop; ship with the prototype's sample events as fixture.
 
-**Accept:** month/list toggle, filtering, modal (focus-trapped, Esc closes), keyboard operable; matches prototype.
-**Commit:** `feat(calendar): events calendar island`
+**Accept:** month/list toggle, filtering, modal (focus-trapped, Esc closes), keyboard operable; matches prototype. Calendar chips/rows and the modal's primary action navigate to `SingleEvent`; the single page matches `designs/Single Event.dc.html` at 1280w and 375w (featured image + details card overlap the red band; rail is sticky); changing the event category re-tints every accent; `location_type` correctly toggles the Location/Online rows and the map block.
+**Commit:** `feat(calendar): events calendar + single-event islands`
 
 ---
 
@@ -122,14 +123,14 @@ Components (`src/components/site/`, Composition API, inline Tailwind, block clas
 ## Phase 6 — WordPress data wiring
 **Agent brief:** Replace hardcoded content with WP data. Spec: `01-ARCHITECTURE.md` § WP data model.
 
-- CPT `event` + `event_category` taxonomy (color term meta); Timber query → props for UpcomingEvents + EventCalendar.
+- CPT `event` + `event_category` taxonomy (color term meta); Timber query → props for UpcomingEvents + EventCalendar. Register the `event_details` ACF group + `event_body` flexible-content group (layouts per § Single Event) + `event_summary`; the single template reads the full event context, the calendar chip a subset. Wire the term color to both the calendar swatches and the single page's accent. Calendar chips/rows and the blog `acf/event_embed` block resolve to the event permalink.
 - Blog: standard posts + `category` taxonomy sharing the same color term meta; register the `post_blocks` ACF flexible content group (block layouts per § Blog spec) + `dek` text field + `byline_mode` select; featured post = sticky ?? latest; archive search/filter params (`?s=`, `?category=`) wired to WP_Query; Home FromTheBlog = latest 3 posts.
 - WP menus → header/footer nav props via `StarterSite.php` context.
 - Options (join URL, email, Instagram, EN/ES flag) → ACF options page or Customizer → context.
 - Interior pages: WP editor content flows into the prose area; documents list from a repeater or media query.
 - Seed realistic demo content (the prototype's events/committees, a handful of lorem posts covering every block type) via a WP-CLI seed script or manual fixture instructions in the PR description.
 
-**Accept:** all six screens fully driven by WP data; creating an event in wp-admin shows it on Home + Calendar; publishing a post shows it on Home + Blog archive and renders its blocks on the single template.
+**Accept:** all six screens fully driven by WP data; creating an event in wp-admin shows it on Home + Calendar **and renders its single-event page** (details group + body blocks); publishing a post shows it on Home + Blog archive and renders its blocks on the single template.
 **Commit:** `feat(wp): event CPT, menus, options wiring`
 
 ---
