@@ -18,49 +18,51 @@
     @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-ExtraBold.ttf') format('truetype');font-weight:800;font-style:normal;font-display:swap}
     @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-Black.ttf') format('truetype');font-weight:900;font-style:normal;font-display:swap}
     html{scroll-behavior:smooth}
-    body{margin:0;font-family:'Open Sans',system-ui,sans-serif;background:#FAF4EA;color:#1C1917;-webkit-font-smoothing:antialiased}
-    ::selection{background:#E9252E;color:#FAF4EA}
-    a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #E9252E;outline-offset:3px}
+    #dc-root, #dc-root > .sc-host{height:auto !important; min-height:100%}
+    body{margin:0;font-family:'Open Sans',system-ui,sans-serif;background:#FFFFFF;color:#1C1917;-webkit-font-smoothing:antialiased}
+    ::selection{background:#E9252E;color:#FFFFFF}
+    a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #1C1917;outline-offset:2px;border-radius:6px}
   </style>
   <script src="./image-slot.js"></script>
 </helmet>
 
 <!-- Skip link -->
-<a href="#main" style="position:absolute; left:-9999px; top:12px; z-index:200; background:#1C1917; color:#FAF4EA; padding:10px 18px; font-weight:700; text-decoration:none; font-size:0.95rem" style-focus="left:16px">Skip to main content</a>
+<a href="#main" style="position:absolute; left:-9999px; top:12px; z-index:200; background:#1C1917; color:#FFFFFF; padding:10px 18px; font-weight:700; text-decoration:none; font-size:0.95rem; border-radius:8px" style-focus="left:16px">Skip to main content</a>
 
 <!-- ============ HEADER (shared) ============ -->
-<header data-screen-label="Header" data-tone="red" style="position:sticky; top:0; z-index:100; background:#E9252E; border-bottom:3px solid #1C1917">
-  <div style="max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; gap:24px; min-height:76px; flex-wrap:wrap">
+<header data-screen-label="Header" data-tone="red" style="position:sticky; top:0; z-index:100; background:#E9252E; box-shadow:0 2px 14px rgba(28,25,23,0.22)">
+  <div style="max-width:1220px; margin:0 auto; padding:10px 24px; display:flex; align-items:center; justify-content:space-between; gap:24px; min-height:64px; flex-wrap:wrap">
     <a href="RGV DSA Home.dc.html" aria-label="RGV DSA home" style="display:flex; align-items:center; flex:none">
-      <img src="assets/logo-red.png" alt="Rio Grande Valley Democratic Socialists of America" style="height:62px; width:auto; display:block">
+      <img src="assets/logo-red.png" alt="Rio Grande Valley Democratic Socialists of America" style="height:58px; width:auto; display:block">
     </a>
-    <nav aria-label="Main" style="display:flex; align-items:center; gap:4px; flex-wrap:wrap">
+    <nav aria-label="Main" style="display:flex; align-items:center; gap:2px; flex-wrap:wrap">
       <div style="position:relative">
-        <button onClick="{{ toggleAbout }}" aria-expanded="{{ aboutOpen }}" style="font-family:Montserrat,sans-serif; font-size:0.95rem; font-weight:600; color:#FAF4EA; background:transparent; border:none; padding:10px 14px; cursor:pointer; letter-spacing:0.02em" style-hover="text-decoration:underline; text-underline-offset:4px">About&nbsp;▾</button>
+        <button onClick="{{ toggleAbout }}" aria-expanded="{{ aboutOpen }}" style="font-family:Montserrat,sans-serif; font-size:1.17rem; font-weight:700; color:#FFFFFF; background:transparent; border:none; padding:10px 16px; cursor:pointer; border-radius:10px" style-hover="background:rgba(28,25,23,0.18)">About&nbsp;▾</button>
         <sc-if value="{{ aboutOpen }}" hint-placeholder-val="{{ false }}">
-          <div style="position:absolute; top:100%; left:0; background:#FAF4EA; border:3px solid #1C1917; box-shadow:6px 6px 0 #1C1917; min-width:240px; display:flex; flex-direction:column; padding:6px 0; z-index:110">
-            <a href="RGV DSA Home.dc.html#about" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Mission &amp; History</a>
-            <a href="RGV DSA Home.dc.html#counties" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Counties We Serve</a>
-            <a href="RGV DSA Home.dc.html#get-involved" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Committees</a>
-            <a href="Interior Page Template.dc.html" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Bylaws &amp; Code of Conduct</a>
-            <a href="Get Involved.dc.html" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">FAQ</a>
+          <div style="position:absolute; top:calc(100% + 10px); left:0; background:#FFFFFF; border-radius:14px; box-shadow:0 14px 36px rgba(28,25,23,0.24); min-width:256px; display:flex; flex-direction:column; padding:8px; z-index:110">
+            <a href="About.dc.html#chapter" style="padding:11px 15px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem; border-radius:9px" style-hover="background:#FDF0EE; color:#B01B22">About the Chapter</a>
+            <a href="About.dc.html#mission" style="padding:11px 15px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem; border-radius:9px" style-hover="background:#FDF0EE; color:#B01B22">Mission &amp; History</a>
+            <a href="About.dc.html#counties" style="padding:11px 15px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem; border-radius:9px" style-hover="background:#FDF0EE; color:#B01B22">Counties We Serve</a>
+            <a href="Get Involved.dc.html#committees" style="padding:11px 15px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem; border-radius:9px" style-hover="background:#FDF0EE; color:#B01B22">Committees</a>
+            <a href="About.dc.html#bylaws" style="padding:11px 15px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem; border-radius:9px" style-hover="background:#FDF0EE; color:#B01B22">Bylaws &amp; Code of Conduct</a>
+            <a href="About.dc.html#faq" style="padding:11px 15px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem; border-radius:9px" style-hover="background:#FDF0EE; color:#B01B22">FAQ</a>
           </div>
         </sc-if>
       </div>
-      <a href="Calendar.dc.html" style="font-family:Montserrat,sans-serif; font-size:0.95rem; font-weight:600; color:#FAF4EA; text-decoration:none; padding:10px 14px; letter-spacing:0.02em" style-hover="text-decoration:underline; text-underline-offset:4px">Calendar</a>
-      <a href="Blog.dc.html" aria-current="page" style="font-family:Montserrat,sans-serif; font-size:0.95rem; font-weight:600; color:#FAF4EA; text-decoration:underline; text-underline-offset:4px; text-decoration-thickness:3px; padding:10px 14px; letter-spacing:0.02em">Blog</a>
-      <a href="Get Involved.dc.html" style="font-family:Montserrat,sans-serif; font-size:0.95rem; font-weight:600; color:#FAF4EA; text-decoration:none; padding:10px 14px; letter-spacing:0.02em" style-hover="text-decoration:underline; text-underline-offset:4px">Get Involved</a>
+      <a href="Calendar.dc.html" style="font-family:Montserrat,sans-serif; font-size:1.17rem; font-weight:700; color:#FFFFFF; text-decoration:none; padding:10px 16px; border-radius:10px" style-hover="background:rgba(28,25,23,0.18)">Calendar</a>
+      <a href="#main" aria-current="page" style="font-family:Montserrat,sans-serif; font-size:1.17rem; font-weight:700; color:#FFFFFF; text-decoration:underline; text-underline-offset:6px; text-decoration-thickness:3px; padding:10px 16px; border-radius:10px">Blog</a>
+      <a href="Get Involved.dc.html" style="font-family:Montserrat,sans-serif; font-size:1.17rem; font-weight:700; color:#FFFFFF; text-decoration:none; padding:10px 16px; border-radius:10px" style-hover="background:rgba(28,25,23,0.18)">Get Involved</a>
     </nav>
     <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
-      <div aria-label="Language" style="display:flex; align-items:center; border:2px solid #FAF4EA; font-size:0.8rem; font-weight:800; letter-spacing:0.05em">
-        <span style="padding:5px 10px; background:#FAF4EA; color:#E9252E">EN</span>
-        <span title="Español — próximamente" style="padding:5px 10px; color:#FAF4EA; opacity:0.65">ES</span>
+      <div aria-label="Language" style="display:flex; align-items:center; background:#FFFFFF; border-radius:999px; overflow:hidden; font-size:0.8rem; font-weight:700; letter-spacing:0.04em; padding:3px">
+        <span style="padding:4px 12px; background:#B01B22; color:#FFFFFF; border-radius:999px">EN</span>
+        <span title="Español — próximamente" style="padding:4px 12px; color:#B01B22">ES</span>
       </div>
       <div style="position:relative">
-        <button onClick="{{ toggleA11y }}" aria-expanded="{{ a11yOpen }}" aria-label="Accessibility options" title="Accessibility options" style="font-family:inherit; font-size:1rem; font-weight:800; color:#E9252E; background:#FAF4EA; border:2px solid #FAF4EA; padding:5px 12px; cursor:pointer" style-hover="background:#9E0B13 !important; color:#FFFFFF !important; border-color:#9E0B13 !important">Aa</button>
+        <button onClick="{{ toggleA11y }}" aria-expanded="{{ a11yOpen }}" aria-label="Accessibility options" title="Accessibility options" style="font-family:inherit; font-size:0.95rem; font-weight:700; color:#B01B22; background:#FFFFFF; border:none; border-radius:999px; padding:8px 16px; cursor:pointer" style-hover="color:#8F151B; box-shadow:0 0 0 3px rgba(28,25,23,0.25)">Aa</button>
         <sc-if value="{{ a11yOpen }}" hint-placeholder-val="{{ false }}">
-          <div role="dialog" aria-label="Accessibility settings" style="position:absolute; top:calc(100% + 10px); right:0; background:#FAF4EA; color:#1C1917; border:3px solid #1C1917; box-shadow:6px 6px 0 #1C1917; width:280px; padding:18px; z-index:110; display:flex; flex-direction:column; gap:16px">
-            <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.04em; text-transform:uppercase">Accessibility</div>
+          <div role="dialog" aria-label="Accessibility settings" style="position:absolute; top:calc(100% + 10px); right:0; background:#FFFFFF; color:#1C1917; border-radius:14px; box-shadow:0 14px 36px rgba(28,25,23,0.24); width:280px; padding:18px; z-index:110; display:flex; flex-direction:column; gap:16px">
+            <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.95rem">Accessibility</div>
             <div style="display:flex; flex-direction:column; gap:8px">
               <div style="font-size:0.85rem; font-weight:700">Text size</div>
               <div style="display:flex; gap:6px">
@@ -74,7 +76,7 @@
           </div>
         </sc-if>
       </div>
-      <a href="https://www.dsausa.org/join" target="_blank" rel="noopener" style="font-size:0.95rem; font-weight:800; color:#E9252E; background:#FAF4EA; text-decoration:none; padding:10px 20px; border:2px solid #FAF4EA; letter-spacing:0.04em; text-transform:uppercase" style-hover="background:#9E0B13 !important; color:#FFFFFF !important; border-color:#9E0B13 !important">Join DSA</a>
+      <a href="https://www.dsausa.org/join" target="_blank" rel="noopener" style="font-size:0.95rem; font-weight:700; color:#B01B22; background:#FFFFFF; text-decoration:none; padding:10px 22px; border-radius:999px" style-hover="color:#8F151B; box-shadow:0 0 0 3px rgba(28,25,23,0.25)">Join DSA</a>
     </div>
   </div>
 </header>
@@ -82,34 +84,34 @@
 <main id="main">
 
 <!-- ============ PAGE HEADER ============ -->
-<section data-screen-label="Page header" data-tone="red" style="background:#E9252E; color:#FAF4EA; padding:48px 24px 56px">
-  <div style="max-width:1200px; margin:0 auto; display:flex; flex-direction:column; gap:18px">
-    <nav aria-label="Breadcrumb" style="display:flex; align-items:center; gap:10px; font-size:0.85rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; flex-wrap:wrap">
-      <a href="RGV DSA Home.dc.html" style="color:#FAF4EA; text-decoration:none; opacity:0.85" style-hover="opacity:1; text-decoration:underline; text-underline-offset:4px">Home</a>
-      <span aria-hidden="true" style="opacity:0.6">/</span>
-      <span aria-current="page">Blog</span>
+<section data-screen-label="Page header" data-tone="red" style="background:#E9252E; color:#FFFFFF; padding:48px 24px 56px">
+  <div style="max-width:1200px; margin:0 auto; display:flex; flex-direction:column; gap:18px; align-items:flex-start">
+    <nav aria-label="Breadcrumb" style="display:flex; align-items:center; gap:8px; background:#FFFFFF; border-radius:999px; padding:6px 16px; font-size:0.85rem; font-weight:700; flex-wrap:wrap">
+      <a href="RGV DSA Home.dc.html" style="color:#B01B22; text-decoration:none" style-hover="text-decoration:underline; text-underline-offset:3px">Home</a>
+      <span aria-hidden="true" style="color:#57534E">/</span>
+      <span aria-current="page" style="color:#1C1917">Blog</span>
     </nav>
-    <h1 style="font-family:Montserrat,sans-serif; font-weight:900; font-size:clamp(2rem, 4.8vw, 3.4rem); line-height:1.1; text-transform:uppercase; margin:0; max-width:22ch">Chapter Blog</h1>
-    <p style="font-size:1.15rem; line-height:1.6; max-width:60ch; margin:0">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <h1 style="font-family:Montserrat,sans-serif; font-weight:900; font-size:clamp(2rem, 4.8vw, 3.4rem); line-height:1.1; letter-spacing:-0.01em; margin:0; max-width:22ch">Chapter Blog</h1>
+    <p style="font-size:1.5rem; line-height:1.5; max-width:48ch; margin:0">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
   </div>
 </section>
 
 <!-- ============ TOOLBAR: search + category filter ============ -->
-<section data-screen-label="Blog toolbar" data-tone="cream" style="background:#FAF4EA; padding:36px 24px 0">
+<section data-screen-label="Blog toolbar" data-tone="cream" style="background:#FFFFFF; padding:40px 24px 0">
   <div style="max-width:1200px; margin:0 auto; display:flex; flex-direction:column; gap:18px">
     <sc-if value="{{ specMode }}" hint-placeholder-val="{{ false }}">
-      <div style="font-family:ui-monospace,Menlo,monospace; font-size:0.78rem; line-height:1.5; background:#F1E8D8; border:2px dashed #B7AC9B; padding:10px 14px; display:flex; gap:12px; flex-wrap:wrap; align-items:baseline">
-        <span style="font-weight:700; color:#9E0B13">index.twig · category.twig · search.twig → one BlogArchive.vue</span>
-        <span style="color:#5C544A">state syncs to URL: ?category=slug &amp; ?s=term · chips = post category taxonomy, colors from term meta (same 6 as events) · any filter/search switches the layout below from editorial grid to uniform result rows</span>
+      <div style="font-family:ui-monospace,Menlo,monospace; font-size:0.78rem; line-height:1.5; background:#F7F5F2; border:2px dashed #B7AC9B; border-radius:12px; padding:10px 14px; display:flex; gap:12px; flex-wrap:wrap; align-items:baseline">
+        <span style="font-weight:700; color:#8F151B">index.twig · category.twig · search.twig → one BlogArchive.vue</span>
+        <span style="color:#57534E">state syncs to URL: ?category=slug &amp; ?s=term · chips = post category taxonomy, colors from term meta (same 6 as events) · any filter/search switches the layout below from editorial grid to uniform result rows</span>
       </div>
     </sc-if>
     <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; justify-content:space-between">
-      <div role="search" style="display:flex; align-items:stretch; flex:1 1 320px; max-width:460px">
-        <input type="search" value="{{ query }}" onChange="{{ onQuery }}" placeholder="Search posts…" aria-label="Search blog posts" style="flex:1; min-width:0; font-family:inherit; font-size:1rem; padding:12px 16px; border:3px solid #1C1917; background:#FFFFFF; color:#1C1917">
-        <span aria-hidden="true" style="display:flex; align-items:center; justify-content:center; width:52px; background:#1C1917; color:#FAF4EA; border:3px solid #1C1917; border-left:none; font-size:1.1rem; font-weight:800">⌕</span>
+      <div role="search" style="display:flex; align-items:stretch; flex:1 1 320px; max-width:460px; background:#FFFFFF; border:1px solid #D6D0C4; border-radius:999px; overflow:hidden; box-shadow:0 1px 4px rgba(28,25,23,0.06)" style-focus="border-color:#1C1917">
+        <input type="search" value="{{ query }}" onChange="{{ onQuery }}" placeholder="Search posts…" aria-label="Search blog posts" style="flex:1; min-width:0; font-family:inherit; font-size:1rem; padding:12px 20px; border:none; background:transparent; color:#1C1917; outline-offset:-3px">
+        <span aria-hidden="true" style="display:flex; align-items:center; justify-content:center; width:52px; background:#1C1917; color:#FFFFFF; font-size:1.1rem; font-weight:700">⌕</span>
       </div>
       <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap">
-        <span style="font-size:0.85rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:#5C544A; margin-right:4px">Filter:</span>
+        <span style="font-size:0.82rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:#57534E; margin-right:4px">Filter:</span>
         <sc-for list="{{ cats }}" as="c" hint-placeholder-count="7">
           <button onClick="{{ c.onClick }}" aria-pressed="{{ c.active }}" style="{{ c.style }}">
             <sc-if value="{{ c.hasSwatch }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="{{ c.swatchStyle }}"></span></sc-if>
@@ -123,46 +125,46 @@
 
 <!-- ============ BROWSE: featured + editorial grid ============ -->
 <sc-if value="{{ isBrowsing }}" hint-placeholder-val="{{ true }}">
-<section data-screen-label="Featured post" data-tone="cream" style="background:#FAF4EA; padding:32px 24px 0">
+<section data-screen-label="Featured post" data-tone="cream" style="background:#FFFFFF; padding:32px 24px 0">
   <div style="max-width:1200px; margin:0 auto; display:flex; flex-direction:column; gap:12px">
     <sc-if value="{{ specMode }}" hint-placeholder-val="{{ false }}">
-      <div style="font-family:ui-monospace,Menlo,monospace; font-size:0.78rem; background:#F1E8D8; border:2px dashed #B7AC9B; padding:8px 12px"><span style="font-weight:700; color:#9E0B13">featured</span> <span style="color:#5C544A">— sticky post ?? latest · fields: title · dek (ACF text on post) · category · featured_image</span></div>
+      <div style="font-family:ui-monospace,Menlo,monospace; font-size:0.78rem; background:#F7F5F2; border:2px dashed #B7AC9B; border-radius:12px; padding:8px 12px"><span style="font-weight:700; color:#8F151B">featured</span> <span style="color:#57534E">— sticky post ?? latest · fields: title · dek (ACF text on post) · category · featured_image</span></div>
     </sc-if>
-    <div style="border:3px solid #1C1917; background:#FFFFFF; box-shadow:10px 10px 0 #1C1917; display:grid; grid-template-columns:minmax(300px, 1.1fr) minmax(300px, 1fr)">
-      <div style="border-right:3px solid #1C1917; min-height:340px">
+    <div style="border-radius:20px; background:#FFFFFF; box-shadow:0 8px 28px rgba(28,25,23,0.14); display:grid; grid-template-columns:minmax(300px, 1.1fr) minmax(300px, 1fr); overflow:hidden">
+      <div style="min-height:340px">
         <image-slot id="blog-featured" shape="rect" placeholder="Featured photo" style="width:100%; height:100%; min-height:340px; display:block"></image-slot>
       </div>
       <div style="display:flex; flex-direction:column; gap:16px; padding:36px 40px; justify-content:center">
         <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap">
-          <span style="font-size:0.8rem; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#E9252E">★ Featured</span>
-          <span style="background:#1F7A48; color:#FAF4EA; border:2px solid #1C1917; padding:4px 12px; font-size:0.75rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase">Mutual Aid</span>
+          <span style="font-size:0.8rem; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:#B01B22">★ Featured</span>
+          <span style="background:#1B6B40; color:#FFFFFF; border-radius:999px; padding:4px 14px; font-size:0.75rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase">Mutual Aid</span>
         </div>
-        <a href="Blog Post.dc.html" style="font-family:Montserrat,sans-serif; font-weight:900; font-size:clamp(1.5rem, 2.8vw, 2.1rem); line-height:1.15; text-transform:uppercase; color:#1C1917; text-decoration:none; text-wrap:balance" style-hover="color:#9E0B13 !important">Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod</a>
-        <p style="font-size:1.05rem; line-height:1.65; margin:0; color:#5C544A">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-        <div style="font-size:0.9rem; font-weight:600; color:#5C544A">By Author Name · June 14, 2026 · 6 min read</div>
-        <a href="Blog Post.dc.html" style="align-self:flex-start; font-size:0.9rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#1C1917; background:#FAF4EA; text-decoration:none; padding:11px 22px; border:3px solid #1C1917; box-shadow:4px 4px 0 #1C1917; margin-top:4px" style-hover="transform:translate(2px,2px); box-shadow:2px 2px 0 #1C1917">Read the post</a>
+        <a href="Blog Post.dc.html" style="font-family:Montserrat,sans-serif; font-weight:800; font-size:clamp(1.5rem, 2.8vw, 2rem); line-height:1.2; letter-spacing:-0.01em; color:#1C1917; text-decoration:none; text-wrap:balance" style-hover="color:#B01B22">Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod</a>
+        <p style="font-size:1.05rem; line-height:1.65; margin:0; color:#57534E">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        <div style="font-size:0.9rem; font-weight:600; color:#57534E">By Author Name · June 14, 2026 · 6 min read</div>
+        <a href="Blog Post.dc.html" style="align-self:flex-start; font-size:0.92rem; font-weight:700; color:#FFFFFF; background:#B01B22; text-decoration:none; padding:11px 26px; border-radius:999px; margin-top:4px" style-hover="background:#8F151B">Read the post</a>
       </div>
     </div>
   </div>
 </section>
 
-<section data-screen-label="Post grid" data-tone="cream" style="background:#FAF4EA; padding:40px 24px 48px">
+<section data-screen-label="Post grid" data-tone="cream" style="background:#FFFFFF; padding:40px 24px 48px">
   <div style="max-width:1200px; margin:0 auto; display:flex; flex-direction:column; gap:12px">
     <sc-if value="{{ specMode }}" hint-placeholder-val="{{ false }}">
-      <div style="font-family:ui-monospace,Menlo,monospace; font-size:0.78rem; background:#F1E8D8; border:2px dashed #B7AC9B; padding:8px 12px"><span style="font-weight:700; color:#9E0B13">editorial grid</span> <span style="color:#5C544A">— 6-col grid; card spans by index: [3,3,2,2,2,2,2,2] · excerpt shows on span-3 cards only · image = featured_image ?? striped placeholder</span></div>
+      <div style="font-family:ui-monospace,Menlo,monospace; font-size:0.78rem; background:#F7F5F2; border:2px dashed #B7AC9B; border-radius:12px; padding:8px 12px"><span style="font-weight:700; color:#8F151B">editorial grid</span> <span style="color:#57534E">— 6-col grid; card spans by index: [3,3,2,2,2,2,2,2] · excerpt shows on span-3 cards only · image = featured_image ?? striped placeholder</span></div>
     </sc-if>
     <div style="display:grid; grid-template-columns:repeat(6, 1fr); gap:24px">
       <sc-for list="{{ gridPosts }}" as="p" hint-placeholder-count="8">
         <div style="{{ p.spanStyle }}">
-          <a href="Blog Post.dc.html" style="flex:1; display:flex; flex-direction:column; border:3px solid #1C1917; background:#FFFFFF; text-decoration:none; color:#1C1917" style-hover="box-shadow:6px 6px 0 #1C1917; transform:translate(-2px,-2px)">
-            <div aria-hidden="true" style="aspect-ratio:16/9; background:repeating-linear-gradient(45deg, #F1E8D8 0 14px, #E9DFCC 14px 28px); border-bottom:3px solid #1C1917; display:flex; align-items:flex-start; justify-content:space-between; padding:12px">
-              <span style="background:{{ p.color }}; color:#FAF4EA; border:2px solid #1C1917; padding:4px 10px; font-size:0.72rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase">{{ p.cat }}</span>
+          <a href="Blog Post.dc.html" style="flex:1; display:flex; flex-direction:column; border-radius:16px; background:#FFFFFF; text-decoration:none; color:#1C1917; overflow:hidden; box-shadow:0 2px 10px rgba(28,25,23,0.10); transition:box-shadow 0.15s, transform 0.15s" style-hover="box-shadow:0 12px 30px rgba(28,25,23,0.16); transform:translateY(-2px)">
+            <div aria-hidden="true" style="aspect-ratio:16/9; background:repeating-linear-gradient(45deg, #F5F1EA 0 14px, #ECE6DA 14px 28px); display:flex; align-items:flex-start; justify-content:space-between; padding:12px">
+              <span style="background:{{ p.color }}; color:#FFFFFF; border-radius:999px; padding:4px 12px; font-size:0.72rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase">{{ p.cat }}</span>
             </div>
             <div style="display:flex; flex-direction:column; gap:10px; padding:20px 22px 24px">
-              <span style="font-size:0.8rem; font-weight:700; color:#5C544A; letter-spacing:0.04em; text-transform:uppercase">{{ p.date }}</span>
-              <span style="font-family:Montserrat,sans-serif; font-weight:800; font-size:{{ p.titleSize }}; line-height:1.25">{{ p.title }}</span>
+              <span style="font-size:0.8rem; font-weight:600; color:#57534E">{{ p.date }}</span>
+              <span style="font-family:Montserrat,sans-serif; font-weight:700; font-size:{{ p.titleSize }}; line-height:1.3">{{ p.title }}</span>
               <sc-if value="{{ p.isLarge }}" hint-placeholder-val="{{ false }}">
-                <span style="font-size:0.98rem; line-height:1.6; color:#5C544A">{{ p.excerpt }}</span>
+                <span style="font-size:0.98rem; line-height:1.6; color:#57534E">{{ p.excerpt }}</span>
               </sc-if>
             </div>
           </a>
@@ -170,8 +172,8 @@
       </sc-for>
     </div>
     <div style="display:flex; justify-content:center; gap:14px; padding-top:32px">
-      <span aria-disabled="true" style="font-size:0.9rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#B7AC9B; border:2px solid #B7AC9B; padding:11px 22px">← Newer</span>
-      <a href="#main" style="font-size:0.9rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#1C1917; border:2px solid #1C1917; padding:11px 22px; text-decoration:none" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Older posts →</a>
+      <span aria-disabled="true" style="font-size:0.92rem; font-weight:700; color:#78716C; border:2px solid #D6D0C4; border-radius:999px; padding:10px 24px">← Newer</span>
+      <a href="#main" style="font-size:0.92rem; font-weight:700; color:#B01B22; border:2px solid #B01B22; border-radius:999px; padding:10px 24px; text-decoration:none; transition:background 0.15s, border-color 0.15s" style-hover="background:#F7D7D3; border-color:#8F151B">Older posts →</a>
     </div>
   </div>
 </section>
@@ -179,31 +181,31 @@
 
 <!-- ============ FILTERED / SEARCH RESULTS ============ -->
 <sc-if value="{{ isFiltering }}" hint-placeholder-val="{{ false }}">
-<section data-screen-label="Search results" data-tone="cream" style="background:#FAF4EA; padding:32px 24px 64px">
+<section data-screen-label="Search results" data-tone="cream" style="background:#FFFFFF; padding:32px 24px 64px">
   <div style="max-width:920px; margin:0 auto; display:flex; flex-direction:column; gap:18px">
-    <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; border-bottom:3px solid #1C1917; padding-bottom:12px">
-      <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.15rem; text-transform:uppercase; letter-spacing:0.02em" role="status">{{ resultLine }}</div>
-      <button onClick="{{ clearFilters }}" style="font-family:inherit; font-size:0.85rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#9E0B13; background:transparent; border:none; cursor:pointer; padding:0; text-decoration:underline; text-underline-offset:4px" style-hover="color:#E9252E !important">Clear filters ✕</button>
+    <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; border-bottom:3px solid #E9252E; padding-bottom:12px">
+      <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:1.15rem" role="status">{{ resultLine }}</div>
+      <button onClick="{{ clearFilters }}" style="font-family:inherit; font-size:0.9rem; font-weight:700; color:#B01B22; background:transparent; border:none; cursor:pointer; padding:0; text-decoration:underline; text-underline-offset:4px" style-hover="color:#8F151B">Clear filters ✕</button>
     </div>
     <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex; flex-direction:column; gap:14px">
         <sc-for list="{{ filteredPosts }}" as="p" hint-placeholder-count="4">
-          <a href="Blog Post.dc.html" style="display:grid; grid-template-columns:auto 1fr auto; gap:20px; align-items:center; border:3px solid #1C1917; background:#FFFFFF; padding:20px 24px; text-decoration:none; color:#1C1917" style-hover="box-shadow:6px 6px 0 #1C1917; transform:translate(-2px,-2px)">
-            <span aria-hidden="true" style="width:14px; height:44px; background:{{ p.color }}; border:2px solid #1C1917"></span>
+          <a href="Blog Post.dc.html" style="display:grid; grid-template-columns:auto 1fr auto; gap:20px; align-items:center; border-radius:16px; background:#FFFFFF; box-shadow:0 2px 10px rgba(28,25,23,0.10); padding:20px 24px; text-decoration:none; color:#1C1917; transition:box-shadow 0.15s, transform 0.15s" style-hover="box-shadow:0 12px 30px rgba(28,25,23,0.16); transform:translateY(-2px)">
+            <span aria-hidden="true" style="width:12px; height:48px; background:{{ p.color }}; border-radius:999px"></span>
             <span style="display:flex; flex-direction:column; gap:5px; min-width:0">
-              <span style="font-size:0.78rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:{{ p.color }}">{{ p.cat }} · {{ p.date }}</span>
-              <span style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.15rem; line-height:1.3">{{ p.title }}</span>
-              <span style="font-size:0.95rem; line-height:1.55; color:#5C544A">{{ p.excerpt }}</span>
+              <span style="font-size:0.78rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:{{ p.color }}">{{ p.cat }} · {{ p.date }}</span>
+              <span style="font-family:Montserrat,sans-serif; font-weight:700; font-size:1.15rem; line-height:1.3">{{ p.title }}</span>
+              <span style="font-size:0.95rem; line-height:1.55; color:#57534E">{{ p.excerpt }}</span>
             </span>
-            <span aria-hidden="true" style="font-weight:800; color:#1C1917; font-size:1.1rem">→</span>
+            <span aria-hidden="true" style="font-weight:700; color:#B01B22; font-size:1.1rem">→</span>
           </a>
         </sc-for>
       </div>
     </sc-if>
     <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
-      <div style="border:3px dashed #B7AC9B; padding:48px 32px; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center">
-        <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.2rem; text-transform:uppercase">No posts match</div>
-        <p style="font-size:1rem; color:#5C544A; margin:0; max-width:44ch; line-height:1.6">Try another word, or browse by category.</p>
+      <div style="border:2px dashed #D6D0C4; border-radius:16px; padding:48px 32px; display:flex; flex-direction:column; align-items:center; gap:10px; text-align:center">
+        <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:1.2rem">No posts match</div>
+        <p style="font-size:1rem; color:#57534E; margin:0; max-width:44ch; line-height:1.6">Try another word, or browse by category.</p>
       </div>
     </sc-if>
   </div>
@@ -211,16 +213,16 @@
 </sc-if>
 
 <!-- ============ SUBSCRIBE STRIP ============ -->
-<section id="subscribe" data-screen-label="Subscribe" data-tone="ink" style="background:#1C1917; color:#FAF4EA; padding:56px 24px">
+<section id="subscribe" data-screen-label="Subscribe" data-tone="ink" style="background:#1C1917; color:#FFFFFF; padding:56px 24px">
   <div style="max-width:1200px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:32px; flex-wrap:wrap">
     <div style="display:flex; flex-direction:column; gap:8px; max-width:52ch">
-      <h2 style="font-family:Montserrat,sans-serif; font-weight:900; font-size:clamp(1.4rem, 3vw, 1.9rem); text-transform:uppercase; margin:0">Get new posts by email</h2>
+      <h2 style="font-family:Montserrat,sans-serif; font-weight:800; font-size:clamp(1.4rem, 3vw, 1.9rem); letter-spacing:-0.01em; margin:0">Get new posts by email</h2>
       <p style="font-size:1rem; line-height:1.6; margin:0; color:#CFC8BD">One email when we publish. No spam, no lists sold — ever.</p>
     </div>
-    <div style="display:flex; align-items:stretch; gap:0; flex-wrap:wrap">
-      <input type="email" placeholder="you@example.com" aria-label="Email address" style="font-family:inherit; font-size:1rem; padding:13px 18px; border:3px solid #FAF4EA; background:transparent; color:#FAF4EA; min-width:240px">
-      <button style="font-family:inherit; font-size:0.95rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#1C1917; background:#FAF4EA; border:3px solid #FAF4EA; padding:13px 26px; cursor:pointer" style-hover="background:#9E0B13 !important; color:#FFFFFF !important; border-color:#9E0B13 !important">Subscribe</button>
-      <a href="#subscribe" style="display:flex; align-items:center; font-size:0.9rem; font-weight:800; color:#FAF4EA; text-decoration:underline; text-underline-offset:4px; padding:0 18px" style-hover="color:#E9252E !important">RSS</a>
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+      <input type="email" placeholder="you@example.com" aria-label="Email address" style="font-family:inherit; font-size:1rem; padding:13px 22px; border:2px solid #57534E; border-radius:999px; background:transparent; color:#FFFFFF; min-width:240px">
+      <button style="font-family:inherit; font-size:0.95rem; font-weight:700; color:#1C1917; background:#FFFFFF; border:none; border-radius:999px; padding:14px 28px; cursor:pointer" style-hover="background:#F0908F; color:#1C1917">Subscribe</button>
+      <a href="#subscribe" style="display:flex; align-items:center; font-size:0.95rem; font-weight:700; color:#FFFFFF; text-decoration:underline; text-underline-offset:4px; padding:0 12px" style-hover="color:#F0908F">RSS</a>
     </div>
   </div>
 </section>
@@ -231,43 +233,43 @@
 <button onClick="{{ toggleSpec }}" aria-pressed="{{ specMode }}" style="{{ specBtnStyle }}">{{ specBtnLabel }}</button>
 
 <!-- ============ FOOTER (shared) ============ -->
-<footer id="footer" data-screen-label="Footer" data-tone="cream" style="background:#FAF4EA; border-top:3px solid #1C1917; padding:64px 24px 0">
-  <div style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:minmax(240px, 1.2fr) repeat(auto-fit, minmax(160px, 1fr)); gap:40px; padding-bottom:56px">
+<footer id="footer" data-screen-label="Footer" data-tone="cream" style="background:#FFFFFF; border-top:1px solid #ECE6DA; padding:64px 24px 0">
+  <div style="max-width:1140px; margin:0 auto; display:grid; grid-template-columns:minmax(240px, 1.2fr) repeat(auto-fit, minmax(160px, 1fr)); gap:40px; padding-bottom:56px">
     <div style="display:flex; flex-direction:column; gap:16px">
-      <img src="assets/logo-green.png" alt="Rio Grande Valley Democratic Socialists of America" style="width:220px; height:auto; display:block">
-      <p style="font-size:0.95rem; line-height:1.6; margin:0; color:#5C544A; max-width:32ch">Organizing across Hidalgo, Cameron, Willacy, and Starr counties.</p>
+      <img src="assets/logo-green.png" alt="Rio Grande Valley Democratic Socialists of America" style="width:200px; height:auto; display:block">
+      <p style="font-size:0.95rem; line-height:1.6; margin:0; color:#57534E; max-width:32ch">Organizing across Hidalgo, Cameron, Willacy, and Starr counties.</p>
     </div>
     <nav aria-label="About" style="display:flex; flex-direction:column; gap:10px">
-      <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase">About</div>
-      <a href="RGV DSA Home.dc.html#about" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Mission &amp; History</a>
-      <a href="RGV DSA Home.dc.html#counties" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Counties We Serve</a>
-      <a href="Interior Page Template.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Bylaws &amp; Code of Conduct</a>
-      <a href="RGV DSA Home.dc.html#footer" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">FAQ</a>
+      <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.9rem; letter-spacing:0.06em; text-transform:uppercase; color:#57534E">About</div>
+      <a href="About.dc.html#mission" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">Mission &amp; History</a>
+      <a href="About.dc.html#counties" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">Counties We Serve</a>
+      <a href="About.dc.html#bylaws" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">Bylaws &amp; Code of Conduct</a>
+      <a href="About.dc.html#faq" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">FAQ</a>
     </nav>
     <nav aria-label="Get involved" style="display:flex; flex-direction:column; gap:10px">
-      <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase">Get involved</div>
-      <a href="https://www.dsausa.org/join" target="_blank" rel="noopener" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Join DSA</a>
-      <a href="Calendar.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Event Calendar</a>
-      <a href="RGV DSA Home.dc.html#get-involved" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Committees</a>
-      <a href="Get Involved.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Communication Channels</a>
+      <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.9rem; letter-spacing:0.06em; text-transform:uppercase; color:#57534E">Get involved</div>
+      <a href="https://www.dsausa.org/join" target="_blank" rel="noopener" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">Join DSA</a>
+      <a href="Calendar.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">Event Calendar</a>
+      <a href="Get Involved.dc.html#committees" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">Committees</a>
+      <a href="Get Involved.dc.html#channels" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">Communication Channels</a>
     </nav>
     <nav aria-label="Resources" style="display:flex; flex-direction:column; gap:10px">
-      <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase">Resources</div>
-      <a href="Blog.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Blog</a>
-      <a href="Interior Page Template.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Documents &amp; Minutes</a>
-      <a href="Interior Page Template.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Education Library</a>
-      <a href="Interior Page Template.dc.html#grievance" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Grievance Contact</a>
+      <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.9rem; letter-spacing:0.06em; text-transform:uppercase; color:#57534E">Resources</div>
+      <a href="#main" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">Blog</a>
+      <a href="Interior Page Template.dc.html#documents" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">Documents &amp; Minutes</a>
+      <a href="Interior Page Template.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">Education Library</a>
+      <a href="Interior Page Template.dc.html#grievance" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">Grievance Contact</a>
     </nav>
     <nav aria-label="Contact" style="display:flex; flex-direction:column; gap:10px">
-      <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase">Contact</div>
-      <a href="mailto:hello@example.org" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Email</a>
-      <a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Instagram</a>
+      <div style="font-family:Montserrat,sans-serif; font-weight:700; font-size:0.9rem; letter-spacing:0.06em; text-transform:uppercase; color:#57534E">Contact</div>
+      <a href="mailto:hello@example.org" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">Email</a>
+      <a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#B01B22; text-decoration:underline; text-underline-offset:3px">Instagram</a>
     </nav>
   </div>
   <div data-tone="ink" style="background:#1C1917; color:#CFC8BD; padding:18px 24px">
-    <div style="max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font-size:0.85rem">
+    <div style="max-width:1140px; margin:0 auto; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font-size:0.85rem">
       <span>Rio Grande Valley Democratic Socialists of America</span>
-      <span>Built to be accessible — <a href="#footer" style="color:#FAF4EA; font-weight:700" style-hover="color:#E9252E !important">tell us how we can do better</a></span>
+      <span>Built to be accessible — <a href="#footer" style="color:#FFFFFF; font-weight:700" style-hover="color:#F0908F">tell us how we can do better</a></span>
     </div>
   </div>
 </footer>
@@ -277,12 +279,12 @@
 }">
 const CATS = [
   { slug: 'all', label: 'All posts', color: null },
-  { slug: 'chapter', label: 'Chapter-Wide', color: '#E9252E' },
-  { slug: 'poled', label: 'Political Education', color: '#3A5BA0' },
-  { slug: 'mutual', label: 'Mutual Aid', color: '#1F7A48' },
-  { slug: 'labor', label: 'Labor', color: '#A3641C' },
-  { slug: 'electoral', label: 'Electoral', color: '#7C4396' },
-  { slug: 'social', label: 'Social', color: '#0E7C86' }
+  { slug: 'chapter', label: 'Chapter-Wide', color: '#B01B22' },
+  { slug: 'poled', label: 'Political Education', color: '#33518F' },
+  { slug: 'mutual', label: 'Mutual Aid', color: '#1B6B40' },
+  { slug: 'labor', label: 'Labor', color: '#8F5715' },
+  { slug: 'electoral', label: 'Electoral', color: '#6E3B87' },
+  { slug: 'social', label: 'Social', color: '#0A6B74' }
 ];
 
 const POSTS = [
@@ -353,10 +355,10 @@ class Component extends DCLogic {
 
   segStyle(active) {
     return {
-      flex: 1, padding: '8px 0', fontFamily: 'inherit', fontSize: '0.95rem', fontWeight: 800,
-      cursor: 'pointer', border: '2px solid #1C1917',
-      background: active ? '#1C1917' : 'transparent',
-      color: active ? '#FAF4EA' : '#1C1917'
+      flex: 1, padding: '8px 0', fontFamily: 'inherit', fontSize: '0.95rem', fontWeight: 700,
+      cursor: 'pointer', border: '1px solid ' + (active ? '#1C1917' : '#D6D0C4'), borderRadius: '8px',
+      background: active ? '#1C1917' : '#FFFFFF',
+      color: active ? '#FFFFFF' : '#1C1917'
     };
   }
 
@@ -370,22 +372,20 @@ class Component extends DCLogic {
 
   pillStyle(on) {
     return {
-      fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase',
-      padding: '4px 10px', border: '2px solid #1C1917',
-      background: on ? '#E9252E' : 'transparent',
-      color: on ? '#FAF4EA' : '#6B6257',
-      borderColor: on ? '#1C1917' : '#B7AC9B'
+      fontSize: '0.75rem', fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase',
+      padding: '4px 12px', border: '1px solid ' + (on ? '#B01B22' : '#D6D0C4'), borderRadius: '999px',
+      background: on ? '#B01B22' : 'transparent',
+      color: on ? '#FFFFFF' : '#57534E'
     };
   }
 
   chipStyle(active) {
     return {
       display: 'inline-flex', alignItems: 'center', gap: '8px',
-      fontFamily: 'inherit', fontSize: '0.85rem', fontWeight: 800,
-      letterSpacing: '0.04em', textTransform: 'uppercase', cursor: 'pointer',
-      padding: '8px 14px', border: '2px solid #1C1917',
+      fontFamily: 'inherit', fontSize: '0.85rem', fontWeight: 700, cursor: 'pointer',
+      padding: '8px 16px', border: '1px solid ' + (active ? '#1C1917' : '#D6D0C4'), borderRadius: '999px',
       background: active ? '#1C1917' : '#FFFFFF',
-      color: active ? '#FAF4EA' : '#1C1917'
+      color: active ? '#FFFFFF' : '#1C1917'
     };
   }
 
@@ -425,7 +425,7 @@ class Component extends DCLogic {
         label: c.label,
         active: c.slug === cat,
         hasSwatch: !!c.color,
-        swatchStyle: { width: '11px', height: '11px', background: c.color || 'transparent', border: '1px solid ' + (c.slug === cat ? '#FAF4EA' : '#1C1917'), flex: 'none' },
+        swatchStyle: { width: '11px', height: '11px', background: c.color || 'transparent', borderRadius: '999px', flex: 'none' },
         style: this.chipStyle(c.slug === cat),
         onClick: () => this.setState({ cat: c.slug })
       })),
@@ -445,9 +445,9 @@ class Component extends DCLogic {
       specBtnStyle: {
         position: 'fixed', bottom: '18px', left: '18px', zIndex: 90,
         fontFamily: 'ui-monospace, Menlo, monospace', fontSize: '0.8rem', fontWeight: 700,
-        letterSpacing: '0.04em', cursor: 'pointer', padding: '10px 16px',
-        background: specMode ? '#9E0B13' : '#1C1917', color: '#FAF4EA',
-        border: '2px solid #FAF4EA', boxShadow: '4px 4px 0 rgba(28,25,23,0.45)'
+        cursor: 'pointer', padding: '10px 18px', borderRadius: '999px',
+        background: specMode ? '#8F151B' : '#1C1917', color: '#FFFFFF',
+        border: 'none', boxShadow: '0 6px 18px rgba(28,25,23,0.35)'
       },
       aboutOpen, a11yOpen, highContrast, reduceMotion,
       toggleAbout: () => this.setState(s => ({ aboutOpen: !s.aboutOpen, a11yOpen: false })),

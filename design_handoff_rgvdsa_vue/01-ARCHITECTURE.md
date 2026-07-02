@@ -58,14 +58,15 @@ Keep WordPress/Timber as the router + content source; render page shells in Twig
 
   @theme {
     /* brand tokens — full list in 03-DESIGN-SPEC.md */
-    --color-brand-red: #E9252E;
-    --color-brand-red-deep: #9E0B13;
-    --color-cream: #FAF4EA;
+    --color-brand-red: #E9252E;     /* bright red — full-bleed bands */
+    --color-red: #B01B22;           /* deeper red — text, links, controls, fills */
     --color-ink: #1C1917;
+    --color-off-white: #F7F5F2;
     --font-display: "Montserrat", sans-serif;
     --font-sans: "Open Sans", system-ui, sans-serif;
-    --radius: 0px;                  /* neobrutalism: no rounding anywhere */
-    --shadow-brutal: 5px 5px 0 var(--color-ink);
+    --radius: 0.875rem;             /* 14px cards/inputs; actions use pill 999px */
+    --shadow-card: 0 2px 10px rgb(28 25 23 / 0.10);
+    --shadow-pop: 0 14px 36px rgb(28 25 23 / 0.24);
   }
   ```
 - Map shadcn's semantic CSS variables (`--background`, `--foreground`, `--primary`, `--border`, `--ring`, …) to brand tokens in `:root` so generated components come out on-brand by default (spec in `03-DESIGN-SPEC.md`).
@@ -76,7 +77,7 @@ Keep WordPress/Timber as the router + content source; render page shells in Twig
 - Init: `npx shadcn-vue@latest init` (it will respect the existing `components.json`). Core deps it brings: `reka-ui`, `class-variance-authority`, `clsx`, `tailwind-merge`, `lucide-vue-next`, `tw-animate-css`.
 - Components are **generated into the repo** (`src/components/ui/`) — this is the "own component library" property. After generation they're ours: re-theme freely, but keep the file/API structure so future `shadcn-vue add` diffs stay readable.
 - Full-registry rollout is phased with per-batch heavy deps (`@tanstack/vue-table`, `@internationalized/date`, `embla-carousel-vue`, `vee-validate` + `zod`, `vue-sonner`, `@unovis/vue`, `vaul-vue`) — batches and acceptance criteria in `02-PHASES.md`.
-- Brutalist re-theme is done **once, centrally**, via the semantic CSS variables + a small set of targeted edits (radius, shadows, border widths) — not by forking every component. Verify per batch on the styleguide page.
+- The v2 re-theme is done **once, centrally**, via the semantic CSS variables + a small set of targeted edits (radius, soft shadows, border colors) — not by forking every component. Verify per batch on the styleguide page.
 
 ## Styleguide page (build early, keep forever)
 A WP page template (`page-styleguide.php` + `views/page-styleguide.twig`) mounting one big island that renders every `ui/` component in brand theme + every `site/` component. This is each phase-agent's acceptance surface and the permanent visual regression page. Noindex it.

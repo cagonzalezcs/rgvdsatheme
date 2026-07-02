@@ -11,12 +11,12 @@ The files in `designs/` are **design references created in HTML** — interactiv
 Open any `designs/*.dc.html` in a browser to see the working prototype.
 
 ## Fidelity
-**High-fidelity.** Colors, typography, spacing, borders, shadows, copy, and interactions are final and should be recreated pixel-faithfully. The visual language is deliberate neobrutalism: **zero border radius, hard offset shadows (no blur), thick ink borders**. The default shadcn-vue look (rounded, soft) must be re-themed — see `03-DESIGN-SPEC.md`.
+**High-fidelity.** Colors, typography, spacing, borders, shadows, copy, and interactions are final and should be recreated faithfully. The visual language (v2) is **warm and rounded**: generous corner radius (pills for actions, 14–20px cards), **soft blurred shadows** for depth, flat brand-red bands, and **sentence-case** display type (uppercase only for small eyebrows/tags). The default shadcn-vue look is close in spirit but must be re-tokened to the palette + radius + shadow scale in `03-DESIGN-SPEC.md`. (An earlier neobrutalist direction — 0 radius, hard offset shadows, uppercase — was replaced; if any doc or file still shows it, `03-DESIGN-SPEC.md` v2 wins.)
 
 ## Documents in this package
 1. **`01-ARCHITECTURE.md`** — technical implementation notes: how Vue 3, Tailwind v4, and shadcn-vue slot into the existing Timber/vite-for-wp theme; branch strategy; rendering architecture options; BEM stance; existing-code coexistence.
 2. **`02-PHASES.md`** — the phased build plan, written as self-contained briefs to hand to separate Claude Code agents/contexts, with acceptance criteria per phase.
-3. **`03-DESIGN-SPEC.md`** — design tokens, typography scale, per-page component inventory, interaction specs, and the shadcn-vue component mapping.
+3. **`03-DESIGN-SPEC.md`** — design tokens, typography scale, per-page component inventory, interaction specs, the shadcn-vue component mapping, and the **Accessibility (WCAG 2.1 AA)** requirements (contrast in every state incl. hover, focus, motion, targets, ARIA + a per-phase a11y gate).
 4. **`designs/`** — the seven HTML prototypes + runtime + logo assets.
 5. **`UPDATE-ABOUT-PAGE.md`** — delta brief for the About page (added 2026-07-02, after the phase docs were first written). If you are starting fresh, the phase docs already incorporate it; if a build is underway, paste this brief into the active Claude Code context.
 
@@ -27,13 +27,14 @@ Open any `designs/*.dc.html` in a browser to see the working prototype.
 - **Calendar** (`Calendar.dc.html`) — month-grid / list view toggle; category filter chips w/ color swatches; event chips; event detail modal; month navigation; subscribe strip.
 - **Blog** (`Blog.dc.html`) — archive: red page header; search + category filter chips (same 6 colors as events); featured post card; editorial grid (mixed card spans); filtered/search state switches to uniform result rows; pagination; email-subscribe strip on ink.
 - **Blog Post** (`Blog Post.dc.html`) — single: red hero w/ category tag, dek, byline (named-author or committee mode); featured image pulled up over the red band; article body = a stack of content blocks (prose, image, pull quote, gallery, person quote, video, audio, document, related event, action callout) intended as ACF flexible content; tags + share; author card; optional sticky meta rail; Read Next. Both blog prototypes have a **"</> ACF spec" toggle** (bottom-left) that overlays field-mapping annotations for implementers.
-- **Interior Page Template** (`Interior Page Template.dc.html`) — same shell as Get Involved; documents list; code of conduct; grievance callout card. This is the generic template for all future interior pages.
+- **Interior Page Template** (`Interior Page Template.dc.html`) — the generic v2 shell for all future interior/governance pages (Bylaws, Documents, Resolutions, Education Library, Grievance): shared header/footer, red PageHeader (title/breadcrumb/lede as props), content+sidebar layout, a governing-documents list (rows with a PDF chip + Download button), code-of-conduct prose, and a grievance CalloutCard. Props: `pageTitle`, `breadcrumbSection`, `lede`, `showSidebar`.
 
 **Note on blog copy:** all blog titles, excerpts, prose, quotes, captions, and author details are deliberately lorem ipsum / generic placeholders. Do not invent real editorial content — implement the layouts and let the chapter write the posts.
 
 ## Assets
 - `designs/assets/logo-red.png` — header logo (on red)
-- `designs/assets/logo-green.png` — footer logo (on cream)
+- `designs/assets/logo-green.png` — footer logo (on cream/white)
+- `designs/assets/cactus-mark-red.png` — decorative hero mark (Home)
 - Fonts: **Montserrat** (400–900) and **Open Sans** (400–800), self-hosted TTFs in `designs/assets/fonts/`. The theme already has a `static/fonts/` directory — move them there (or swap to woff2).
 - `designs/image-slot.js` — design-time-only helper (drag-and-drop image placeholder used by the blog prototypes). Do **not** port it; in production those slots are ordinary `<img>` / featured-image fields.
 

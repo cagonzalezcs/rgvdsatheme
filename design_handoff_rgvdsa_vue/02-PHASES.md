@@ -25,13 +25,13 @@ Orchestrator note: Phases 0 → 1 → 2A are strictly sequential. 2B and 2C can 
 **Agent brief:** Initialize shadcn-vue and the app scaffolding every later phase depends on.
 
 1. `npx shadcn-vue@latest init` — must consume the existing `components.json` unchanged (new-york, lucide, `@/` aliases, css at `src/css/tailwind.css`). Verify it created `src/lib/utils.ts` (`cn()`).
-2. Add the brand `@theme` tokens and the shadcn semantic-variable mapping to `src/css/tailwind.css` — exact values in `03-DESIGN-SPEC.md` § Tokens. This is the **brutalist re-theme**: `--radius: 0px`, hard offset shadows, 2–3px ink borders.
+2. Add the brand `@theme` tokens and the shadcn semantic-variable mapping to `src/css/tailwind.css` — exact values in `03-DESIGN-SPEC.md` § Tokens. This is the **v2 re-theme**: `--radius: 0.875rem` (14px cards; actions use the pill radius 999px), soft blurred shadows, 1px hairline borders (2px `red` on outline buttons).
 3. Add `shadcn-vue add button badge card separator label input` as the seed batch; verify they render on-brand.
 4. Build the island registry (`src/ts/islands.ts`): scans `[data-vue-island]`, parses `data-props` JSON, mounts the registered component. Register islands lazily (dynamic `import()`) so page JS stays small.
 5. Styleguide: `page-styleguide.php` + `views/page-styleguide.twig` + a `Styleguide.vue` island showing the token palette, type scale, and every installed ui component in all variants. Noindex.
 6. Self-host fonts: move Montserrat + Open Sans from `designs/assets/fonts/` into `static/fonts/` (convert to woff2 if trivial), `@font-face` in `tailwind.css`, weights per `03-DESIGN-SPEC.md`.
 
-**Accept:** styleguide page shows seed components with zero radius, hard shadows, brand palette, correct fonts.
+**Accept:** styleguide page shows seed components with rounded corners, soft shadows, brand palette, correct fonts.
 **Commit:** `feat: shadcn-vue init, brand theme, island registry, styleguide`
 
 ---
@@ -46,7 +46,7 @@ Goal: every shadcn-vue registry component generated into `src/components/ui/`, o
 ### 2B — Overlay & navigation (reka-ui heavy)
 `accordion alert-dialog collapsible context-menu dialog drawer dropdown-menu hover-card menubar navigation-menu popover scroll-area sheet sidebar tabs tooltip`
 Peer deps: `vaul-vue` (drawer).
-Pay attention: dialog/popover/dropdown shadows must be the hard `6px 6px 0 ink` style; overlay animations must respect reduced motion.
+Pay attention: dialog/popover/dropdown shadows must be the soft `0 14px 36px rgba(28,25,23,0.24)` style; overlay animations must respect reduced motion.
 **Commit:** `feat(ui): shadcn-vue batch B — overlays & nav`
 
 ### 2C — Data & complex (heavy deps)
@@ -67,10 +67,10 @@ Components (`src/components/site/`, Composition API, inline Tailwind, block clas
 - `SiteHeader.vue` — sticky red bar; logo; About dropdown (DropdownMenu) whose six items deep-link to the About page anchors (`/about#chapter`, `#mission`, `#counties`, `#committees`, `#bylaws`, `#faq` — see spec § SiteHeader); Calendar / Blog / Get Involved links; EN/ES toggle (ES disabled, `title="Español — próximamente"`); A11yWidget; Join DSA CTA. Add a mobile disclosure menu (Sheet) — the prototype only wraps; breakpoint behavior is yours to design within the visual language.
 - `A11yWidget.vue` + `useA11ySettings.ts` composable — Popover panel: text-size segmented control (A / A+ / A++ → root font 16/18/20px), High-contrast toggle, Reduce-motion toggle; persists to localStorage `rgv-dsa-a11y`; applies via `data-tone` overrides + global style injection exactly as specced.
 - `SiteFooter.vue` — logo, 4 nav columns (props-driven from WP menus later; hardcode prototype content now), ink bottom bar.
-- `PageHeader.vue` — red band: Breadcrumb + uppercase H1 + lede (props: `title`, `lede`, `crumbs`).
+- `PageHeader.vue` — red band: Breadcrumb + sentence-case H1 + lede (props: `title`, `lede`, `crumbs`).
 - Twig integration: replace legacy header/footer markup in `views/` with header/footer islands (or one whole-page island per template — pick one strategy and note it in the commit).
 
-**Accept:** chrome pixel-matches prototypes at 1280w; a11y widget settings persist across reload; keyboard nav works (dropdown, popover, skip link).
+**Accept:** chrome pixel-matches prototypes at 1280w; a11y widget settings persist across reload; keyboard nav works (dropdown, popover, skip link); every button/link keeps ≥ 4.5:1 label contrast in its **hover** state (see Design-Spec § Accessibility — outline-button hover trap).
 **Commit:** `feat(site): header, footer, a11y widget, page header`
 
 ---
@@ -83,7 +83,7 @@ Components (`src/components/site/`, Composition API, inline Tailwind, block clas
 - **Get Involved** (`views/page-get-involved.twig`): PageHeader; content+sidebar grid (`minmax(300px,1fr) 300px`, gap 56px); How to Join; Committees; Channels; FAQ (Accordion). Reproduce sidebar cards from the prototype.
 - **Interior Page Template** (`views/page.twig` — the default): PageHeader; content+sidebar; documents list; prose styles for WP content (`h2` w/ bottom border, links, lists — match prototype); grievance `CalloutCard.vue` (white, ink border, red hard shadow).
 
-**Accept:** side-by-side match vs prototypes at 1280w and 375w; all in-page anchors work (Get Involved `#committees`/`#faq`, Interior `#documents`/`#grievance`, About `#chapter`/`#mission`/`#counties`/`#committees`/`#bylaws`/`#faq` — including from the header dropdown on other pages); lighthouse a11y ≥ 95.
+**Accept:** side-by-side match vs prototypes at 1280w and 375w; all in-page anchors work (Get Involved `#committees`/`#faq`, Interior `#documents`/`#grievance`, About `#chapter`/`#mission`/`#counties`/`#committees`/`#bylaws`/`#faq` — including from the header dropdown on other pages); lighthouse a11y ≥ 95; hover/active states on every CTA and outline button verified for contrast (no red-on-red fills).
 **Commit:** `feat(pages): home, about, get involved, interior template`
 
 ---
@@ -94,7 +94,7 @@ Components (`src/components/site/`, Composition API, inline Tailwind, block clas
 `EventCalendar.vue` island composed of:
 - Toolbar: month prev/next + current month label; Month/List view toggle (ToggleGroup); category filter chips with color swatches (aria-pressed).
 - `MonthGrid.vue` — 7-col CSS grid on ink gap lines; day cells cream (adjacent-month cells muted); event chips (category-colored, truncated, clickable).
-- `EventListView.vue` — stacked rows: date block + title/when/where + hover hard-shadow lift; empty state (dashed border).
+- `EventListView.vue` — stacked rows: date block + title/when/where + hover soft-shadow lift (`0 12px 30px` + `translateY(-2px)`); empty state (dashed border).
 - `EventDetailDialog.vue` — Dialog: category tag, title, datetime, venue, description, RSVP CTA.
 - Subscribe strip (ink band, ICS/Google links — hrefs stubbed).
 - State: current month, view mode, active category, selected event. View + filter survive reload (URL params preferred over localStorage).
@@ -110,7 +110,7 @@ Components (`src/components/site/`, Composition API, inline Tailwind, block clas
 
 - **`BlogArchive.vue`** island (replaces `index.twig` / `category.twig` / `search.twig` rendering): PageHeader; search input + category filter chips (post categories share the 6 event colors); **browse state** = featured post card (sticky post ?? latest) + editorial grid (6-col; card spans by index `[3,3,2,2,2,2,2,2]`; excerpt only on span-3 cards); **filter/search state** = uniform result rows + result-count line + "Clear filters"; empty state (dashed border); pagination; email-subscribe strip (ink band, form action stubbed until Phase 6).
 - State: `query` + `activeCat` sync to URL (`?s=`, `?category=`); any active filter/search switches browse → results layout.
-- **`SinglePost.vue`** island (`single.twig`): red hero (breadcrumb, category tag, uppercase H1, dek, byline, "Léelo en español" stub link); featured image pulled up over the red band (negative margin); article body renders the **post_blocks** flexible-content stack — one Vue component per block: prose, image (w/ caption + credit), pull_quote, gallery (essay/grid), person_quote (photo + bilingual quote), video (oEmbed + CC badge + transcript link), audio (player row + transcript link), document (reuses Interior's DocumentRow), event_embed (reuses Calendar's list-row), action_callout (ink card, red hard shadow, button repeater). Block accents inherit the post category's term color.
+- **`SinglePost.vue`** island (`single.twig`): red hero (breadcrumb, category tag, sentence-case H1, dek, byline, "Léelo en español" stub link); featured image pulled up over the red band (negative margin); article body renders the **post_blocks** flexible-content stack — one Vue component per block: prose, image (w/ caption + credit), pull_quote, gallery (essay/grid), person_quote (photo + bilingual quote), video (oEmbed + CC badge + transcript link), audio (player row + transcript link), document (reuses Interior's DocumentRow), event_embed (reuses Calendar's list-row), action_callout (ink card, red hard shadow, button repeater). Block accents inherit the post category's term color.
 - End matter: tags + copy-link/email share; author card (named vs committee byline mode); Read Next = latest 3 same-category posts (no ACF field); optional sticky meta rail (`showMetaRail` prop, off by default).
 - Data: typed `BlogPost` fixture from the prototype's `POSTS` array; ACF field group definitions can be stubbed as JSON now and registered in Phase 6.
 
@@ -138,7 +138,7 @@ Components (`src/components/site/`, Composition API, inline Tailwind, block clas
 **Agent brief:**
 - Delete legacy `src/scss/` and `src/ts/components|pages` once nothing imports them; remove `@awesome.me/webawesome` if unused; prune dead Twig partials.
 - Audit bundle: islands lazy-loaded, fonts preloaded, images sized.
-- Full a11y pass (axe + keyboard walk of every page, both a11y-widget modes).
+- Full a11y pass (axe + keyboard walk of every page, both a11y-widget modes; hover/active contrast checked on every button per Design-Spec § Accessibility).
 - Cross-browser: Chrome / Firefox / Safari / iOS Safari.
 - Update `README.md` in the theme: stack, commands, how to add a shadcn component, island pattern.
 

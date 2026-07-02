@@ -1,5 +1,7 @@
 # UPDATE — About page added (2026-07-02)
 
+> ⚠ **Superseded styling (updated 2026-07-02).** This brief predates the v2 redesign. Its **structure, anchors, section content, and shared-fixture notes are still correct**, but any *visual* details below (cream `#FAF4EA`, 3px ink borders, `6px 6px 0` hard shadows, uppercase, 2px ink dividers) are the old neobrutalist look and are **obsolete** — build the About page to the v2 system in `03-DESIGN-SPEC.md` (white/`#F7F5F2` surfaces, 14–16px radius, soft shadows, 3px red `h2` underline, `#F0EDE8` dividers). The `designs/About.dc.html` prototype is already v2 and is canonical.
+
 **How to use this file:** paste its full contents into your active Claude Code session in the `rgvdsatheme` repo. If you are starting the build fresh instead, ignore this file — `README.md`, `02-PHASES.md`, and `03-DESIGN-SPEC.md` already incorporate everything below.
 
 ---
