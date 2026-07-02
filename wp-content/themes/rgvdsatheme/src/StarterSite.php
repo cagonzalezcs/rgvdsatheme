@@ -12,7 +12,6 @@ class StarterSite extends Site {
 		add_action( 'init', array( $this, 'register_post_types' ) );
 		add_action( 'init', array( $this, 'register_taxonomies' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'theme_enqueue_scripts' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'theme_enqueue_styles' ) );
 
 		add_filter( 'timber/context', array( $this, 'add_to_context' ) );
 		add_filter( 'timber/twig', array( $this, 'add_to_twig' ) );
@@ -41,11 +40,26 @@ class StarterSite extends Site {
 	 * @param string $context context['this'] Being the Twig's {{ this }}.
 	 */
 	public function add_to_context( $context ) {
-		$context['foo']   = 'bar';
-		$context['stuff'] = 'I am a value set in your functions.php file';
-		$context['notes'] = 'These values are available everytime you call Timber::context();';
-		$context['menu']  = Timber::get_menu();
-		$context['site']  = $this;
+		$context['menu']    = Timber::get_menu( 'primary' ) ?: Timber::get_menu();
+		$context['site']    = $this;
+		$context['chapter'] = array(
+			'join_url'       => 'https://act.dsausa.org/donate/membership',
+			'newsletter_url' => 'https://actionnetwork.org/forms/dsa-rgv-newsletter-sign-up',
+			'socials'        => array(
+				array(
+					'name' => 'Facebook',
+					'url'  => 'https://facebook.com/dsargv',
+				),
+				array(
+					'name' => 'Instagram',
+					'url'  => 'https://instagram.com/dsa_rgv',
+				),
+				array(
+					'name' => 'Twitter',
+					'url'  => 'https://twitter.com/dsa_rgv',
+				),
+			),
+		);
 
 		return $context;
 	}
@@ -102,16 +116,8 @@ class StarterSite extends Site {
 		);
 
 		add_theme_support( 'menus' );
-	}
 
-	/**
-	 * his would return 'foo bar!'.
-	 *
-	 * @param string $text being 'foo', then returned 'foo bar!'.
-	 */
-	public function myfoo( $text ) {
-		$text .= ' bar!';
-		return $text;
+		register_nav_menus( array( 'primary' => __( 'Primary Menu', 'rgvdsatheme' ) ) );
 	}
 
 	/**
@@ -125,8 +131,6 @@ class StarterSite extends Site {
 		 * @link https://twig.symfony.com/doc/3.x/functions/template_from_string.html
 		 */
 		// $twig->addExtension( new Twig\Extension\StringLoaderExtension() );
-
-		$twig->addFilter( new Twig\TwigFilter( 'myfoo', [ $this, 'myfoo' ] ) );
 
 		return $twig;
 	}
@@ -159,17 +163,4 @@ class StarterSite extends Site {
             ]
         );
     }
-
-    /*
-     * Enqueue styles used within the theme
-     */
-     public function theme_enqueue_styles() {
-        wp_enqueue_style(
-            'main-app-stylesheet',
-            get_template_directory_uri() . '/dist/app.css',
-            array(),
-            wp_get_theme()->get( 'Version' ),
-            'all'
-        );
-     }
 }

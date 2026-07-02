@@ -51,5 +51,10 @@ wp-config.php
 .DS_Store
 .idea/
 
+# Local tooling / design reference (not versioned)
+/.claude/
+/openspec/
+/wp-content/themes/design_handoff_rgvdsa_vue/
+
 # Secrets
 .env

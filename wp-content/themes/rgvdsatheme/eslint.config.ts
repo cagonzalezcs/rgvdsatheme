@@ -6,6 +6,11 @@ import { defineConfig } from "eslint/config";
 import eslintConfigPrettier from "eslint-config-prettier/flat";
 
 export default defineConfig([
+  { ignores: ["dist/", "vendor/", "node_modules/", "wordpress/"] },
+  {
+    files: ["vite.config.js"],
+    languageOptions: { globals: globals.node },
+  },
   {
     files: ["**/*.{js,mjs,cjs,ts,mts,cts,vue}"],
     plugins: { js },

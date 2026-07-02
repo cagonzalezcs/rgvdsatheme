@@ -1,0 +1,40 @@
+:root {
+  --color-red: #d11;
+  --color-red-dark: #7c0909;
+  --color-cream: #fff5e5;
+  --color-black: #111;
+  --color-white: #fff;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 2rem;
+  --space-xl: 4rem;
+  --max-width: 72rem;
+  --header-height: 4.5rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+// Scroll lock while the mobile nav panel is open (set by SiteHeader.ts).
+body.is-locked {
+  overflow: hidden;
+}
+
+// Keep the hidden attribute authoritative even when display rules apply.
+[hidden] {
+  display: none !important;
+}
+
+.wrapper {
+  max-width: var(--max-width);
+  padding-inline: var(--space-md);
+  margin-inline: auto;
+}

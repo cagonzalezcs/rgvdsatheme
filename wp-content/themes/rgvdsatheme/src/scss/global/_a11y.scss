@@ -1,11 +1,32 @@
-.sr-only {
+.sr-only,
+.screen-reader-text {
   position: absolute;
   width: 1px;
   height: 1px;
   padding: 0;
   margin: -1px;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
   white-space: nowrap;
   border-width: 0;
+}
+
+// Skip link: visually hidden (via .screen-reader-text) until focused.
+.skip-link:focus {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  width: auto;
+  height: auto;
+  padding: var(--space-sm) var(--space-md);
+  margin: 0;
+  overflow: visible;
+  clip-path: none;
+  color: var(--color-cream);
+  text-decoration: underline;
+  white-space: normal;
+  background: var(--color-black);
+  outline: 2px solid var(--color-cream);
+  outline-offset: -4px;
 }

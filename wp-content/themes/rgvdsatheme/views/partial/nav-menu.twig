@@ -1,0 +1,23 @@
+{% if items %}
+	<ul class="{{ depth > 0 ? 'site-nav__sublist' : 'site-nav__list' }}"{% if depth > 0 %} id="{{ list_id }}" data-submenu{% endif %}>
+		{% for item in items %}
+			<li class="site-nav__item {{ item.classes|join(' ')|trim }}">
+				<a class="site-nav__link" href="{{ item.link }}"
+					{%- if item.current or 'current-menu-item' in item.classes %} aria-current="page"{% endif %}
+					{%- if item.target == '_blank' %} target="_blank" rel="noopener noreferrer"{% endif %}>
+					{{- item.title -}}
+					{%- if item.target == '_blank' %}<span class="sr-only"> (opens in new tab)</span>{% endif -%}
+				</a>
+				{% if item.children %}
+					<button class="site-nav__subtoggle" type="button" hidden
+							data-submenu-toggle aria-expanded="false"
+							aria-controls="submenu-{{ item.id }}">
+						<span class="sr-only">{{ item.title }} submenu</span>
+						<svg class="site-nav__chevron" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					</button>
+					{% include 'partial/nav-menu.twig' with { items: item.children, depth: depth + 1, list_id: 'submenu-' ~ item.id } only %}
+				{% endif %}
+			</li>
+		{% endfor %}
+	</ul>
+{% endif %}

@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Open Sans';
-  src: url('/static/fonts/open-sans/OpenSans-Regular.ttf')
+  src: url('../../../static/fonts/open-sans/OpenSans-Regular.ttf')
   format('truetype');
   font-weight: 400;
   font-style: normal;
@@ -9,7 +9,7 @@
 
 @font-face {
   font-family: 'Open Sans';
-  src: url('/static/fonts/open-sans/OpenSans-SemiBold.ttf')
+  src: url('../../../static/fonts/open-sans/OpenSans-SemiBold.ttf')
   format('truetype');
   font-weight: 600;
   font-style: normal;
@@ -18,7 +18,7 @@
 
 @font-face {
   font-family: 'Open Sans';
-  src: url('/static/fonts/open-sans/OpenSans-Bold.ttf')
+  src: url('../../../static/fonts/open-sans/OpenSans-Bold.ttf')
   format('truetype');
   font-weight: 700;
   font-style: normal;
@@ -26,8 +26,8 @@
 }
 
 @font-face {
-  font-family: 'Montserrat';
-  src: url('/static/fonts/montserrat/Montserrat-Regular.ttf')
+  font-family: Montserrat;
+  src: url('../../../static/fonts/montserrat/Montserrat-Regular.ttf')
   format('truetype');
   font-weight: 400;
   font-style: normal;
@@ -35,8 +35,8 @@
 }
 
 @font-face {
-  font-family: 'Montserrat';
-  src: url('/static/fonts/montserrat/Montserrat-SemiBold.ttf')
+  font-family: Montserrat;
+  src: url('../../../static/fonts/montserrat/Montserrat-SemiBold.ttf')
   format('truetype');
   font-weight: 600;
   font-style: normal;
@@ -44,8 +44,8 @@
 }
 
 @font-face {
-  font-family: 'Montserrat';
-  src: url('/static/fonts/montserrat/Montserrat-Bold.ttf')
+  font-family: Montserrat;
+  src: url('../../../static/fonts/montserrat/Montserrat-Bold.ttf')
   format('truetype');
   font-weight: 700;
   font-style: normal;

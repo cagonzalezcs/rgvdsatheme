@@ -1,0 +1,173 @@
+@use '../../global/breakpoints' as bp;
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  color: var(--color-cream);
+  background: var(--color-black);
+}
+
+// Offset the sticky header below the WP admin bar.
+body.admin-bar .site-header {
+  top: var(--wp-admin--admin-bar--height, 32px);
+}
+
+.site-header__inner {
+  display: flex;
+  gap: var(--space-md);
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--header-height);
+}
+
+.site-header__logo {
+  display: inline-block;
+
+  img {
+    display: block;
+    width: auto;
+    height: 3rem;
+  }
+}
+
+.site-header__toggle {
+  // Stays above the fixed mobile panel (z-index 1) so it remains clickable.
+  position: relative;
+  z-index: 2;
+  padding: var(--space-sm);
+  color: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-cream);
+    outline-offset: 2px;
+  }
+
+  @include bp.up(bp.$bp-md) {
+    display: none;
+  }
+}
+
+// Hamburger: middle bar is the span, outer bars are ::before/::after.
+.site-header__toggle-icon {
+  position: relative;
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: currentcolor;
+  border-radius: 1px;
+
+  &::before,
+  &::after {
+    position: absolute;
+    left: 0;
+    width: 24px;
+    height: 2px;
+    content: '';
+    background: currentcolor;
+    border-radius: 1px;
+  }
+
+  &::before {
+    top: -7px;
+  }
+
+  &::after {
+    top: 7px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: background-color 0.2s ease;
+
+    &::before,
+    &::after {
+      transition:
+        transform 0.2s ease,
+        top 0.2s ease;
+    }
+  }
+}
+
+// Morph hamburger into an X while the panel is open.
+.site-header__toggle[aria-expanded='true'] .site-header__toggle-icon {
+  background: transparent;
+
+  &::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+
+  &::after {
+    top: 0;
+    transform: rotate(-45deg);
+  }
+}
+
+// No-JS nav: plain in-flow list on mobile, horizontal row on desktop.
+.site-nav {
+  @include bp.up(bp.$bp-md) {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-lg);
+    align-items: center;
+  }
+}
+
+// JS-enhanced mobile panel. Scoped to .site-header.js so that without JS
+// the nav stays fully visible and usable.
+.site-header.js .site-nav {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  align-items: flex-start;
+  padding-top: var(--header-height);
+  padding-inline: var(--space-md);
+  overflow-y: auto;
+  visibility: hidden;
+  background: var(--color-black);
+  opacity: 0;
+  transform: translateY(-0.5rem);
+
+  @media (prefers-reduced-motion: no-preference) {
+    // Visibility flips after the fade-out on close; instantly on open so the
+    // panel is focusable in the same frame it opens (SiteHeader.ts).
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      visibility 0s 0.2s;
+  }
+
+  &.is-open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition:
+        opacity 0.2s ease,
+        transform 0.2s ease,
+        visibility 0s;
+    }
+  }
+
+  @include bp.up(bp.$bp-md) {
+    position: static;
+    inset: auto;
+    flex-direction: row;
+    gap: var(--space-lg);
+    align-items: center;
+    padding: 0;
+    overflow: visible;
+    visibility: visible;
+    background: transparent;
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
