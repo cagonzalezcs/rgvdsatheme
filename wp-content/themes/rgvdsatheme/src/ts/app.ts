@@ -1,8 +1,5 @@
-// Tailwind v4 entry (must precede legacy SCSS so legacy rules win during migration)
+// Tailwind v4 entry
 import "../css/tailwind.css";
-
-// Custom Styles
-import "../scss/app.scss";
 
 // Components
 import { mountIslands } from "./islands";

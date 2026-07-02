@@ -9,8 +9,6 @@
     "preview": "node_modules/.bin/vite preview",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "stylelint": "stylelint 'src/**/*.scss'",
-    "stylelint:fix": "stylelint 'src/**/*.scss' --fix",
     "format": "prettier . --write",
     "typecheck": "./node_modules/.bin/vue-tsc --noEmit"
   },
@@ -22,15 +20,11 @@
     "eslint-plugin-vue": "^10.9.1",
     "globals": "^17.6.0",
     "prettier": "3.8.3",
-    "sass": "^1.99.0",
-    "stylelint": "^17.11.0",
-    "stylelint-config-standard-scss": "^17.0.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
     "vite": "^7.3.3"
   },
   "dependencies": {
-    "@awesome.me/webawesome": "^3.9.0",
     "@lucide/vue": "^1.23.0",
     "@tailwindcss/vite": "^4.3.2",
     "@tanstack/vue-table": "^8.21.3",
