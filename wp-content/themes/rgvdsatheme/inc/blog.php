@@ -784,14 +784,13 @@ function rgvdsa_blog_archive_context( $context ) {
 
 	$query = rgvdsa_blog_posts_query( $args );
 
-	// Leave archive_posts unset pre-seed so the island fixture holds.
-	if ( empty( $query->posts ) ) {
-		return $context;
-	}
-
+	// Always-set keys (island-empty-states): the island owns the designed
+	// empty state; there is no fixture fallback anymore.
 	// Sticky posts stay in date order here with featured:true; the island
 	// picks posts.find(featured) ?? posts[0] for the featured card.
-	$context['archive_posts'] = array_map( 'rgvdsa_post_to_blog_post', $query->posts );
+	$context['archive_posts']    = array_map( 'rgvdsa_post_to_blog_post', $query->posts );
+	$context['archive_total']    = (int) $query->found_posts;
+	$context['archive_api_base'] = rest_url( 'rgvdsa/v1' );
 
 	$pagination = array();
 	if ( $paged > 1 ) {
@@ -800,9 +799,7 @@ function rgvdsa_blog_archive_context( $context ) {
 	if ( $paged < (int) $query->max_num_pages ) {
 		$pagination['olderUrl'] = get_pagenum_link( $paged + 1, false );
 	}
-	if ( ! empty( $pagination ) ) {
-		$context['archive_pagination'] = $pagination;
-	}
+	$context['archive_pagination'] = $pagination ? $pagination : null;
 
 	return $context;
 }

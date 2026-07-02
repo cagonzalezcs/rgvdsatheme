@@ -8,14 +8,9 @@
 
 {% set show_counties_strip = show_counties_strip|default(true) %}
 {% set event_count = event_count|default(5) %}
-{% set home_events = home_events|default([
-	{ day: '07', month: 'JUL', title: 'RGV-DSA 101 (Virtual)', when: 'Tuesday, July 7 · 7:00 PM', where: 'Zoom' },
-	{ day: '11', month: 'JUL', title: 'General Meeting — McAllen', when: 'Saturday, July 11 · 1:00 PM', where: 'McAllen · venue shared on RSVP' },
-	{ day: '15', month: 'JUL', title: 'RGV-DSA 101 — Brownsville', when: 'Wednesday, July 15 · 7:00 PM', where: 'Brownsville · venue shared on RSVP' },
-	{ day: '19', month: 'JUL', title: 'Socialist Night School: Reading Group', when: 'Sunday, July 19 · 4:00 PM', where: 'Edinburg' },
-	{ day: '25', month: 'JUL', title: 'Chapter Social — Harlingen', when: 'Saturday, July 25 · 6:00 PM', where: 'Harlingen' },
-	{ day: '29', month: 'JUL', title: 'RGV-DSA 101 (Virtual)', when: 'Wednesday, July 29 · 7:00 PM', where: 'Zoom' }
-]) %}
+{# home_events comes from rgvdsa_events_front_page_context() — always set
+   (possibly empty); the empty state below owns the pre-seed render. #}
+{% set home_events = home_events|default([]) %}
 {# counties + hero come from inc/options.php (rgvdsa_chapter_counties / rgvdsa_front_hero). #}
 {% set counties = counties|default([]) %}
 {#
@@ -102,6 +97,12 @@
 				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">Upcoming events</h2>
 				<a href="/calendar/" class="text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">Full calendar →</a>
 			</div>
+			{% if home_events is empty %}
+				<div class="flex flex-col items-center gap-2.5 rounded-[16px] border-2 border-dashed border-border-control px-8 py-12 text-center">
+					<div class="font-display text-[1.2rem] font-bold">No events on the books yet</div>
+					<p class="m-0 max-w-[48ch] text-base leading-[1.6] text-text-muted">New meetings and actions land on the <a href="/calendar/" class="font-bold text-red">calendar</a> first — subscribe there and never miss one.</p>
+				</div>
+			{% endif %}
 			<div class="flex flex-col gap-3">
 				{% for ev in home_events|slice(0, event_count) %}
 					<div class="grid items-center gap-6 rounded-[14px] bg-white px-[22px] py-[18px] shadow-subtle [grid-template-columns:76px_1fr_auto] max-sm:[grid-template-columns:64px_1fr] max-sm:gap-4">

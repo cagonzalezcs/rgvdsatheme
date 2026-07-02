@@ -5,20 +5,14 @@ import ImageSlot from "@/components/site/blog/ImageSlot.vue";
 import PostBlocks from "@/components/site/blog/PostBlocks.vue";
 import PostCard from "@/components/site/blog/PostCard.vue";
 import { type EventCategory, setCategories } from "@/lib/events";
-import {
-  type BlogPost,
-  postCategoryById,
-  SAMPLE_POSTS,
-  SAMPLE_SINGLE,
-  type SinglePostData,
-} from "@/lib/posts";
+import { type BlogPost, postCategoryById, type SinglePostData } from "@/lib/posts";
 
 const props = withDefaults(
   defineProps<{
-    post?: SinglePostData;
+    post: SinglePostData;
     /** pool the Read Next query draws from (same category, latest 3) */
     posts?: BlogPost[];
-    /** WP term-driven categories — replaces the fixture palette when provided */
+    /** WP term-driven categories — replaces the registry palette when provided */
     categories?: EventCategory[];
     /** overrides the post's own byline_mode (per-post ACF select) */
     bylineMode?: "named" | "committee";
@@ -27,8 +21,7 @@ const props = withDefaults(
     homeUrl?: string;
   }>(),
   {
-    post: () => SAMPLE_SINGLE,
-    posts: () => SAMPLE_POSTS,
+    posts: () => [],
     categories: undefined,
     bylineMode: undefined,
     showMetaRail: false,
@@ -230,8 +223,8 @@ const mailShareUrl = computed(
       </div>
     </section>
 
-    <!-- Read Next -->
-    <section class="bg-off-white px-6 pb-24 pt-16" data-tone="cream">
+    <!-- Read Next (hidden when the pool is empty) -->
+    <section v-if="readNext.length > 0" class="bg-off-white px-6 pb-24 pt-16" data-tone="cream">
       <div class="mx-auto flex max-w-[1140px] flex-col gap-7">
         <div class="flex flex-wrap items-baseline justify-between gap-4">
           <h2 class="m-0 font-display text-[clamp(1.5rem,3.2vw,2.2rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">Read next</h2>

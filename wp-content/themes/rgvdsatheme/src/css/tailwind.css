@@ -71,7 +71,7 @@
  * shadcn semantic variables — brutalist brand mapping (03-DESIGN-SPEC.md)
  * ------------------------------------------------------------------------ */
 :root {
-  --background: #faf4ea;
+  --background: #faf4ea; /* mirrored inline in views/html-header.twig (critical bg — keep in sync) */
   --foreground: #1c1917;
   --card: #ffffff;
   --card-foreground: #1c1917;

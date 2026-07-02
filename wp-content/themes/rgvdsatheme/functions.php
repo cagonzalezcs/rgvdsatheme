@@ -23,4 +23,5 @@ require_once __DIR__ . '/inc/options.php';
 require_once __DIR__ . '/inc/events.php';
 require_once __DIR__ . '/inc/blocks.php';
 require_once __DIR__ . '/inc/blog.php';
+require_once __DIR__ . '/inc/rest.php';
 require_once __DIR__ . '/inc/interior.php';

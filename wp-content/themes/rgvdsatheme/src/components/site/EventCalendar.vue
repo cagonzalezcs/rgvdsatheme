@@ -1,23 +1,21 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import EventDetailDialog from "@/components/site/EventDetailDialog.vue";
 import EventListView from "@/components/site/EventListView.vue";
 import MonthGrid from "@/components/site/MonthGrid.vue";
+import { fetchEvents, isAbortError } from "@/lib/api";
 import {
   type ChapterEvent,
   EVENT_CATEGORIES,
-  type EventCategory,
   MONTH_NAMES,
   parseISODate,
-  SAMPLE_EVENTS,
   setCategories,
 } from "@/lib/events";
 
 const props = withDefaults(
   defineProps<{
-    events?: ChapterEvent[];
-    /** WP term-driven categories — replaces the fixture palette when provided */
-    categories?: EventCategory[];
+    /** rgvdsa/v1 base URL — the island fetches its window on mount */
+    apiBase: string;
     defaultView?: "month" | "list";
     showCategoryColors?: boolean;
     showSubscribe?: boolean;
@@ -25,8 +23,6 @@ const props = withDefaults(
     icsUrl?: string;
   }>(),
   {
-    events: () => SAMPLE_EVENTS,
-    categories: undefined,
     defaultView: "month",
     showCategoryColors: true,
     showSubscribe: true,
@@ -35,7 +31,27 @@ const props = withDefaults(
   },
 );
 
-if (props.categories && props.categories.length > 0) setCategories(props.categories);
+/* ---- windowed fetch (island-data-fetch): skeleton until events land ---- */
+const events = ref<ChapterEvent[]>([]);
+const loading = ref(true);
+const failed = ref(false);
+
+async function loadEvents() {
+  loading.value = true;
+  failed.value = false;
+  try {
+    const envelope = await fetchEvents(props.apiBase);
+    events.value = envelope.events;
+    if (envelope.categories.length > 0) setCategories(envelope.categories);
+  } catch (err) {
+    if (isAbortError(err)) return;
+    failed.value = true;
+  } finally {
+    loading.value = false;
+  }
+}
+
+onMounted(loadEvents);
 
 /* ---- state (view + filter survive reload via URL params) ---- */
 const initialParams = new URLSearchParams(window.location.search);
@@ -75,7 +91,7 @@ const monthLabel = computed(
 
 /* ---- filtering ---- */
 const filtered = computed(() =>
-  props.events.filter((e) => activeCat.value === "all" || e.cat === activeCat.value),
+  events.value.filter((e) => activeCat.value === "all" || e.cat === activeCat.value),
 );
 const monthEvents = computed(() =>
   filtered.value
@@ -89,7 +105,7 @@ const monthEvents = computed(() =>
 );
 
 const selectedEvent = computed(
-  () => props.events.find((e) => e.id === selectedId.value) ?? null,
+  () => events.value.find((e) => e.id === selectedId.value) ?? null,
 );
 </script>
 
@@ -168,7 +184,51 @@ const selectedEvent = computed(
       </div>
     </section>
 
-    <section v-if="view === 'month'" class="bg-white px-6 pb-12 pt-6" data-tone="cream">
+    <!-- Skeleton while the window loads -->
+    <section v-if="loading" class="bg-white px-6 pb-12 pt-6" data-tone="cream">
+      <div aria-hidden="true" class="mx-auto max-w-[1200px]">
+        <div class="h-11 animate-pulse rounded-t-[12px] bg-ink/10"></div>
+        <div class="grid grid-cols-7 gap-px pt-px">
+          <div v-for="n in 35" :key="n" class="h-20 animate-pulse bg-tint"></div>
+        </div>
+      </div>
+      <p role="status" class="mx-auto mt-3.5 max-w-[1200px] text-[0.9rem] text-text-muted">Loading events…</p>
+    </section>
+
+    <!-- Error state: the calendar feed keeps working even when the API doesn't -->
+    <section v-else-if="failed" class="bg-white px-6 pb-12 pt-6" data-tone="cream">
+      <div class="mx-auto max-w-[900px]">
+        <div class="flex flex-col items-center gap-2.5 rounded-[16px] border-2 border-dashed border-border-control px-8 py-14 text-center">
+          <div class="font-display text-[1.25rem] font-bold">We couldn&rsquo;t load the calendar</div>
+          <p class="m-0 max-w-[48ch] text-base leading-[1.6] text-text-muted">
+            Try again in a moment — or subscribe with
+            <a :href="icsUrl" class="font-bold text-red">iCal / Outlook</a>
+            and get every event straight in your own calendar.
+          </p>
+          <button
+            type="button"
+            class="mt-2 cursor-pointer rounded-full border-2 border-red bg-transparent px-6 py-2.5 text-[0.92rem] font-bold text-red transition-colors hover:border-red-hover hover:bg-wash"
+            @click="loadEvents"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Designed empty state (island-empty-states) -->
+    <section v-else-if="events.length === 0" class="bg-white px-6 pb-12 pt-6" data-tone="cream">
+      <div class="mx-auto max-w-[900px]">
+        <div class="flex flex-col items-center gap-2.5 rounded-[16px] border-2 border-dashed border-border-control px-8 py-14 text-center">
+          <div class="font-display text-[1.25rem] font-bold">No events scheduled</div>
+          <p class="m-0 max-w-[48ch] text-base leading-[1.6] text-text-muted">
+            New meetings and actions land here first. Subscribe below and never miss one.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section v-else-if="view === 'month'" class="bg-white px-6 pb-12 pt-6" data-tone="cream">
       <div class="mx-auto max-w-[1200px]">
         <MonthGrid
           :year="visibleMonth.year"

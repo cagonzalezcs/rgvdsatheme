@@ -307,9 +307,9 @@ function rgvdsa_events_query( $args = array() ) {
 }
 
 /**
- * Calendar page context: events in a 1-month-back → 12-months-forward
- * window + categories + subscribe URLs. Keys are only set when the CPT has
- * events in the window, so the island fixture still renders pre-seed.
+ * Calendar page context: subscribe URLs + API base. The island fetches its
+ * own event window from /rgvdsa/v1/events on mount (island-data-fetch), so
+ * nothing is embedded. Keys are always set.
  */
 add_filter( 'rgvdsa/context/page', 'rgvdsa_events_calendar_context', 10, 2 );
 function rgvdsa_events_calendar_context( $context, $timber_post ) {
@@ -319,49 +319,19 @@ function rgvdsa_events_calendar_context( $context, $timber_post ) {
 		return $context;
 	}
 
-	// Serialized window is cached (rgvdsa_cache_remember) — invalidated by
-	// content-version bumps on event/term/options saves, TTL backstop 15 min.
-	$events = rgvdsa_cache_remember(
-		'calendar_events',
-		static function () {
-			$now   = new DateTimeImmutable( 'now', rgvdsa_events_timezone() );
-			$posts = rgvdsa_events_query(
-				array(
-					'meta_query' => array(
-						array(
-							'key'     => 'start_datetime',
-							'value'   => array(
-								$now->modify( '-1 month' )->format( 'Y-m-d H:i:s' ),
-								$now->modify( '+12 months' )->format( 'Y-m-d H:i:s' ),
-							),
-							'compare' => 'BETWEEN',
-							'type'    => 'DATETIME',
-						),
-					),
-				)
-			);
-
-			return array_values( array_filter( array_map( 'rgvdsa_event_to_chapter_event', $posts ) ) );
-		}
-	);
-	if ( ! $events ) {
-		return $context;
-	}
-
 	$ics_url = get_feed_link( 'rgvdsa-events' );
 
-	$context['calendar_events']     = $events;
-	$context['calendar_categories'] = rgvdsa_event_categories();
-	$context['calendar_ics_url']    = $ics_url;
-	$context['calendar_gcal_url']   = 'https://calendar.google.com/calendar/r?cid=' . urlencode( preg_replace( '#^https?://#', 'webcal://', $ics_url ) );
+	$context['calendar_api_base'] = rest_url( 'rgvdsa/v1' );
+	$context['calendar_ics_url']  = $ics_url;
+	$context['calendar_gcal_url'] = 'https://calendar.google.com/calendar/r?cid=' . urlencode( preg_replace( '#^https?://#', 'webcal://', $ics_url ) );
 
 	return $context;
 }
 
 /**
  * Home page context: next N upcoming events. `event_count` is injected by
- * the options domain at priority 5; we run at 10. The key is only set when
- * upcoming events exist, so the twig fixture default survives pre-seed.
+ * the options domain at priority 5; we run at 10. Always set (possibly
+ * empty) — Twig owns the designed empty state.
  */
 add_filter( 'rgvdsa/context/front_page', 'rgvdsa_events_front_page_context' );
 function rgvdsa_events_front_page_context( $context ) {
@@ -397,9 +367,7 @@ function rgvdsa_events_front_page_context( $context ) {
 			'where' => $city ? $city : $venue,
 		);
 	}
-	if ( $home_events ) {
-		$context['home_events'] = $home_events;
-	}
+	$context['home_events'] = $home_events;
 
 	return $context;
 }

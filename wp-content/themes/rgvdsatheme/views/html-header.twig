@@ -11,4 +11,9 @@
     <link rel="author" href="{{ site.theme.link }}/humans.txt" />
     <link rel="pingback" href="{{ site.pingback_url }}" />
     <link rel="profile" href="http://gmpg.org/xfn/11">
+    <style>
+      /* Critical: paint brand cream before Tailwind/JS loads so navigations
+         never flash browser-white. Mirrors --background in src/css/tailwind.css. */
+      html { background-color: #faf4ea; }
+    </style>
     {{function('wp_head')}}

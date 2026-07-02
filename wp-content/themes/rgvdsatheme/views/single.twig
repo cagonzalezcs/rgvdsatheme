@@ -2,26 +2,48 @@
 
 {#
   Single post. The island renders its own red hero, so no PageHeader here.
-  inc/blog.php injects single_post (post_blocks stack included) plus the
-  Read Next pool / categories / meta-rail flag for post-type posts; the
-  island fixture holds when they are unset. Comments are out of the
-  design's scope.
+  inc/blog.php always sets single_post / single_posts / single_categories
+  for post-type posts. The server-rendered article inside the mount element
+  is the crawlable/no-JS fallback — createApp().mount() replaces it on
+  hydration. Non-post singles (e.g. events) render their editor content.
+  Comments are out of the design's scope.
 #}
 
 {% block content %}
-	{% set post_props = {
-		showMetaRail: single_show_meta_rail|default(false),
-		blogUrl: single_blog_url|default('/blog/'),
-		homeUrl: single_home_url|default('/')
-	} %}
 	{% if single_post is defined %}
-		{% set post_props = post_props|merge({ post: single_post }) %}
+		{% set post_props = {
+			post: single_post,
+			posts: single_posts,
+			categories: single_categories,
+			showMetaRail: single_show_meta_rail,
+			blogUrl: single_blog_url,
+			homeUrl: single_home_url
+		} %}
+		<div data-vue-island="SinglePost" data-props='{{ post_props|json_encode|e("html_attr") }}'>
+			{# Server-rendered fallback: crawlable + readable without JS.
+			   Prose HTML is kses-sanitized at serialize time (inc/blog.php). #}
+			<article class="mx-auto max-w-[74ch] px-6 py-12">
+				<h1 class="font-display text-[clamp(2rem,4.6vw,3.3rem)] font-black leading-[1.12]">{{ single_post.title }}</h1>
+				{% if single_post.dek %}
+					<p class="text-[1.3rem] leading-[1.5] text-text-muted">{{ single_post.dek }}</p>
+				{% endif %}
+				<p class="text-[0.92rem] text-text-muted">{{ single_post.date }} · {{ single_post.readMinutes }} min read</p>
+				<div class="prose-rgv">
+					{% for block in single_post.blocks %}
+						{% if block.type == 'prose' %}
+							{{ block.html|raw }}
+						{% elseif block.type == 'pull_quote' %}
+							<blockquote><p>{{ block.quote }}</p>{% if block.attribution %}<cite>{{ block.attribution }}</cite>{% endif %}</blockquote>
+						{% endif %}
+					{% endfor %}
+				</div>
+			</article>
+		</div>
+	{% else %}
+		{# Non-post single (event permalink etc.): plain editor content. #}
+		<article class="mx-auto max-w-[74ch] px-6 py-12">
+			<h1 class="font-display text-[clamp(2rem,4.6vw,3.3rem)] font-black leading-[1.12]">{{ post.title }}</h1>
+			<div class="prose-rgv">{{ post.content }}</div>
+		</article>
 	{% endif %}
-	{% if single_posts is defined %}
-		{% set post_props = post_props|merge({ posts: single_posts }) %}
-	{% endif %}
-	{% if single_categories is defined %}
-		{% set post_props = post_props|merge({ categories: single_categories }) %}
-	{% endif %}
-	<div data-vue-island="SinglePost" data-props='{{ post_props|json_encode|e("html_attr") }}'></div>
 {% endblock %}

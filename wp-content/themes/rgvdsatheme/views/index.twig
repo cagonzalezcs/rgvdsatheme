@@ -3,8 +3,9 @@
 {#
   Blog archive (posts page). One BlogArchive island serves browse, category
   filter, and search states; index/category/search templates all land here.
-  inc/blog.php injects archive_posts / archive_categories / archive_pagination
-  when published posts exist; the island fixture holds when they are unset.
+  inc/blog.php always sets archive_posts / archive_total / archive_categories
+  / archive_pagination / archive_api_base; the island fetches interaction
+  states from /rgvdsa/v1/posts and owns the designed empty state.
 #}
 
 {% block content %}
@@ -17,17 +18,24 @@
 	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
 
 	{% set archive_props = {
+		initialPosts: archive_posts,
+		initialTotal: archive_total,
+		categories: archive_categories,
+		pagination: archive_pagination,
+		apiBase: archive_api_base,
 		showSubscribe: true,
 		newsletterUrl: chapter.newsletter_url
 	} %}
-	{% if archive_posts is defined %}
-		{% set archive_props = archive_props|merge({ posts: archive_posts }) %}
-	{% endif %}
-	{% if archive_categories is defined %}
-		{% set archive_props = archive_props|merge({ categories: archive_categories }) %}
-	{% endif %}
-	{% if archive_pagination is defined %}
-		{% set archive_props = archive_props|merge({ pagination: archive_pagination }) %}
-	{% endif %}
 	<div data-vue-island="BlogArchive" data-props='{{ archive_props|json_encode|e("html_attr") }}'></div>
+
+	{# Crawlable fallback: current-page post links for no-JS/crawlers #}
+	<noscript>
+		<section class="bg-white px-6 py-10">
+			<ul class="mx-auto flex max-w-[920px] list-disc flex-col gap-2 pl-6">
+				{% for p in archive_posts %}
+					<li><a href="{{ p.url }}">{{ p.title }}</a></li>
+				{% endfor %}
+			</ul>
+		</section>
+	</noscript>
 {% endblock %}

@@ -11,11 +11,8 @@
 {% set h2class = 'scroll-mt-[calc(110px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-brand-red pb-3 font-display text-[1.55rem] font-extrabold tracking-[-0.01em]' %}
 {% set nav_link = 'rounded-[8px] px-3.5 py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-tint hover:text-red' %}
 
-{% set documents = documents|default([
-	{ title: 'Chapter Bylaws', meta: 'PDF · Last amended March 2026', url: '#documents' },
-	{ title: 'Code of Conduct', meta: 'PDF · Adopted January 2026', url: '#documents' },
-	{ title: 'Grievance Policy', meta: 'PDF · Adopted January 2026', url: '#documents' }
-]) %}
+{# documents comes from inc/interior.php — always set (possibly empty). #}
+{% set documents = documents|default([]) %}
 
 {% block content %}
 	{# html_entity_decode: Vue renders props as text, so &#038; would show literally #}
@@ -37,7 +34,8 @@
 					<p class="m-0 text-[1.08rem] leading-[1.78] text-text-body">Our chapter is governed by its members. These documents spell out how we make decisions together, how we treat each other, and what to do when something goes wrong. Every member is encouraged to read them &mdash; and every member has the power to propose changes.</p>
 				{% endif %}
 
-				{# ---- Governing documents ---- #}
+				{# ---- Governing documents (hidden until the repeater has rows) ---- #}
+				{% if documents %}
 				<h2 id="documents" class="mx-0 mb-0 mt-4 {{ h2class }}">Governing documents</h2>
 				<div class="flex flex-col gap-3.5">
 					{% for doc in documents %}
@@ -53,6 +51,7 @@
 						</div>
 					{% endfor %}
 				</div>
+				{% endif %}
 
 				{% if not post.content %}
 					{# ---- Code of conduct (fixture) ---- #}
@@ -69,10 +68,10 @@
 				{% endif %}
 
 				{# ---- Grievance callout (toggle + editable body; email from chapter settings) ---- #}
-				{% if show_grievance is not defined or show_grievance %}
+				{% if show_grievance|default(true) %}
 					<aside id="grievance" class="callout-card mt-3 flex scroll-mt-[calc(110px+var(--wp-admin--admin-bar--height,0px))] flex-col gap-2.5 rounded-[16px] border-l-[5px] border-brand-red bg-tint px-7 py-[26px]">
 						<div class="font-display text-base font-extrabold text-red">Need to report something?</div>
-						{% if grievance_body is defined and grievance_body %}
+						{% if grievance_body|default('') %}
 							<div class="prose-rgv text-base leading-[1.7] text-text-body">{{ grievance_body|raw }}</div>
 						{% else %}
 							<p class="m-0 text-base leading-[1.7] text-text-body">Our grievance officers are here for you. Reports are handled confidentially, and you can always bring a support person.{% if chapter.contact_email %} Email <a href="mailto:{{ chapter.contact_email }}" class="font-bold text-red hover:underline hover:underline-offset-[3px]">{{ chapter.contact_email }}</a> or speak to any grievance officer at a meeting.{% else %} Speak to any grievance officer at a meeting.{% endif %}</p>

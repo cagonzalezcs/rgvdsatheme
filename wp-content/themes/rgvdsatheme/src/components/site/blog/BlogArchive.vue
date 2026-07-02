@@ -1,30 +1,32 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { useDebounceFn } from "@vueuse/core";
+import { computed, onMounted, ref, watch } from "vue";
 import EmailSubscribeStrip from "@/components/site/blog/EmailSubscribeStrip.vue";
 import FeaturedPostCard from "@/components/site/blog/FeaturedPostCard.vue";
 import PostCard from "@/components/site/blog/PostCard.vue";
 import PostResultRow from "@/components/site/blog/PostResultRow.vue";
+import { fetchPosts, isAbortError } from "@/lib/api";
 import { type EventCategory, setCategories } from "@/lib/events";
-import {
-  type BlogPost,
-  POST_CATEGORIES,
-  postCategoryById,
-  SAMPLE_POSTS,
-} from "@/lib/posts";
+import { POST_CATEGORIES, postCategoryById } from "@/lib/posts";
+import type { BlogPost, PostsEnvelope } from "@/lib/schemas";
 
 const props = withDefaults(
   defineProps<{
-    posts?: BlogPost[];
-    /** WP term-driven categories — replaces the fixture palette when provided */
+    /** server-rendered first browse page (no fetch, no flash) */
+    initialPosts: BlogPost[];
+    /** honest corpus size for the browse/empty state */
+    initialTotal: number;
+    /** rgvdsa/v1 base URL */
+    apiBase: string;
+    /** WP term-driven categories — replaces the registry palette */
     categories?: EventCategory[];
-    /** WP_Query paging — turns the static pager into real links when provided */
+    /** server-paged archive URLs (crawl path; island intercepts clicks) */
     pagination?: { newerUrl?: string; olderUrl?: string };
     showSubscribe?: boolean;
     /** Action Network newsletter form URL (from Chapter Settings) */
     newsletterUrl?: string;
   }>(),
   {
-    posts: () => SAMPLE_POSTS,
     categories: undefined,
     pagination: undefined,
     showSubscribe: true,
@@ -34,7 +36,7 @@ const props = withDefaults(
 
 if (props.categories && props.categories.length > 0) setCategories(props.categories);
 
-/* ---- state (search + filter survive reload via URL params: ?s= & ?category=) ---- */
+/* ---- state (search + filter + page survive reload via URL params) ---- */
 const initialParams = new URLSearchParams(window.location.search);
 const initialCat = initialParams.get("category");
 
@@ -44,55 +46,119 @@ const activeCat = ref(
     ? (initialCat as string)
     : "all",
 );
+const page = ref(Math.max(1, Number.parseInt(initialParams.get("paged") ?? "1", 10) || 1));
 
-watch([query, activeCat], () => {
+watch([query, activeCat, page], () => {
   const params = new URLSearchParams(window.location.search);
   if (query.value.trim() === "") params.delete("s");
   else params.set("s", query.value.trim());
   if (activeCat.value === "all") params.delete("category");
   else params.set("category", activeCat.value);
+  if (page.value <= 1) params.delete("paged");
+  else params.set("paged", String(page.value));
   const qs = params.toString();
   history.replaceState(null, "", qs ? `${location.pathname}?${qs}` : location.pathname);
 });
 
-/* ---- browse vs filter/search layout ---- */
-const isBrowsing = computed(() => activeCat.value === "all" && query.value.trim() === "");
+/* ---- server fetch (island-data-fetch): debounced, abortable, honest ---- */
+const isDefaultState = computed(
+  () => query.value.trim() === "" && activeCat.value === "all" && page.value === 1,
+);
 
-/* WP already applied the URL's ?s= server-side (matching full body text);
- * re-matching those posts against title/excerpt here would drop body-only
- * hits. Only queries typed after load re-filter client-side — real
- * server-side fetch lands with the rest-data-layer change. */
-const serverQuery =
-  props.posts === SAMPLE_POSTS ? null : (initialParams.get("s") ?? "").trim().toLowerCase();
+const fetched = ref<PostsEnvelope | null>(null);
+const loading = ref(false);
+const failed = ref(false);
+let controller: AbortController | null = null;
 
-const filtered = computed(() => {
-  const q = query.value.trim().toLowerCase();
-  return props.posts.filter((p) => {
-    const okCat = activeCat.value === "all" || p.cat === activeCat.value;
-    if (!okCat) return false;
-    if (q === "" || q === serverQuery) return true;
-    const hay = `${p.title} ${p.excerpt} ${postCategoryById(p.cat).label}`.toLowerCase();
-    return hay.includes(q);
-  });
+async function runFetch() {
+  controller?.abort();
+  const ctl = new AbortController();
+  controller = ctl;
+  loading.value = true;
+  failed.value = false;
+  try {
+    const envelope = await fetchPosts(
+      props.apiBase,
+      { s: query.value, category: activeCat.value, page: page.value },
+      ctl.signal,
+    );
+    if (ctl !== controller) return;
+    fetched.value = envelope;
+  } catch (err) {
+    if (isAbortError(err) || ctl !== controller) return;
+    failed.value = true;
+  } finally {
+    if (ctl === controller) loading.value = false;
+  }
+}
+
+function syncState() {
+  if (isDefaultState.value) {
+    // Back to the embedded browse page — no fetch needed.
+    controller?.abort();
+    fetched.value = null;
+    loading.value = false;
+    failed.value = false;
+    return;
+  }
+  void runFetch();
+}
+
+const debouncedSync = useDebounceFn(syncState, 300);
+
+watch(query, () => {
+  page.value = 1;
+  debouncedSync();
+});
+watch(activeCat, () => {
+  page.value = 1;
+  syncState();
+});
+watch(page, syncState);
+
+onMounted(() => {
+  // A shared/reloaded URL with filters fetches that exact state instead of
+  // trusting the embedded browse props.
+  if (!isDefaultState.value) void runFetch();
 });
 
+/* ---- browse vs filter/search layout ---- */
+const isBrowsing = computed(() => isDefaultState.value);
+
+const results = computed(() => fetched.value?.posts ?? []);
+const total = computed(() => fetched.value?.total ?? 0);
+const totalPages = computed(() => fetched.value?.totalPages ?? 1);
+
 const resultLine = computed(() => {
-  const n = filtered.value.length;
+  const n = total.value;
   const catLabel = activeCat.value === "all" ? "All posts" : postCategoryById(activeCat.value).label;
   const q = query.value.trim();
-  return `${n} ${n === 1 ? "post" : "posts"} · ${catLabel}${q ? ` · “${q}”` : ""}`;
+  const pageSuffix = totalPages.value > 1 ? ` · page ${fetched.value?.page ?? page.value} of ${totalPages.value}` : "";
+  return `${n} ${n === 1 ? "post" : "posts"} · ${catLabel}${q ? ` · “${q}”` : ""}${pageSuffix}`;
 });
 
 function clearFilters() {
   query.value = "";
   activeCat.value = "all";
+  page.value = 1;
 }
 
-/* ---- browse-state data ---- */
-const featuredPost = computed(() => props.posts.find((p) => p.featured) ?? props.posts[0]);
+/** Real server-paged href (crawl/middle-click path); clicks stay on-island. */
+function pagedUrl(n: number): string {
+  const base = location.pathname.replace(/page\/\d+\/?$/, "");
+  const params = new URLSearchParams(window.location.search);
+  params.delete("paged");
+  const qs = params.toString();
+  return `${n <= 1 ? base : `${base}page/${n}/`}${qs ? `?${qs}` : ""}`;
+}
+
+/* ---- browse-state data (embedded first page) ---- */
+const featuredPost = computed(
+  () => props.initialPosts.find((p) => p.featured) ?? props.initialPosts[0],
+);
 const GRID_SPANS = [3, 3, 2, 2, 2, 2, 2, 2];
 const gridPosts = computed(() =>
-  props.posts
+  props.initialPosts
     .filter((p) => p.id !== featuredPost.value?.id)
     .map((p, i) => ({ post: p, span: GRID_SPANS[i] ?? 2 })),
 );
@@ -139,69 +205,64 @@ const gridPosts = computed(() =>
       </div>
     </section>
 
-    <!-- Browse state: featured + editorial grid -->
+    <!-- Browse state: featured + editorial grid (embedded, no fetch) -->
     <template v-if="isBrowsing">
-      <section v-if="featuredPost" class="bg-white px-6 pt-8" data-tone="cream">
-        <div class="mx-auto max-w-[1200px]">
-          <FeaturedPostCard :post="featuredPost" />
-        </div>
-      </section>
+      <template v-if="initialPosts.length > 0">
+        <section v-if="featuredPost" class="bg-white px-6 pt-8" data-tone="cream">
+          <div class="mx-auto max-w-[1200px]">
+            <FeaturedPostCard :post="featuredPost" />
+          </div>
+        </section>
 
-      <section class="bg-white px-6 pb-12 pt-10" data-tone="cream">
-        <div class="mx-auto flex max-w-[1200px] flex-col">
-          <div class="grid grid-cols-1 gap-6 md:grid-cols-6">
-            <div
-              v-for="{ post, span } in gridPosts"
-              :key="post.id"
-              class="flex"
-              :class="span === 3 ? 'md:col-span-3' : 'md:col-span-2'"
-            >
-              <PostCard :post="post" :variant="span === 3 ? 'grid-lg' : 'grid'" />
+        <section class="bg-white px-6 pb-12 pt-10" data-tone="cream">
+          <div class="mx-auto flex max-w-[1200px] flex-col">
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-6">
+              <div
+                v-for="{ post, span } in gridPosts"
+                :key="post.id"
+                class="flex"
+                :class="span === 3 ? 'md:col-span-3' : 'md:col-span-2'"
+              >
+                <PostCard :post="post" :variant="span === 3 ? 'grid-lg' : 'grid'" />
+              </div>
+            </div>
+            <!-- Real server-paged links; the island intercepts and fetches -->
+            <div v-if="pagination?.olderUrl || pagination?.newerUrl" class="flex justify-center gap-3.5 pt-8">
+              <span
+                aria-disabled="true"
+                class="rounded-full border-2 border-border-control px-6 py-2.5 text-[0.92rem] font-bold text-text-faint"
+              >← Newer</span>
+              <a
+                v-if="pagination?.olderUrl"
+                :href="pagination.olderUrl"
+                class="rounded-full border-2 border-red px-6 py-2.5 text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash"
+                @click.prevent="page = 2"
+              >Older posts →</a>
             </div>
           </div>
-          <!-- Pagination: real WP_Query links when provided, static fallback otherwise -->
-          <div v-if="pagination" class="flex justify-center gap-3.5 pt-8">
-            <a
-              v-if="pagination.newerUrl"
-              :href="pagination.newerUrl"
-              class="rounded-full border-2 border-red px-6 py-2.5 text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash"
-            >← Newer</a>
-            <span
-              v-else
-              aria-disabled="true"
-              class="rounded-full border-2 border-border-control px-6 py-2.5 text-[0.92rem] font-bold text-text-faint"
-            >← Newer</span>
-            <a
-              v-if="pagination.olderUrl"
-              :href="pagination.olderUrl"
-              class="rounded-full border-2 border-red px-6 py-2.5 text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash"
-            >Older posts →</a>
-            <span
-              v-else
-              aria-disabled="true"
-              class="rounded-full border-2 border-border-control px-6 py-2.5 text-[0.92rem] font-bold text-text-faint"
-            >Older posts →</span>
-          </div>
-          <div v-else class="flex justify-center gap-3.5 pt-8">
-            <span
-              aria-disabled="true"
-              class="rounded-full border-2 border-border-control px-6 py-2.5 text-[0.92rem] font-bold text-text-faint"
-            >← Newer</span>
-            <a
-              href="#main"
-              class="rounded-full border-2 border-red px-6 py-2.5 text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash"
-            >Older posts →</a>
+        </section>
+      </template>
+
+      <!-- Designed empty state (island-empty-states): no posts yet -->
+      <section v-else class="bg-white px-6 pb-16 pt-10" data-tone="cream">
+        <div class="mx-auto max-w-[920px]">
+          <div class="flex flex-col items-center gap-2.5 rounded-[16px] border-2 border-dashed border-border-control px-8 py-16 text-center">
+            <div class="font-display text-[1.3rem] font-bold">No posts yet</div>
+            <p class="m-0 max-w-[48ch] text-base leading-[1.6] text-text-muted">
+              The chapter blog is warming up. Check back soon — or subscribe below and we&rsquo;ll send the first post straight to you.
+            </p>
           </div>
         </div>
       </section>
     </template>
 
-    <!-- Filter/search state: uniform result rows -->
+    <!-- Filter/search/paged state: server-fetched result rows -->
     <section v-else class="bg-white px-6 pb-16 pt-8" data-tone="cream">
       <div class="mx-auto flex max-w-[920px] flex-col gap-[18px]">
         <div class="flex flex-wrap items-baseline justify-between gap-4 border-b-[3px] border-brand-red pb-3">
-          <div role="status" class="font-display text-[1.15rem] font-bold">
-            {{ resultLine }}
+          <div role="status" aria-live="polite" class="font-display text-[1.15rem] font-bold">
+            <template v-if="loading">Searching…</template>
+            <template v-else-if="!failed">{{ resultLine }}</template>
           </div>
           <button
             type="button"
@@ -212,19 +273,70 @@ const gridPosts = computed(() =>
           </button>
         </div>
 
-        <div v-if="filtered.length > 0" class="flex flex-col gap-3.5">
-          <PostResultRow v-for="post in filtered" :key="post.id" :post="post" />
+        <!-- Loading skeleton -->
+        <div v-if="loading" aria-hidden="true" class="flex flex-col gap-3.5">
+          <div v-for="n in 4" :key="n" class="h-[92px] animate-pulse rounded-[14px] bg-tint"></div>
         </div>
 
+        <!-- Error state -->
         <div
-          v-else
+          v-else-if="failed"
           class="flex flex-col items-center gap-2.5 rounded-[16px] border-2 border-dashed border-border-control px-8 py-12 text-center"
         >
-          <div class="font-display text-[1.2rem] font-bold">No posts match</div>
+          <div class="font-display text-[1.2rem] font-bold">Something went wrong</div>
           <p class="m-0 max-w-[44ch] text-base leading-[1.6] text-text-muted">
-            Try another word, or browse by category.
+            We couldn&rsquo;t load posts just now. Give it another try.
           </p>
+          <button
+            type="button"
+            class="mt-2 cursor-pointer rounded-full border-2 border-red bg-transparent px-6 py-2.5 text-[0.92rem] font-bold text-red transition-colors hover:border-red-hover hover:bg-wash"
+            @click="runFetch"
+          >
+            Retry
+          </button>
         </div>
+
+        <template v-else>
+          <div v-if="results.length > 0" class="flex flex-col gap-3.5">
+            <PostResultRow v-for="post in results" :key="post.id" :post="post" />
+          </div>
+
+          <div
+            v-else
+            class="flex flex-col items-center gap-2.5 rounded-[16px] border-2 border-dashed border-border-control px-8 py-12 text-center"
+          >
+            <div class="font-display text-[1.2rem] font-bold">No posts match</div>
+            <p class="m-0 max-w-[44ch] text-base leading-[1.6] text-text-muted">
+              Try another word, or browse by category.
+            </p>
+          </div>
+
+          <!-- Envelope-driven pagination: real hrefs, island-handled clicks -->
+          <div v-if="totalPages > 1" class="flex justify-center gap-3.5 pt-4">
+            <a
+              v-if="page > 1"
+              :href="pagedUrl(page - 1)"
+              class="rounded-full border-2 border-red px-6 py-2.5 text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash"
+              @click.prevent="page = page - 1"
+            >← Newer</a>
+            <span
+              v-else
+              aria-disabled="true"
+              class="rounded-full border-2 border-border-control px-6 py-2.5 text-[0.92rem] font-bold text-text-faint"
+            >← Newer</span>
+            <a
+              v-if="page < totalPages"
+              :href="pagedUrl(page + 1)"
+              class="rounded-full border-2 border-red px-6 py-2.5 text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash"
+              @click.prevent="page = page + 1"
+            >Older posts →</a>
+            <span
+              v-else
+              aria-disabled="true"
+              class="rounded-full border-2 border-border-control px-6 py-2.5 text-[0.92rem] font-bold text-text-faint"
+            >Older posts →</span>
+          </div>
+        </template>
       </div>
     </section>
 

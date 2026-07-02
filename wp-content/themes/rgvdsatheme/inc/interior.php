@@ -127,10 +127,15 @@ function rgvdsa_interior_document_row( $row ) {
 /**
  * Inject interior-page ACF data into the page.twig context.
  *
- * Only sets keys when real data exists so the twig |default() fixtures
- * keep rendering on unseeded pages.
+ * Keys are always set (possibly empty) — Twig owns empty states instead of
+ * |default() fixtures (island-empty-states).
  */
 add_filter( 'rgvdsa/context/page', function ( $context, $timber_post ) {
+	$context['page_lede']      = '';
+	$context['show_grievance'] = true;
+	$context['grievance_body'] = '';
+	$context['documents']      = array();
+
 	if ( ! function_exists( 'get_field' ) || ! $timber_post ) {
 		return $context;
 	}
@@ -151,10 +156,7 @@ add_filter( 'rgvdsa/context/page', function ( $context, $timber_post ) {
 
 	$rows = get_field( 'documents', $timber_post->ID );
 	if ( is_array( $rows ) && $rows ) {
-		$documents = array_values( array_filter( array_map( 'rgvdsa_interior_document_row', $rows ) ) );
-		if ( $documents ) {
-			$context['documents'] = $documents;
-		}
+		$context['documents'] = array_values( array_filter( array_map( 'rgvdsa_interior_document_row', $rows ) ) );
 	}
 
 	return $context;
