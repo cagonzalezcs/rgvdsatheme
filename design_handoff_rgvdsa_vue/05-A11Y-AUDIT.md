@@ -63,7 +63,8 @@ What changed:
 What was intentionally **kept bright** (`#e9252e`):
 - Signature **bands** carrying cream text (sticky header, `PageHeader`, blog/home hero) — the residual
   small-text-on-band cases are a documented **AA-large exception**, covered by the high-contrast widget
-  which maps `data-tone="red"` → `#9e0b13`. *(Owner Q pending: darken these bands too?)*
+  which maps `data-tone="red"` → `#9e0b13`. *(Owner decision: keep bright for brand recognition; the
+  contrast toggle serves users who need higher contrast.)*
 - Large display **numerals** (`text-[1.8rem]/[2rem]`, pass 3:1), decorative **stars**, and media
   **play-button icons** (graphical, 3:1).
 
