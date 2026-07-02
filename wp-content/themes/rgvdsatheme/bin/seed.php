@@ -22,6 +22,10 @@ if ( ! function_exists( 'update_field' ) ) {
 	return;
 }
 
+// CLI contexts run capability-less; the kses save filters would backslash-
+// escape the block comment JSON in seeded post_content.
+kses_remove_filters();
+
 /* -------------------------------------------------------------------------
  * 1. Terms — 6 canonical categories in event_category AND category.
  * ---------------------------------------------------------------------- */
@@ -163,7 +167,7 @@ foreach ( $rgvdsa_seed_events as $ev ) {
 }
 
 /* -------------------------------------------------------------------------
- * 3. Blog — posts page, the 9 SAMPLE_POSTS, p1 post_blocks.
+ * 3. Blog — posts page, the 9 SAMPLE_POSTS, p1 block markup.
  * ---------------------------------------------------------------------- */
 
 $rgvdsa_seed_blog_page = get_page_by_path( 'blog' );
@@ -257,7 +261,7 @@ foreach ( $rgvdsa_seed_posts as $sp ) {
 			'post_title'   => $sp['title'],
 			'post_name'    => $sp['slug'],
 			'post_excerpt' => $sp['excerpt'],
-			'post_content' => '<p>' . $sp['excerpt'] . '</p>',
+			'post_content' => '<!-- wp:paragraph --><p>' . $sp['excerpt'] . '</p><!-- /wp:paragraph -->',
 			'post_date'    => $sp['date'],
 			'post_author'  => 1,
 		), true );
@@ -351,97 +355,109 @@ function rgvdsa_seed_placeholder_pdf() {
 
 $rgvdsa_seed_pdf_id = rgvdsa_seed_placeholder_pdf();
 
-/* --- p1: one post_blocks row of every layout (SAMPLE_SINGLE fixture). */
+/* --- p1: block markup using every block type (SAMPLE_SINGLE fixture). */
 
 if ( $rgvdsa_seed_p1_id ) {
-	$brake_light_id = isset( $rgvdsa_seed_event_ids['Brake Light Clinic'] ) ? $rgvdsa_seed_event_ids['Brake Light Clinic'] : 0;
+	$brake_light_id = isset( $rgvdsa_seed_event_ids['Brake Light Clinic'] ) ? (int) $rgvdsa_seed_event_ids['Brake Light Clinic'] : 0;
+	$doc_id         = $rgvdsa_seed_pdf_id ? (int) $rgvdsa_seed_pdf_id : 0;
 
-	$blocks = array(
-		array(
-			'acf_fc_layout' => 'prose',
-			'content'       => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
-		),
-		array(
-			'acf_fc_layout' => 'image',
-			'image'         => '',
-			'alt_text'      => 'Photo',
-			'caption'       => 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.',
-			'credit'        => '',
-			'breakout'      => 0,
-		),
-		array(
-			'acf_fc_layout' => 'prose',
-			'content'       => '<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>',
-		),
-		array(
-			'acf_fc_layout' => 'pull_quote',
-			'quote'         => '“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.”',
-			'attribution'   => 'Attribution line',
-		),
-		array(
-			'acf_fc_layout' => 'gallery',
-			'layout'        => 'essay',
-			'images'        => array(
-				array( 'image' => '', 'alt_text' => 'Wide photo', 'caption' => 'Lorem ipsum dolor sit amet.' ),
-				array( 'image' => '', 'alt_text' => 'Photo', 'caption' => 'Consectetur adipiscing elit.' ),
-				array( 'image' => '', 'alt_text' => 'Photo', 'caption' => 'Sed do eiusmod tempor.' ),
-			),
-		),
-		array(
-			'acf_fc_layout' => 'person_quote',
-			'photo'         => '',
-			'alt_text'      => 'Portrait',
-			'quote'         => '“Lorem ipsum dolor sit amet, consectetur adipiscing elit.”',
-			'translation'   => '“Translation of the quote appears here.”',
-			'name'          => 'Person Name',
-			'role'          => 'Role or affiliation',
-			'lang'          => 'es',
-		),
-		array(
-			'acf_fc_layout'  => 'video',
-			'url'            => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-			'poster'         => '',
-			'caption'        => 'Watch: lorem ipsum dolor sit amet consectetur. Captioned in English and Spanish.',
-			'transcript_url' => '#',
-		),
-		array(
-			'acf_fc_layout' => 'prose',
-			'content'       => '<h2>Lorem ipsum dolor sit amet</h2><p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt, neque porro quisquam est qui dolorem ipsum quia dolor sit amet.</p>',
-		),
-		array(
-			'acf_fc_layout' => 'audio',
-			'file'          => '',
-			'title'         => 'Listen: lorem ipsum audio title',
-			'duration'      => '3:12',
-			'transcript'    => '',
-		),
-		array(
-			'acf_fc_layout' => 'document',
-			'file'          => $rgvdsa_seed_pdf_id ? $rgvdsa_seed_pdf_id : '',
-			'title'         => 'Lorem ipsum document title',
-			'description'   => 'Bilingual · 2 pages · 340 KB',
-		),
-		array(
-			'acf_fc_layout' => 'event_embed',
-			'event'         => $brake_light_id ? array( $brake_light_id ) : array(),
-		),
-		array(
-			'acf_fc_layout' => 'action_callout',
-			'heading'       => 'Lorem ipsum dolor sit amet',
-			'body'          => 'Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
-			'buttons'       => array(
-				array( 'label' => 'Primary action', 'url' => '/get-involved/', 'style' => 'primary' ),
-				array( 'label' => 'Secondary action', 'url' => '#', 'style' => 'outline' ),
-			),
-		),
-	);
+	$acf_block = function ( $name, $data ) {
+		return '<!-- wp:' . $name . ' ' . wp_json_encode( array(
+			'name' => $name,
+			'data' => $data,
+			'mode' => 'preview',
+		) ) . ' /-->';
+	};
 
-	update_field( 'field_rgvdsa_blog_post_blocks', $blocks, $rgvdsa_seed_p1_id );
-	update_field( 'field_rgvdsa_blog_featured_caption', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', $rgvdsa_seed_p1_id );
-	update_field( 'field_rgvdsa_blog_featured_credit', 'Photo: RGV DSA', $rgvdsa_seed_p1_id );
+	$markup =
+		'<!-- wp:paragraph --><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p><!-- /wp:paragraph -->'
+		. '<!-- wp:paragraph --><p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><!-- /wp:paragraph -->'
+		. '<!-- wp:image {"sizeSlug":"large","linkDestination":"none"} --><figure class="wp-block-image size-large"><img alt="Photo"/><figcaption class="wp-element-caption">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium.</figcaption></figure><!-- /wp:image -->'
+		. '<!-- wp:paragraph --><p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p><!-- /wp:paragraph -->'
+		. '<!-- wp:pullquote --><figure class="wp-block-pullquote"><blockquote><p>“Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt.”</p><cite>Attribution line</cite></blockquote></figure><!-- /wp:pullquote -->'
+		. '<!-- wp:gallery {"linkTo":"none"} --><figure class="wp-block-gallery has-nested-images columns-default is-cropped">'
+		. '<!-- wp:image {"sizeSlug":"large","linkDestination":"none"} --><figure class="wp-block-image size-large"><img alt="Wide photo"/><figcaption class="wp-element-caption">Lorem ipsum dolor sit amet.</figcaption></figure><!-- /wp:image -->'
+		. '<!-- wp:image {"sizeSlug":"large","linkDestination":"none"} --><figure class="wp-block-image size-large"><img alt="Photo"/><figcaption class="wp-element-caption">Consectetur adipiscing elit.</figcaption></figure><!-- /wp:image -->'
+		. '<!-- wp:image {"sizeSlug":"large","linkDestination":"none"} --><figure class="wp-block-image size-large"><img alt="Photo"/><figcaption class="wp-element-caption">Sed do eiusmod tempor.</figcaption></figure><!-- /wp:image -->'
+		. '</figure><!-- /wp:gallery -->'
+		. $acf_block( 'rgvdsa/person-quote', array(
+			'photo'        => 0,
+			'_photo'       => 'field_rgvdsa_block_pq_photo',
+			'alt_text'     => 'Portrait',
+			'_alt_text'    => 'field_rgvdsa_block_pq_alt_text',
+			'quote'        => '“Lorem ipsum dolor sit amet, consectetur adipiscing elit.”',
+			'_quote'       => 'field_rgvdsa_block_pq_quote',
+			'translation'  => '“Translation of the quote appears here.”',
+			'_translation' => 'field_rgvdsa_block_pq_translation',
+			'name'         => 'Person Name',
+			'_name'        => 'field_rgvdsa_block_pq_name',
+			'role'         => 'Role or affiliation',
+			'_role'        => 'field_rgvdsa_block_pq_role',
+			'lang'         => 'es',
+			'_lang'        => 'field_rgvdsa_block_pq_lang',
+		) )
+		. $acf_block( 'rgvdsa/video', array(
+			'url'             => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+			'_url'            => 'field_rgvdsa_block_video_url',
+			'poster'          => 0,
+			'_poster'         => 'field_rgvdsa_block_video_poster',
+			'caption'         => 'Watch: lorem ipsum dolor sit amet consectetur. Captioned in English and Spanish.',
+			'_caption'        => 'field_rgvdsa_block_video_caption',
+			'transcript_url'  => '#',
+			'_transcript_url' => 'field_rgvdsa_block_video_transcript_url',
+		) )
+		. '<!-- wp:heading --><h2 class="wp-block-heading">Lorem ipsum dolor sit amet</h2><!-- /wp:heading -->'
+		. '<!-- wp:paragraph --><p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt, neque porro quisquam est qui dolorem ipsum quia dolor sit amet.</p><!-- /wp:paragraph -->'
+		. $acf_block( 'rgvdsa/audio', array(
+			'file'        => 0,
+			'_file'       => 'field_rgvdsa_block_audio_file',
+			'title'       => 'Listen: lorem ipsum audio title',
+			'_title'      => 'field_rgvdsa_block_audio_title',
+			'duration'    => '3:12',
+			'_duration'   => 'field_rgvdsa_block_audio_duration',
+			'transcript'  => 0,
+			'_transcript' => 'field_rgvdsa_block_audio_transcript',
+		) )
+		. $acf_block( 'rgvdsa/document', array(
+			'file'         => $doc_id,
+			'_file'        => 'field_rgvdsa_block_document_file',
+			'title'        => 'Lorem ipsum document title',
+			'_title'       => 'field_rgvdsa_block_document_title',
+			'description'  => 'Bilingual · 2 pages · 340 KB',
+			'_description' => 'field_rgvdsa_block_document_description',
+		) )
+		. $acf_block( 'rgvdsa/event-embed', array(
+			'event'  => $brake_light_id,
+			'_event' => 'field_rgvdsa_block_event_embed_event',
+		) )
+		. $acf_block( 'rgvdsa/action-callout', array(
+			'heading'          => 'Lorem ipsum dolor sit amet',
+			'_heading'         => 'field_rgvdsa_block_ac_heading',
+			'body'             => 'Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.',
+			'_body'            => 'field_rgvdsa_block_ac_body',
+			'buttons_0_label'  => 'Primary action',
+			'_buttons_0_label' => 'field_rgvdsa_block_ac_btn_label',
+			'buttons_0_url'    => '/get-involved/',
+			'_buttons_0_url'   => 'field_rgvdsa_block_ac_btn_url',
+			'buttons_0_style'  => 'primary',
+			'_buttons_0_style' => 'field_rgvdsa_block_ac_btn_style',
+			'buttons_1_label'  => 'Secondary action',
+			'_buttons_1_label' => 'field_rgvdsa_block_ac_btn_label',
+			'buttons_1_url'    => '#',
+			'_buttons_1_url'   => 'field_rgvdsa_block_ac_btn_url',
+			'buttons_1_style'  => 'outline',
+			'_buttons_1_style' => 'field_rgvdsa_block_ac_btn_style',
+			'buttons'          => 2,
+			'_buttons'         => 'field_rgvdsa_block_ac_buttons',
+		) );
+
+	wp_update_post( array(
+		'ID'           => $rgvdsa_seed_p1_id,
+		'post_content' => wp_slash( $markup ),
+	) );
 	update_field( 'field_rgvdsa_blog_read_minutes', 6, $rgvdsa_seed_p1_id );
 	wp_set_post_terms( $rgvdsa_seed_p1_id, array( 'tag one', 'tag two' ), 'post_tag' );
-	rgvdsa_seed_log( "p1 post_blocks seeded (#{$rgvdsa_seed_p1_id}, " . count( $blocks ) . ' rows)' );
+	rgvdsa_seed_log( "p1 block markup seeded (#{$rgvdsa_seed_p1_id})" );
 }
 
 /* -------------------------------------------------------------------------
@@ -489,7 +505,7 @@ rgvdsa_seed_menu( 'Primary', 'primary', array(
 ) );
 
 rgvdsa_seed_menu( 'Footer — About', 'footer_about', array(
-	'About the Chapter'        => '/about/#chapter',
+	'About the Chapter'        => '/about/',
 	'Mission & History'        => '/about/#mission',
 	'Counties We Serve'        => '/about/#counties',
 	'Bylaws & Code of Conduct' => '/about/#bylaws',

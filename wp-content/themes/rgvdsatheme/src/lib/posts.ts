@@ -82,7 +82,7 @@ export type PostBlock =
       transcriptUrl: string;
     }
   | { type: "document"; url: string; title: string; description?: string }
-  | { type: "event_embed"; event: ChapterEvent }
+  | { type: "event_embed"; event: ChapterEvent | null }
   | {
       type: "action_callout";
       heading: string;

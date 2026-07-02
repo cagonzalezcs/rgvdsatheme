@@ -58,12 +58,21 @@ watch([query, activeCat], () => {
 /* ---- browse vs filter/search layout ---- */
 const isBrowsing = computed(() => activeCat.value === "all" && query.value.trim() === "");
 
+/* WP already applied the URL's ?s= server-side (matching full body text);
+ * re-matching those posts against title/excerpt here would drop body-only
+ * hits. Only queries typed after load re-filter client-side — real
+ * server-side fetch lands with the rest-data-layer change. */
+const serverQuery =
+  props.posts === SAMPLE_POSTS ? null : (initialParams.get("s") ?? "").trim().toLowerCase();
+
 const filtered = computed(() => {
   const q = query.value.trim().toLowerCase();
   return props.posts.filter((p) => {
     const okCat = activeCat.value === "all" || p.cat === activeCat.value;
+    if (!okCat) return false;
+    if (q === "" || q === serverQuery) return true;
     const hay = `${p.title} ${p.excerpt} ${postCategoryById(p.cat).label}`.toLowerCase();
-    return okCat && (q === "" || hay.includes(q));
+    return hay.includes(q);
   });
 });
 

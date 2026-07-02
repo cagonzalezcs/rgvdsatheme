@@ -2,9 +2,10 @@
 /**
  * Blog domain: post fields + archive/single wiring.
  *
- * Owns: category color term meta, post settings field group (dek,
- * byline_mode, …), the post_blocks flexible content group, and
- * serialization to the BlogPost / SinglePostData island contracts.
+ * Owns: category color term meta, the post settings field group (dek,
+ * byline_mode, …), and serialization of post_content blocks to the
+ * BlogPost / SinglePostData island contracts (block registration and the
+ * per-block field groups live in inc/blocks.php).
  *
  * Public contract (other domains call these):
  * - rgvdsa_post_categories(): array — [{ id, label, color }] for the six
@@ -110,18 +111,6 @@ function rgvdsa_blog_register_fields() {
 					'return_format' => 'value',
 				),
 				array(
-					'key'   => 'field_rgvdsa_blog_featured_caption',
-					'label' => 'Featured image caption',
-					'name'  => 'featured_caption',
-					'type'  => 'text',
-				),
-				array(
-					'key'   => 'field_rgvdsa_blog_featured_credit',
-					'label' => 'Featured image credit',
-					'name'  => 'featured_credit',
-					'type'  => 'text',
-				),
-				array(
 					'key'          => 'field_rgvdsa_blog_read_minutes',
 					'label'        => 'Read minutes',
 					'name'         => 'read_minutes',
@@ -152,405 +141,6 @@ function rgvdsa_blog_register_fields() {
 		)
 	);
 
-	// Article body — flexible content stack (see 03-DESIGN-SPEC.md § Blog Post).
-	acf_add_local_field_group(
-		array(
-			'key'      => 'group_rgvdsa_blog_post_blocks',
-			'title'    => 'Post blocks',
-			'fields'   => array(
-				array(
-					'key'          => 'field_rgvdsa_blog_post_blocks',
-					'label'        => 'Blocks',
-					'name'         => 'post_blocks',
-					'type'         => 'flexible_content',
-					'button_label' => 'Add block',
-					'layouts'      => array(
-						'layout_rgvdsa_blog_prose'          => array(
-							'key'        => 'layout_rgvdsa_blog_prose',
-							'name'       => 'prose',
-							'label'      => 'Prose',
-							'display'    => 'block',
-							'sub_fields' => array(
-								array(
-									'key'          => 'field_rgvdsa_blog_pb_prose_content',
-									'label'        => 'Content',
-									'name'         => 'content',
-									'type'         => 'wysiwyg',
-									'media_upload' => 0,
-								),
-							),
-						),
-						'layout_rgvdsa_blog_image'          => array(
-							'key'        => 'layout_rgvdsa_blog_image',
-							'name'       => 'image',
-							'label'      => 'Image',
-							'display'    => 'block',
-							'sub_fields' => array(
-								array(
-									'key'           => 'field_rgvdsa_blog_pb_image_image',
-									'label'         => 'Image',
-									'name'          => 'image',
-									'type'          => 'image',
-									'required'      => 1,
-									'return_format' => 'array',
-									'preview_size'  => 'medium',
-								),
-								array(
-									'key'      => 'field_rgvdsa_blog_pb_image_alt_text',
-									'label'    => 'Alt text',
-									'name'     => 'alt_text',
-									'type'     => 'text',
-									'required' => 1,
-								),
-								array(
-									'key'   => 'field_rgvdsa_blog_pb_image_caption',
-									'label' => 'Caption',
-									'name'  => 'caption',
-									'type'  => 'text',
-								),
-								array(
-									'key'   => 'field_rgvdsa_blog_pb_image_credit',
-									'label' => 'Credit',
-									'name'  => 'credit',
-									'type'  => 'text',
-								),
-								array(
-									'key'          => 'field_rgvdsa_blog_pb_image_breakout',
-									'label'        => 'Breakout',
-									'name'         => 'breakout',
-									'type'         => 'true_false',
-									'instructions' => 'Let the image break out of the prose measure.',
-									'ui'           => 1,
-								),
-							),
-						),
-						'layout_rgvdsa_blog_pull_quote'     => array(
-							'key'        => 'layout_rgvdsa_blog_pull_quote',
-							'name'       => 'pull_quote',
-							'label'      => 'Pull quote',
-							'display'    => 'block',
-							'sub_fields' => array(
-								array(
-									'key'      => 'field_rgvdsa_blog_pb_pull_quote_quote',
-									'label'    => 'Quote',
-									'name'     => 'quote',
-									'type'     => 'textarea',
-									'required' => 1,
-									'rows'     => 3,
-								),
-								array(
-									'key'   => 'field_rgvdsa_blog_pb_pull_quote_attribution',
-									'label' => 'Attribution',
-									'name'  => 'attribution',
-									'type'  => 'text',
-								),
-							),
-						),
-						'layout_rgvdsa_blog_gallery'        => array(
-							'key'        => 'layout_rgvdsa_blog_gallery',
-							'name'       => 'gallery',
-							'label'      => 'Gallery',
-							'display'    => 'block',
-							'sub_fields' => array(
-								array(
-									'key'           => 'field_rgvdsa_blog_pb_gallery_layout',
-									'label'         => 'Layout',
-									'name'          => 'layout',
-									'type'          => 'select',
-									'choices'       => array(
-										'essay' => 'Essay',
-										'grid'  => 'Grid',
-									),
-									'default_value' => 'essay',
-									'return_format' => 'value',
-								),
-								array(
-									'key'          => 'field_rgvdsa_blog_pb_gallery_images',
-									'label'        => 'Images',
-									'name'         => 'images',
-									'type'         => 'repeater',
-									'layout'       => 'block',
-									'button_label' => 'Add image',
-									'sub_fields'   => array(
-										array(
-											'key'           => 'field_rgvdsa_blog_pb_gallery_img_image',
-											'label'         => 'Image',
-											'name'          => 'image',
-											'type'          => 'image',
-											'required'      => 1,
-											'return_format' => 'array',
-											'preview_size'  => 'medium',
-										),
-										array(
-											'key'      => 'field_rgvdsa_blog_pb_gallery_img_alt_text',
-											'label'    => 'Alt text',
-											'name'     => 'alt_text',
-											'type'     => 'text',
-											'required' => 1,
-										),
-										array(
-											'key'   => 'field_rgvdsa_blog_pb_gallery_img_caption',
-											'label' => 'Caption',
-											'name'  => 'caption',
-											'type'  => 'text',
-										),
-									),
-								),
-							),
-						),
-						'layout_rgvdsa_blog_person_quote'   => array(
-							'key'        => 'layout_rgvdsa_blog_person_quote',
-							'name'       => 'person_quote',
-							'label'      => 'Person quote',
-							'display'    => 'block',
-							'sub_fields' => array(
-								array(
-									'key'           => 'field_rgvdsa_blog_pb_person_quote_photo',
-									'label'         => 'Photo',
-									'name'          => 'photo',
-									'type'          => 'image',
-									'return_format' => 'array',
-									'preview_size'  => 'thumbnail',
-								),
-								array(
-									'key'      => 'field_rgvdsa_blog_pb_person_quote_alt_text',
-									'label'    => 'Alt text',
-									'name'     => 'alt_text',
-									'type'     => 'text',
-									'required' => 1,
-								),
-								array(
-									'key'      => 'field_rgvdsa_blog_pb_person_quote_quote',
-									'label'    => 'Quote',
-									'name'     => 'quote',
-									'type'     => 'textarea',
-									'required' => 1,
-									'rows'     => 3,
-								),
-								array(
-									'key'   => 'field_rgvdsa_blog_pb_person_quote_translation',
-									'label' => 'Translation',
-									'name'  => 'translation',
-									'type'  => 'textarea',
-									'rows'  => 3,
-								),
-								array(
-									'key'      => 'field_rgvdsa_blog_pb_person_quote_name',
-									'label'    => 'Name',
-									'name'     => 'name',
-									'type'     => 'text',
-									'required' => 1,
-								),
-								array(
-									'key'   => 'field_rgvdsa_blog_pb_person_quote_role',
-									'label' => 'Role',
-									'name'  => 'role',
-									'type'  => 'text',
-								),
-								array(
-									'key'           => 'field_rgvdsa_blog_pb_person_quote_lang',
-									'label'         => 'Quote language',
-									'name'          => 'lang',
-									'type'          => 'select',
-									'choices'       => array(
-										'en' => 'English',
-										'es' => 'Español',
-									),
-									'default_value' => 'en',
-									'return_format' => 'value',
-								),
-							),
-						),
-						'layout_rgvdsa_blog_video'          => array(
-							'key'        => 'layout_rgvdsa_blog_video',
-							'name'       => 'video',
-							'label'      => 'Video',
-							'display'    => 'block',
-							'sub_fields' => array(
-								array(
-									'key'   => 'field_rgvdsa_blog_pb_video_url',
-									'label' => 'Video URL',
-									'name'  => 'url',
-									'type'  => 'url',
-								),
-								array(
-									'key'           => 'field_rgvdsa_blog_pb_video_poster',
-									'label'         => 'Poster',
-									'name'          => 'poster',
-									'type'          => 'image',
-									'return_format' => 'array',
-									'preview_size'  => 'medium',
-								),
-								array(
-									'key'   => 'field_rgvdsa_blog_pb_video_caption',
-									'label' => 'Caption',
-									'name'  => 'caption',
-									'type'  => 'text',
-								),
-								array(
-									'key'   => 'field_rgvdsa_blog_pb_video_transcript_url',
-									'label' => 'Transcript URL',
-									'name'  => 'transcript_url',
-									'type'  => 'url',
-								),
-							),
-						),
-						'layout_rgvdsa_blog_audio'          => array(
-							'key'        => 'layout_rgvdsa_blog_audio',
-							'name'       => 'audio',
-							'label'      => 'Audio',
-							'display'    => 'block',
-							'sub_fields' => array(
-								array(
-									'key'           => 'field_rgvdsa_blog_pb_audio_file',
-									'label'         => 'Audio file',
-									'name'          => 'file',
-									'type'          => 'file',
-									'required'      => 1,
-									'return_format' => 'array',
-								),
-								array(
-									'key'      => 'field_rgvdsa_blog_pb_audio_title',
-									'label'    => 'Title',
-									'name'     => 'title',
-									'type'     => 'text',
-									'required' => 1,
-								),
-								array(
-									'key'          => 'field_rgvdsa_blog_pb_audio_duration',
-									'label'        => 'Duration',
-									'name'         => 'duration',
-									'type'         => 'text',
-									'instructions' => 'Display string, e.g. 3:12.',
-								),
-								array(
-									'key'           => 'field_rgvdsa_blog_pb_audio_transcript',
-									'label'         => 'Transcript',
-									'name'          => 'transcript',
-									'type'          => 'file',
-									'return_format' => 'array',
-								),
-							),
-						),
-						'layout_rgvdsa_blog_document'       => array(
-							'key'        => 'layout_rgvdsa_blog_document',
-							'name'       => 'document',
-							'label'      => 'Document',
-							'display'    => 'block',
-							'sub_fields' => array(
-								array(
-									'key'           => 'field_rgvdsa_blog_pb_document_file',
-									'label'         => 'File',
-									'name'          => 'file',
-									'type'          => 'file',
-									'required'      => 1,
-									'return_format' => 'array',
-								),
-								array(
-									'key'      => 'field_rgvdsa_blog_pb_document_title',
-									'label'    => 'Title',
-									'name'     => 'title',
-									'type'     => 'text',
-									'required' => 1,
-								),
-								array(
-									'key'          => 'field_rgvdsa_blog_pb_document_description',
-									'label'        => 'Description',
-									'name'         => 'description',
-									'type'         => 'text',
-									'instructions' => 'Meta line, e.g. Bilingual · 2 pages · 340 KB.',
-								),
-							),
-						),
-						'layout_rgvdsa_blog_event_embed'    => array(
-							'key'        => 'layout_rgvdsa_blog_event_embed',
-							'name'       => 'event_embed',
-							'label'      => 'Event embed',
-							'display'    => 'block',
-							'sub_fields' => array(
-								array(
-									'key'           => 'field_rgvdsa_blog_pb_event_embed_event',
-									'label'         => 'Event',
-									'name'          => 'event',
-									'type'          => 'relationship',
-									'required'      => 1,
-									'post_type'     => array( 'event' ),
-									'filters'       => array( 'search' ),
-									'max'           => 1,
-									'return_format' => 'id',
-								),
-							),
-						),
-						'layout_rgvdsa_blog_action_callout' => array(
-							'key'        => 'layout_rgvdsa_blog_action_callout',
-							'name'       => 'action_callout',
-							'label'      => 'Action callout',
-							'display'    => 'block',
-							'sub_fields' => array(
-								array(
-									'key'      => 'field_rgvdsa_blog_pb_action_callout_heading',
-									'label'    => 'Heading',
-									'name'     => 'heading',
-									'type'     => 'text',
-									'required' => 1,
-								),
-								array(
-									'key'   => 'field_rgvdsa_blog_pb_action_callout_body',
-									'label' => 'Body',
-									'name'  => 'body',
-									'type'  => 'textarea',
-									'rows'  => 3,
-								),
-								array(
-									'key'          => 'field_rgvdsa_blog_pb_action_callout_buttons',
-									'label'        => 'Buttons',
-									'name'         => 'buttons',
-									'type'         => 'repeater',
-									'layout'       => 'table',
-									'button_label' => 'Add button',
-									'sub_fields'   => array(
-										array(
-											'key'   => 'field_rgvdsa_blog_pb_action_callout_btn_label',
-											'label' => 'Label',
-											'name'  => 'label',
-											'type'  => 'text',
-										),
-										array(
-											'key'   => 'field_rgvdsa_blog_pb_action_callout_btn_url',
-											'label' => 'URL',
-											'name'  => 'url',
-											'type'  => 'text',
-										),
-										array(
-											'key'           => 'field_rgvdsa_blog_pb_action_callout_btn_style',
-											'label'         => 'Style',
-											'name'          => 'style',
-											'type'          => 'select',
-											'choices'       => array(
-												'primary' => 'Primary',
-												'outline' => 'Outline',
-											),
-											'default_value' => 'primary',
-											'return_format' => 'value',
-										),
-									),
-								),
-							),
-						),
-					),
-				),
-			),
-			'location' => array(
-				array(
-					array(
-						'param'    => 'post_type',
-						'operator' => '==',
-						'value'    => 'post',
-					),
-				),
-			),
-		)
-	);
 }
 
 // Committee choices come from the chapter options repeater.
@@ -587,8 +177,7 @@ function rgvdsa_blog_post_cat( $post ) {
 }
 
 /**
- * Word count (post_content + prose blocks) at 200 wpm. Loads the
- * post_blocks flexible field — save-time / self-heal only, never per card.
+ * Word count of post_content (where block bodies live) at 200 wpm.
  */
 function rgvdsa_blog_compute_read_minutes( $post_id ) {
 	$post = get_post( $post_id );
@@ -596,22 +185,12 @@ function rgvdsa_blog_compute_read_minutes( $post_id ) {
 		return 1;
 	}
 
-	$text   = $post->post_content;
-	$blocks = rgvdsa_blog_field( 'post_blocks', $post->ID );
-	if ( is_array( $blocks ) ) {
-		foreach ( $blocks as $block ) {
-			if ( 'prose' === ( $block['acf_fc_layout'] ?? '' ) ) {
-				$text .= ' ' . (string) ( $block['content'] ?? '' );
-			}
-		}
-	}
-
-	$words = str_word_count( wp_strip_all_tags( $text ) );
+	$words = str_word_count( wp_strip_all_tags( $post->post_content ) );
 
 	return max( 1, (int) round( $words / 200 ) );
 }
 
-// Precompute at save (priority 20 — after ACF has written post_blocks meta).
+// Precompute at save.
 add_action( 'save_post_post', 'rgvdsa_blog_store_read_minutes', 20 );
 
 function rgvdsa_blog_store_read_minutes( $post_id ) {
@@ -624,7 +203,7 @@ function rgvdsa_blog_store_read_minutes( $post_id ) {
 
 /**
  * ACF read_minutes override, else precomputed `_rgvdsa_read_minutes` meta
- * (primed by WP_Query's meta cache — no per-card post_blocks load).
+ * (primed by WP_Query's meta cache — no per-card body parse).
  * Computes + stores once when the meta is absent (pre-hook posts).
  */
 function rgvdsa_blog_read_minutes( $post ) {
@@ -647,30 +226,6 @@ function rgvdsa_blog_read_minutes( $post ) {
 	update_post_meta( $post->ID, '_rgvdsa_read_minutes', $minutes );
 
 	return $minutes;
-}
-
-/**
- * PostImage assoc array from an ACF image array (caption/credit keys omitted when empty).
- */
-function rgvdsa_blog_post_image( $image, $alt, $caption = '', $credit = '' ) {
-	$out = array(
-		'src' => null,
-		'alt' => rgvdsa_blog_kses_plain( $alt ),
-	);
-
-	if ( is_array( $image ) ) {
-		$out['src'] = $image['sizes']['large'] ?? $image['url'] ?? null;
-	}
-	$caption = rgvdsa_blog_kses_plain( $caption );
-	if ( '' !== $caption ) {
-		$out['caption'] = $caption;
-	}
-	$credit = rgvdsa_blog_kses_plain( $credit );
-	if ( '' !== $credit ) {
-		$out['credit'] = $credit;
-	}
-
-	return $out;
 }
 
 /**
@@ -719,207 +274,307 @@ function rgvdsa_blog_kses_plain( $text ) {
 	return trim( wp_strip_all_tags( (string) $text ) );
 }
 
+/* -------------------------------------------------------------------------
+ * Gutenberg serialization — post_content blocks → PostBlock[].
+ * ---------------------------------------------------------------------- */
+
 /**
- * post_blocks ACF rows → PostBlock[] (camelCase keys, optional keys omitted).
+ * Raw ACF block data from a parsed block comment. ACF stores values in the
+ * flat postmeta layout: `name => value`, repeaters as `name => count` plus
+ * `name_{i}_{sub}` rows; image/file/post_object fields hold attachment or
+ * post IDs regardless of return_format.
  */
-function rgvdsa_blog_map_blocks( $post_id ) {
-	$rows = rgvdsa_blog_field( 'post_blocks', $post_id );
-	if ( ! is_array( $rows ) ) {
+function rgvdsa_blog_block_data( $block ) {
+	$data = $block['attrs']['data'] ?? array();
+
+	return is_array( $data ) ? $data : array();
+}
+
+/**
+ * Repeater rows out of flat ACF block data (tolerates the nested-array
+ * form the migration script and some ACF saves emit).
+ */
+function rgvdsa_blog_block_repeater( $data, $name, $subs ) {
+	if ( is_array( $data[ $name ] ?? null ) ) {
+		return $data[ $name ];
+	}
+
+	$rows = array();
+	for ( $i = 0, $count = (int) ( $data[ $name ] ?? 0 ); $i < $count; $i++ ) {
+		$row = array();
+		foreach ( $subs as $sub ) {
+			$row[ $sub ] = $data[ "{$name}_{$i}_{$sub}" ] ?? null;
+		}
+		$rows[] = $row;
+	}
+
+	return $rows;
+}
+
+/**
+ * <figcaption> text out of a core block's saved markup.
+ */
+function rgvdsa_blog_block_figcaption( $html ) {
+	return preg_match( '#<figcaption[^>]*>(.*?)</figcaption>#s', (string) $html, $m )
+		? rgvdsa_blog_kses_plain( $m[1] )
+		: '';
+}
+
+/**
+ * PostImage from a core/image block (attachment ID in attrs, caption in the
+ * saved figcaption, credit from the attachment `credit` field).
+ */
+function rgvdsa_blog_block_image_contract( $block ) {
+	$attachment_id = (int) ( $block['attrs']['id'] ?? 0 );
+	$html          = (string) ( $block['innerHTML'] ?? '' );
+
+	$src = $attachment_id ? ( wp_get_attachment_image_url( $attachment_id, 'large' ) ?: null ) : null;
+	if ( ! $src && preg_match( '#<img[^>]*\ssrc="([^"]+)"#', $html, $m ) ) {
+		$src = $m[1];
+	}
+
+	$alt = $attachment_id ? (string) get_post_meta( $attachment_id, '_wp_attachment_image_alt', true ) : '';
+	if ( '' === $alt && preg_match( '#<img[^>]*\salt="([^"]*)"#', $html, $m ) ) {
+		$alt = $m[1];
+	}
+
+	$out = array(
+		'src' => $src ?: null,
+		'alt' => rgvdsa_blog_kses_plain( $alt ),
+	);
+
+	$caption = rgvdsa_blog_block_figcaption( $html );
+	if ( '' !== $caption ) {
+		$out['caption'] = $caption;
+	}
+
+	$credit = $attachment_id ? rgvdsa_blog_kses_plain( get_post_meta( $attachment_id, 'credit', true ) ) : '';
+	if ( '' !== $credit ) {
+		$out['credit'] = $credit;
+	}
+
+	return $out;
+}
+
+/**
+ * post_content blocks → PostBlock[] (block-serialization spec). Consecutive
+ * prose-class core blocks (paragraph/heading/list/quote — plus classic
+ * freeform chunks) coalesce into one kses-sanitized `prose` entry; the rest
+ * map 1:1 onto the contract union. Same sanitization rules as the legacy
+ * ACF path.
+ */
+function rgvdsa_blog_blocks_from_content( $post ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
 		return array();
 	}
 
+	$prose_types = array( 'core/paragraph', 'core/heading', 'core/list', 'core/quote' );
+
 	$blocks = array();
+	$prose  = '';
 
-	foreach ( $rows as $row ) {
-		switch ( $row['acf_fc_layout'] ?? '' ) {
-			case 'prose':
-				$html = rgvdsa_blog_kses_prose( trim( (string) ( $row['content'] ?? '' ) ) );
-				if ( '' === $html ) {
+	$flush_prose = function () use ( &$prose, &$blocks ) {
+		$html = trim( rgvdsa_blog_kses_prose( $prose ) );
+		if ( '' !== $html ) {
+			$blocks[] = array(
+				'type' => 'prose',
+				'html' => $html,
+			);
+		}
+		$prose = '';
+	};
+
+	foreach ( parse_blocks( $post->post_content ) as $block ) {
+		$name = $block['blockName'];
+
+		// Classic/freeform chunks count as prose (kses keeps them safe).
+		if ( null === $name ) {
+			if ( '' !== trim( (string) $block['innerHTML'] ) ) {
+				$prose .= $block['innerHTML'];
+			}
+			continue;
+		}
+
+		if ( in_array( $name, $prose_types, true ) ) {
+			$prose .= render_block( $block );
+			continue;
+		}
+
+		$flush_prose();
+
+		switch ( $name ) {
+			case 'core/image':
+				$image = rgvdsa_blog_block_image_contract( $block );
+				if ( null === $image['src'] && '' === $image['alt'] && empty( $image['caption'] ) ) {
 					break;
 				}
-				$blocks[] = array(
-					'type' => 'prose',
-					'html' => $html,
-				);
-				break;
-
-			case 'image':
-				// Imageless rows still render (ImageSlot placeholder) as long as
-				// the editor filled anything in; skip only truly empty rows.
-				if ( ! is_array( $row['image'] ?? null )
-					&& '' === trim( (string) ( $row['alt_text'] ?? '' ) )
-					&& '' === trim( (string) ( $row['caption'] ?? '' ) ) ) {
-					break;
-				}
-				$block = array(
+				$out = array(
 					'type'  => 'image',
-					'image' => rgvdsa_blog_post_image(
-						is_array( $row['image'] ?? null ) ? $row['image'] : null,
-						$row['alt_text'] ?? '',
-						$row['caption'] ?? '',
-						$row['credit'] ?? ''
-					),
+					'image' => $image,
 				);
-				if ( ! empty( $row['breakout'] ) ) {
-					$block['breakout'] = true;
+				if ( in_array( $block['attrs']['align'] ?? '', array( 'wide', 'full' ), true ) ) {
+					$out['breakout'] = true;
 				}
-				$blocks[] = $block;
+				$blocks[] = $out;
 				break;
 
-			case 'pull_quote':
-				$quote = rgvdsa_blog_kses_plain( $row['quote'] ?? '' );
+			case 'core/pullquote':
+				$html        = (string) $block['innerHTML'];
+				$attribution = preg_match( '#<cite[^>]*>(.*?)</cite>#s', $html, $m )
+					? rgvdsa_blog_kses_plain( $m[1] )
+					: '';
+				$quote       = rgvdsa_blog_kses_plain( preg_replace( '#<cite[^>]*>.*?</cite>#s', '', $html ) );
 				if ( '' === $quote ) {
 					break;
 				}
-				$block       = array(
+				$out = array(
 					'type'  => 'pull_quote',
 					'quote' => $quote,
 				);
-				$attribution = rgvdsa_blog_kses_plain( $row['attribution'] ?? '' );
 				if ( '' !== $attribution ) {
-					$block['attribution'] = $attribution;
+					$out['attribution'] = $attribution;
 				}
-				$blocks[] = $block;
+				$blocks[] = $out;
 				break;
 
-			case 'gallery':
+			case 'core/gallery':
 				$images = array();
-				foreach ( (array) ( $row['images'] ?? array() ) as $img_row ) {
-					// Imageless rows keep their placeholder slot.
-					if ( ! is_array( $img_row['image'] ?? null )
-						&& '' === trim( (string) ( $img_row['alt_text'] ?? '' ) )
-						&& '' === trim( (string) ( $img_row['caption'] ?? '' ) ) ) {
+				foreach ( (array) $block['innerBlocks'] as $inner ) {
+					if ( 'core/image' !== $inner['blockName'] ) {
 						continue;
 					}
-					$images[] = rgvdsa_blog_post_image(
-						is_array( $img_row['image'] ?? null ) ? $img_row['image'] : null,
-						$img_row['alt_text'] ?? '',
-						$img_row['caption'] ?? ''
-					);
+					$image = rgvdsa_blog_block_image_contract( $inner );
+					if ( null === $image['src'] && '' === $image['alt'] && empty( $image['caption'] ) ) {
+						continue;
+					}
+					$images[] = $image;
 				}
 				if ( empty( $images ) ) {
 					break;
 				}
+				$class    = (string) ( $block['attrs']['className'] ?? '' );
 				$blocks[] = array(
 					'type'   => 'gallery',
-					'layout' => 'grid' === ( $row['layout'] ?? '' ) ? 'grid' : 'essay',
+					'layout' => false !== strpos( $class, 'is-style-grid' ) ? 'grid' : 'essay',
 					'images' => $images,
 				);
 				break;
 
-			case 'person_quote':
-				$quote = rgvdsa_blog_kses_plain( $row['quote'] ?? '' );
-				$name  = rgvdsa_blog_kses_plain( $row['name'] ?? '' );
-				if ( '' === $quote || '' === $name ) {
+			case 'rgvdsa/person-quote':
+				$data  = rgvdsa_blog_block_data( $block );
+				$quote = rgvdsa_blog_kses_plain( $data['quote'] ?? '' );
+				$name_ = rgvdsa_blog_kses_plain( $data['name'] ?? '' );
+				if ( '' === $quote || '' === $name_ ) {
 					break;
 				}
-				$photo = null;
-				if ( is_array( $row['photo'] ?? null ) ) {
-					$photo = $row['photo']['sizes']['medium'] ?? $row['photo']['url'] ?? null;
-				}
-				$block = array(
+				$photo_id = (int) ( $data['photo'] ?? 0 );
+				$out      = array(
 					'type'  => 'person_quote',
-					'photo' => $photo,
-					'alt'   => (string) ( $row['alt_text'] ?? '' ),
+					'photo' => $photo_id ? ( wp_get_attachment_image_url( $photo_id, 'medium' ) ?: null ) : null,
+					'alt'   => rgvdsa_blog_kses_plain( $data['alt_text'] ?? '' ),
 					'quote' => $quote,
-					'name'  => $name,
-					'lang'  => 'es' === ( $row['lang'] ?? '' ) ? 'es' : 'en',
+					'name'  => $name_,
+					'lang'  => 'es' === ( $data['lang'] ?? '' ) ? 'es' : 'en',
 				);
-				$translation = rgvdsa_blog_kses_plain( $row['translation'] ?? '' );
+				$translation = rgvdsa_blog_kses_plain( $data['translation'] ?? '' );
 				if ( '' !== $translation ) {
-					$block['translation'] = $translation;
+					$out['translation'] = $translation;
 				}
-				$role = rgvdsa_blog_kses_plain( $row['role'] ?? '' );
+				$role = rgvdsa_blog_kses_plain( $data['role'] ?? '' );
 				if ( '' !== $role ) {
-					$block['role'] = $role;
+					$out['role'] = $role;
 				}
-				$blocks[] = $block;
+				$blocks[] = $out;
 				break;
 
-			case 'video':
-				$block = array(
+			case 'rgvdsa/video':
+				$data = rgvdsa_blog_block_data( $block );
+				$out  = array(
 					'type' => 'video',
-					'url'  => (string) ( $row['url'] ?? '' ),
+					'url'  => (string) ( $data['url'] ?? '' ),
 				);
-				if ( is_array( $row['poster'] ?? null ) ) {
-					$block['poster'] = $row['poster']['sizes']['large'] ?? $row['poster']['url'] ?? null;
+				$poster_id = (int) ( $data['poster'] ?? 0 );
+				if ( $poster_id ) {
+					$out['poster'] = wp_get_attachment_image_url( $poster_id, 'large' ) ?: null;
 				}
-				$caption = rgvdsa_blog_kses_plain( $row['caption'] ?? '' );
+				$caption = rgvdsa_blog_kses_plain( $data['caption'] ?? '' );
 				if ( '' !== $caption ) {
-					$block['caption'] = $caption;
+					$out['caption'] = $caption;
 				}
-				if ( '' !== (string) ( $row['transcript_url'] ?? '' ) ) {
-					$block['transcriptUrl'] = (string) $row['transcript_url'];
+				if ( '' !== (string) ( $data['transcript_url'] ?? '' ) ) {
+					$out['transcriptUrl'] = (string) $data['transcript_url'];
 				}
-				$blocks[] = $block;
+				$blocks[] = $out;
 				break;
 
-			case 'audio':
-				$title = trim( (string) ( $row['title'] ?? '' ) );
+			case 'rgvdsa/audio':
+				$data  = rgvdsa_blog_block_data( $block );
+				$title = rgvdsa_blog_kses_plain( $data['title'] ?? '' );
 				if ( '' === $title ) {
 					break;
 				}
-				$file = null;
-				if ( is_array( $row['file'] ?? null ) ) {
-					$file = $row['file']['url'] ?? null;
-				}
-				$transcript = is_array( $row['transcript'] ?? null ) ? (string) ( $row['transcript']['url'] ?? '' ) : '';
-				$block      = array(
+				$file_id       = (int) ( $data['file'] ?? 0 );
+				$transcript_id = (int) ( $data['transcript'] ?? 0 );
+				$out           = array(
 					'type'          => 'audio',
-					'file'          => $file,
+					'file'          => $file_id ? ( wp_get_attachment_url( $file_id ) ?: null ) : null,
 					'title'         => $title,
-					'transcriptUrl' => $transcript,
+					'transcriptUrl' => $transcript_id ? (string) wp_get_attachment_url( $transcript_id ) : '',
 				);
-				if ( '' !== (string) ( $row['duration'] ?? '' ) ) {
-					$block['duration'] = (string) $row['duration'];
+				if ( '' !== (string) ( $data['duration'] ?? '' ) ) {
+					$out['duration'] = (string) $data['duration'];
 				}
-				$blocks[] = $block;
+				$blocks[] = $out;
 				break;
 
-			case 'document':
-				$title = trim( (string) ( $row['title'] ?? '' ) );
-				$url   = is_array( $row['file'] ?? null ) ? (string) ( $row['file']['url'] ?? '' ) : '';
+			case 'rgvdsa/document':
+				$data    = rgvdsa_blog_block_data( $block );
+				$title   = rgvdsa_blog_kses_plain( $data['title'] ?? '' );
+				$file_id = (int) ( $data['file'] ?? 0 );
+				$url     = $file_id ? (string) wp_get_attachment_url( $file_id ) : '';
 				if ( '' === $title || '' === $url ) {
 					break;
 				}
-				$block = array(
+				$out = array(
 					'type'  => 'document',
 					'url'   => $url,
 					'title' => $title,
 				);
-				if ( '' !== (string) ( $row['description'] ?? '' ) ) {
-					$block['description'] = (string) $row['description'];
+				$description = rgvdsa_blog_kses_plain( $data['description'] ?? '' );
+				if ( '' !== $description ) {
+					$out['description'] = $description;
 				}
-				$blocks[] = $block;
+				$blocks[] = $out;
 				break;
 
-			case 'event_embed':
-				// Drop the block when the events domain or the event is missing.
-				if ( ! function_exists( 'rgvdsa_event_to_chapter_event' ) ) {
-					break;
-				}
-				$ids      = array_filter( array_map( 'intval', (array) ( $row['event'] ?? array() ) ) );
-				$event_id = $ids ? (int) reset( $ids ) : 0;
+			case 'rgvdsa/event-embed':
+				$data     = rgvdsa_blog_block_data( $block );
+				$event_id = (int) ( $data['event'] ?? 0 );
 				if ( ! $event_id ) {
 					break;
 				}
+				// Nullable by contract: unpublished/deleted events serialize
+				// null and the island renders the fallback card.
 				$event_post = get_post( $event_id );
-				if ( ! $event_post || 'publish' !== $event_post->post_status ) {
-					break;
+				$event      = null;
+				if ( $event_post && 'publish' === $event_post->post_status && function_exists( 'rgvdsa_event_to_chapter_event' ) ) {
+					$event = rgvdsa_event_to_chapter_event( $event_post );
 				}
 				$blocks[] = array(
 					'type'  => 'event_embed',
-					'event' => rgvdsa_event_to_chapter_event( $event_post ),
+					'event' => $event,
 				);
 				break;
 
-			case 'action_callout':
-				$heading = rgvdsa_blog_kses_plain( $row['heading'] ?? '' );
+			case 'rgvdsa/action-callout':
+				$data    = rgvdsa_blog_block_data( $block );
+				$heading = rgvdsa_blog_kses_plain( $data['heading'] ?? '' );
 				if ( '' === $heading ) {
 					break;
 				}
 				$buttons = array();
-				foreach ( (array) ( $row['buttons'] ?? array() ) as $btn ) {
+				foreach ( rgvdsa_blog_block_repeater( $data, 'buttons', array( 'label', 'url', 'style' ) ) as $btn ) {
 					$label = rgvdsa_blog_kses_plain( $btn['label'] ?? '' );
 					if ( '' === $label ) {
 						continue;
@@ -933,14 +588,25 @@ function rgvdsa_blog_map_blocks( $post_id ) {
 				$blocks[] = array(
 					'type'    => 'action_callout',
 					'heading' => $heading,
-					'body'    => rgvdsa_blog_kses_plain( $row['body'] ?? '' ),
+					'body'    => rgvdsa_blog_kses_plain( $data['body'] ?? '' ),
 					'buttons' => $buttons,
 				);
 				break;
 		}
 	}
 
+	$flush_prose();
+
 	return $blocks;
+}
+
+/**
+ * PostBlock[] for a post. Everything serializes from post_content — block
+ * posts through the contract map, classic/imported content lands in the
+ * freeform-prose branch (kses applied either way).
+ */
+function rgvdsa_blog_map_blocks( $post_id ) {
+	return rgvdsa_blog_blocks_from_content( get_post( $post_id ) );
 }
 
 /**
@@ -990,7 +656,7 @@ function rgvdsa_post_to_blog_post( $post ) {
 }
 
 /**
- * SinglePostData shape (post hero + post_blocks stack + end matter).
+ * SinglePostData shape (post hero + block stack + end matter).
  */
 function rgvdsa_post_to_single( $post ) {
 	$post      = get_post( $post );
@@ -1015,13 +681,17 @@ function rgvdsa_post_to_single( $post ) {
 		'src' => get_the_post_thumbnail_url( $post, 'large' ) ?: null,
 		'alt' => '' !== $thumb_alt ? $thumb_alt : $title,
 	);
-	$featured_caption = rgvdsa_blog_kses_plain( rgvdsa_blog_field( 'featured_caption', $post->ID ) );
-	if ( '' !== $featured_caption ) {
-		$featured_image['caption'] = $featured_caption;
-	}
-	$featured_credit = rgvdsa_blog_kses_plain( rgvdsa_blog_field( 'featured_credit', $post->ID ) );
-	if ( '' !== $featured_credit ) {
-		$featured_image['credit'] = $featured_credit;
+	// Caption/credit travel with the attachment (native caption + the
+	// `credit` ACF field from inc/blocks.php).
+	if ( $thumb_id ) {
+		$featured_caption = rgvdsa_blog_kses_plain( wp_get_attachment_caption( $thumb_id ) );
+		if ( '' !== $featured_caption ) {
+			$featured_image['caption'] = $featured_caption;
+		}
+		$featured_credit = rgvdsa_blog_kses_plain( get_post_meta( $thumb_id, 'credit', true ) );
+		if ( '' !== $featured_credit ) {
+			$featured_image['credit'] = $featured_credit;
+		}
 	}
 
 	$tags = wp_get_post_terms( $post->ID, 'post_tag', array( 'fields' => 'names' ) );

@@ -8,14 +8,15 @@ import {
   WEEKDAYS,
 } from "@/lib/events";
 
-const props = defineProps<{ event: ChapterEvent }>();
+const props = defineProps<{ event: ChapterEvent | null }>();
 
-const date = computed(() => parseISODate(props.event.date));
-const category = computed(() => categoryById(props.event.cat));
+const date = computed(() => (props.event ? parseISODate(props.event.date) : null));
+const category = computed(() => (props.event ? categoryById(props.event.cat) : null));
 </script>
 
 <template>
   <div
+    v-if="event && date && category"
     class="block-event-embed grid w-[min(74ch,100%)] items-center gap-5 rounded-[16px] bg-white px-6 py-5 shadow-gallery [grid-template-columns:72px_1fr_auto]"
   >
     <div
@@ -42,6 +43,21 @@ const category = computed(() => categoryById(props.event.cat));
       class="whitespace-nowrap rounded-full border-2 border-red px-5 py-2 text-[0.9rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash"
     >
       RSVP
+    </a>
+  </div>
+  <div
+    v-else
+    class="block-event-embed grid w-[min(74ch,100%)] items-center gap-5 rounded-[16px] bg-wash px-6 py-5 shadow-gallery [grid-template-columns:1fr_auto]"
+  >
+    <div class="flex min-w-0 flex-col gap-1">
+      <span class="text-[0.75rem] font-bold uppercase tracking-[0.06em] text-text-muted">Event</span>
+      <span class="text-[1.05rem] font-bold text-text-muted">This event is no longer scheduled.</span>
+    </div>
+    <a
+      href="/calendar/"
+      class="whitespace-nowrap rounded-full border-2 border-red px-5 py-2 text-[0.9rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash"
+    >
+      See the calendar
     </a>
   </div>
 </template>
