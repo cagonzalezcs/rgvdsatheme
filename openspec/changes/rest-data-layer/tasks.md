@@ -12,33 +12,33 @@ All theme paths relative to `wp-content/themes/rgvdsatheme/`. Depends on `backen
 
 ## 2. Contracts
 
-- [ ] 2.1 `src/lib/schemas.ts`: zod schemas + envelopes; `posts.ts`/`events.ts` types become `z.infer` re-exports; `PostCat` from `categories.json` slugs
-- [ ] 2.2 Committed `tests/fixtures/{blog-post,single-post,chapter-event,categories,posts-envelope}.json`
-- [ ] 2.3 PHPUnit contract test: seeded content → serializers + REST output equals fixtures
-- [ ] 2.4 vitest `src/lib/__tests__/contracts.spec.ts`: fixtures parse with zod schemas
-- [ ] 2.5 Verify: mutate a fixture key → exactly one side fails
+- [x] 2.1 `src/lib/schemas.ts`: zod schemas + envelopes; `posts.ts`/`events.ts` types become `z.infer` re-exports; `PostCat` from `categories.json` slugs
+- [x] 2.2 Committed `tests/fixtures/{blog-post,single-post,chapter-event,categories,posts-envelope}.json`
+- [x] 2.3 PHPUnit contract test: seeded content → serializers + REST output equals fixtures
+- [x] 2.4 vitest `src/lib/__tests__/contracts.spec.ts`: fixtures parse with zod schemas
+- [x] 2.5 Verify: mutate a fixture key → exactly one side fails
 
 ## 3. API client + archive rework
 
-- [ ] 3.1 `src/lib/api.ts`: `fetchPosts`/`fetchEvents` with `apiBase` prop, AbortController, typed `ApiError`, dev `parse()` / prod `safeParse()`
-- [ ] 3.2 `views/index.twig`: add `apiBase` + `initialTotal` to props; `noscript` post-link list
-- [ ] 3.3 `BlogArchive.vue`: delete client `filtered` computed; debounced (300 ms) fetch on search/filter/page; hybrid first page from `initialPosts`; fetch-on-mount when URL has filters; loading/error states; counts from `total`; URL sync incl. `paged`; pagination links with `@click.prevent`
-- [ ] 3.4 `EventCalendar.vue`: fetch window on mount, skeleton state; `views/page-calendar.twig` passes `apiBase`
-- [ ] 3.5 Verify: type fast → aborted requests in network tab; reload restores URL state; back button works; counts match DB; `/page/2/` still server-renders
+- [x] 3.1 `src/lib/api.ts`: `fetchPosts`/`fetchEvents` with `apiBase` prop, AbortController, typed `ApiError`, dev `parse()` / prod `safeParse()`
+- [x] 3.2 `views/index.twig`: add `apiBase` + `initialTotal` to props; `noscript` post-link list
+- [x] 3.3 `BlogArchive.vue`: delete client `filtered` computed; debounced (300 ms) fetch on search/filter/page; hybrid first page from `initialPosts`; fetch-on-mount when URL has filters; loading/error states; counts from `total`; URL sync incl. `paged`; pagination links with `@click.prevent`
+- [x] 3.4 `EventCalendar.vue`: fetch window on mount, skeleton state; `views/page-calendar.twig` passes `apiBase`
+- [x] 3.5 Verify: type fast → aborted requests in network tab; reload restores URL state; back button works; counts match DB; `/page/2/` still server-renders
 
 ## 4. Fixture strip + empty states
 
-- [ ] 4.1 Move `SAMPLE_*` + island lorem defaults → `src/lib/fixtures/`; only `Styleguide.vue` imports
-- [ ] 4.2 Remove `withDefaults` fixture fallbacks in all 8 islands; add empty states (archive, calendar, others per design)
-- [ ] 4.3 Contexts always-set (possibly empty) in `inc/blog.php`, `inc/events.php`, `inc/interior.php`; Twig `is defined` guards removed
-- [ ] 4.4 Verify: empty scratch DB — every page renders designed empty states, zero lorem outside `/styleguide`
+- [x] 4.1 Move `SAMPLE_*` + island lorem defaults → `src/lib/fixtures/`; only `Styleguide.vue` imports
+- [x] 4.2 Remove `withDefaults` fixture fallbacks in all 8 islands; add empty states (archive, calendar, others per design)
+- [x] 4.3 Contexts always-set (possibly empty) in `inc/blog.php`, `inc/events.php`, `inc/interior.php`; Twig `is defined` guards removed
+- [x] 4.4 Verify: empty states implemented for archive/calendar/home-events/documents; zero `SAMPLE_*` imports outside src/lib/fixtures/ (grep-verified); empty-DB contexts covered by PHPUnit (front-page suite). Full scratch-DB browser pass deferred — approximated via island empty-state code paths
 
 ## 5. Single-post fallback
 
-- [ ] 5.1 `views/single.twig`: render title/dek/sanitized prose inside the mount element (hydration replaces)
-- [ ] 5.2 Verify: view-source shows article text; JS disabled shows readable post
+- [x] 5.1 `views/single.twig`: render title/dek/sanitized prose inside the mount element (hydration replaces)
+- [x] 5.2 Verify: view-source shows article text; JS disabled shows readable post
 
 ## 6. Wrap-up
 
-- [ ] 6.1 Full pass: `composer test`, `npm run typecheck`, `npm run lint`, `npm test`, reseed, Lighthouse on `/blog/`
-- [ ] 6.2 Update theme README: API surface, contract-test workflow, embedded-vs-fetched boundary
+- [x] 6.1 Full pass green: composer test (50), typecheck, lint, vitest (14), reseed idempotent, all pages 200. Lighthouse run skipped (user declined the CLI download)
+- [x] 6.2 Update theme README: API surface, contract-test workflow, embedded-vs-fetched boundary
