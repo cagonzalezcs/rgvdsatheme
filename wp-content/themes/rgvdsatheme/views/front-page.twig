@@ -1,9 +1,9 @@
 {% extends "base.twig" %}
 
 {#
-  Home page. Content is hardcoded prototype copy until Phase 6 wires WP data:
-  - events: ChapterEvent teasers (Timber query later)
-  - show_counties_strip / event_count become WP options later
+  Home page — v2 (warm/rounded) skin. Content is hardcoded prototype copy until
+  Phase 6 wires WP data (events, blog teasers, counties, options).
+  Ported from design_handoff_rgvdsa_vue/designs/RGV DSA Home.dc.html.
 #}
 
 {% set show_counties_strip = show_counties_strip|default(true) %}
@@ -18,48 +18,51 @@
 ]) %}
 {% set counties = ['McAllen', 'Edinburg', 'Brownsville', 'Harlingen', 'Pharr', 'San Juan', 'San Benito', 'Raymondville', 'Roma', 'La Joya', 'Rio Grande City', 'Zapata', 'La Grulla', 'La Feria', 'Rio Hondo'] %}
 {% set blog_featured = {
-	cat_label: 'Mutual Aid', cat_class: 'bg-cat-mutual',
+	cat_label: 'Mutual Aid', pill_class: 'bg-cat-mutual text-white',
 	date: 'June 14, 2026', read: '6 min read',
 	title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod',
 	excerpt: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
 } %}
 {% set blog_rows = [
-	{ cat_label: 'Political Education', cat_class: 'bg-cat-poled', title: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem', date: 'June 28, 2026' },
-	{ cat_label: 'Labor', cat_class: 'bg-cat-labor', title: 'Nemo enim ipsam voluptatem quia voluptas sit aspernatur', date: 'June 21, 2026' }
+	{ cat_label: 'Political Education', pill_class: 'text-cat-poled border-cat-poled', title: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem', date: 'June 28, 2026' },
+	{ cat_label: 'Labor', pill_class: 'text-cat-labor border-cat-labor', title: 'Nemo enim ipsam voluptatem quia voluptas sit aspernatur', date: 'June 21, 2026' }
 ] %}
+{% set stripe = 'bg-[repeating-linear-gradient(45deg,var(--color-stripe-v2-a)_0_14px,var(--color-stripe-v2-b)_14px_28px)]' %}
 
 {% block content %}
 
 	{# ============ HERO ============ #}
-	<section class="home-hero bg-brand-red px-6 pb-24 pt-[88px] text-cream" data-tone="red">
-		<div class="mx-auto flex max-w-[1100px] flex-col gap-7">
-			<div class="flex flex-wrap items-center gap-3 text-[0.9rem] font-extrabold uppercase tracking-[0.18em]">
-				<span>Rio Grande Valley DSA</span><span aria-hidden="true">★</span><span>From Roma to Brownsville</span>
+	<section class="home-hero bg-brand-red px-6 py-[88px] text-white" data-tone="red">
+		<div class="mx-auto flex max-w-[1140px] flex-wrap items-center gap-12">
+			<div class="flex flex-[1_1_520px] flex-col items-start gap-7">
+				<span class="rounded-full bg-white px-[18px] py-[7px] text-[0.85rem] font-bold uppercase tracking-[0.1em] text-red">Rio Grande Valley Democratic Socialists</span>
+				<h1 class="m-0 max-w-[18ch] font-display text-[clamp(2.3rem,5.6vw,4rem)] font-black leading-[1.08] tracking-[-0.01em] [text-wrap:balance]">
+					A better world is possible. We&rsquo;re building it in the Valley.
+				</h1>
+				<p class="m-0 max-w-[44ch] text-[1.5rem] font-normal leading-[1.5]">
+					We&rsquo;re the Rio Grande Valley chapter of the Democratic Socialists of America — the largest socialist organization in the United States — organizing working-class power across our border communities.
+				</p>
+				<div class="flex flex-wrap items-center gap-3.5">
+					<a href="{{ chapter.join_url }}" target="_blank" rel="noopener"
+						class="rounded-full bg-white px-[34px] py-4 text-[1.05rem] font-bold text-red no-underline shadow-[0_4px_14px_rgba(28,25,23,0.25)] transition-transform hover:-translate-y-px hover:text-red-hover">
+						Join DSA
+					</a>
+					<a href="#events"
+						class="rounded-full bg-ink px-[34px] py-4 text-[1.05rem] font-bold text-white no-underline transition-colors hover:bg-ink-soft">
+						Come to a meeting ↓
+					</a>
+				</div>
+				<span class="rounded-full bg-[rgba(28,25,23,0.85)] px-[18px] py-2 text-[0.95rem]">New here? Start with <strong>RGV-DSA 101</strong> — no experience needed.</span>
 			</div>
-			<h1 class="m-0 max-w-[18ch] font-display text-[clamp(2.3rem,5.8vw,4.4rem)] font-black uppercase leading-[1.08] tracking-[-0.01em] [text-wrap:balance]">
-				A better world is possible. We&rsquo;re building it in the Valley.
-			</h1>
-			<p class="m-0 max-w-[56ch] text-[1.2rem] leading-relaxed">
-				We&rsquo;re the Rio Grande Valley chapter of the Democratic Socialists of America — the largest socialist organization in the United States — organizing working-class power across our border communities.
-			</p>
-			<div class="flex flex-wrap items-center gap-3.5">
-				<a href="{{ chapter.join_url }}" target="_blank" rel="noopener"
-					class="border-[3px] border-ink bg-cream px-8 py-4 text-[1.05rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm active:translate-x-[5px] active:translate-y-[5px] active:shadow-none">
-					Join DSA
-				</a>
-				<a href="#events"
-					class="border-[3px] border-cream bg-transparent px-8 py-4 text-[1.05rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:border-brand-red-deep hover:bg-brand-red-deep">
-					Come to a meeting ↓
-				</a>
-			</div>
-			<div class="text-[0.95rem] opacity-90">New here? Start with <strong>RGV-DSA 101</strong> — no experience needed.</div>
+			<img src="{{ site.theme.link }}/static/images/cactus-mark-red.png" alt="" aria-hidden="true"
+				class="mx-auto h-auto w-[clamp(220px,30vw,400px)] flex-[0_1_auto]">
 		</div>
 	</section>
 
 	{# ============ COUNTIES STRIP ============ #}
 	{% if show_counties_strip %}
-		<section id="counties" class="counties-strip bg-ink px-6 py-5 text-cream" data-tone="ink" aria-label="Communities we serve">
-			<div class="mx-auto flex max-w-[1200px] flex-wrap justify-center gap-x-[18px] gap-y-2 font-display text-[0.95rem] font-extrabold uppercase tracking-[0.05em]">
+		<section id="counties" class="counties-strip bg-ink px-6 py-5 text-white" data-tone="ink" aria-label="Communities we serve">
+			<div class="mx-auto flex max-w-[1200px] flex-wrap justify-center gap-x-[18px] gap-y-2 font-display text-[0.92rem] font-bold uppercase tracking-[0.05em]">
 				{% for county in counties %}
 					<span>{{ county }}</span>{% if not loop.last %}<span aria-hidden="true" class="text-brand-red">★</span>{% endif %}
 				{% endfor %}
@@ -68,48 +71,45 @@
 	{% endif %}
 
 	{# ============ WHO WE ARE ============ #}
-	<section id="about" class="who-we-are bg-cream px-6 py-24" data-tone="cream">
-		<div class="mx-auto grid max-w-[1100px] items-center gap-14 [grid-template-columns:minmax(300px,1.1fr)_minmax(280px,0.9fr)] max-md:[grid-template-columns:1fr]">
+	<section id="about" class="who-we-are bg-white px-6 py-24" data-tone="cream">
+		<div class="mx-auto grid max-w-[1140px] items-center gap-16 [grid-template-columns:minmax(300px,1.1fr)_minmax(280px,0.9fr)] max-md:[grid-template-columns:1fr]">
 			<div class="flex flex-col gap-5">
-				<div class="text-[0.85rem] font-extrabold uppercase tracking-[0.18em] text-brand-red-deep">Who we are</div>
-				<h2 class="m-0 font-display text-[clamp(1.8rem,4vw,2.9rem)] font-black uppercase leading-[1.12]">We are DSA-RGV</h2>
-				<p class="m-0 text-[1.1rem] leading-[1.7]">
+				<div class="text-[0.82rem] font-bold uppercase tracking-[0.14em] text-red">Who we are</div>
+				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">We are DSA-RGV</h2>
+				<p class="m-0 text-[1.08rem] leading-[1.75] text-text-body">
 					The RGV is one of the most economically unequal regions in the country — but it doesn&rsquo;t have to stay that way. As democratic socialists, we&rsquo;re building working-class power to challenge the dominance of the wealthy and the powerful across our border communities.
 				</p>
-				<p class="m-0 text-[1.1rem] leading-[1.7]">
+				<p class="m-0 text-[1.08rem] leading-[1.75] text-text-body">
 					Together, we&rsquo;re fighting for a Valley where working people have real power, and where everyone can live a dignified life — regardless of where they were born or how they got here.
 				</p>
-				<a href="#get-involved"
-					class="self-start border-b-[3px] border-brand-red pb-0.5 text-base font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:border-brand-red-deep hover:text-ink">
-					More about our chapter →
-				</a>
+				<a href="/about/" class="self-start text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">More about our chapter →</a>
 			</div>
-			<figure class="m-0 flex aspect-[4/3] items-center justify-center border-[3px] border-ink bg-[repeating-linear-gradient(45deg,var(--color-stripe-a)_0_14px,var(--color-stripe-b)_14px_28px)] shadow-brutal-red">
-				<figcaption class="border border-ink bg-cream px-3.5 py-2 font-mono text-[0.85rem] text-muted-2">photo: chapter members at an action</figcaption>
+			<figure class="m-0 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[18px] shadow-photo {{ stripe }}">
+				<figcaption class="rounded-lg bg-white px-3.5 py-2 font-mono text-[0.85rem] text-text-muted shadow-subtle">photo: chapter members at an action</figcaption>
 			</figure>
 		</div>
 	</section>
 
 	{# ============ UPCOMING EVENTS ============ #}
-	<section id="events" class="upcoming-events bg-cream px-6 pb-24" data-tone="cream">
-		<div class="mx-auto flex max-w-[1100px] flex-col gap-8">
-			<div class="flex flex-wrap items-baseline justify-between gap-4 border-b-[3px] border-ink pb-4">
-				<h2 class="m-0 font-display text-[clamp(1.8rem,4vw,2.9rem)] font-black uppercase leading-[1.12]">Upcoming events</h2>
-				<a href="/calendar/" class="text-base font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:underline hover:underline-offset-4">Full calendar →</a>
+	<section id="events" class="upcoming-events bg-off-white px-6 py-[88px]" data-tone="cream">
+		<div class="mx-auto flex max-w-[1140px] flex-col gap-9">
+			<div class="flex flex-wrap items-baseline justify-between gap-4">
+				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">Upcoming events</h2>
+				<a href="/calendar/" class="text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">Full calendar →</a>
 			</div>
-			<div class="flex flex-col">
+			<div class="flex flex-col gap-3">
 				{% for ev in home_events|slice(0, event_count) %}
-					<div class="grid items-center gap-6 border-b-2 border-divider-cream py-5 [grid-template-columns:88px_1fr_auto] max-sm:[grid-template-columns:64px_1fr] max-sm:gap-4">
-						<div aria-hidden="true" class="flex flex-col border-2 border-ink bg-brand-red-deep px-1 py-2 text-center text-cream">
-							<span class="font-display text-[1.45rem] font-black leading-[1.1]">{{ ev.day }}</span>
-							<span class="text-xs font-extrabold tracking-[0.12em]">{{ ev.month }}</span>
+					<div class="grid items-center gap-6 rounded-[14px] bg-white px-[22px] py-[18px] shadow-subtle [grid-template-columns:76px_1fr_auto] max-sm:[grid-template-columns:64px_1fr] max-sm:gap-4">
+						<div aria-hidden="true" class="flex flex-col rounded-[12px] bg-brand-red px-1 py-2.5 text-center text-white">
+							<span class="font-display text-[1.4rem] font-extrabold leading-[1.1]">{{ ev.day }}</span>
+							<span class="text-[0.72rem] font-bold tracking-[0.1em]">{{ ev.month }}</span>
 						</div>
 						<div class="flex flex-col gap-1">
-							<div class="text-[1.15rem] font-extrabold">{{ ev.title }}</div>
-							<div class="text-[0.95rem] text-muted-on-cream">{{ ev.when }} · {{ ev.where }}</div>
+							<div class="text-[1.12rem] font-bold">{{ ev.title }}</div>
+							<div class="text-[0.95rem] text-text-muted">{{ ev.when }} · {{ ev.where }}</div>
 						</div>
 						<a href="/calendar/" aria-label="View event: {{ ev.title }}"
-							class="whitespace-nowrap border-2 border-ink px-[18px] py-2.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white max-sm:hidden">
+							class="whitespace-nowrap rounded-full border-2 border-red px-5 py-[9px] text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash max-sm:hidden">
 							View event
 						</a>
 					</div>
@@ -119,32 +119,32 @@
 	</section>
 
 	{# ============ FROM THE BLOG ============ #}
-	<section id="blog" class="from-the-blog bg-cream px-6 pb-24" data-tone="cream">
-		<div class="mx-auto flex max-w-[1100px] flex-col gap-8">
-			<div class="flex flex-wrap items-baseline justify-between gap-4 border-b-[3px] border-ink pb-4">
-				<h2 class="m-0 font-display text-[clamp(1.8rem,4vw,2.9rem)] font-black uppercase leading-[1.12]">From the blog</h2>
-				<a href="/blog/" class="text-base font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:underline hover:underline-offset-4">All posts →</a>
+	<section id="blog" class="from-the-blog bg-white px-6 py-[88px]" data-tone="cream">
+		<div class="mx-auto flex max-w-[1140px] flex-col gap-9">
+			<div class="flex flex-wrap items-baseline justify-between gap-4">
+				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">From the blog</h2>
+				<a href="/blog/" class="text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">All posts →</a>
 			</div>
-			<div class="grid items-stretch gap-9 [grid-template-columns:minmax(300px,1.15fr)_minmax(280px,1fr)] max-md:[grid-template-columns:1fr]">
-				<a href="/blog/" class="flex flex-col border-[3px] border-ink bg-white text-ink no-underline hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[8px_8px_0_var(--color-ink)]">
-					<div aria-hidden="true" class="flex aspect-video items-start border-b-[3px] border-ink bg-[repeating-linear-gradient(45deg,var(--color-stripe-a)_0_14px,var(--color-stripe-b)_14px_28px)] p-3.5">
-						<span class="{{ blog_featured.cat_class }} border-2 border-ink px-3 py-1 text-xs font-extrabold uppercase tracking-[0.08em] text-cream">{{ blog_featured.cat_label }}</span>
+			<div class="grid items-stretch gap-8 [grid-template-columns:minmax(300px,1.15fr)_minmax(280px,1fr)] max-md:[grid-template-columns:1fr]">
+				<a href="/blog/" class="flex flex-col overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card-hover-lg">
+					<div aria-hidden="true" class="flex aspect-video items-start p-3.5 {{ stripe }}">
+						<span class="{{ blog_featured.pill_class }} rounded-full px-3.5 py-[5px] text-[0.75rem] font-bold uppercase tracking-[0.06em]">{{ blog_featured.cat_label }}</span>
 					</div>
-					<div class="flex flex-col gap-2.5 px-7 pb-7 pt-6">
-						<span class="text-[0.8rem] font-bold uppercase tracking-[0.04em] text-muted-on-cream">{{ blog_featured.date }} · {{ blog_featured.read }}</span>
-						<span class="font-display text-[clamp(1.2rem,2.4vw,1.55rem)] font-black uppercase leading-[1.2] [text-wrap:balance]">{{ blog_featured.title }}</span>
-						<span class="text-base leading-[1.65] text-muted-on-cream">{{ blog_featured.excerpt }}</span>
-						<span class="mt-1 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep">Read the post →</span>
+					<div class="flex flex-col gap-2.5 px-7 pb-[30px] pt-[26px]">
+						<span class="text-[0.82rem] font-semibold text-text-muted">{{ blog_featured.date }} · {{ blog_featured.read }}</span>
+						<span class="font-display text-[clamp(1.2rem,2.2vw,1.45rem)] font-extrabold leading-[1.25] [text-wrap:balance]">{{ blog_featured.title }}</span>
+						<span class="text-base leading-[1.65] text-text-muted">{{ blog_featured.excerpt }}</span>
+						<span class="mt-1 text-[0.95rem] font-bold text-red">Read the post →</span>
 					</div>
 				</a>
-				<div class="flex flex-col gap-6">
+				<div class="flex flex-col gap-5">
 					{% for row in blog_rows %}
-						<a href="/blog/" class="grid flex-1 border-2 border-ink bg-white text-ink no-underline [grid-template-columns:140px_1fr] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-md max-sm:[grid-template-columns:100px_1fr]">
-							<span aria-hidden="true" class="min-h-[130px] border-r-2 border-ink bg-[repeating-linear-gradient(45deg,var(--color-stripe-a)_0_14px,var(--color-stripe-b)_14px_28px)]"></span>
-							<span class="flex flex-col justify-center gap-2.5 px-6 py-5">
-								<span class="{{ row.cat_class }} self-start border-2 border-ink px-2.5 py-[3px] text-[0.72rem] font-extrabold uppercase tracking-[0.08em] text-cream">{{ row.cat_label }}</span>
-								<span class="font-display text-[1.1rem] font-extrabold leading-[1.3]">{{ row.title }}</span>
-								<span class="text-[0.85rem] font-bold uppercase tracking-[0.04em] text-muted-on-cream">{{ row.date }}</span>
+						<a href="/blog/" class="grid flex-1 overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] [grid-template-columns:130px_1fr] hover:-translate-y-0.5 hover:shadow-card-hover-lg max-sm:[grid-template-columns:100px_1fr]">
+							<span aria-hidden="true" class="min-h-[130px] {{ stripe }}"></span>
+							<span class="flex flex-col justify-center gap-[9px] px-6 py-5">
+								<span class="{{ row.pill_class }} self-start rounded-full border-2 px-3 py-[3px] text-[0.72rem] font-bold uppercase tracking-[0.06em]">{{ row.cat_label }}</span>
+								<span class="font-display text-[1.08rem] font-bold leading-[1.35]">{{ row.title }}</span>
+								<span class="text-[0.85rem] font-semibold text-text-muted">{{ row.date }}</span>
 							</span>
 						</a>
 					{% endfor %}
@@ -154,38 +154,38 @@
 	</section>
 
 	{# ============ GET INVOLVED STEPS ============ #}
-	<section id="get-involved" class="get-involved-steps bg-ink px-6 py-24 text-cream" data-tone="ink">
-		<div class="mx-auto flex max-w-[1100px] flex-col gap-12">
-			<div class="flex flex-col gap-4">
-				<div class="text-[0.85rem] font-extrabold uppercase tracking-[0.18em] text-brand-red">Get involved</div>
-				<h2 class="m-0 max-w-[20ch] font-display text-[clamp(1.8rem,4vw,2.9rem)] font-black uppercase leading-[1.12]">Three steps to start organizing</h2>
+	<section id="get-involved" class="get-involved-steps bg-ink px-6 py-24 text-white" data-tone="ink">
+		<div class="mx-auto flex max-w-[1140px] flex-col gap-12">
+			<div class="flex flex-col gap-3.5">
+				<div class="text-[0.82rem] font-bold uppercase tracking-[0.14em] text-pink">Get involved</div>
+				<h2 class="m-0 max-w-[20ch] font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">Three steps to start organizing</h2>
 			</div>
-			<div class="grid gap-8 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
+			<div class="grid gap-7 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
 				{% set steps = [
 					{ num: '01', title: 'Join DSA', body: 'Become a national DSA member — dues are sliding-scale, and membership automatically connects you to our chapter.', link_label: 'Sign up at dsausa.org →', href: chapter.join_url, external: true },
 					{ num: '02', title: 'Come to RGV-DSA 101', body: 'Our intro session for new and curious folks — what we do, how the chapter works, and how you can plug in. Virtual and in-person options.', link_label: 'Find a session →', href: '#events', external: false },
 					{ num: '03', title: 'Plug into the work', body: 'Join a committee, get on our WhatsApp, and show up. Members receive an invite to our communication channels after onboarding.', link_label: 'See committees →', href: '/get-involved/#committees', external: false }
 				] %}
 				{% for step in steps %}
-					<div class="step-card flex flex-col gap-3 border-t-4 border-brand-red pt-5">
-						<div class="font-display text-[2rem] font-black text-brand-red">{{ step.num }}</div>
-						<div class="text-[1.2rem] font-extrabold">{{ step.title }}</div>
+					<div class="step-card flex flex-col gap-3 rounded-[18px] bg-ink-card p-7">
+						<div class="font-display text-[1.7rem] font-extrabold text-pink">{{ step.num }}</div>
+						<div class="text-[1.18rem] font-bold">{{ step.title }}</div>
 						<p class="m-0 text-base leading-[1.65] text-muted-on-ink">{{ step.body }}</p>
 						<a href="{{ step.href }}"{% if step.external %} target="_blank" rel="noopener"{% endif %}
-							class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:text-white">
+							class="mt-auto self-start text-[0.95rem] font-bold text-white underline underline-offset-4 hover:text-pink">
 							{{ step.link_label }}
 						</a>
 					</div>
 				{% endfor %}
 			</div>
-			<div class="flex flex-wrap items-center gap-4 border-t-2 border-ink-soft pt-8">
-				<span class="text-[0.9rem] font-extrabold uppercase tracking-[0.1em]">Follow along:</span>
+			<div class="flex flex-wrap items-center gap-4 border-t border-ink-soft pt-8">
+				<span class="text-[0.95rem] font-bold text-muted-on-ink">Follow along:</span>
 				<a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener"
-					class="border-2 border-cream bg-cream px-5 py-2.5 text-[0.95rem] font-extrabold text-ink no-underline hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white">
+					class="rounded-full bg-white px-[22px] py-2.5 text-[0.95rem] font-bold text-ink no-underline transition-colors hover:bg-pink">
 					Instagram @dsa_rgv
 				</a>
 				<a href="mailto:hello@example.org"
-					class="border-2 border-cream bg-transparent px-5 py-2.5 text-[0.95rem] font-extrabold text-cream no-underline hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white">
+					class="rounded-full border-2 border-[#57534e] px-[21px] py-[9px] text-[0.95rem] font-bold text-white no-underline transition-colors hover:border-white">
 					Email us
 				</a>
 			</div>

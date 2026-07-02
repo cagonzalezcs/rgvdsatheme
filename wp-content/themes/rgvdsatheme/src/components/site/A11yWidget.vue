@@ -15,17 +15,18 @@ const sizes: { value: TextSize; label: string }[] = [
 <template>
   <Popover>
     <PopoverTrigger
-      class="a11y-widget cursor-pointer border-2 border-cream bg-cream px-3 py-[5px] text-base font-extrabold text-brand-red-deep hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white"
+      class="a11y-widget cursor-pointer rounded-full bg-white px-4 py-2 text-[0.95rem] font-bold text-red hover:text-red-hover hover:shadow-[0_0_0_3px_rgba(28,25,23,0.25)]"
       aria-label="Accessibility options"
       title="Accessibility options"
     >
       Aa
     </PopoverTrigger>
-    <PopoverContent align="end" class="w-[280px] p-[18px]">
+    <PopoverContent
+      align="end"
+      class="w-[280px] rounded-[14px] border-hairline bg-white p-[18px] shadow-popover"
+    >
       <div class="flex flex-col gap-4">
-        <div class="font-display text-[0.95rem] font-extrabold uppercase tracking-[0.04em]">
-          Accessibility
-        </div>
+        <div class="font-display text-[0.95rem] font-bold">Accessibility</div>
 
         <div class="flex flex-col gap-2">
           <div class="text-[0.85rem] font-bold">Text size</div>
@@ -34,11 +35,11 @@ const sizes: { value: TextSize; label: string }[] = [
               v-for="s in sizes"
               :key="s.value"
               type="button"
-              class="flex-1 cursor-pointer border-2 border-ink py-2 text-[0.95rem] font-extrabold"
+              class="flex-1 cursor-pointer rounded-[8px] border py-2 text-[0.95rem] font-bold"
               :class="
                 settings.textSize === s.value
-                  ? 'bg-ink text-cream'
-                  : 'bg-transparent text-ink hover:bg-divider-cream'
+                  ? 'border-ink bg-ink text-white'
+                  : 'border-border-control bg-white text-ink hover:bg-off-white'
               "
               :aria-pressed="settings.textSize === s.value"
               @click="setTextSize(s.value)"
@@ -50,17 +51,17 @@ const sizes: { value: TextSize; label: string }[] = [
 
         <button
           type="button"
-          class="flex cursor-pointer items-center justify-between gap-3 border-0 bg-transparent p-0 text-left text-[0.95rem] font-bold text-ink"
+          class="flex cursor-pointer items-center justify-between gap-3 border-0 bg-transparent p-0 text-left text-[0.9rem] font-bold text-ink"
           :aria-pressed="settings.highContrast"
           @click="toggleHighContrast()"
         >
           <span>High contrast</span>
           <span
-            class="border-2 px-2.5 py-0.5 text-[0.8rem] font-extrabold uppercase"
+            class="rounded-full border px-3 py-1 text-[0.75rem] font-bold uppercase tracking-[0.06em]"
             :class="
               settings.highContrast
-                ? 'border-ink bg-brand-red-deep text-cream'
-                : 'border-border-muted bg-transparent text-muted-2'
+                ? 'border-red bg-red text-white'
+                : 'border-border-control bg-transparent text-text-muted'
             "
           >
             {{ settings.highContrast ? "On" : "Off" }}
@@ -69,17 +70,17 @@ const sizes: { value: TextSize; label: string }[] = [
 
         <button
           type="button"
-          class="flex cursor-pointer items-center justify-between gap-3 border-0 bg-transparent p-0 text-left text-[0.95rem] font-bold text-ink"
+          class="flex cursor-pointer items-center justify-between gap-3 border-0 bg-transparent p-0 text-left text-[0.9rem] font-bold text-ink"
           :aria-pressed="settings.reduceMotion"
           @click="toggleReduceMotion()"
         >
           <span>Reduce motion</span>
           <span
-            class="border-2 px-2.5 py-0.5 text-[0.8rem] font-extrabold uppercase"
+            class="rounded-full border px-3 py-1 text-[0.75rem] font-bold uppercase tracking-[0.06em]"
             :class="
               settings.reduceMotion
-                ? 'border-ink bg-brand-red-deep text-cream'
-                : 'border-border-muted bg-transparent text-muted-2'
+                ? 'border-red bg-red text-white'
+                : 'border-border-control bg-transparent text-text-muted'
             "
           >
             {{ settings.reduceMotion ? "On" : "Off" }}

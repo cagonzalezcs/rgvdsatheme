@@ -54,8 +54,9 @@ const props = withDefaults(
   },
 );
 
+// v2: larger sentence-case nav, rounded translucent-ink hover pill (03-DESIGN-SPEC.md § SiteHeader).
 const navLinkClass =
-  "px-3.5 py-2.5 font-display text-[0.95rem] font-semibold tracking-[0.02em] text-cream no-underline hover:underline hover:underline-offset-4";
+  "rounded-[10px] px-4 py-2.5 font-display text-[1.17rem] font-bold text-white no-underline hover:bg-[rgba(28,25,23,0.18)]";
 
 function isCurrent(href: string): boolean {
   return props.currentPath !== "" && href === props.currentPath;
@@ -64,39 +65,42 @@ function isCurrent(href: string): boolean {
 
 <template>
   <header
-    class="site-header sticky top-0 z-100 border-b-[3px] border-ink bg-brand-red [.admin-bar_&]:top-[var(--wp-admin--admin-bar--height,32px)]"
+    class="site-header sticky top-0 z-100 bg-brand-red shadow-header [.admin-bar_&]:top-[var(--wp-admin--admin-bar--height,32px)]"
     data-tone="red"
   >
     <div
-      class="mx-auto flex min-h-[76px] max-w-[1200px] items-center justify-between gap-6 px-6"
+      class="mx-auto flex min-h-[64px] max-w-[1220px] flex-wrap items-center justify-between gap-6 px-6 py-2.5"
     >
       <a :href="homeUrl" aria-label="RGV DSA home" class="flex flex-none items-center">
         <img
           :src="logoUrl"
           alt="Rio Grande Valley Democratic Socialists of America"
-          class="block h-[62px] w-auto"
+          class="block h-[58px] w-auto"
           width="931"
           height="358"
         />
       </a>
 
-      <nav aria-label="Main" class="hidden items-center gap-1 lg:flex">
+      <nav aria-label="Main" class="hidden items-center gap-0.5 lg:flex">
         <DropdownMenu>
           <DropdownMenuTrigger
-            class="cursor-pointer border-0 bg-transparent px-3.5 py-2.5 font-display text-[0.95rem] font-semibold tracking-[0.02em] text-cream hover:underline hover:underline-offset-4"
+            :class="`cursor-pointer border-0 bg-transparent ${navLinkClass}`"
           >
             About&nbsp;▾
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" class="min-w-[240px] py-1.5">
+          <DropdownMenuContent
+            align="start"
+            class="min-w-[256px] rounded-[14px] border-none bg-white p-2 shadow-popover"
+          >
             <DropdownMenuItem
               v-for="item in aboutItems"
               :key="item.label"
               as-child
-              class="px-[18px] py-2.5 font-display text-[0.95rem] font-semibold focus:bg-brand-red-deep focus:text-white"
+              class="rounded-[9px] px-[15px] py-[11px] font-display text-[0.95rem] font-semibold focus:bg-tint focus:text-red"
             >
               <a
                 :href="item.href"
-                class="block cursor-pointer text-ink no-underline hover:text-white focus:text-white"
+                class="block cursor-pointer text-ink no-underline hover:text-red focus:text-red"
                 >{{ item.label }}</a
               >
             </DropdownMenuItem>
@@ -107,30 +111,31 @@ function isCurrent(href: string): boolean {
           v-for="item in navItems"
           :key="item.label"
           :href="item.href"
-          :class="[navLinkClass, isCurrent(item.href) ? 'underline underline-offset-4' : '']"
+          :class="[navLinkClass, isCurrent(item.href) ? 'underline decoration-[3px] underline-offset-[6px]' : '']"
           :aria-current="isCurrent(item.href) ? 'page' : undefined"
         >
           {{ item.label }}
         </a>
       </nav>
 
-      <div class="flex items-center gap-2.5">
+      <div class="flex flex-wrap items-center gap-2.5">
         <div
+          role="group"
           aria-label="Language"
-          class="hidden items-center border-2 border-cream text-[0.8rem] font-extrabold tracking-[0.05em] sm:flex"
+          class="hidden items-center gap-0.5 rounded-full bg-white p-[3px] text-[0.8rem] font-bold tracking-[0.04em] sm:flex"
         >
-          <span class="bg-cream px-2.5 py-[5px] text-brand-red-deep">EN</span>
+          <span class="rounded-full bg-red px-3 py-1 text-white">EN</span>
           <a
             v-if="esEnabled && esUrl"
             :href="esUrl"
             lang="es"
-            class="px-2.5 py-[5px] text-cream no-underline hover:bg-cream hover:text-brand-red-deep"
+            class="rounded-full px-3 py-1 text-red no-underline hover:bg-tint"
             >ES</a
           >
           <span
             v-else
             lang="es"
-            class="px-2.5 py-[5px] text-cream opacity-65"
+            class="rounded-full px-3 py-1 text-red/55"
             title="Español — próximamente"
             >ES</span
           >
@@ -142,7 +147,7 @@ function isCurrent(href: string): boolean {
           :href="joinUrl"
           target="_blank"
           rel="noopener"
-          class="hidden border-2 border-cream bg-cream px-5 py-2.5 text-[0.95rem] font-extrabold uppercase tracking-[0.04em] text-brand-red-deep no-underline hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white sm:block"
+          class="hidden rounded-full bg-white px-[22px] py-2.5 text-[0.95rem] font-bold text-red no-underline hover:text-red-hover hover:shadow-[0_0_0_3px_rgba(28,25,23,0.25)] sm:block"
         >
           Join DSA
         </a>
@@ -150,7 +155,7 @@ function isCurrent(href: string): boolean {
         <!-- Mobile menu -->
         <Sheet>
           <SheetTrigger
-            class="flex cursor-pointer items-center border-2 border-cream bg-transparent p-2 text-cream hover:bg-brand-red-deep lg:hidden"
+            class="flex cursor-pointer items-center rounded-[10px] bg-transparent p-2 text-white hover:bg-[rgba(28,25,23,0.18)] lg:hidden"
             aria-label="Open menu"
           >
             <Menu class="size-5" />
@@ -161,7 +166,7 @@ function isCurrent(href: string): boolean {
             </SheetHeader>
             <nav aria-label="Mobile" class="flex flex-col gap-1 px-4">
               <div
-                class="px-2 pb-1 pt-3 font-display text-xs font-extrabold uppercase tracking-[0.12em] text-muted-on-cream"
+                class="px-2 pb-1 pt-3 font-display text-xs font-bold uppercase tracking-[0.12em] text-text-muted"
               >
                 About
               </div>
@@ -169,16 +174,16 @@ function isCurrent(href: string): boolean {
                 v-for="item in aboutItems"
                 :key="item.label"
                 :href="item.href"
-                class="px-2 py-2 font-display text-base font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white"
+                class="rounded-[10px] px-2 py-2 font-display text-base font-semibold text-ink no-underline hover:bg-tint hover:text-red"
               >
                 {{ item.label }}
               </a>
-              <div class="my-2 border-t-2 border-ink" />
+              <div class="my-2 border-t border-hairline" />
               <a
                 v-for="item in navItems"
                 :key="item.label"
                 :href="item.href"
-                class="px-2 py-2 font-display text-base font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white"
+                class="rounded-[10px] px-2 py-2 font-display text-base font-semibold text-ink no-underline hover:bg-tint hover:text-red"
                 :aria-current="isCurrent(item.href) ? 'page' : undefined"
               >
                 {{ item.label }}
@@ -187,7 +192,7 @@ function isCurrent(href: string): boolean {
                 :href="joinUrl"
                 target="_blank"
                 rel="noopener"
-                class="mt-4 border-[3px] border-ink bg-brand-red-deep px-5 py-3 text-center text-[0.95rem] font-extrabold uppercase tracking-[0.04em] text-cream no-underline shadow-brutal hover:bg-ink"
+                class="mt-4 rounded-full bg-red px-5 py-3 text-center text-[0.95rem] font-bold text-white no-underline hover:bg-red-hover"
               >
                 Join DSA
               </a>

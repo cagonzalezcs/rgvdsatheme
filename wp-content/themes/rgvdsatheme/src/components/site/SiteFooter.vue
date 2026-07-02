@@ -74,21 +74,21 @@ withDefaults(
 
 <template>
   <footer
-    class="site-footer border-t-[3px] border-ink bg-cream pt-16"
+    class="site-footer border-t border-hairline bg-white pt-16"
     data-tone="cream"
   >
     <div
-      class="mx-auto grid max-w-[1100px] gap-10 px-6 pb-14 sm:[grid-template-columns:minmax(240px,1.2fr)_repeat(auto-fit,minmax(160px,1fr))]"
+      class="mx-auto grid max-w-[1140px] gap-10 px-6 pb-14 sm:[grid-template-columns:minmax(240px,1.2fr)_repeat(auto-fit,minmax(160px,1fr))]"
     >
       <div class="flex flex-col gap-4">
         <img
           :src="logoUrl"
           alt="Rio Grande Valley Democratic Socialists of America"
-          class="block h-auto w-[220px]"
+          class="block h-auto w-[200px]"
           width="931"
           height="358"
         />
-        <p class="m-0 max-w-[32ch] text-[0.95rem] leading-relaxed text-muted-on-cream">
+        <p class="m-0 max-w-[32ch] text-[0.95rem] leading-relaxed text-text-muted">
           {{ tagline }}
         </p>
       </div>
@@ -100,7 +100,7 @@ withDefaults(
         class="flex flex-col gap-2.5"
       >
         <div
-          class="font-display text-[0.95rem] font-extrabold uppercase tracking-[0.05em]"
+          class="font-display text-[0.9rem] font-bold uppercase tracking-[0.06em] text-text-muted"
         >
           {{ col.title }}
         </div>
@@ -110,7 +110,7 @@ withDefaults(
           :href="link.href"
           :target="link.external ? '_blank' : undefined"
           :rel="link.external ? 'noopener' : undefined"
-          class="text-[0.95rem] text-ink no-underline hover:text-brand-red-deep"
+          class="text-[0.95rem] text-ink no-underline hover:text-red hover:underline hover:underline-offset-[3px]"
         >
           {{ link.label }}
         </a>
@@ -119,12 +119,12 @@ withDefaults(
 
     <div data-tone="ink" class="bg-ink px-6 py-[18px] text-muted-on-ink">
       <div
-        class="mx-auto flex max-w-[1100px] flex-wrap justify-between gap-4 text-[0.85rem]"
+        class="mx-auto flex max-w-[1140px] flex-wrap justify-between gap-4 text-[0.85rem]"
       >
         <span>{{ orgName }}</span>
         <span>
           Built to be accessible —
-          <a :href="a11yContactHref" class="font-bold text-cream hover:text-white">
+          <a :href="a11yContactHref" class="font-bold text-white hover:text-pink">
             tell us how we can do better
           </a>
         </span>

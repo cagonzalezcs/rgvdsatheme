@@ -139,24 +139,51 @@
   --color-stripe-a: #f1e8d8;
   --color-stripe-b: #e9dfcc;
 
-  /* event category colors (match WP taxonomy term colors) */
-  --color-cat-chapter: #e9252e;
-  --color-cat-poled: #3a5ba0;
-  --color-cat-mutual: #1f7a48;
-  --color-cat-labor: #a3641c;
-  --color-cat-electoral: #7c4396;
-  --color-cat-social: #0e7c86;
+  /* --- v2 warm/rounded palette (additive; v1 tokens above stay for un-migrated pages) --- */
+  --color-red: #b01b22; /* deep red — links, red fills, red text on white */
+  --color-red-hover: #8f151b;
+  --color-pink: #f0908f; /* red accent ON ink bands (eyebrows, hovers) */
+  --color-tint: #fdf0ee; /* light red wash — dropdown/nav hover */
+  --color-wash: #f7d7d3; /* stronger rose wash — outline-button hover fill */
+  --color-off-white: #f7f5f2; /* alt section background */
+  --color-ink-card: #292420; /* dark card sitting on an ink band */
+  --color-text-body: #44403c;
+  --color-text-muted: #57534e;
+  --color-text-strong: #292524;
+  --color-hairline: #ece6da; /* 1px hairline on white/cream */
+  --color-divider: #f0ede8; /* inner divider in white cards */
+  --color-border-control: #d6d0c4; /* inputs, inactive chips/tags */
+  --color-stripe-v2-a: #f5f1ea;
+  --color-stripe-v2-b: #ece6da;
+
+  /* event category colors — v2 corrected hexes (match 03-DESIGN-SPEC.md; term meta is runtime source) */
+  --color-cat-chapter: #b01b22;
+  --color-cat-poled: #33518f;
+  --color-cat-mutual: #1b6b40;
+  --color-cat-labor: #8f5715;
+  --color-cat-electoral: #6e3b87;
+  --color-cat-social: #0a6b74;
 
   /* type */
   --font-display: "Montserrat", sans-serif;
   --font-sans: "Open Sans", system-ui, sans-serif;
 
-  /* hard offset shadows — zero blur, always */
+  /* hard offset shadows — zero blur (v1; kept for un-migrated pages) */
   --shadow-brutal: 5px 5px 0 var(--color-ink);
   --shadow-brutal-sm: 3px 3px 0 var(--color-ink);
   --shadow-brutal-md: 6px 6px 0 var(--color-ink);
   --shadow-brutal-red: 8px 8px 0 var(--color-brand-red);
   --shadow-brutal-lg: 10px 10px 0 var(--color-ink);
+
+  /* v2 soft blurred shadows (03-DESIGN-SPEC.md) */
+  --shadow-card: 0 2px 10px rgba(28, 25, 23, 0.1);
+  --shadow-card-hover: 0 12px 30px rgba(28, 25, 23, 0.16);
+  --shadow-card-hover-lg: 0 14px 34px rgba(28, 25, 23, 0.16);
+  --shadow-subtle: 0 1px 4px rgba(28, 25, 23, 0.07);
+  --shadow-header: 0 2px 14px rgba(28, 25, 23, 0.22);
+  --shadow-popover: 0 14px 36px rgba(28, 25, 23, 0.24);
+  --shadow-featured: 0 8px 28px rgba(28, 25, 23, 0.14);
+  --shadow-photo: 0 10px 30px rgba(28, 25, 23, 0.12);
 }
 
 @layer base {
