@@ -14,38 +14,6 @@
  */
 
 /**
- * Canonical category palette — slugs are load-bearing (URLs + Vue types).
- */
-function rgvdsa_blog_canonical_palette() {
-	return array(
-		'chapter'   => array(
-			'label' => 'Chapter-Wide',
-			'color' => '#B01B22',
-		),
-		'poled'     => array(
-			'label' => 'Political Education',
-			'color' => '#33518F',
-		),
-		'mutual'    => array(
-			'label' => 'Mutual Aid',
-			'color' => '#1B6B40',
-		),
-		'labor'     => array(
-			'label' => 'Labor',
-			'color' => '#8F5715',
-		),
-		'electoral' => array(
-			'label' => 'Electoral',
-			'color' => '#6E3B87',
-		),
-		'social'    => array(
-			'label' => 'Social',
-			'color' => '#0A6B74',
-		),
-	);
-}
-
-/**
  * ACF value with a guard so templates survive ACF being disabled.
  */
 function rgvdsa_blog_field( $name, $post_id ) {
@@ -93,32 +61,11 @@ function rgvdsa_blog_committees() {
 
 /**
  * [{ id: slug, label, color }] for the six canonical category slugs.
- * Term name/ACF color win when the term exists; palette is the fallback.
+ * Term name/ACF color win when the term exists; the registry
+ * (categories.json via inc/categories.php) is the fallback.
  */
 function rgvdsa_post_categories() {
-	$categories = array();
-
-	foreach ( rgvdsa_blog_canonical_palette() as $slug => $fallback ) {
-		$label = $fallback['label'];
-		$color = $fallback['color'];
-
-		$term = get_term_by( 'slug', $slug, 'category' );
-		if ( $term instanceof WP_Term ) {
-			$label      = $term->name;
-			$term_color = function_exists( 'get_field' ) ? get_field( 'color', 'category_' . $term->term_id ) : '';
-			if ( is_string( $term_color ) && '' !== $term_color ) {
-				$color = $term_color;
-			}
-		}
-
-		$categories[] = array(
-			'id'    => $slug,
-			'label' => $label,
-			'color' => $color,
-		);
-	}
-
-	return $categories;
+	return rgvdsa_categories( 'category' );
 }
 
 /* -------------------------------------------------------------------------
@@ -656,7 +603,7 @@ function rgvdsa_blog_load_committee_choices( $field ) {
  * First canonical category slug on the post, fallback "chapter".
  */
 function rgvdsa_blog_post_cat( $post ) {
-	$canonical = array_keys( rgvdsa_blog_canonical_palette() );
+	$canonical = array_keys( rgvdsa_category_registry() );
 
 	$terms = get_the_category( $post->ID );
 	if ( is_array( $terms ) ) {
@@ -1062,7 +1009,7 @@ function rgvdsa_blog_archive_context( $context ) {
 
 	// Custom ?category= param (island filter state) → category_name.
 	$category = isset( $_GET['category'] ) ? sanitize_key( (string) wp_unslash( $_GET['category'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-	if ( array_key_exists( $category, rgvdsa_blog_canonical_palette() ) ) {
+	if ( array_key_exists( $category, rgvdsa_category_registry() ) ) {
 		$args['category_name'] = $category;
 	}
 

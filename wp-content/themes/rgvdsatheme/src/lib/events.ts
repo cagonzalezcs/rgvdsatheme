@@ -1,4 +1,5 @@
 import { reactive } from "vue";
+import categoriesJson from "../../categories.json";
 
 export interface ChapterEvent {
   id: string;
@@ -22,16 +23,11 @@ export interface EventCategory {
   color: string | null;
 }
 
-/* Default term colors match the --color-cat-* tokens in tailwind.css; WP term
- * meta overrides them at island mount via setCategories(). */
-const DEFAULT_CATEGORIES: EventCategory[] = [
-  { id: "chapter", label: "Chapter-Wide", color: "#E9252E" },
-  { id: "poled", label: "Political Education", color: "#3A5BA0" },
-  { id: "mutual", label: "Mutual Aid", color: "#1F7A48" },
-  { id: "labor", label: "Labor", color: "#A3641C" },
-  { id: "electoral", label: "Electoral", color: "#7C4396" },
-  { id: "social", label: "Social", color: "#0E7C86" },
-];
+/* Default categories come from the canonical registry (categories.json at
+ * the theme root — shared with PHP and drift-tested against the
+ * --color-cat-* tokens in tailwind.css); WP term meta overrides them at
+ * island mount via setCategories(). */
+const DEFAULT_CATEGORIES: EventCategory[] = categoriesJson;
 
 /* Reactive category store. Index 0 is always the "All events" pseudo-category
  * (owned by the store); the rest default to the fixture palette until an

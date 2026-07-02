@@ -2,3 +2,4 @@ wordpress/
 node_modules/
 dist/
 vendor/
+.phpunit.result.cache

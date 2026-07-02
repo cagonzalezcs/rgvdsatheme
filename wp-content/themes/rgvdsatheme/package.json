@@ -10,7 +10,8 @@
     "lint": "eslint",
     "lint:fix": "eslint --fix",
     "format": "prettier . --write",
-    "typecheck": "./node_modules/.bin/vue-tsc --noEmit"
+    "typecheck": "./node_modules/.bin/vue-tsc --noEmit",
+    "test": "vitest run"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -23,7 +24,8 @@
     "prettier": "3.8.3",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
-    "vite": "^7.3.3"
+    "vite": "^7.3.3",
+    "vitest": "^4.1.9"
   },
   "dependencies": {
     "@lucide/vue": "^1.23.0",

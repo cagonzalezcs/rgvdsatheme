@@ -26,14 +26,7 @@ if ( ! function_exists( 'update_field' ) ) {
  * 1. Terms — 6 canonical categories in event_category AND category.
  * ---------------------------------------------------------------------- */
 
-$rgvdsa_seed_palette = function_exists( 'rgvdsa_events_palette' ) ? rgvdsa_events_palette() : array(
-	'chapter'   => array( 'label' => 'Chapter-Wide', 'color' => '#B01B22' ),
-	'poled'     => array( 'label' => 'Political Education', 'color' => '#33518F' ),
-	'mutual'    => array( 'label' => 'Mutual Aid', 'color' => '#1B6B40' ),
-	'labor'     => array( 'label' => 'Labor', 'color' => '#8F5715' ),
-	'electoral' => array( 'label' => 'Electoral', 'color' => '#6E3B87' ),
-	'social'    => array( 'label' => 'Social', 'color' => '#0A6B74' ),
-);
+$rgvdsa_seed_palette = rgvdsa_category_registry();
 
 $rgvdsa_seed_color_field_keys = array(
 	'event_category' => 'field_rgvdsa_events_term_color',

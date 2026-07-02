@@ -13,41 +13,6 @@
  */
 
 /**
- * Canonical category palette. Slugs are load-bearing — they appear in URLs
- * and in the Vue ChapterEvent['cat'] union type.
- *
- * @return array<string, array{label: string, color: string}> Keyed by slug.
- */
-function rgvdsa_events_palette() {
-	return array(
-		'chapter'   => array(
-			'label' => 'Chapter-Wide',
-			'color' => '#B01B22',
-		),
-		'poled'     => array(
-			'label' => 'Political Education',
-			'color' => '#33518F',
-		),
-		'mutual'    => array(
-			'label' => 'Mutual Aid',
-			'color' => '#1B6B40',
-		),
-		'labor'     => array(
-			'label' => 'Labor',
-			'color' => '#8F5715',
-		),
-		'electoral' => array(
-			'label' => 'Electoral',
-			'color' => '#6E3B87',
-		),
-		'social'    => array(
-			'label' => 'Social',
-			'color' => '#0A6B74',
-		),
-	);
-}
-
-/**
  * Chapter timezone for event display, gcal links, and the ICS feed.
  *
  * @return DateTimeZone
@@ -255,10 +220,10 @@ function rgvdsa_event_to_chapter_event( $post ) {
 	$start = rgvdsa_events_parse_datetime( rgvdsa_events_get_field( $post_id, 'start_datetime' ) );
 	$end   = rgvdsa_events_parse_datetime( rgvdsa_events_get_field( $post_id, 'end_datetime' ) );
 
-	$palette = rgvdsa_events_palette();
-	$cat     = 'chapter';
-	$terms   = get_the_terms( $post_id, 'event_category' );
-	if ( $terms && ! is_wp_error( $terms ) && isset( $palette[ $terms[0]->slug ] ) ) {
+	$registry = rgvdsa_category_registry();
+	$cat      = 'chapter';
+	$terms    = get_the_terms( $post_id, 'event_category' );
+	if ( $terms && ! is_wp_error( $terms ) && isset( $registry[ $terms[0]->slug ] ) ) {
 		$cat = $terms[0]->slug;
 	}
 
@@ -309,39 +274,12 @@ function rgvdsa_event_to_chapter_event( $post ) {
 /**
  * The 6 event categories for the island `categories` prop.
  * Label from the term when it exists, color from the term's ACF "color"
- * field; both fall back to the canonical palette pre-seed.
+ * field; both fall back to the registry (categories.json) pre-seed.
  *
  * @return array [{ id: slug, label: string, color: hex }]
  */
 function rgvdsa_event_categories() {
-	$by_slug = array();
-	$terms   = get_terms(
-		array(
-			'taxonomy'   => 'event_category',
-			'hide_empty' => false,
-		)
-	);
-	if ( ! is_wp_error( $terms ) ) {
-		foreach ( $terms as $term ) {
-			$by_slug[ $term->slug ] = $term;
-		}
-	}
-
-	$categories = array();
-	foreach ( rgvdsa_events_palette() as $slug => $fallback ) {
-		$term  = isset( $by_slug[ $slug ] ) ? $by_slug[ $slug ] : null;
-		$color = '';
-		if ( $term && function_exists( 'get_field' ) ) {
-			$color = (string) get_field( 'color', 'event_category_' . $term->term_id );
-		}
-		$categories[] = array(
-			'id'    => $slug,
-			'label' => $term ? $term->name : $fallback['label'],
-			'color' => $color ? $color : $fallback['color'],
-		);
-	}
-
-	return $categories;
+	return rgvdsa_categories( 'event_category' );
 }
 
 /**
