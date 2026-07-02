@@ -1,0 +1,184 @@
+{% extends "base.twig" %}
+
+{% block content %}
+	{% set page_header_props = {
+		title: "About RGV DSA",
+		lede: "A member-run chapter of the Democratic Socialists of America, organizing for working people across the Rio Grande Valley.",
+		crumbs: [{ label: "Home", href: "/" }]
+	} %}
+	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
+
+	{# ---- Mission band ---- #}
+	<section class="bg-ink px-6 py-[72px] text-cream" data-tone="ink">
+		<div class="mx-auto flex max-w-[1100px] flex-col gap-5">
+			<div class="font-display text-[0.9rem] font-extrabold uppercase tracking-[0.1em] text-brand-red">What we believe</div>
+			<p class="m-0 max-w-[32ch] font-display text-[clamp(1.4rem,3vw,2.2rem)] font-extrabold leading-[1.35]">Democratic socialists believe that our economy should be built democratically, by and for working people &mdash; not by billionaires for profit.</p>
+		</div>
+	</section>
+
+	<section class="bg-cream px-6 pt-16 pb-24" data-tone="cream">
+		<div class="mx-auto grid max-w-[1100px] items-start gap-14 lg:[grid-template-columns:minmax(300px,1fr)_300px]">
+
+			<article class="flex min-w-0 flex-col gap-7">
+
+				{# ---- 1. About the Chapter ---- #}
+				<h2 id="chapter" class="m-0 scroll-mt-[calc(100px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">About the Chapter</h2>
+
+				<p class="m-0 text-[1.1rem] leading-[1.75]">The Rio Grande Valley Democratic Socialists of America (DSA RGV) is a local chapter of the nation's largest socialist organization. Based primarily in McAllen, Texas, our grassroots group focuses on progressive labor organizing, mutual aid, and socialist political education throughout South Texas.</p>
+
+				<p class="m-0 text-[1.05rem] leading-[1.75]">Everything we do is member-led, member-funded, and open to anyone who wants to build a Valley that works for working people. We regularly host community meetings &mdash; often in McAllen &mdash; to share updates, plan campaigns, and hold political education lectures. You can find our organizing platforms on the DSA Rio Grande Valley Action Network, and if you're a student, we operate a collegiate branch: the UTRGV Young Democratic Socialists of America.</p>
+
+				<figure class="m-0 flex h-[340px] items-center justify-center border-[3px] border-ink bg-[repeating-linear-gradient(45deg,var(--color-stripe-a)_0_14px,var(--color-stripe-b)_14px_28px)]">
+					<figcaption class="border border-ink bg-cream px-3.5 py-2 font-mono text-[0.85rem] text-muted-2">photo: chapter members at a meeting or action</figcaption>
+				</figure>
+
+				<div class="flex flex-wrap gap-3">
+					<a href="/calendar/" class="bg-ink px-[18px] py-2.5 text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:bg-brand-red-deep">Come to a meeting</a>
+					<a href="/get-involved/" class="border-2 border-ink px-4 py-2 text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white">Get involved</a>
+					<a href="/get-involved/" class="border-2 border-ink px-4 py-2 text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white">Students: UTRGV YDSA</a>
+				</div>
+
+				{# ---- 2. Mission & History ---- #}
+				<h2 id="mission" class="mx-0 mt-4 mb-0 scroll-mt-[calc(100px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">Mission &amp; History</h2>
+
+				<p class="m-0 text-[1.05rem] leading-[1.75]">We fight for a Rio Grande Valley where housing, healthcare, and a dignified living are guaranteed &mdash; and we believe the people who live and work here should be the ones deciding the Valley's future. Our work centers on three pillars: labor organizing, mutual aid, and political education.</p>
+
+				{# 20XX years are placeholders for the chapter to fill in — do not invent dates. #}
+				{% set timeline = [
+					{ year: "1982", text: "The Democratic Socialists of America is founded, growing into the largest socialist organization in the United States.", note: false },
+					{ year: "20XX", text: "Valley organizers form an organizing committee and begin meeting in McAllen.", note: true },
+					{ year: "20XX", text: "DSA RGV is chartered as an official local chapter, organizing across four counties in South Texas.", note: true }
+				] %}
+				<div class="flex flex-col border-2 border-ink bg-white">
+					{% for row in timeline %}
+						<div class="grid items-baseline gap-4 border-b-2 border-ink px-5 py-4 last:border-b-0 [grid-template-columns:110px_1fr]">
+							<span class="font-display text-[1.05rem] font-black text-brand-red">{{ row.year }}</span>
+							<span class="text-base leading-[1.6]">{{ row.text }} {% if row.note %}<em class="text-muted-2">(Year and details to be filled in by the chapter.)</em>{% endif %}</span>
+						</div>
+					{% endfor %}
+				</div>
+
+				{# ---- 3. Counties We Serve ---- #}
+				<h2 id="counties" class="mx-0 mt-4 mb-0 scroll-mt-[calc(100px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">Counties We Serve</h2>
+
+				<p class="m-0 text-[1.05rem] leading-[1.75]">One chapter, four counties. Wherever you are in the Valley, you're covered &mdash; and if you can help us organize deeper in your county, we want to hear from you.</p>
+
+				<div class="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+					<div class="flex flex-col gap-1.5 border-2 border-ink bg-white p-5">
+						<div class="font-display text-[1.05rem] font-extrabold uppercase tracking-[0.02em]">Hidalgo</div>
+						<div class="text-[0.9rem] leading-[1.6] text-muted-on-cream">McAllen <span class="text-brand-red">&starf;</span> &middot; Edinburg &middot; Mission &middot; Pharr</div>
+						<div class="mt-1 text-[0.8rem] font-extrabold uppercase tracking-[0.06em] text-brand-red">Home base &mdash; most meetings held here</div>
+					</div>
+					<div class="flex flex-col gap-1.5 border-2 border-ink bg-white p-5">
+						<div class="font-display text-[1.05rem] font-extrabold uppercase tracking-[0.02em]">Cameron</div>
+						<div class="text-[0.9rem] leading-[1.6] text-muted-on-cream">Brownsville &middot; Harlingen &middot; San Benito</div>
+					</div>
+					<div class="flex flex-col gap-1.5 border-2 border-ink bg-white p-5">
+						<div class="font-display text-[1.05rem] font-extrabold uppercase tracking-[0.02em]">Willacy</div>
+						<div class="text-[0.9rem] leading-[1.6] text-muted-on-cream">Raymondville &middot; Lyford</div>
+					</div>
+					<div class="flex flex-col gap-1.5 border-2 border-ink bg-white p-5">
+						<div class="font-display text-[1.05rem] font-extrabold uppercase tracking-[0.02em]">Starr</div>
+						<div class="text-[0.9rem] leading-[1.6] text-muted-on-cream">Rio Grande City &middot; Roma</div>
+					</div>
+				</div>
+
+				{# ---- 4. Committees ---- #}
+				<h2 id="committees" class="mx-0 mt-4 mb-0 scroll-mt-[calc(100px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">Committees</h2>
+
+				<p class="m-0 text-[1.05rem] leading-[1.75]">Committees are where the work happens. Each one meets regularly and welcomes new members.</p>
+
+				<div class="flex flex-col border-2 border-ink bg-white">
+					{% for committee in chapter.committees %}
+						<div class="grid items-baseline gap-2 border-b-2 border-ink px-5 py-3.5 last:border-b-0 sm:gap-4 sm:[grid-template-columns:200px_1fr]">
+							<span class="font-display text-[0.95rem] font-extrabold uppercase tracking-[0.02em] text-brand-red">{{ committee.name }}</span>
+							<span class="text-[0.95rem] leading-[1.6]">{{ committee.desc }}</span>
+						</div>
+					{% endfor %}
+				</div>
+
+				<a href="/get-involved/#committees" class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:border-brand-red-deep hover:text-brand-red-deep">Join a committee &rarr;</a>
+
+				{# ---- 5. Bylaws & Code of Conduct ---- #}
+				<h2 id="bylaws" class="mx-0 mt-4 mb-0 scroll-mt-[calc(100px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">Bylaws &amp; Code of Conduct</h2>
+
+				<p class="m-0 text-[1.05rem] leading-[1.75]">The chapter is governed by its members through documents we debate and vote on together. Everything is public.</p>
+
+				{% set governance_docs = [
+					{ title: "Chapter Bylaws", covers: "How the chapter runs: officers, elections, quorum, committees, and how decisions get made.", action: "Read", url: "/bylaws-code-of-conduct/#documents" },
+					{ title: "Code of Conduct", covers: "What we expect of each other in every chapter space — meetings, actions, and online.", action: "Read", url: "/bylaws-code-of-conduct/#documents" },
+					{ title: "Grievance Policy", covers: "How to report harm and how the chapter handles conflict, confidentially and fairly.", action: "Read", url: "/bylaws-code-of-conduct/#grievance" },
+					{ title: "Meeting Minutes", covers: "Records and resolutions from general meetings, available to all members.", action: "Browse", url: "/bylaws-code-of-conduct/#documents" }
+				] %}
+				<div class="overflow-x-auto">
+				<table class="w-full border-collapse border-2 border-ink bg-white text-[0.95rem]">
+					<thead>
+						<tr class="bg-ink text-left text-cream">
+							<th scope="col" class="px-5 py-3 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.05em]">Document</th>
+							<th scope="col" class="px-5 py-3 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.05em]">What it covers</th>
+							<th scope="col" class="w-[90px] px-5 py-3"><span class="sr-only">Action</span></th>
+						</tr>
+					</thead>
+					<tbody>
+						{% for doc in governance_docs %}
+							<tr class="border-b-2 border-ink last:border-b-0">
+								<th scope="row" class="px-5 py-3.5 text-left align-top font-extrabold sm:whitespace-nowrap">{{ doc.title }}</th>
+								<td class="px-5 py-3.5 align-top leading-[1.6]">{{ doc.covers }}</td>
+								<td class="px-5 py-3.5 align-top"><a href="{{ doc.url }}" class="text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:text-brand-red-deep hover:underline">{{ doc.action }}</a></td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+				</div>
+
+				{# ---- 6. FAQ (tabular rows, intentionally not the Get Involved accordion) ---- #}
+				<h2 id="faq" class="mx-0 mt-4 mb-0 scroll-mt-[calc(100px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">FAQ</h2>
+
+				{% set faq_rows = [
+					{ question: "Do I have to be a member to come to events?", answer: "Nope — most of our events are open to everyone. Come to a 101 or a social, meet folks, and see if it's for you." },
+					{ question: "How much are dues?", answer: "Dues are sliding-scale through national DSA — most folks pay a few dollars a month. No one is turned away for inability to pay." },
+					{ question: "How do I switch to a monthly or Solidarity Dues rate?", answer: "Enter the email associated with your membership in the national dues form with your new dues amount, and your current dues will be canceled and updated." },
+					{ question: "I've never done anything political before. Is that okay?", answer: "More than okay — it's the norm. Most members joined without any organizing experience. RGV-DSA 101 exists exactly for this." },
+					{ question: "Can I participate without being publicly visible?", answer: "Yes. There are plenty of ways to contribute behind the scenes, and we take members' privacy and safety seriously." },
+					{ question: "How much time does membership take?", answer: "As much or as little as you have. Some members show up to one event a month; others help lead committees." }
+				] %}
+				<div class="flex flex-col border-2 border-ink bg-white">
+					{% for row in faq_rows %}
+						<div class="grid gap-2 border-b-2 border-ink px-5 py-4 last:border-b-0 sm:gap-5 sm:[grid-template-columns:minmax(200px,2fr)_3fr]">
+							<span class="text-[0.98rem] font-extrabold leading-[1.5]">{{ row.question }}</span>
+							<span class="text-[0.95rem] leading-[1.65]">{{ row.answer }}</span>
+						</div>
+					{% endfor %}
+				</div>
+
+				{# ---- Dues callout ---- #}
+				<aside id="dues" class="mt-3 flex flex-col gap-2.5 border-[3px] border-ink bg-white px-7 py-[26px] shadow-brutal-red">
+					<div class="font-display text-base font-extrabold uppercase tracking-[0.04em] text-brand-red">Switching your dues rate?</div>
+					<p class="m-0 text-base leading-[1.7]">Already a member but switching to a monthly or Solidarity Dues rate? Enter the email associated with your membership in this form with your new dues amount, and your current dues will be canceled and updated.</p>
+					<a href="{{ chapter.join_url }}" target="_blank" rel="noopener" class="mt-1.5 self-start bg-ink px-[18px] py-2.5 text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:bg-brand-red-deep">Update my dues</a>
+				</aside>
+
+			</article>
+
+			{# ---- Sidebar ---- #}
+			<aside aria-label="Page navigation" class="flex flex-col gap-7 lg:sticky lg:top-[calc(100px+var(--wp-admin--admin-bar--height,0px))]">
+				<nav aria-label="On this page" class="flex flex-col gap-0.5 border-l-[3px] border-ink">
+					<div class="mb-1.5 px-[18px] py-1.5 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.08em]">On this page</div>
+					<a href="#chapter" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">About the Chapter</a>
+					<a href="#mission" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Mission &amp; History</a>
+					<a href="#counties" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Counties We Serve</a>
+					<a href="#committees" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Committees</a>
+					<a href="#bylaws" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Bylaws &amp; Code of Conduct</a>
+					<a href="#faq" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">FAQ</a>
+				</nav>
+
+				<div class="flex flex-col gap-3 bg-ink p-[22px] text-cream" data-tone="ink">
+					<div class="font-display text-[0.95rem] font-extrabold uppercase tracking-[0.04em]">New here?</div>
+					<p class="m-0 text-[0.9rem] leading-[1.6] text-muted-on-ink">Come to an RGV-DSA 101 &mdash; our intro session for new and curious folks.</p>
+					<a href="/calendar/" class="self-start bg-cream px-4 py-[9px] text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white">Find a session</a>
+				</div>
+			</aside>
+
+		</div>
+	</section>
+{% endblock %}

@@ -34,11 +34,12 @@ const props = withDefaults(
     logoUrl: "",
     homeUrl: "/",
     aboutItems: () => [
-      { label: "Mission & History", href: "/about/" },
-      { label: "Counties We Serve", href: "/#counties" },
-      { label: "Committees", href: "/get-involved/#committees" },
-      { label: "Bylaws & Code of Conduct", href: "/bylaws-code-of-conduct/" },
-      { label: "FAQ", href: "/get-involved/#faq" },
+      { label: "About the Chapter", href: "/about/#chapter" },
+      { label: "Mission & History", href: "/about/#mission" },
+      { label: "Counties We Serve", href: "/about/#counties" },
+      { label: "Committees", href: "/about/#committees" },
+      { label: "Bylaws & Code of Conduct", href: "/about/#bylaws" },
+      { label: "FAQ", href: "/about/#faq" },
     ],
     navItems: () => [
       { label: "Calendar", href: "/calendar/" },

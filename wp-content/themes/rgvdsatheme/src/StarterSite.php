@@ -45,6 +45,33 @@ class StarterSite extends Site {
 		$context['chapter'] = array(
 			'join_url'       => 'https://act.dsausa.org/donate/membership',
 			'newsletter_url' => 'https://actionnetwork.org/forms/dsa-rgv-newsletter-sign-up',
+			// Shared fixture — rendered on both Get Involved and About (03-DESIGN-SPEC.md § About).
+			'committees'     => array(
+				array(
+					'name' => 'Political Education',
+					'desc' => 'Reading groups, night school, and workshops that build our shared analysis.',
+				),
+				array(
+					'name' => 'Mutual Aid',
+					'desc' => "Meeting our neighbors' immediate needs while organizing for lasting change.",
+				),
+				array(
+					'name' => 'Labor',
+					'desc' => 'Supporting workers organizing on the job across the Valley.',
+				),
+				array(
+					'name' => 'Communications',
+					'desc' => "Social media, design, and this website — telling the chapter's story.",
+				),
+				array(
+					'name' => 'Electoral',
+					'desc' => 'Backing candidates and ballot measures that fight for working people.',
+				),
+				array(
+					'name' => 'Membership & Onboarding',
+					'desc' => 'Welcoming new members and making sure no one falls through the cracks.',
+				),
+			),
 			'socials'        => array(
 				array(
 					'name' => 'Facebook',

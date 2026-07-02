@@ -25,10 +25,11 @@ withDefaults(
       {
         title: "About",
         links: [
-          { label: "Mission & History", href: "/about/" },
-          { label: "Counties We Serve", href: "/#counties" },
-          { label: "Bylaws & Code of Conduct", href: "/bylaws-code-of-conduct/" },
-          { label: "FAQ", href: "/get-involved/#faq" },
+          { label: "About the Chapter", href: "/about/#chapter" },
+          { label: "Mission & History", href: "/about/#mission" },
+          { label: "Counties We Serve", href: "/about/#counties" },
+          { label: "Bylaws & Code of Conduct", href: "/about/#bylaws" },
+          { label: "FAQ", href: "/about/#faq" },
         ],
       },
       {
@@ -77,7 +78,7 @@ withDefaults(
     data-tone="cream"
   >
     <div
-      class="mx-auto grid max-w-[1100px] gap-10 px-6 pb-14 [grid-template-columns:minmax(240px,1.2fr)_repeat(auto-fit,minmax(160px,1fr))]"
+      class="mx-auto grid max-w-[1100px] gap-10 px-6 pb-14 sm:[grid-template-columns:minmax(240px,1.2fr)_repeat(auto-fit,minmax(160px,1fr))]"
     >
       <div class="flex flex-col gap-4">
         <img

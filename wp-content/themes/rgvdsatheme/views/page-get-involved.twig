@@ -48,15 +48,7 @@
 				<p class="m-0 text-[1.05rem] leading-[1.75]">Committees are where the work happens. Each one meets regularly and welcomes new members &mdash; reach out through the WhatsApp or at any general meeting.</p>
 
 				<div class="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]">
-					{% set committees = [
-						{ name: "Political Education", desc: "Reading groups, night school, and workshops that build our shared analysis." },
-						{ name: "Mutual Aid", desc: "Meeting our neighbors' immediate needs while organizing for lasting change." },
-						{ name: "Labor", desc: "Supporting workers organizing on the job across the Valley." },
-						{ name: "Communications", desc: "Social media, design, and this website — telling the chapter's story." },
-						{ name: "Electoral", desc: "Backing candidates and ballot measures that fight for working people." },
-						{ name: "Membership & Onboarding", desc: "Welcoming new members and making sure no one falls through the cracks." }
-					] %}
-					{% for committee in committees %}
+					{% for committee in chapter.committees %}
 						<div class="flex flex-col gap-2 border-2 border-ink bg-white p-5">
 							<div class="font-display text-base font-extrabold uppercase tracking-[0.02em] text-brand-red">{{ committee.name }}</div>
 							<p class="m-0 text-[0.95rem] leading-[1.65]">{{ committee.desc }}</p>
@@ -140,7 +132,7 @@
 					<div class="mb-1.5 px-[18px] py-1.5 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.08em]">Related</div>
 					<a href="/calendar/" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Event Calendar</a>
 					<a href="/bylaws-code-of-conduct/" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Bylaws &amp; Code of Conduct</a>
-					<a href="/about/" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Mission &amp; History</a>
+					<a href="/about/#mission" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Mission &amp; History</a>
 				</nav>
 			</aside>
 
