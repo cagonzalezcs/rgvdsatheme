@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @font-face{font-family:'Open Sans';src:url('assets/fonts/OpenSans-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+    @font-face{font-family:'Open Sans';src:url('assets/fonts/OpenSans-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;font-display:swap}
+    @font-face{font-family:'Open Sans';src:url('assets/fonts/OpenSans-Bold.ttf') format('truetype');font-weight:700 800;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-ExtraBold.ttf') format('truetype');font-weight:800;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-Black.ttf') format('truetype');font-weight:900;font-style:normal;font-display:swap}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:'Open Sans',system-ui,sans-serif;background:#FAF4EA;color:#1C1917;-webkit-font-smoothing:antialiased}
+    ::selection{background:#E9252E;color:#FAF4EA}
+  </style>
+</helmet>
+
+<!-- Skip link -->
+<a href="#main" style="position:absolute; left:-9999px; top:12px; z-index:200; background:#1C1917; color:#FAF4EA; padding:10px 18px; font-weight:700; text-decoration:none; font-size:0.95rem" style-focus="left:16px">Skip to main content</a>
+
+<!-- ============ HEADER (shared with Home) ============ -->
+<header data-screen-label="Header" data-tone="red" style="position:sticky; top:0; z-index:100; background:#E9252E; border-bottom:3px solid #1C1917">
+  <div style="max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; gap:24px; min-height:76px; flex-wrap:wrap">
+    <a href="RGV DSA Home.dc.html" aria-label="RGV DSA home" style="display:flex; align-items:center; flex:none">
+      <img src="assets/logo-red.png" alt="Rio Grande Valley Democratic Socialists of America" style="height:62px; width:auto; display:block">
+    </a>
+    <nav aria-label="Main" style="display:flex; align-items:center; gap:4px; flex-wrap:wrap">
+      <div style="position:relative">
+        <button onClick="{{ toggleAbout }}" aria-expanded="{{ aboutOpen }}" style="font-family:Montserrat,sans-serif; font-size:0.95rem; font-weight:600; color:#FAF4EA; background:transparent; border:none; padding:10px 14px; cursor:pointer; letter-spacing:0.02em" style-hover="text-decoration:underline; text-underline-offset:4px">About&nbsp;▾</button>
+        <sc-if value="{{ aboutOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute; top:100%; left:0; background:#FAF4EA; border:3px solid #1C1917; box-shadow:6px 6px 0 #1C1917; min-width:240px; display:flex; flex-direction:column; padding:6px 0; z-index:110">
+            <a href="RGV DSA Home.dc.html#about" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Mission &amp; History</a>
+            <a href="RGV DSA Home.dc.html#counties" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Counties We Serve</a>
+            <a href="RGV DSA Home.dc.html#get-involved" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Committees</a>
+            <a href="#main" onClick="{{ closeAbout }}" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Bylaws &amp; Code of Conduct</a>
+            <a href="RGV DSA Home.dc.html#footer" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">FAQ</a>
+          </div>
+        </sc-if>
+      </div>
+      <a href="Calendar.dc.html" style="font-family:Montserrat,sans-serif; font-size:0.95rem; font-weight:600; color:#FAF4EA; text-decoration:none; padding:10px 14px; letter-spacing:0.02em" style-hover="text-decoration:underline; text-underline-offset:4px">Calendar</a>
+      <a href="Blog.dc.html" style="font-family:Montserrat,sans-serif; font-size:0.95rem; font-weight:600; color:#FAF4EA; text-decoration:none; padding:10px 14px; letter-spacing:0.02em" style-hover="text-decoration:underline; text-underline-offset:4px">Blog</a>
+      <a href="RGV DSA Home.dc.html#get-involved" style="font-family:Montserrat,sans-serif; font-size:0.95rem; font-weight:600; color:#FAF4EA; text-decoration:none; padding:10px 14px; letter-spacing:0.02em" style-hover="text-decoration:underline; text-underline-offset:4px">Get Involved</a>
+    </nav>
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+      <div aria-label="Language" style="display:flex; align-items:center; border:2px solid #FAF4EA; font-size:0.8rem; font-weight:800; letter-spacing:0.05em">
+        <span style="padding:5px 10px; background:#FAF4EA; color:#E9252E">EN</span>
+        <span title="Español — próximamente" style="padding:5px 10px; color:#FAF4EA; opacity:0.65">ES</span>
+      </div>
+      <div style="position:relative">
+        <button onClick="{{ toggleA11y }}" aria-expanded="{{ a11yOpen }}" aria-label="Accessibility options" title="Accessibility options" style="font-family:inherit; font-size:1rem; font-weight:800; color:#E9252E; background:#FAF4EA; border:2px solid #FAF4EA; padding:5px 12px; cursor:pointer" style-hover="background:#9E0B13 !important; color:#FFFFFF !important; border-color:#9E0B13 !important">Aa</button>
+        <sc-if value="{{ a11yOpen }}" hint-placeholder-val="{{ false }}">
+          <div role="dialog" aria-label="Accessibility settings" style="position:absolute; top:calc(100% + 10px); right:0; background:#FAF4EA; color:#1C1917; border:3px solid #1C1917; box-shadow:6px 6px 0 #1C1917; width:280px; padding:18px; z-index:110; display:flex; flex-direction:column; gap:16px">
+            <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.04em; text-transform:uppercase">Accessibility</div>
+            <div style="display:flex; flex-direction:column; gap:8px">
+              <div style="font-size:0.85rem; font-weight:700">Text size</div>
+              <div style="display:flex; gap:6px">
+                <button onClick="{{ setTsDefault }}" style="{{ tsDefaultStyle }}">A</button>
+                <button onClick="{{ setTsLarge }}" style="{{ tsLargeStyle }}">A+</button>
+                <button onClick="{{ setTsXl }}" style="{{ tsXlStyle }}">A++</button>
+              </div>
+            </div>
+            <button onClick="{{ toggleHC }}" aria-pressed="{{ highContrast }}" style="{{ hcRowStyle }}"><span>High contrast</span><span style="{{ hcPillStyle }}">{{ hcLabel }}</span></button>
+            <button onClick="{{ toggleRM }}" aria-pressed="{{ reduceMotion }}" style="{{ rmRowStyle }}"><span>Reduce motion</span><span style="{{ rmPillStyle }}">{{ rmLabel }}</span></button>
+          </div>
+        </sc-if>
+      </div>
+      <a href="https://www.dsausa.org/join" target="_blank" rel="noopener" style="font-size:0.95rem; font-weight:800; color:#E9252E; background:#FAF4EA; text-decoration:none; padding:10px 20px; border:2px solid #FAF4EA; letter-spacing:0.04em; text-transform:uppercase" style-hover="background:#9E0B13 !important; color:#FFFFFF !important; border-color:#9E0B13 !important">Join DSA</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ PAGE HEADER ============ -->
+<section data-screen-label="Page header" data-tone="red" style="background:#E9252E; color:#FAF4EA; padding:48px 24px 56px">
+  <div style="max-width:1100px; margin:0 auto; display:flex; flex-direction:column; gap:18px">
+    <nav aria-label="Breadcrumb" style="display:flex; align-items:center; gap:10px; font-size:0.85rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; flex-wrap:wrap">
+      <a href="RGV DSA Home.dc.html" style="color:#FAF4EA; text-decoration:none; opacity:0.85" style-hover="opacity:1; text-decoration:underline; text-underline-offset:4px">Home</a>
+      <span aria-hidden="true" style="opacity:0.6">/</span>
+      <a href="#main" style="color:#FAF4EA; text-decoration:none; opacity:0.85" style-hover="opacity:1; text-decoration:underline; text-underline-offset:4px">{{ breadcrumbSection }}</a>
+      <span aria-hidden="true" style="opacity:0.6">/</span>
+      <span aria-current="page">{{ pageTitle }}</span>
+    </nav>
+    <h1 style="font-family:Montserrat,sans-serif; font-weight:900; font-size:clamp(2rem, 4.8vw, 3.4rem); line-height:1.1; text-transform:uppercase; margin:0; max-width:22ch">{{ pageTitle }}</h1>
+    <p style="font-size:1.15rem; line-height:1.6; max-width:60ch; margin:0">{{ lede }}</p>
+  </div>
+</section>
+
+<!-- ============ CONTENT + SIDEBAR ============ -->
+<section data-screen-label="Page content" data-tone="cream" style="background:#FAF4EA; padding:64px 24px 96px">
+  <div style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:minmax(300px, 1fr) 300px; gap:56px; align-items:start">
+
+    <!-- Main content column -->
+    <article style="display:flex; flex-direction:column; gap:28px; min-width:0">
+
+      <p style="font-size:1.1rem; line-height:1.75; margin:0">Our chapter is governed by its members. These documents spell out how we make decisions together, how we treat each other, and what to do when something goes wrong. Every member is encouraged to read them — and every member has the power to propose changes.</p>
+
+      <h2 id="documents" style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.5rem; text-transform:uppercase; letter-spacing:0.02em; margin:16px 0 0; padding-bottom:10px; border-bottom:3px solid #1C1917">Governing documents</h2>
+
+      <div style="display:flex; flex-direction:column; gap:14px">
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:20px; border:2px solid #1C1917; background:#FFFFFF; padding:18px 22px; flex-wrap:wrap">
+          <div style="display:flex; flex-direction:column; gap:3px">
+            <span style="font-weight:800; font-size:1.05rem">Chapter Bylaws</span>
+            <span style="font-size:0.85rem; color:#5C544A">PDF · Last amended March 2026</span>
+          </div>
+          <a href="#documents" style="font-weight:800; color:#1C1917; text-decoration:none; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; border:2px solid #1C1917; padding:9px 16px; white-space:nowrap" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Download</a>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:20px; border:2px solid #1C1917; background:#FFFFFF; padding:18px 22px; flex-wrap:wrap">
+          <div style="display:flex; flex-direction:column; gap:3px">
+            <span style="font-weight:800; font-size:1.05rem">Code of Conduct</span>
+            <span style="font-size:0.85rem; color:#5C544A">PDF · Adopted January 2026</span>
+          </div>
+          <a href="#documents" style="font-weight:800; color:#1C1917; text-decoration:none; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; border:2px solid #1C1917; padding:9px 16px; white-space:nowrap" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Download</a>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; gap:20px; border:2px solid #1C1917; background:#FFFFFF; padding:18px 22px; flex-wrap:wrap">
+          <div style="display:flex; flex-direction:column; gap:3px">
+            <span style="font-weight:800; font-size:1.05rem">Grievance Policy</span>
+            <span style="font-size:0.85rem; color:#5C544A">PDF · Adopted January 2026</span>
+          </div>
+          <a href="#documents" style="font-weight:800; color:#1C1917; text-decoration:none; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; border:2px solid #1C1917; padding:9px 16px; white-space:nowrap" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Download</a>
+        </div>
+      </div>
+
+      <h2 id="conduct" style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.5rem; text-transform:uppercase; letter-spacing:0.02em; margin:16px 0 0; padding-bottom:10px; border-bottom:3px solid #1C1917">What we expect of each other</h2>
+
+      <p style="font-size:1.05rem; line-height:1.75; margin:0">Organizing only works when everyone can participate safely and fully. Our code of conduct applies to all chapter spaces — meetings, actions, socials, and online channels. In short:</p>
+
+      <ul style="margin:0; padding-left:24px; display:flex; flex-direction:column; gap:10px; font-size:1.05rem; line-height:1.6">
+        <li>Treat fellow members with respect, across every difference.</li>
+        <li>Honor pronouns, access needs, and language needs.</li>
+        <li>No harassment, intimidation, or discrimination — full stop.</li>
+        <li>Disagree openly and in good faith; debate ideas, not people.</li>
+      </ul>
+
+      <h3 style="font-family:Montserrat,sans-serif; font-weight:700; font-size:1.15rem; margin:8px 0 0">Amending these documents</h3>
+      <p style="font-size:1.05rem; line-height:1.75; margin:0">Any member in good standing may propose an amendment. Proposals are read at a general meeting and voted on at the following one. Reach out to the steering committee if you'd like help drafting a proposal.</p>
+
+      <!-- Callout -->
+      <aside id="grievance" style="border:3px solid #1C1917; background:#FFFFFF; box-shadow:8px 8px 0 #E9252E; padding:26px 28px; display:flex; flex-direction:column; gap:10px; margin-top:12px">
+        <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1rem; text-transform:uppercase; letter-spacing:0.04em; color:#E9252E">Need to report something?</div>
+        <p style="font-size:1rem; line-height:1.7; margin:0">Our grievance officers are here for you. Reports are handled confidentially, and you can always bring a support person. Email <a href="mailto:hello@example.org" style="color:#E9252E; font-weight:700" style-hover="color:#9E0B13 !important">hello@example.org</a> or speak to any grievance officer at a meeting.</p>
+      </aside>
+
+    </article>
+
+    <!-- Sidebar -->
+    <sc-if value="{{ showSidebar }}" hint-placeholder-val="{{ true }}">
+    <aside aria-label="Page navigation" style="position:sticky; top:100px; display:flex; flex-direction:column; gap:28px">
+      <nav aria-label="On this page" style="display:flex; flex-direction:column; gap:2px; border-left:3px solid #1C1917; padding-left:0">
+        <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.85rem; letter-spacing:0.08em; text-transform:uppercase; padding:6px 18px; margin-bottom:6px">On this page</div>
+        <a href="#documents" style="color:#1C1917; text-decoration:none; font-size:0.95rem; font-weight:600; padding:8px 18px" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Governing documents</a>
+        <a href="#conduct" style="color:#1C1917; text-decoration:none; font-size:0.95rem; font-weight:600; padding:8px 18px" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">What we expect</a>
+        <a href="#grievance" style="color:#1C1917; text-decoration:none; font-size:0.95rem; font-weight:600; padding:8px 18px" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Reporting a grievance</a>
+      </nav>
+      <nav aria-label="Related pages" style="display:flex; flex-direction:column; gap:2px; border-left:3px solid #E9252E">
+        <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.85rem; letter-spacing:0.08em; text-transform:uppercase; padding:6px 18px; margin-bottom:6px">Related</div>
+        <a href="RGV DSA Home.dc.html#about" style="color:#1C1917; text-decoration:none; font-size:0.95rem; font-weight:600; padding:8px 18px" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Mission &amp; History</a>
+        <a href="RGV DSA Home.dc.html#get-involved" style="color:#1C1917; text-decoration:none; font-size:0.95rem; font-weight:600; padding:8px 18px" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Committees</a>
+        <a href="RGV DSA Home.dc.html#footer" style="color:#1C1917; text-decoration:none; font-size:0.95rem; font-weight:600; padding:8px 18px" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">FAQ</a>
+      </nav>
+      <div data-tone="ink" style="background:#1C1917; color:#FAF4EA; padding:22px; display:flex; flex-direction:column; gap:12px">
+        <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; text-transform:uppercase; letter-spacing:0.04em">New here?</div>
+        <p style="font-size:0.9rem; line-height:1.6; margin:0; color:#CFC8BD">Come to an RGV-DSA 101 — our intro session for new and curious folks.</p>
+        <a href="Calendar.dc.html" style="font-weight:800; color:#1C1917; background:#FAF4EA; text-decoration:none; padding:9px 16px; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.05em; align-self:flex-start" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Find a session</a>
+      </div>
+    </aside>
+    </sc-if>
+
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER (shared with Home) ============ -->
+<footer id="footer" data-screen-label="Footer" data-tone="cream" style="background:#FAF4EA; border-top:3px solid #1C1917; padding:64px 24px 0">
+  <div style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:minmax(240px, 1.2fr) repeat(auto-fit, minmax(160px, 1fr)); gap:40px; padding-bottom:56px">
+    <div style="display:flex; flex-direction:column; gap:16px">
+      <img src="assets/logo-green.png" alt="Rio Grande Valley Democratic Socialists of America" style="width:220px; height:auto; display:block">
+      <p style="font-size:0.95rem; line-height:1.6; margin:0; color:#5C544A; max-width:32ch">Organizing across Hidalgo, Cameron, Willacy, and Starr counties.</p>
+    </div>
+    <nav aria-label="About" style="display:flex; flex-direction:column; gap:10px">
+      <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase">About</div>
+      <a href="RGV DSA Home.dc.html#about" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Mission &amp; History</a>
+      <a href="RGV DSA Home.dc.html#counties" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Counties We Serve</a>
+      <a href="#main" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Bylaws &amp; Code of Conduct</a>
+      <a href="RGV DSA Home.dc.html#footer" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">FAQ</a>
+    </nav>
+    <nav aria-label="Get involved" style="display:flex; flex-direction:column; gap:10px">
+      <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase">Get involved</div>
+      <a href="https://www.dsausa.org/join" target="_blank" rel="noopener" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Join DSA</a>
+      <a href="Calendar.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Event Calendar</a>
+      <a href="RGV DSA Home.dc.html#get-involved" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Committees</a>
+      <a href="RGV DSA Home.dc.html#get-involved" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Communication Channels</a>
+    </nav>
+    <nav aria-label="Resources" style="display:flex; flex-direction:column; gap:10px">
+      <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase">Resources</div>
+      <a href="Blog.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Blog</a>
+      <a href="#documents" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Documents &amp; Minutes</a>
+      <a href="#documents" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Resolutions</a>
+      <a href="#main" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Education Library</a>
+      <a href="#grievance" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Grievance Contact</a>
+    </nav>
+    <nav aria-label="Contact" style="display:flex; flex-direction:column; gap:10px">
+      <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase">Contact</div>
+      <a href="mailto:hello@example.org" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Email</a>
+      <a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Instagram</a>
+    </nav>
+  </div>
+  <div data-tone="ink" style="background:#1C1917; color:#CFC8BD; padding:18px 24px">
+    <div style="max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font-size:0.85rem">
+      <span>Rio Grande Valley Democratic Socialists of America</span>
+      <span>Built to be accessible — <a href="#footer" style="color:#FAF4EA; font-weight:700" style-hover="color:#E9252E !important">tell us how we can do better</a></span>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;pageTitle&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;Bylaws &amp; Code of Conduct&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Page&quot; },
+  &quot;breadcrumbSection&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;About&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Page&quot; },
+  &quot;lede&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;How our chapter governs itself — and how we take care of each other while we do the work.&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Page&quot; },
+  &quot;showSidebar&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Layout&quot; }
+}">
+class Component extends DCLogic {
+  state = {
+    aboutOpen: false,
+    a11yOpen: false,
+    textSize: 'default',
+    highContrast: false,
+    reduceMotion: false
+  };
+
+  componentDidMount() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('rgv-dsa-a11y') || '{}');
+      this.setState({
+        textSize: saved.textSize || 'default',
+        highContrast: !!saved.highContrast,
+        reduceMotion: !!saved.reduceMotion
+      }, () => this.applyA11y());
+    } catch (e) { this.applyA11y(); }
+  }
+
+  saveA11y() {
+    const { textSize, highContrast, reduceMotion } = this.state;
+    try { localStorage.setItem('rgv-dsa-a11y', JSON.stringify({ textSize, highContrast, reduceMotion })); } catch (e) {}
+  }
+
+  applyA11y() {
+    const { textSize, highContrast, reduceMotion } = this.state;
+    const sizes = { default: '16px', large: '18px', xl: '20px' };
+    document.documentElement.style.fontSize = sizes[textSize] || '16px';
+    let st = document.getElementById('rgv-a11y-css');
+    if (!st) {
+      st = document.createElement('style');
+      st.id = 'rgv-a11y-css';
+      document.head.appendChild(st);
+    }
+    let css = '';
+    if (reduceMotion) {
+      css += '*{animation:none !important; transition:none !important} html{scroll-behavior:auto !important}';
+    }
+    if (highContrast) {
+      css += '[data-tone="cream"]{background:#FFFFFF !important; color:#000000 !important}';
+      css += '[data-tone="red"]{background:#9E0B13 !important}';
+      css += '[data-tone="ink"]{background:#000000 !important; color:#FFFFFF !important}';
+      css += 'body{background:#FFFFFF}';
+    }
+    st.textContent = css;
+    this.saveA11y();
+  }
+
+  setA11y(patch) { this.setState(patch, () => this.applyA11y()); }
+
+  segStyle(active) {
+    return {
+      flex: 1, padding: '8px 0', fontFamily: 'inherit', fontSize: '0.95rem', fontWeight: 800,
+      cursor: 'pointer', border: '2px solid #1C1917',
+      background: active ? '#1C1917' : 'transparent',
+      color: active ? '#FAF4EA' : '#1C1917'
+    };
+  }
+
+  rowStyle() {
+    return {
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px',
+      fontFamily: 'inherit', fontSize: '0.9rem', fontWeight: 700, cursor: 'pointer',
+      background: 'transparent', border: 'none', padding: 0, color: '#1C1917', textAlign: 'left'
+    };
+  }
+
+  pillStyle(on) {
+    return {
+      fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase',
+      padding: '4px 10px', border: '2px solid #1C1917',
+      background: on ? '#E9252E' : 'transparent',
+      color: on ? '#FAF4EA' : '#6B6257',
+      borderColor: on ? '#1C1917' : '#B7AC9B'
+    };
+  }
+
+  renderVals() {
+    const { aboutOpen, a11yOpen, textSize, highContrast, reduceMotion } = this.state;
+    return {
+      pageTitle: this.props.pageTitle ?? 'Bylaws & Code of Conduct',
+      breadcrumbSection: this.props.breadcrumbSection ?? 'About',
+      lede: this.props.lede ?? 'How our chapter governs itself — and how we take care of each other while we do the work.',
+      showSidebar: this.props.showSidebar ?? true,
+      aboutOpen, a11yOpen, highContrast, reduceMotion,
+      toggleAbout: () => this.setState(s => ({ aboutOpen: !s.aboutOpen, a11yOpen: false })),
+      closeAbout: () => this.setState({ aboutOpen: false }),
+      toggleA11y: () => this.setState(s => ({ a11yOpen: !s.a11yOpen, aboutOpen: false })),
+      setTsDefault: () => this.setA11y({ textSize: 'default' }),
+      setTsLarge: () => this.setA11y({ textSize: 'large' }),
+      setTsXl: () => this.setA11y({ textSize: 'xl' }),
+      toggleHC: () => this.setA11y({ highContrast: !highContrast }),
+      toggleRM: () => this.setA11y({ reduceMotion: !reduceMotion }),
+      tsDefaultStyle: this.segStyle(textSize === 'default'),
+      tsLargeStyle: this.segStyle(textSize === 'large'),
+      tsXlStyle: this.segStyle(textSize === 'xl'),
+      hcRowStyle: this.rowStyle(),
+      rmRowStyle: this.rowStyle(),
+      hcPillStyle: this.pillStyle(highContrast),
+      rmPillStyle: this.pillStyle(reduceMotion),
+      hcLabel: highContrast ? 'On' : 'Off',
+      rmLabel: reduceMotion ? 'On' : 'Off'
+    };
+  }
+}
+</script>
+</body>
+</html>

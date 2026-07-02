@@ -1,0 +1,149 @@
+{% extends "base.twig" %}
+
+{% block content %}
+	{% set page_header_props = {
+		title: "Get involved",
+		lede: "No experience needed, no perfect politics required. If you want a better Valley, there's a place for you here.",
+		crumbs: [{ label: "Home", href: "/" }]
+	} %}
+	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
+
+	<section class="bg-cream px-6 pt-16 pb-24" data-tone="cream">
+		<div class="mx-auto grid max-w-[1100px] items-start gap-14 lg:[grid-template-columns:minmax(300px,1fr)_300px]">
+
+			<article class="flex min-w-0 flex-col gap-7">
+
+				{# ---- How to join ---- #}
+				<h2 id="join" class="m-0 border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">How to join</h2>
+
+				<div class="flex flex-col gap-3.5">
+					<div class="grid gap-5 border-2 border-ink bg-white p-[22px] [grid-template-columns:64px_1fr]">
+						<div class="font-display text-[1.8rem] font-black text-brand-red">01</div>
+						<div class="flex flex-col gap-2">
+							<div class="text-[1.1rem] font-extrabold">Become a DSA member</div>
+							<p class="m-0 text-base leading-[1.7]">Sign up through national DSA and select the Rio Grande Valley chapter. Dues are sliding-scale &mdash; pay what you can, and <strong>no one is turned away for lack of funds</strong>.</p>
+							<a href="{{ chapter.join_url }}" target="_blank" rel="noopener" class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:border-brand-red-deep hover:text-brand-red-deep">Join at dsausa.org &rarr;</a>
+						</div>
+					</div>
+					<div class="grid gap-5 border-2 border-ink bg-white p-[22px] [grid-template-columns:64px_1fr]">
+						<div class="font-display text-[1.8rem] font-black text-brand-red">02</div>
+						<div class="flex flex-col gap-2">
+							<div class="text-[1.1rem] font-extrabold">Come to RGV-DSA 101</div>
+							<p class="m-0 text-base leading-[1.7]">Our intro session for new and curious folks &mdash; what democratic socialism means, what our chapter is working on, and how to plug in. Offered virtually and in person, multiple times a month. You don't have to be a member yet to attend.</p>
+							<a href="/calendar/" class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:border-brand-red-deep hover:text-brand-red-deep">Find a session &rarr;</a>
+						</div>
+					</div>
+					<div class="grid gap-5 border-2 border-ink bg-white p-[22px] [grid-template-columns:64px_1fr]">
+						<div class="font-display text-[1.8rem] font-black text-brand-red">03</div>
+						<div class="flex flex-col gap-2">
+							<div class="text-[1.1rem] font-extrabold">Get onboarded &amp; plug in</div>
+							<p class="m-0 text-base leading-[1.7]">After 101, we'll add you to our WhatsApp and match you with a committee that fits your interests and capacity &mdash; whether that's an hour a month or a night a week.</p>
+							<a href="#committees" class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:border-brand-red-deep hover:text-brand-red-deep">Browse committees &darr;</a>
+						</div>
+					</div>
+				</div>
+
+				{# ---- Committees ---- #}
+				<h2 id="committees" class="mx-0 mt-4 mb-0 border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">Committees</h2>
+				<p class="m-0 text-[1.05rem] leading-[1.75]">Committees are where the work happens. Each one meets regularly and welcomes new members &mdash; reach out through the WhatsApp or at any general meeting.</p>
+
+				<div class="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]">
+					{% set committees = [
+						{ name: "Political Education", desc: "Reading groups, night school, and workshops that build our shared analysis." },
+						{ name: "Mutual Aid", desc: "Meeting our neighbors' immediate needs while organizing for lasting change." },
+						{ name: "Labor", desc: "Supporting workers organizing on the job across the Valley." },
+						{ name: "Communications", desc: "Social media, design, and this website — telling the chapter's story." },
+						{ name: "Electoral", desc: "Backing candidates and ballot measures that fight for working people." },
+						{ name: "Membership & Onboarding", desc: "Welcoming new members and making sure no one falls through the cracks." }
+					] %}
+					{% for committee in committees %}
+						<div class="flex flex-col gap-2 border-2 border-ink bg-white p-5">
+							<div class="font-display text-base font-extrabold uppercase tracking-[0.02em] text-brand-red">{{ committee.name }}</div>
+							<p class="m-0 text-[0.95rem] leading-[1.65]">{{ committee.desc }}</p>
+						</div>
+					{% endfor %}
+				</div>
+
+				{# ---- Communication channels ---- #}
+				<h2 id="channels" class="mx-0 mt-4 mb-0 border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">Communication channels</h2>
+
+				<div class="flex flex-col gap-3.5">
+					<div class="flex flex-wrap items-center justify-between gap-5 border-2 border-ink bg-white px-[22px] py-[18px]">
+						<div class="flex flex-col gap-[3px]">
+							<span class="text-[1.05rem] font-extrabold">WhatsApp</span>
+							<span class="text-[0.9rem] text-muted-on-cream">Our main channel &mdash; members receive an invite during onboarding</span>
+						</div>
+						<span class="border-2 border-dashed border-border-muted px-3.5 py-2 text-[0.8rem] font-extrabold uppercase tracking-[0.06em] text-muted-on-cream">Members only</span>
+					</div>
+					<div class="flex flex-wrap items-center justify-between gap-5 border-2 border-ink bg-white px-[22px] py-[18px]">
+						<div class="flex flex-col gap-[3px]">
+							<span class="text-[1.05rem] font-extrabold">Instagram &mdash; @dsa_rgv</span>
+							<span class="text-[0.9rem] text-muted-on-cream">Events, actions, and updates for everyone</span>
+						</div>
+						<a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener" class="whitespace-nowrap border-2 border-ink px-4 py-[9px] text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white">Follow</a>
+					</div>
+					<div class="flex flex-wrap items-center justify-between gap-5 border-2 border-ink bg-white px-[22px] py-[18px]">
+						<div class="flex flex-col gap-[3px]">
+							<span class="text-[1.05rem] font-extrabold">Email</span>
+							<span class="text-[0.9rem] text-muted-on-cream">Questions, press, and anything else</span>
+						</div>
+						<a href="mailto:hello@example.org" class="whitespace-nowrap border-2 border-ink px-4 py-[9px] text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white">Write us</a>
+					</div>
+				</div>
+
+				{# ---- Common questions ---- #}
+				<h2 id="faq" class="mx-0 mt-4 mb-0 border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">Common questions</h2>
+
+				{% set faq_items = [
+					{
+						question: "Do I have to be a member to come to events?",
+						answer: "Nope — most of our events are open to everyone. Come to a 101 or a social, meet folks, and see if it's for you. No pressure."
+					},
+					{
+						question: "How much are dues?",
+						answer: "Dues are sliding-scale through national DSA — most folks pay a few dollars a month. If dues are a barrier, talk to us: no one is turned away for lack of funds."
+					},
+					{
+						question: "I've never done anything political before. Is that okay?",
+						answer: "More than okay — it's the norm. Most members joined without any organizing experience. RGV-DSA 101 exists exactly for this, and committees will teach you everything as you go."
+					},
+					{
+						question: "Can I participate without being publicly visible?",
+						answer: "Yes. There are plenty of ways to contribute behind the scenes, and we take members' privacy and safety seriously. Talk to us about what you're comfortable with."
+					},
+					{
+						question: "How much time does membership take?",
+						answer: "As much or as little as you have. Some members show up to one event a month; others help lead committees. Capacity changes — that's fine. The work is a marathon, not a sprint."
+					}
+				] %}
+				<div data-vue-island="FaqAccordion" data-props='{{ { items: faq_items }|json_encode|e("html_attr") }}'></div>
+
+			</article>
+
+			{# ---- Sidebar ---- #}
+			<aside aria-label="Page navigation" class="flex flex-col gap-7 lg:sticky lg:top-[100px]">
+				<nav aria-label="On this page" class="flex flex-col gap-0.5 border-l-[3px] border-ink">
+					<div class="mb-1.5 px-[18px] py-1.5 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.08em]">On this page</div>
+					<a href="#join" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">How to join</a>
+					<a href="#committees" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Committees</a>
+					<a href="#channels" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Communication channels</a>
+					<a href="#faq" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Common questions</a>
+				</nav>
+
+				<div class="flex flex-col gap-3 bg-ink p-[22px] text-cream" data-tone="ink">
+					<div class="font-display text-[0.95rem] font-extrabold uppercase tracking-[0.04em]">Ready right now?</div>
+					<p class="m-0 text-[0.9rem] leading-[1.6] text-muted-on-ink">Membership takes five minutes, and dues are pay-what-you-can.</p>
+					<a href="{{ chapter.join_url }}" target="_blank" rel="noopener" class="self-start bg-cream px-4 py-[9px] text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white">Join DSA</a>
+				</div>
+
+				<nav aria-label="Related pages" class="flex flex-col gap-0.5 border-l-[3px] border-brand-red">
+					<div class="mb-1.5 px-[18px] py-1.5 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.08em]">Related</div>
+					<a href="/calendar/" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Event Calendar</a>
+					<a href="/bylaws-code-of-conduct/" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Bylaws &amp; Code of Conduct</a>
+					<a href="/about/" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Mission &amp; History</a>
+				</nav>
+			</aside>
+
+		</div>
+	</section>
+{% endblock %}

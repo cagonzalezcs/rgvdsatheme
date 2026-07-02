@@ -13,6 +13,7 @@ const registry: Record<string, () => Promise<{ default: Component }>> = {
   SiteHeader: () => import("@/components/site/SiteHeader.vue"),
   SiteFooter: () => import("@/components/site/SiteFooter.vue"),
   PageHeader: () => import("@/components/site/PageHeader.vue"),
+  FaqAccordion: () => import("@/components/site/FaqAccordion.vue"),
 };
 
 export function mountIslands(root: ParentNode = document): void {

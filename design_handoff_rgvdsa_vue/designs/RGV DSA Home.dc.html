@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    @font-face{font-family:'Open Sans';src:url('assets/fonts/OpenSans-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+    @font-face{font-family:'Open Sans';src:url('assets/fonts/OpenSans-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;font-display:swap}
+    @font-face{font-family:'Open Sans';src:url('assets/fonts/OpenSans-Bold.ttf') format('truetype');font-weight:700 800;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-Regular.ttf') format('truetype');font-weight:400;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-SemiBold.ttf') format('truetype');font-weight:600;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-Bold.ttf') format('truetype');font-weight:700;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-ExtraBold.ttf') format('truetype');font-weight:800;font-style:normal;font-display:swap}
+    @font-face{font-family:Montserrat;src:url('assets/fonts/Montserrat-Black.ttf') format('truetype');font-weight:900;font-style:normal;font-display:swap}
+    html{scroll-behavior:smooth}
+    #dc-root, #dc-root > .sc-host{height:auto !important; min-height:100%}
+    body{margin:0;font-family:'Open Sans',system-ui,sans-serif;background:#FAF4EA;color:#1C1917;-webkit-font-smoothing:antialiased}
+    ::selection{background:#E9252E;color:#FAF4EA}
+  </style>
+</helmet>
+
+<!-- Skip link -->
+<a href="#main" style="position:absolute; left:-9999px; top:12px; z-index:200; background:#1C1917; color:#FAF4EA; padding:10px 18px; font-weight:700; text-decoration:none; font-size:0.95rem" style-focus="left:16px">Skip to main content</a>
+
+<!-- ============ HEADER ============ -->
+<header data-screen-label="Header" data-tone="red" style="position:sticky; top:0; z-index:100; background:#E9252E; border-bottom:3px solid #1C1917">
+  <div style="max-width:1200px; margin:0 auto; padding:0 24px; display:flex; align-items:center; justify-content:space-between; gap:24px; min-height:76px; flex-wrap:wrap">
+    <a href="#" aria-label="RGV DSA home" style="display:flex; align-items:center; flex:none">
+      <img src="assets/logo-red.png" alt="Rio Grande Valley Democratic Socialists of America" style="height:62px; width:auto; display:block">
+    </a>
+    <nav aria-label="Main" style="display:flex; align-items:center; gap:4px; flex-wrap:wrap">
+      <div style="position:relative">
+        <button onClick="{{ toggleAbout }}" aria-expanded="{{ aboutOpen }}" style="font-family:Montserrat,sans-serif; font-size:0.95rem; font-weight:600; color:#FAF4EA; background:transparent; border:none; padding:10px 14px; cursor:pointer; letter-spacing:0.02em" style-hover="text-decoration:underline; text-underline-offset:4px">About&nbsp;▾</button>
+        <sc-if value="{{ aboutOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute; top:100%; left:0; background:#FAF4EA; border:3px solid #1C1917; box-shadow:6px 6px 0 #1C1917; min-width:240px; display:flex; flex-direction:column; padding:6px 0; z-index:110">
+            <a href="#about" onClick="{{ closeAbout }}" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Mission &amp; History</a>
+            <a href="#counties" onClick="{{ closeAbout }}" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Counties We Serve</a>
+            <a href="#get-involved" onClick="{{ closeAbout }}" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Committees</a>
+            <a href="#footer" onClick="{{ closeAbout }}" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">Bylaws &amp; Code of Conduct</a>
+            <a href="#footer" onClick="{{ closeAbout }}" style="padding:10px 18px; color:#1C1917; text-decoration:none; font-family:Montserrat,sans-serif; font-weight:600; font-size:0.95rem" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">FAQ</a>
+          </div>
+        </sc-if>
+      </div>
+      <a href="Calendar.dc.html" style="font-family:Montserrat,sans-serif; font-size:0.95rem; font-weight:600; color:#FAF4EA; text-decoration:none; padding:10px 14px; letter-spacing:0.02em" style-hover="text-decoration:underline; text-underline-offset:4px">Calendar</a>
+      <a href="Blog.dc.html" style="font-family:Montserrat,sans-serif; font-size:0.95rem; font-weight:600; color:#FAF4EA; text-decoration:none; padding:10px 14px; letter-spacing:0.02em" style-hover="text-decoration:underline; text-underline-offset:4px">Blog</a>
+      <a href="#get-involved" style="font-family:Montserrat,sans-serif; font-size:0.95rem; font-weight:600; color:#FAF4EA; text-decoration:none; padding:10px 14px; letter-spacing:0.02em" style-hover="text-decoration:underline; text-underline-offset:4px">Get Involved</a>
+    </nav>
+    <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap">
+      <div aria-label="Language" style="display:flex; align-items:center; border:2px solid #FAF4EA; font-size:0.8rem; font-weight:800; letter-spacing:0.05em">
+        <span style="padding:5px 10px; background:#FAF4EA; color:#E9252E">EN</span>
+        <span title="Español — próximamente" style="padding:5px 10px; color:#FAF4EA; opacity:0.65">ES</span>
+      </div>
+      <div style="position:relative">
+        <button onClick="{{ toggleA11y }}" aria-expanded="{{ a11yOpen }}" aria-label="Accessibility options" title="Accessibility options" style="font-family:inherit; font-size:1rem; font-weight:800; color:#E9252E; background:#FAF4EA; border:2px solid #FAF4EA; padding:5px 12px; cursor:pointer" style-hover="background:#9E0B13 !important; color:#FFFFFF !important; border-color:#9E0B13 !important">Aa</button>
+        <sc-if value="{{ a11yOpen }}" hint-placeholder-val="{{ false }}">
+          <div role="dialog" aria-label="Accessibility settings" style="position:absolute; top:calc(100% + 10px); right:0; background:#FAF4EA; color:#1C1917; border:3px solid #1C1917; box-shadow:6px 6px 0 #1C1917; width:280px; padding:18px; z-index:110; display:flex; flex-direction:column; gap:16px">
+            <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.04em; text-transform:uppercase">Accessibility</div>
+            <div style="display:flex; flex-direction:column; gap:8px">
+              <div style="font-size:0.85rem; font-weight:700">Text size</div>
+              <div style="display:flex; gap:6px">
+                <button onClick="{{ setTsDefault }}" style="{{ tsDefaultStyle }}">A</button>
+                <button onClick="{{ setTsLarge }}" style="{{ tsLargeStyle }}">A+</button>
+                <button onClick="{{ setTsXl }}" style="{{ tsXlStyle }}">A++</button>
+              </div>
+            </div>
+            <button onClick="{{ toggleHC }}" aria-pressed="{{ highContrast }}" style="{{ hcRowStyle }}"><span>High contrast</span><span style="{{ hcPillStyle }}">{{ hcLabel }}</span></button>
+            <button onClick="{{ toggleRM }}" aria-pressed="{{ reduceMotion }}" style="{{ rmRowStyle }}"><span>Reduce motion</span><span style="{{ rmPillStyle }}">{{ rmLabel }}</span></button>
+          </div>
+        </sc-if>
+      </div>
+      <a href="{{ joinHref }}" target="_blank" rel="noopener" style="font-size:0.95rem; font-weight:800; color:#E9252E; background:#FAF4EA; text-decoration:none; padding:10px 20px; border:2px solid #FAF4EA; letter-spacing:0.04em; text-transform:uppercase" style-hover="background:#9E0B13 !important; color:#FFFFFF !important; border-color:#9E0B13 !important">Join DSA</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ============ HERO ============ -->
+<section data-screen-label="Hero" data-tone="red" style="background:#E9252E; color:#FAF4EA; padding:88px 24px 96px">
+  <div style="max-width:1100px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; gap:48px">
+  <div style="flex:1 1 520px; display:flex; flex-direction:column; gap:28px">
+    <div style="font-size:0.9rem; font-weight:800; letter-spacing:0.18em; text-transform:uppercase; display:flex; align-items:center; gap:12px; flex-wrap:wrap">
+      <span>Rio Grande Valley Democratic Socialists</span>
+    </div>
+    <h1 style="font-family: Montserrat,sans-serif; font-weight: 900; font-size: clamp(2.3rem, 5.8vw, 4.2rem); line-height: 1.08; letter-spacing: -0.01em; text-transform: uppercase; margin: 0; max-width: 18ch; text-wrap: balance">A better world is possible. We're building it in the Valley.</h1>
+    <p style="font-size:1.2rem; line-height:1.6; max-width:56ch; margin:0; font-weight:400">We're the Rio Grande Valley chapter of the Democratic Socialists of America — the largest socialist organization in the United States — organizing working-class power across our border communities.</p>
+    <div style="display:flex; gap:14px; flex-wrap:wrap; align-items:center">
+      <a href="{{ joinHref }}" target="_blank" rel="noopener" style="font-size:1.05rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#E9252E; background:#FAF4EA; text-decoration:none; padding:16px 32px; border:3px solid #1C1917; box-shadow:5px 5px 0 #1C1917" style-hover="transform:translate(2px,2px); box-shadow:3px 3px 0 #1C1917" style-active="transform:translate(5px,5px); box-shadow:0 0 0 #1C1917">Join DSA</a>
+      <a href="#events" style="font-size:1.05rem; font-weight:800; text-transform:uppercase; letter-spacing:0.05em; color:#FAF4EA; background:transparent; text-decoration:none; padding:16px 32px; border:3px solid #FAF4EA" style-hover="background:#9E0B13 !important; border-color:#9E0B13 !important">Come to a meeting ↓</a>
+    </div>
+    <div style="font-size:0.95rem; opacity:0.9">New here? Start with <strong>RGV-DSA 101</strong> — no experience needed.</div>
+  </div>
+  <img src="assets/cactus-mark-red.png" alt="" aria-hidden="true" style="flex:0 1 auto; width:clamp(220px, 30vw, 400px); height:auto; margin:0 auto">
+  </div>
+</section>
+
+<!-- ============ COUNTIES STRIP ============ -->
+<sc-if value="{{ showCounties }}" hint-placeholder-val="{{ true }}">
+<section id="counties" data-screen-label="Counties strip" data-tone="ink" aria-label="Communities we serve" style="background:#1C1917; color:#FAF4EA; padding:20px 24px">
+  <div style="max-width:1200px; margin:0 auto; display:flex; flex-wrap:wrap; gap:8px 18px; justify-content:center; font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase">
+    <span>McAllen</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>Edinburg</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>Brownsville</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>Harlingen</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>Pharr</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>San Juan</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>San Benito</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>Raymondville</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>Roma</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>La Joya</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>Rio Grande City</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>Zapata</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>La Grulla</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>La Feria</span><span aria-hidden="true" style="color:#E9252E">★</span>
+    <span>Rio Hondo</span>
+  </div>
+</section>
+</sc-if>
+
+<!-- ============ WHO WE ARE ============ -->
+<section id="about" data-screen-label="Who we are" data-tone="cream" style="background:#FAF4EA; padding:96px 24px">
+  <div style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:minmax(300px, 1.1fr) minmax(280px, 0.9fr); gap:56px; align-items:center">
+    <div style="display:flex; flex-direction:column; gap:20px">
+      <div style="font-size:0.85rem; font-weight:800; letter-spacing:0.18em; text-transform:uppercase; color:#E9252E">Who we are</div>
+      <h2 style="font-family:Montserrat,sans-serif; font-weight:900; font-size:clamp(1.8rem, 4vw, 2.9rem); line-height:1.12; text-transform:uppercase; margin:0">We are DSA-RGV</h2>
+      <p style="font-size:1.1rem; line-height:1.7; margin:0">The RGV is one of the most economically unequal regions in the country — but it doesn't have to stay that way. As democratic socialists, we're building working-class power to challenge the dominance of the wealthy and the powerful across our border communities.</p>
+      <p style="font-size:1.1rem; line-height:1.7; margin:0">Together, we're fighting for a Valley where working people have real power, and where everyone can live a dignified life — regardless of where they were born or how they got here.</p>
+      <a href="#get-involved" style="font-weight:800; color:#E9252E; text-decoration:none; font-size:1rem; text-transform:uppercase; letter-spacing:0.05em; align-self:flex-start; border-bottom:3px solid #E9252E; padding-bottom:2px" style-hover="color:#9E0B13 !important; border-color:#9E0B13 !important">More about our chapter →</a>
+    </div>
+    <figure style="margin:0; border:3px solid #1C1917; box-shadow:8px 8px 0 #E9252E; aspect-ratio:4/3; background:repeating-linear-gradient(45deg, #F1E8D8 0 14px, #E9DFCC 14px 28px); display:flex; align-items:center; justify-content:center">
+      <figcaption style="font-family:ui-monospace, Menlo, monospace; font-size:0.85rem; color:#6B6257; background:#FAF4EA; border:1px solid #1C1917; padding:8px 14px">photo: chapter members at an action</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ============ EVENTS ============ -->
+<section id="events" data-screen-label="Events" data-tone="cream" style="background:#FAF4EA; padding:0 24px 96px">
+  <div style="max-width:1100px; margin:0 auto; display:flex; flex-direction:column; gap:32px">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; border-bottom:3px solid #1C1917; padding-bottom:16px">
+      <h2 style="font-family:Montserrat,sans-serif; font-weight:900; font-size:clamp(1.8rem, 4vw, 2.9rem); line-height:1.12; text-transform:uppercase; margin:0">Upcoming events</h2>
+      <a href="#events" style="font-weight:800; color:#E9252E; text-decoration:none; font-size:1rem; text-transform:uppercase; letter-spacing:0.05em" style-hover="text-decoration:underline; text-underline-offset:4px">Full calendar →</a>
+    </div>
+    <div style="display:flex; flex-direction:column">
+      <sc-for list="{{ events }}" as="ev" hint-placeholder-count="5">
+        <div style="display:grid; grid-template-columns:88px 1fr auto; gap:24px; align-items:center; padding:20px 0; border-bottom:2px solid #E3D9C6">
+          <div aria-hidden="true" style="background:#E9252E; color:#FAF4EA; border:2px solid #1C1917; text-align:center; padding:8px 4px; display:flex; flex-direction:column; gap:0">
+            <span style="font-family:Montserrat,sans-serif; font-weight:900; font-size:1.45rem; line-height:1.1">{{ ev.day }}</span>
+            <span style="font-size:0.75rem; font-weight:800; letter-spacing:0.12em">{{ ev.month }}</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:4px">
+            <div style="font-size:1.15rem; font-weight:800">{{ ev.title }}</div>
+            <div style="font-size:0.95rem; color:#5C544A">{{ ev.when }} · {{ ev.where }}</div>
+          </div>
+          <a href="#events" aria-label="{{ ev.aria }}" style="font-weight:800; color:#1C1917; text-decoration:none; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.05em; border:2px solid #1C1917; padding:10px 18px; white-space:nowrap" style-hover="background:#9E0B13 !important; color:#FFFFFF !important">View event</a>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FROM THE BLOG ============ -->
+<section id="blog" data-screen-label="From the blog" data-tone="cream" style="background:#FAF4EA; padding:0 24px 96px">
+  <div style="max-width:1100px; margin:0 auto; display:flex; flex-direction:column; gap:32px">
+    <div style="display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; border-bottom:3px solid #1C1917; padding-bottom:16px">
+      <h2 style="font-family:Montserrat,sans-serif; font-weight:900; font-size:clamp(1.8rem, 4vw, 2.9rem); line-height:1.12; text-transform:uppercase; margin:0">From the blog</h2>
+      <a href="Blog.dc.html" style="font-weight:800; color:#E9252E; text-decoration:none; font-size:1rem; text-transform:uppercase; letter-spacing:0.05em" style-hover="text-decoration:underline; text-underline-offset:4px">All posts →</a>
+    </div>
+    <div style="display:grid; grid-template-columns:minmax(300px, 1.15fr) minmax(280px, 1fr); gap:36px; align-items:stretch">
+      <a href="Blog Post.dc.html" style="display:flex; flex-direction:column; border:3px solid #1C1917; background:#FFFFFF; text-decoration:none; color:#1C1917" style-hover="box-shadow:8px 8px 0 #1C1917; transform:translate(-2px,-2px)">
+        <div aria-hidden="true" style="aspect-ratio:16/9; background:repeating-linear-gradient(45deg, #F1E8D8 0 14px, #E9DFCC 14px 28px); border-bottom:3px solid #1C1917; display:flex; align-items:flex-start; padding:14px">
+          <span style="background:#1F7A48; color:#FAF4EA; border:2px solid #1C1917; padding:4px 12px; font-size:0.75rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase">Mutual Aid</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px; padding:24px 28px 28px">
+          <span style="font-size:0.8rem; font-weight:700; color:#5C544A; letter-spacing:0.04em; text-transform:uppercase">June 14, 2026 · 6 min read</span>
+          <span style="font-family:Montserrat,sans-serif; font-weight:900; font-size:clamp(1.2rem, 2.4vw, 1.55rem); line-height:1.2; text-transform:uppercase; text-wrap:balance">Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod</span>
+          <span style="font-size:1rem; line-height:1.65; color:#5C544A">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</span>
+          <span style="font-weight:800; color:#E9252E; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.05em; margin-top:4px">Read the post →</span>
+        </div>
+      </a>
+      <div style="display:flex; flex-direction:column; gap:24px">
+        <a href="Blog.dc.html" style="flex:1; display:grid; grid-template-columns:140px 1fr; border:2px solid #1C1917; background:#FFFFFF; text-decoration:none; color:#1C1917" style-hover="box-shadow:6px 6px 0 #1C1917; transform:translate(-2px,-2px)">
+          <span aria-hidden="true" style="background:repeating-linear-gradient(45deg, #F1E8D8 0 14px, #E9DFCC 14px 28px); border-right:2px solid #1C1917; min-height:130px"></span>
+          <span style="display:flex; flex-direction:column; justify-content:center; gap:10px; padding:20px 24px">
+            <span style="align-self:flex-start; background:#3A5BA0; color:#FAF4EA; border:2px solid #1C1917; padding:3px 10px; font-size:0.72rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase">Political Education</span>
+            <span style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.1rem; line-height:1.3">Sed ut perspiciatis unde omnis iste natus error sit voluptatem</span>
+            <span style="font-size:0.85rem; font-weight:700; color:#5C544A; letter-spacing:0.04em; text-transform:uppercase">June 28, 2026</span>
+          </span>
+        </a>
+        <a href="Blog.dc.html" style="flex:1; display:grid; grid-template-columns:140px 1fr; border:2px solid #1C1917; background:#FFFFFF; text-decoration:none; color:#1C1917" style-hover="box-shadow:6px 6px 0 #1C1917; transform:translate(-2px,-2px)">
+          <span aria-hidden="true" style="background:repeating-linear-gradient(45deg, #F1E8D8 0 14px, #E9DFCC 14px 28px); border-right:2px solid #1C1917; min-height:130px"></span>
+          <span style="display:flex; flex-direction:column; justify-content:center; gap:10px; padding:20px 24px">
+            <span style="align-self:flex-start; background:#A3641C; color:#FAF4EA; border:2px solid #1C1917; padding:3px 10px; font-size:0.72rem; font-weight:800; letter-spacing:0.08em; text-transform:uppercase">Labor</span>
+            <span style="font-family:Montserrat,sans-serif; font-weight:800; font-size:1.1rem; line-height:1.3">Nemo enim ipsam voluptatem quia voluptas sit aspernatur</span>
+            <span style="font-size:0.85rem; font-weight:700; color:#5C544A; letter-spacing:0.04em; text-transform:uppercase">June 21, 2026</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GET INVOLVED ============ -->
+<section id="get-involved" data-screen-label="Get involved" data-tone="ink" style="background:#1C1917; color:#FAF4EA; padding:96px 24px">
+  <div style="max-width:1100px; margin:0 auto; display:flex; flex-direction:column; gap:48px">
+    <div style="display:flex; flex-direction:column; gap:16px">
+      <div style="font-size:0.85rem; font-weight:800; letter-spacing:0.18em; text-transform:uppercase; color:#E9252E">Get involved</div>
+      <h2 style="font-family:Montserrat,sans-serif; font-weight:900; font-size:clamp(1.8rem, 4vw, 2.9rem); line-height:1.12; text-transform:uppercase; margin:0; max-width:20ch">Three steps to start organizing</h2>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:32px">
+      <div style="display:flex; flex-direction:column; gap:12px; border-top:4px solid #E9252E; padding-top:20px">
+        <div style="font-family:Montserrat,sans-serif; font-weight:900; font-size:2rem; color:#E9252E">01</div>
+        <div style="font-size:1.2rem; font-weight:800">Join DSA</div>
+        <p style="font-size:1rem; line-height:1.65; margin:0; color:#CFC8BD">Become a national DSA member — dues are sliding-scale, and membership automatically connects you to our chapter.</p>
+        <a href="{{ joinHref }}" target="_blank" rel="noopener" style="font-weight:800; color:#FAF4EA; text-decoration:none; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.05em; border-bottom:2px solid #E9252E; align-self:flex-start; padding-bottom:2px" style-hover="color:#E9252E !important">Sign up at dsausa.org →</a>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px; border-top:4px solid #E9252E; padding-top:20px">
+        <div style="font-family:Montserrat,sans-serif; font-weight:900; font-size:2rem; color:#E9252E">02</div>
+        <div style="font-size:1.2rem; font-weight:800">Come to RGV-DSA 101</div>
+        <p style="font-size:1rem; line-height:1.65; margin:0; color:#CFC8BD">Our intro session for new and curious folks — what we do, how the chapter works, and how you can plug in. Virtual and in-person options.</p>
+        <a href="#events" style="font-weight:800; color:#FAF4EA; text-decoration:none; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.05em; border-bottom:2px solid #E9252E; align-self:flex-start; padding-bottom:2px" style-hover="color:#E9252E !important">Find a session →</a>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px; border-top:4px solid #E9252E; padding-top:20px">
+        <div style="font-family:Montserrat,sans-serif; font-weight:900; font-size:2rem; color:#E9252E">03</div>
+        <div style="font-size:1.2rem; font-weight:800">Plug into the work</div>
+        <p style="font-size:1rem; line-height:1.65; margin:0; color:#CFC8BD">Join a committee, get on our WhatsApp, and show up. Members receive an invite to our communication channels after onboarding.</p>
+        <a href="#footer" style="font-weight:800; color:#FAF4EA; text-decoration:none; font-size:0.9rem; text-transform:uppercase; letter-spacing:0.05em; border-bottom:2px solid #E9252E; align-self:flex-start; padding-bottom:2px" style-hover="color:#E9252E !important">See committees →</a>
+      </div>
+    </div>
+    <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap; border-top:2px solid #3A352F; padding-top:32px">
+      <span style="font-weight:800; text-transform:uppercase; letter-spacing:0.1em; font-size:0.9rem">Follow along:</span>
+      <a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener" style="font-weight:800; color:#1C1917; background:#FAF4EA; text-decoration:none; padding:10px 20px; font-size:0.95rem; border:2px solid #FAF4EA" style-hover="background:#9E0B13 !important; color:#FFFFFF !important; border-color:#9E0B13 !important">Instagram @dsa_rgv</a>
+      <a href="mailto:hello@example.org" style="font-weight:800; color:#FAF4EA; text-decoration:none; padding:10px 20px; font-size:0.95rem; border:2px solid #FAF4EA" style-hover="background:#9E0B13 !important; color:#FFFFFF !important; border-color:#9E0B13 !important">Email us</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer id="footer" data-screen-label="Footer" data-tone="cream" style="background:#FAF4EA; border-top:3px solid #1C1917; padding:64px 24px 0">
+  <div style="max-width:1100px; margin:0 auto; display:grid; grid-template-columns:minmax(240px, 1.2fr) repeat(auto-fit, minmax(160px, 1fr)); gap:40px; padding-bottom:56px">
+    <div style="display:flex; flex-direction:column; gap:16px">
+      <img src="assets/logo-green.png" alt="Rio Grande Valley Democratic Socialists of America" style="width:220px; height:auto; display:block">
+      <p style="font-size:0.95rem; line-height:1.6; margin:0; color:#5C544A; max-width:32ch">Organizing across Hidalgo, Cameron, Willacy, and Starr counties.</p>
+    </div>
+    <nav aria-label="About" style="display:flex; flex-direction:column; gap:10px">
+      <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase">About</div>
+      <a href="#about" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Mission &amp; History</a>
+      <a href="#counties" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Counties We Serve</a>
+      <a href="#footer" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Bylaws &amp; Code of Conduct</a>
+      <a href="#footer" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">FAQ</a>
+    </nav>
+    <nav aria-label="Get involved" style="display:flex; flex-direction:column; gap:10px">
+      <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase">Get involved</div>
+      <a href="{{ joinHref }}" target="_blank" rel="noopener" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Join DSA</a>
+      <a href="Calendar.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Event Calendar</a>
+      <a href="#get-involved" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Committees</a>
+      <a href="#get-involved" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Communication Channels</a>
+    </nav>
+    <nav aria-label="Resources" style="display:flex; flex-direction:column; gap:10px">
+      <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase">Resources</div>
+      <a href="Blog.dc.html" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Blog</a>
+      <a href="#footer" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Documents &amp; Minutes</a>
+      <a href="#footer" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Resolutions</a>
+      <a href="#footer" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Education Library</a>
+      <a href="#footer" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Grievance Contact</a>
+    </nav>
+    <nav aria-label="Contact" style="display:flex; flex-direction:column; gap:10px">
+      <div style="font-family:Montserrat,sans-serif; font-weight:800; font-size:0.95rem; letter-spacing:0.05em; text-transform:uppercase">Contact</div>
+      <a href="mailto:hello@example.org" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Email</a>
+      <a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener" style="color:#1C1917; text-decoration:none; font-size:0.95rem" style-hover="color:#E9252E !important">Instagram</a>
+    </nav>
+  </div>
+  <div data-tone="ink" style="background:#1C1917; color:#CFC8BD; padding:18px 24px">
+    <div style="max-width:1100px; margin:0 auto; display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; font-size:0.85rem">
+      <span>Rio Grande Valley Democratic Socialists of America</span>
+      <span>Built to be accessible — <a href="#footer" style="color:#FAF4EA; font-weight:700" style-hover="color:#E9252E !important">tell us how we can do better</a></span>
+    </div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;eventCount&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 5, &quot;min&quot;: 1, &quot;max&quot;: 6, &quot;step&quot;: 1, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Content&quot; },
+  &quot;showCountiesStrip&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Content&quot; },
+  &quot;joinUrl&quot;: { &quot;editor&quot;: &quot;text&quot;, &quot;default&quot;: &quot;https://www.dsausa.org/join&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Links&quot; }
+}">
+class Component extends DCLogic {
+  state = {
+    aboutOpen: false,
+    a11yOpen: false,
+    textSize: 'default',
+    highContrast: false,
+    reduceMotion: false
+  };
+
+  componentDidMount() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('rgv-dsa-a11y') || '{}');
+      this.setState({
+        textSize: saved.textSize || 'default',
+        highContrast: !!saved.highContrast,
+        reduceMotion: !!saved.reduceMotion
+      }, () => this.applyA11y());
+    } catch (e) { this.applyA11y(); }
+  }
+
+  saveA11y() {
+    const { textSize, highContrast, reduceMotion } = this.state;
+    try { localStorage.setItem('rgv-dsa-a11y', JSON.stringify({ textSize, highContrast, reduceMotion })); } catch (e) {}
+  }
+
+  applyA11y() {
+    const { textSize, highContrast, reduceMotion } = this.state;
+    const sizes = { default: '16px', large: '18px', xl: '20px' };
+    document.documentElement.style.fontSize = sizes[textSize] || '16px';
+    let st = document.getElementById('rgv-a11y-css');
+    if (!st) {
+      st = document.createElement('style');
+      st.id = 'rgv-a11y-css';
+      document.head.appendChild(st);
+    }
+    let css = '';
+    if (reduceMotion) {
+      css += '*{animation:none !important; transition:none !important} html{scroll-behavior:auto !important}';
+    }
+    if (highContrast) {
+      css += '[data-tone="cream"]{background:#FFFFFF !important; color:#000000 !important}';
+      css += '[data-tone="red"]{background:#9E0B13 !important}';
+      css += '[data-tone="ink"]{background:#000000 !important; color:#FFFFFF !important}';
+      css += 'body{background:#FFFFFF}';
+    }
+    st.textContent = css;
+    this.saveA11y();
+  }
+
+  setA11y(patch) { this.setState(patch, () => this.applyA11y()); }
+
+  segStyle(active) {
+    return {
+      flex: 1, padding: '8px 0', fontFamily: 'inherit', fontSize: '0.95rem', fontWeight: 800,
+      cursor: 'pointer', border: '2px solid #1C1917',
+      background: active ? '#1C1917' : 'transparent',
+      color: active ? '#FAF4EA' : '#1C1917'
+    };
+  }
+
+  rowStyle() {
+    return {
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px',
+      fontFamily: 'inherit', fontSize: '0.9rem', fontWeight: 700, cursor: 'pointer',
+      background: 'transparent', border: 'none', padding: 0, color: '#1C1917', textAlign: 'left'
+    };
+  }
+
+  pillStyle(on) {
+    return {
+      fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase',
+      padding: '4px 10px', border: '2px solid #1C1917',
+      background: on ? '#E9252E' : 'transparent',
+      color: on ? '#FAF4EA' : '#6B6257',
+      borderColor: on ? '#1C1917' : '#B7AC9B'
+    };
+  }
+
+  renderVals() {
+    const allEvents = [
+      { day: '07', month: 'JUL', title: 'RGV-DSA 101 (Virtual)', when: 'Tuesday, July 7 · 7:00 PM', where: 'Zoom', aria: 'View event: RGV-DSA 101 Virtual, July 7' },
+      { day: '11', month: 'JUL', title: 'General Meeting — McAllen', when: 'Saturday, July 11 · 1:00 PM', where: 'McAllen · venue shared on RSVP', aria: 'View event: General Meeting McAllen, July 11' },
+      { day: '15', month: 'JUL', title: 'RGV-DSA 101 — Brownsville', when: 'Wednesday, July 15 · 7:00 PM', where: 'Brownsville · venue shared on RSVP', aria: 'View event: RGV-DSA 101 Brownsville, July 15' },
+      { day: '19', month: 'JUL', title: 'Socialist Night School: Reading Group', when: 'Sunday, July 19 · 4:00 PM', where: 'Edinburg', aria: 'View event: Reading Group, July 19' },
+      { day: '25', month: 'JUL', title: 'Chapter Social — Harlingen', when: 'Saturday, July 25 · 6:00 PM', where: 'Harlingen', aria: 'View event: Chapter Social Harlingen, July 25' },
+      { day: '29', month: 'JUL', title: 'RGV-DSA 101 (Virtual)', when: 'Wednesday, July 29 · 7:00 PM', where: 'Zoom', aria: 'View event: RGV-DSA 101 Virtual, July 29' }
+    ];
+    const count = Math.max(1, Math.min(6, this.props.eventCount ?? 5));
+    const { aboutOpen, a11yOpen, textSize, highContrast, reduceMotion } = this.state;
+    return {
+      events: allEvents.slice(0, count),
+      joinHref: this.props.joinUrl ?? 'https://www.dsausa.org/join',
+      showCounties: this.props.showCountiesStrip ?? true,
+      aboutOpen, a11yOpen, highContrast, reduceMotion,
+      toggleAbout: () => this.setState(s => ({ aboutOpen: !s.aboutOpen, a11yOpen: false })),
+      closeAbout: () => this.setState({ aboutOpen: false }),
+      toggleA11y: () => this.setState(s => ({ a11yOpen: !s.a11yOpen, aboutOpen: false })),
+      setTsDefault: () => this.setA11y({ textSize: 'default' }),
+      setTsLarge: () => this.setA11y({ textSize: 'large' }),
+      setTsXl: () => this.setA11y({ textSize: 'xl' }),
+      toggleHC: () => this.setA11y({ highContrast: !highContrast }),
+      toggleRM: () => this.setA11y({ reduceMotion: !reduceMotion }),
+      tsDefaultStyle: this.segStyle(textSize === 'default'),
+      tsLargeStyle: this.segStyle(textSize === 'large'),
+      tsXlStyle: this.segStyle(textSize === 'xl'),
+      hcRowStyle: this.rowStyle(),
+      rmRowStyle: this.rowStyle(),
+      hcPillStyle: this.pillStyle(highContrast),
+      rmPillStyle: this.pillStyle(reduceMotion),
+      hcLabel: highContrast ? 'On' : 'Off',
+      rmLabel: reduceMotion ? 'On' : 'Off'
+    };
+  }
+}
+</script>
+</body>
+</html>

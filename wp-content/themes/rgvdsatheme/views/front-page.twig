@@ -1,0 +1,150 @@
+{% extends "base.twig" %}
+
+{#
+  Home page. Content is hardcoded prototype copy until Phase 6 wires WP data:
+  - events: ChapterEvent teasers (Timber query later)
+  - show_counties_strip / event_count become WP options later
+#}
+
+{% set show_counties_strip = show_counties_strip|default(true) %}
+{% set event_count = event_count|default(5) %}
+{% set home_events = home_events|default([
+	{ day: '07', month: 'JUL', title: 'RGV-DSA 101 (Virtual)', when: 'Tue Jul 7, 7:00 PM', where: 'Zoom' },
+	{ day: '11', month: 'JUL', title: 'General Meeting — McAllen', when: 'Sat Jul 11, 1:00 PM', where: 'McAllen' },
+	{ day: '15', month: 'JUL', title: 'RGV-DSA 101 — Brownsville', when: 'Wed Jul 15, 7:00 PM', where: 'Brownsville' },
+	{ day: '19', month: 'JUL', title: 'Socialist Night School: Reading Group', when: 'Sun Jul 19, 4:00 PM', where: 'Edinburg' },
+	{ day: '25', month: 'JUL', title: 'Chapter Social — Harlingen', when: 'Sat Jul 25, 6:00 PM', where: 'Harlingen' },
+	{ day: '29', month: 'JUL', title: 'RGV-DSA 101 (Virtual)', when: 'Wed Jul 29, 7:00 PM', where: 'Zoom' }
+]) %}
+{% set counties = ['McAllen', 'Edinburg', 'Brownsville', 'Harlingen', 'Pharr', 'San Juan', 'San Benito', 'Raymondville', 'Roma', 'La Joya', 'Rio Grande City'] %}
+
+{% block content %}
+
+	{# ============ HERO ============ #}
+	<section class="home-hero bg-brand-red px-6 pb-24 pt-[88px] text-cream" data-tone="red">
+		<div class="mx-auto flex max-w-[1100px] flex-col gap-7">
+			<div class="flex flex-wrap items-center gap-3 text-[0.9rem] font-extrabold uppercase tracking-[0.18em]">
+				<span>Rio Grande Valley DSA</span><span aria-hidden="true">★</span><span>From Roma to Brownsville</span>
+			</div>
+			<h1 class="m-0 max-w-[18ch] font-display text-[clamp(2.3rem,5.8vw,4.4rem)] font-black uppercase leading-[1.08] tracking-[-0.01em] [text-wrap:balance]">
+				A better world is possible. We&rsquo;re building it in the Valley.
+			</h1>
+			<p class="m-0 max-w-[56ch] text-[1.2rem] leading-relaxed">
+				We&rsquo;re the Rio Grande Valley chapter of the Democratic Socialists of America — the largest socialist organization in the United States — organizing working-class power across our border communities.
+			</p>
+			<div class="flex flex-wrap items-center gap-3.5">
+				<a href="{{ chapter.join_url }}" target="_blank" rel="noopener"
+					class="border-[3px] border-ink bg-cream px-8 py-4 text-[1.05rem] font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm active:translate-x-[5px] active:translate-y-[5px] active:shadow-none">
+					Join DSA
+				</a>
+				<a href="#events"
+					class="border-[3px] border-cream bg-transparent px-8 py-4 text-[1.05rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:border-brand-red-deep hover:bg-brand-red-deep">
+					Come to a meeting ↓
+				</a>
+			</div>
+			<div class="text-[0.95rem] opacity-90">New here? Start with <strong>RGV-DSA 101</strong> — no experience needed.</div>
+		</div>
+	</section>
+
+	{# ============ COUNTIES STRIP ============ #}
+	{% if show_counties_strip %}
+		<section id="counties" class="counties-strip bg-ink px-6 py-5 text-cream" data-tone="ink" aria-label="Communities we serve">
+			<div class="mx-auto flex max-w-[1200px] flex-wrap justify-center gap-x-[18px] gap-y-2 font-display text-[0.95rem] font-extrabold uppercase tracking-[0.05em]">
+				{% for county in counties %}
+					<span>{{ county }}</span>{% if not loop.last %}<span aria-hidden="true" class="text-brand-red">★</span>{% endif %}
+				{% endfor %}
+			</div>
+		</section>
+	{% endif %}
+
+	{# ============ WHO WE ARE ============ #}
+	<section id="about" class="who-we-are bg-cream px-6 py-24" data-tone="cream">
+		<div class="mx-auto grid max-w-[1100px] items-center gap-14 [grid-template-columns:minmax(300px,1.1fr)_minmax(280px,0.9fr)] max-md:[grid-template-columns:1fr]">
+			<div class="flex flex-col gap-5">
+				<div class="text-[0.85rem] font-extrabold uppercase tracking-[0.18em] text-brand-red">Who we are</div>
+				<h2 class="m-0 font-display text-[clamp(1.8rem,4vw,2.9rem)] font-black uppercase leading-[1.12]">We are DSA-RGV</h2>
+				<p class="m-0 text-[1.1rem] leading-[1.7]">
+					The RGV is one of the most economically unequal regions in the country — but it doesn&rsquo;t have to stay that way. As democratic socialists, we&rsquo;re building working-class power to challenge the dominance of the wealthy and the powerful across our border communities.
+				</p>
+				<p class="m-0 text-[1.1rem] leading-[1.7]">
+					Together, we&rsquo;re fighting for a Valley where working people have real power, and where everyone can live a dignified life — regardless of where they were born or how they got here.
+				</p>
+				<a href="#get-involved"
+					class="self-start border-b-[3px] border-brand-red pb-0.5 text-base font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:border-brand-red-deep hover:text-brand-red-deep">
+					More about our chapter →
+				</a>
+			</div>
+			<figure class="m-0 flex aspect-[4/3] items-center justify-center border-[3px] border-ink bg-[repeating-linear-gradient(45deg,var(--color-stripe-a)_0_14px,var(--color-stripe-b)_14px_28px)] shadow-brutal-red">
+				<figcaption class="border border-ink bg-cream px-3.5 py-2 font-mono text-[0.85rem] text-muted-2">photo: chapter members at an action</figcaption>
+			</figure>
+		</div>
+	</section>
+
+	{# ============ UPCOMING EVENTS ============ #}
+	<section id="events" class="upcoming-events bg-cream px-6 pb-24" data-tone="cream">
+		<div class="mx-auto flex max-w-[1100px] flex-col gap-8">
+			<div class="flex flex-wrap items-baseline justify-between gap-4 border-b-[3px] border-ink pb-4">
+				<h2 class="m-0 font-display text-[clamp(1.8rem,4vw,2.9rem)] font-black uppercase leading-[1.12]">Upcoming events</h2>
+				<a href="/calendar/" class="text-base font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:underline hover:underline-offset-4">Full calendar →</a>
+			</div>
+			<div class="flex flex-col">
+				{% for ev in home_events|slice(0, event_count) %}
+					<div class="grid items-center gap-6 border-b-2 border-divider-cream py-5 [grid-template-columns:88px_1fr_auto] max-sm:[grid-template-columns:64px_1fr] max-sm:gap-4">
+						<div aria-hidden="true" class="flex flex-col border-2 border-ink bg-brand-red px-1 py-2 text-center text-cream">
+							<span class="font-display text-[1.45rem] font-black leading-[1.1]">{{ ev.day }}</span>
+							<span class="text-xs font-extrabold tracking-[0.12em]">{{ ev.month }}</span>
+						</div>
+						<div class="flex flex-col gap-1">
+							<div class="text-[1.15rem] font-extrabold">{{ ev.title }}</div>
+							<div class="text-[0.95rem] text-muted-on-cream">{{ ev.when }} · {{ ev.where }}</div>
+						</div>
+						<a href="/calendar/" aria-label="View event: {{ ev.title }}"
+							class="whitespace-nowrap border-2 border-ink px-[18px] py-2.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white max-sm:hidden">
+							View event
+						</a>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</section>
+
+	{# ============ GET INVOLVED STEPS ============ #}
+	<section id="get-involved" class="get-involved-steps bg-ink px-6 py-24 text-cream" data-tone="ink">
+		<div class="mx-auto flex max-w-[1100px] flex-col gap-12">
+			<div class="flex flex-col gap-4">
+				<div class="text-[0.85rem] font-extrabold uppercase tracking-[0.18em] text-brand-red">Get involved</div>
+				<h2 class="m-0 max-w-[20ch] font-display text-[clamp(1.8rem,4vw,2.9rem)] font-black uppercase leading-[1.12]">Three steps to start organizing</h2>
+			</div>
+			<div class="grid gap-8 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
+				{% set steps = [
+					{ num: '01', title: 'Join DSA', body: 'Become a national DSA member — dues are sliding-scale, and membership automatically connects you to our chapter.', link_label: 'Sign up at dsausa.org →', href: chapter.join_url, external: true },
+					{ num: '02', title: 'Come to RGV-DSA 101', body: 'Our intro session for new and curious folks — what we do, how the chapter works, and how you can plug in. Virtual and in-person options.', link_label: 'Find a session →', href: '#events', external: false },
+					{ num: '03', title: 'Plug into the work', body: 'Join a committee, get on our WhatsApp, and show up. Members receive an invite to our communication channels after onboarding.', link_label: 'See committees →', href: '/get-involved/#committees', external: false }
+				] %}
+				{% for step in steps %}
+					<div class="step-card flex flex-col gap-3 border-t-4 border-brand-red pt-5">
+						<div class="font-display text-[2rem] font-black text-brand-red">{{ step.num }}</div>
+						<div class="text-[1.2rem] font-extrabold">{{ step.title }}</div>
+						<p class="m-0 text-base leading-[1.65] text-muted-on-ink">{{ step.body }}</p>
+						<a href="{{ step.href }}"{% if step.external %} target="_blank" rel="noopener"{% endif %}
+							class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:text-brand-red">
+							{{ step.link_label }}
+						</a>
+					</div>
+				{% endfor %}
+			</div>
+			<div class="flex flex-wrap items-center gap-4 border-t-2 border-ink-soft pt-8">
+				<span class="text-[0.9rem] font-extrabold uppercase tracking-[0.1em]">Follow along:</span>
+				<a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener"
+					class="border-2 border-cream bg-cream px-5 py-2.5 text-[0.95rem] font-extrabold text-ink no-underline hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white">
+					Instagram @dsa_rgv
+				</a>
+				<a href="mailto:hello@example.org"
+					class="border-2 border-cream bg-transparent px-5 py-2.5 text-[0.95rem] font-extrabold text-cream no-underline hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white">
+					Email us
+				</a>
+			</div>
+		</div>
+	</section>
+
+{% endblock %}

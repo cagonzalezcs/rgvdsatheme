@@ -166,3 +166,61 @@
     font-family: var(--font-sans);
   }
 }
+
+/* WP editor content on interior pages (unlayered so it beats legacy scss) */
+.prose-rgv {
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+.prose-rgv > * + * {
+  margin-top: 1.25em;
+}
+.prose-rgv h2 {
+  margin-top: 2em;
+  padding-bottom: 10px;
+  border-bottom: 3px solid var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.prose-rgv h3 {
+  margin-top: 1.75em;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.prose-rgv a {
+  color: var(--color-brand-red);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.prose-rgv a:hover {
+  color: var(--color-brand-red-deep);
+}
+.prose-rgv ul {
+  padding-left: 1.4em;
+  list-style: square;
+}
+.prose-rgv ol {
+  padding-left: 1.4em;
+  list-style: decimal;
+}
+.prose-rgv li + li {
+  margin-top: 0.5em;
+}
+.prose-rgv li::marker {
+  color: var(--color-brand-red);
+}
+.prose-rgv strong {
+  font-weight: 800;
+}
+.prose-rgv blockquote {
+  margin: 1.5em 0;
+  border-left: 4px solid var(--color-brand-red);
+  padding: 0.25em 0 0.25em 1.25em;
+  color: var(--color-muted-on-cream);
+}
