@@ -313,7 +313,9 @@ function rgvdsa_events_query( $args = array() ) {
  */
 add_filter( 'rgvdsa/context/page', 'rgvdsa_events_calendar_context', 10, 2 );
 function rgvdsa_events_calendar_context( $context, $timber_post ) {
-	if ( ! $timber_post || 'calendar' !== $timber_post->post_name ) {
+	// Key off the assigned page template, not a magic `calendar` slug, so
+	// renaming the page's slug/title never breaks the events wiring (D9).
+	if ( ! $timber_post || ! is_page_template( 'page-templates/calendar.php' ) ) {
 		return $context;
 	}
 

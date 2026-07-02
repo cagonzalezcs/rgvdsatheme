@@ -21,42 +21,11 @@ function rgvdsa_blog_field( $name, $post_id ) {
 }
 
 /**
- * Committees — chapter options when available, hardcoded fixture otherwise.
+ * Committees for byline choices — delegates to the single chapter-options
+ * source (inc/options.php owns the ACF repeater + design fixture fallback).
  */
 function rgvdsa_blog_committees() {
-	if ( function_exists( 'rgvdsa_chapter_committees' ) ) {
-		$committees = rgvdsa_chapter_committees();
-		if ( is_array( $committees ) && ! empty( $committees ) ) {
-			return $committees;
-		}
-	}
-
-	return array(
-		array(
-			'name' => 'Political Education',
-			'desc' => 'Reading groups, night school, and workshops that build our shared analysis.',
-		),
-		array(
-			'name' => 'Mutual Aid',
-			'desc' => "Meeting our neighbors' immediate needs while organizing for lasting change.",
-		),
-		array(
-			'name' => 'Labor',
-			'desc' => 'Supporting workers organizing on the job across the Valley.',
-		),
-		array(
-			'name' => 'Communications',
-			'desc' => "Social media, design, and this website — telling the chapter's story.",
-		),
-		array(
-			'name' => 'Electoral',
-			'desc' => 'Backing candidates and ballot measures that fight for working people.',
-		),
-		array(
-			'name' => 'Membership & Onboarding',
-			'desc' => 'Welcoming new members and making sure no one falls through the cracks.',
-		),
-	);
+	return function_exists( 'rgvdsa_chapter_committees' ) ? rgvdsa_chapter_committees() : array();
 }
 
 /**

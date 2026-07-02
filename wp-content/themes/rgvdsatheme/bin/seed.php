@@ -198,6 +198,32 @@ rgvdsa_seed_log(
 	. ' page_for_posts=' . get_option( 'page_for_posts' )
 );
 
+/* --- Calendar page: assign the "Calendar" template so the events wiring
+ *     keys off the template, not the `calendar` slug (D9); the slug is then
+ *     free to change without breaking the calendar. */
+$rgvdsa_seed_calendar_page = get_page_by_path( 'calendar' );
+if ( ! $rgvdsa_seed_calendar_page ) {
+	$calendar_page_id = wp_insert_post( array(
+		'post_type'   => 'page',
+		'post_status' => 'publish',
+		'post_title'  => 'Event Calendar',
+		'post_name'   => 'calendar',
+	), true );
+	if ( is_wp_error( $calendar_page_id ) ) {
+		rgvdsa_seed_log( 'ERROR calendar page: ' . $calendar_page_id->get_error_message() );
+		$calendar_page_id = 0;
+	} else {
+		rgvdsa_seed_log( "page created: calendar (#{$calendar_page_id})" );
+	}
+} else {
+	$calendar_page_id = (int) $rgvdsa_seed_calendar_page->ID;
+	rgvdsa_seed_log( "page exists: calendar (#{$calendar_page_id})" );
+}
+if ( $calendar_page_id ) {
+	update_post_meta( $calendar_page_id, '_wp_page_template', 'page-templates/calendar.php' );
+	rgvdsa_seed_log( 'calendar page template assigned: page-templates/calendar.php' );
+}
+
 $rgvdsa_seed_posts = array(
 	array( 'slug' => 'lorem-ipsum-dolor', 'title' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod', 'cat' => 'mutual', 'date' => '2026-06-14 10:00:00', 'excerpt' => 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 'dek' => 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 'byline_mode' => 'named', 'committee' => 'Mutual Aid Committee', 'sticky' => true ),
 	array( 'slug' => 'sed-ut-perspiciatis', 'title' => 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem', 'cat' => 'poled', 'date' => '2026-06-28 10:00:00', 'excerpt' => 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.', 'byline_mode' => 'named' ),
