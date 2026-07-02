@@ -13,13 +13,13 @@ defineProps<{
     <figure
       v-for="(img, i) in images"
       :key="i"
-      class="m-0 flex flex-col border-[3px] border-ink bg-white"
+      class="m-0 flex flex-col overflow-hidden rounded-[16px] bg-white shadow-gallery"
       :class="layout === 'essay' && i === 0 ? 'sm:col-span-2' : ''"
     >
       <div :class="layout === 'essay' && i === 0 ? 'h-[clamp(220px,34vw,360px)]' : 'h-[clamp(180px,24vw,280px)]'">
         <ImageSlot :src="img.src" :alt="img.alt" :label="layout === 'essay' && i === 0 ? 'Wide photo' : 'Photo'" />
       </div>
-      <figcaption v-if="img.caption" class="border-t-2 border-ink bg-white px-3.5 py-2.5 text-[0.85rem] text-muted-on-cream">
+      <figcaption v-if="img.caption" class="bg-white px-4 py-2.5 text-[0.85rem] text-text-muted">
         {{ img.caption }}
       </figcaption>
     </figure>

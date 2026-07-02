@@ -26,15 +26,12 @@ withDefaults(
         : ''
     "
   >
-    <div
-      class="h-[clamp(240px,38vw,440px)] border-[3px] border-ink bg-cream"
-      :style="{ boxShadow: `8px 8px 0 ${accent}` }"
-    >
+    <div class="h-[clamp(240px,38vw,440px)] overflow-hidden rounded-[18px] bg-white shadow-media">
       <ImageSlot :src="image.src" :alt="image.alt" label="Photo" />
     </div>
-    <figcaption v-if="image.caption || image.credit" class="px-1 pt-3 text-[0.9rem] leading-[1.5] text-muted-on-cream">
+    <figcaption v-if="image.caption || image.credit" class="px-1 pt-3 text-[0.9rem] leading-[1.5] text-text-muted">
       {{ image.caption }}
-      <span v-if="image.credit" class="text-muted-2">{{ image.credit }}</span>
+      <span v-if="image.credit" class="text-text-faint">{{ image.credit }}</span>
     </figcaption>
   </figure>
 </template>

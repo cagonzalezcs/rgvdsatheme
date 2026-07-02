@@ -8,10 +8,10 @@ defineProps<{
 
 <template>
   <aside
-    class="block-action-callout flex w-full flex-col gap-[18px] border-[3px] border-ink bg-ink px-10 py-9 text-cream shadow-brutal-red"
+    class="block-action-callout flex w-full flex-col gap-[18px] rounded-[20px] bg-ink px-10 py-9 text-white"
     data-tone="ink"
   >
-    <div class="max-w-[24ch] font-display text-[clamp(1.4rem,3vw,1.9rem)] font-black uppercase leading-[1.15]">
+    <div class="max-w-[24ch] font-display text-[clamp(1.4rem,3vw,1.9rem)] font-extrabold leading-[1.2] tracking-[-0.01em]">
       {{ heading }}
     </div>
     <p class="m-0 max-w-[56ch] text-[1.05rem] leading-[1.7] text-muted-on-ink">{{ body }}</p>
@@ -20,11 +20,11 @@ defineProps<{
         v-for="btn in buttons"
         :key="btn.label"
         :href="btn.url"
-        class="px-[26px] py-[13px] text-[0.95rem] font-extrabold uppercase tracking-[0.05em] no-underline"
+        class="rounded-full px-[26px] py-[13px] text-[0.95rem] font-bold no-underline transition-colors"
         :class="
           btn.style === 'primary'
-            ? 'border-[3px] border-cream bg-cream text-ink shadow-[5px_5px_0_var(--color-brand-red)] transition-[box-shadow,transform] duration-100 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[3px_3px_0_var(--color-brand-red)]'
-            : 'border-[3px] border-cream bg-transparent text-cream hover:border-brand-red-deep hover:bg-brand-red-deep'
+            ? 'bg-white text-ink hover:bg-pink'
+            : 'border-2 border-[#57534e] bg-transparent text-white hover:border-white'
         "
       >
         {{ btn.label }}

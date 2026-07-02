@@ -38,7 +38,7 @@ const totalLabel = computed(() =>
 </script>
 
 <template>
-  <div class="block-audio flex w-[min(74ch,100%)] flex-col gap-3.5 border-[3px] border-ink bg-white px-[26px] py-[22px]">
+  <div class="block-audio flex w-[min(74ch,100%)] flex-col gap-3.5 rounded-[18px] bg-white px-[26px] py-[22px] shadow-media">
     <!-- Audio-only: WCAG wants a transcript (the "Read transcript" link below), not a video caption track. -->
     <!-- eslint-disable-next-line vuejs-accessibility/media-has-caption -->
     <audio
@@ -56,21 +56,21 @@ const totalLabel = computed(() =>
       <button
         type="button"
         :aria-label="`${playing ? 'Pause' : 'Play'} audio: ${title}`"
-        class="size-14 flex-none cursor-pointer border-[3px] border-ink bg-brand-red text-[1.1rem] text-cream shadow-[4px_4px_0_var(--color-ink)] transition-[box-shadow,transform] duration-100 hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_var(--color-ink)]"
+        class="size-14 flex-none cursor-pointer rounded-full bg-red text-[1.1rem] text-white shadow-[0_4px_14px_rgba(28,25,23,0.25)] transition-colors duration-100 hover:bg-red-hover"
         @click="toggle"
       >
         {{ playing ? "⏸" : "▶" }}
       </button>
       <div class="flex flex-[1_1_260px] flex-col gap-2.5">
-        <div class="text-[1.05rem] font-extrabold">{{ title }}</div>
-        <div aria-hidden="true" class="relative h-3 border-2 border-ink bg-muted">
-          <div class="absolute inset-y-0 left-0" :style="{ width: `${progressPct}%`, background: accent }"></div>
+        <div class="text-[1.05rem] font-bold">{{ title }}</div>
+        <div aria-hidden="true" class="relative h-2.5 overflow-hidden rounded-full bg-divider">
+          <div class="absolute inset-y-0 left-0 rounded-full" :style="{ width: `${progressPct}%`, background: accent }"></div>
         </div>
-        <div class="flex justify-between font-mono text-[0.8rem] text-muted-on-cream">
+        <div class="flex justify-between font-mono text-[0.8rem] text-text-muted">
           <span>{{ currentLabel }}</span><span>{{ totalLabel }}</span>
         </div>
       </div>
     </div>
-    <a :href="transcriptUrl" class="self-start text-[0.9rem] font-bold text-brand-red-deep hover:text-ink">Read transcript</a>
+    <a :href="transcriptUrl" class="self-start text-[0.9rem] font-bold text-red hover:underline hover:underline-offset-[3px]">Read transcript</a>
   </div>
 </template>
