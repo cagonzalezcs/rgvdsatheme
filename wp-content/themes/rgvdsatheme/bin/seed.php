@@ -27,12 +27,12 @@ if ( ! function_exists( 'update_field' ) ) {
  * ---------------------------------------------------------------------- */
 
 $rgvdsa_seed_palette = function_exists( 'rgvdsa_events_palette' ) ? rgvdsa_events_palette() : array(
-	'chapter'   => array( 'label' => 'Chapter-Wide', 'color' => '#E9252E' ),
-	'poled'     => array( 'label' => 'Political Education', 'color' => '#3A5BA0' ),
-	'mutual'    => array( 'label' => 'Mutual Aid', 'color' => '#1F7A48' ),
-	'labor'     => array( 'label' => 'Labor', 'color' => '#A3641C' ),
-	'electoral' => array( 'label' => 'Electoral', 'color' => '#7C4396' ),
-	'social'    => array( 'label' => 'Social', 'color' => '#0E7C86' ),
+	'chapter'   => array( 'label' => 'Chapter-Wide', 'color' => '#B01B22' ),
+	'poled'     => array( 'label' => 'Political Education', 'color' => '#33518F' ),
+	'mutual'    => array( 'label' => 'Mutual Aid', 'color' => '#1B6B40' ),
+	'labor'     => array( 'label' => 'Labor', 'color' => '#8F5715' ),
+	'electoral' => array( 'label' => 'Electoral', 'color' => '#6E3B87' ),
+	'social'    => array( 'label' => 'Social', 'color' => '#0A6B74' ),
 );
 
 $rgvdsa_seed_color_field_keys = array(
@@ -465,6 +465,7 @@ function rgvdsa_seed_menu( $name, $location, $items ) {
 
 rgvdsa_seed_menu( 'Primary', 'primary', array(
 	'Calendar'     => '/calendar/',
+	'Blog'         => '/blog/',
 	'Get Involved' => '/get-involved/',
 ) );
 

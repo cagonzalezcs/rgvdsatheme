@@ -150,6 +150,7 @@
   --color-text-body: #44403c;
   --color-text-muted: #57534e;
   --color-text-strong: #292524;
+  --color-text-faint: #78716c;
   --color-hairline: #ece6da; /* 1px hairline on white/cream */
   --color-divider: #f0ede8; /* inner divider in white cards */
   --color-border-control: #d6d0c4; /* inputs, inactive chips/tags */

@@ -20,27 +20,27 @@ function rgvdsa_blog_canonical_palette() {
 	return array(
 		'chapter'   => array(
 			'label' => 'Chapter-Wide',
-			'color' => '#E9252E',
+			'color' => '#B01B22',
 		),
 		'poled'     => array(
 			'label' => 'Political Education',
-			'color' => '#3A5BA0',
+			'color' => '#33518F',
 		),
 		'mutual'    => array(
 			'label' => 'Mutual Aid',
-			'color' => '#1F7A48',
+			'color' => '#1B6B40',
 		),
 		'labor'     => array(
 			'label' => 'Labor',
-			'color' => '#A3641C',
+			'color' => '#8F5715',
 		),
 		'electoral' => array(
 			'label' => 'Electoral',
-			'color' => '#7C4396',
+			'color' => '#6E3B87',
 		),
 		'social'    => array(
 			'label' => 'Social',
-			'color' => '#0E7C86',
+			'color' => '#0A6B74',
 		),
 	);
 }

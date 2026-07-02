@@ -95,40 +95,40 @@ const selectedEvent = computed(
 
 <template>
   <div class="event-calendar">
-    <section class="bg-cream px-6 pt-9" data-tone="cream">
+    <section class="bg-white px-6 pt-10" data-tone="cream">
       <div class="mx-auto flex max-w-[1200px] flex-col gap-5">
         <div class="flex flex-wrap items-center justify-between gap-5">
-          <div class="flex items-stretch border-[3px] border-ink bg-white">
+          <div class="flex items-stretch overflow-hidden rounded-[12px] bg-white shadow-card">
             <button
               type="button"
               aria-label="Previous month"
-              class="cursor-pointer border-r-[3px] border-ink bg-transparent px-[18px] py-2.5 text-[1.1rem] font-extrabold text-ink hover:bg-brand-red-deep hover:text-white"
+              class="cursor-pointer bg-transparent px-[18px] py-2.5 text-[1.1rem] font-bold text-red hover:bg-wash"
               @click="monthOffset--"
             >
               ←
             </button>
             <div
               aria-live="polite"
-              class="flex min-w-[220px] items-center justify-center px-[26px] py-2.5 font-display text-[1.15rem] font-extrabold uppercase tracking-[0.03em]"
+              class="flex min-w-[210px] items-center justify-center px-[26px] py-2.5 font-display text-[1.1rem] font-bold"
             >
               {{ monthLabel }}
             </div>
             <button
               type="button"
               aria-label="Next month"
-              class="cursor-pointer border-l-[3px] border-ink bg-transparent px-[18px] py-2.5 text-[1.1rem] font-extrabold text-ink hover:bg-brand-red-deep hover:text-white"
+              class="cursor-pointer bg-transparent px-[18px] py-2.5 text-[1.1rem] font-bold text-red hover:bg-wash"
               @click="monthOffset++"
             >
               →
             </button>
           </div>
 
-          <div role="group" aria-label="View" class="flex border-[3px] border-ink">
+          <div role="group" aria-label="View" class="flex gap-1 rounded-full bg-off-white p-1">
             <button
               type="button"
               :aria-pressed="view === 'month'"
-              class="cursor-pointer px-6 py-3 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.05em]"
-              :class="view === 'month' ? 'bg-ink text-cream' : 'bg-white text-ink'"
+              class="cursor-pointer rounded-full px-6 py-2.5 font-display text-[0.85rem] font-bold"
+              :class="view === 'month' ? 'bg-ink text-white' : 'text-ink'"
               @click="view = 'month'"
             >
               Month
@@ -136,8 +136,8 @@ const selectedEvent = computed(
             <button
               type="button"
               :aria-pressed="view === 'list'"
-              class="cursor-pointer px-6 py-3 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.05em]"
-              :class="view === 'list' ? 'bg-ink text-cream' : 'bg-white text-ink'"
+              class="cursor-pointer rounded-full px-6 py-2.5 font-display text-[0.85rem] font-bold"
+              :class="view === 'list' ? 'bg-ink text-white' : 'text-ink'"
               @click="view = 'list'"
             >
               List
@@ -146,20 +146,20 @@ const selectedEvent = computed(
         </div>
 
         <div aria-label="Filter by category" class="flex flex-wrap items-center gap-2">
-          <span class="mr-1.5 font-display text-[0.8rem] font-extrabold uppercase tracking-[0.08em]">Filter:</span>
+          <span class="mr-1.5 font-display text-[0.82rem] font-bold uppercase tracking-[0.06em] text-text-muted">Filter:</span>
           <button
             v-for="cat in EVENT_CATEGORIES"
             :key="cat.id"
             type="button"
             :aria-pressed="activeCat === cat.id"
-            class="inline-flex cursor-pointer items-center gap-2 border-2 border-ink px-3.5 py-2 text-[0.85rem] font-bold"
-            :class="activeCat === cat.id ? 'bg-ink text-cream' : 'bg-white text-ink'"
+            class="inline-flex cursor-pointer items-center gap-2 rounded-full border px-3.5 py-2 text-[0.85rem] font-bold"
+            :class="activeCat === cat.id ? 'border-ink bg-ink text-white' : 'border-border-control bg-white text-ink'"
             @click="activeCat = cat.id"
           >
             <span
               v-if="cat.color && showCategoryColors"
               aria-hidden="true"
-              class="inline-block size-2.5 flex-none"
+              class="inline-block size-2.5 flex-none rounded-full"
               :style="{ background: cat.color }"
             ></span>
             <span>{{ cat.label }}</span>
@@ -168,7 +168,7 @@ const selectedEvent = computed(
       </div>
     </section>
 
-    <section v-if="view === 'month'" class="bg-cream px-6 pb-10 pt-6" data-tone="cream">
+    <section v-if="view === 'month'" class="bg-white px-6 pb-12 pt-6" data-tone="cream">
       <div class="mx-auto max-w-[1200px]">
         <MonthGrid
           :year="visibleMonth.year"
@@ -177,13 +177,13 @@ const selectedEvent = computed(
           :show-category-colors="showCategoryColors"
           @select="selectedId = $event"
         />
-        <p class="mt-3.5 text-[0.9rem] text-muted-on-cream">
+        <p class="mt-3.5 text-[0.9rem] text-text-muted">
           Select an event for details, location, and how to RSVP.
         </p>
       </div>
     </section>
 
-    <section v-else class="bg-cream px-6 pb-10 pt-6" data-tone="cream">
+    <section v-else class="bg-white px-6 pb-12 pt-6" data-tone="cream">
       <div class="mx-auto max-w-[900px]">
         <EventListView
           :events="monthEvents"
@@ -199,10 +199,10 @@ const selectedEvent = computed(
       @close="selectedId = null"
     />
 
-    <section v-if="showSubscribe" class="bg-ink px-6 py-14 text-cream" data-tone="ink">
+    <section v-if="showSubscribe" class="bg-ink px-6 py-14 text-white" data-tone="ink">
       <div class="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-8">
         <div class="flex max-w-[56ch] flex-col gap-2">
-          <h2 class="m-0 font-display text-[1.6rem] font-black uppercase">Never miss a meeting</h2>
+          <h2 class="m-0 font-display text-[1.6rem] font-extrabold tracking-[-0.01em]">Never miss a meeting</h2>
           <p class="m-0 text-base leading-[1.65] text-muted-on-ink">
             Subscribe to the chapter calendar and events land straight in your own. We also announce everything in the members&rsquo; WhatsApp.
           </p>
@@ -210,13 +210,13 @@ const selectedEvent = computed(
         <div class="flex flex-wrap gap-3">
           <a
             :href="googleCalUrl"
-            class="bg-cream px-6 py-[13px] text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white"
+            class="rounded-full bg-white px-[26px] py-[13px] text-[0.95rem] font-bold text-ink no-underline transition-colors hover:bg-pink"
           >
             Google Calendar
           </a>
           <a
             :href="icsUrl"
-            class="border-2 border-cream bg-transparent px-6 py-[13px] text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:border-brand-red-deep hover:bg-brand-red-deep"
+            class="rounded-full border-2 border-[#57534e] bg-transparent px-6 py-[11px] text-[0.95rem] font-bold text-white no-underline transition-colors hover:border-white"
           >
             iCal / Outlook
           </a>

@@ -56,34 +56,34 @@ function chipColor(ev: ChapterEvent): string {
 </script>
 
 <template>
-  <div class="month-grid border-[3px] border-ink bg-ink">
-    <div class="grid grid-cols-7 gap-[2px] bg-ink">
+  <div class="month-grid overflow-hidden rounded-[16px] bg-hairline shadow-[0_4px_18px_rgba(28,25,23,0.12)]">
+    <div class="grid grid-cols-7 gap-px bg-ink">
       <div
         v-for="wd in WEEKDAYS"
         :key="wd"
-        class="bg-ink px-3 py-2.5 font-display text-[0.8rem] font-extrabold uppercase tracking-[0.08em] text-cream"
+        class="bg-ink px-3 py-3 font-display text-[0.8rem] font-bold uppercase tracking-[0.08em] text-white"
       >
         {{ wd }}
       </div>
     </div>
-    <div class="grid grid-cols-7 gap-[2px] bg-ink">
+    <div class="grid grid-cols-7 gap-px bg-hairline">
       <div
         v-for="day in cells"
         :key="day.key"
         class="flex min-h-[112px] min-w-0 flex-col gap-1.5 p-2"
-        :class="day.inMonth ? 'bg-white' : 'bg-cell-outmonth opacity-55'"
+        :class="day.inMonth ? 'bg-white' : 'bg-[#f5f3ef]'"
       >
         <div class="flex justify-end">
           <span
             v-if="day.isToday"
-            class="bg-brand-red-deep px-2 py-0.5 font-display text-[0.85rem] font-extrabold text-cream"
+            class="rounded-full bg-brand-red px-[9px] py-0.5 font-display text-[0.85rem] font-bold text-white"
           >
             {{ day.num }}
           </span>
           <span
             v-else
             class="font-display text-[0.85rem] font-bold"
-            :class="day.inMonth ? 'text-ink' : 'text-[#8A8175]'"
+            :class="day.inMonth ? 'text-ink' : 'text-text-faint'"
           >
             {{ day.num }}
           </span>
@@ -95,7 +95,7 @@ function chipColor(ev: ChapterEvent): string {
             type="button"
             :title="`${ev.title} — ${ev.time}`"
             :style="{ background: chipColor(ev) }"
-            class="block w-full cursor-pointer truncate border-none px-[7px] py-1 text-left text-[0.74rem] font-bold leading-[1.25] text-white hover:outline-2 hover:outline-offset-1 hover:outline-ink"
+            class="block w-full cursor-pointer truncate rounded-[6px] border-none px-[7px] py-1 text-left text-[0.74rem] font-bold leading-[1.25] text-white hover:outline-2 hover:outline-offset-1 hover:outline-ink"
             @click="emit('select', ev.id)"
           >
             {{ ev.title }}

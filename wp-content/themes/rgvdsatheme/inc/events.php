@@ -22,27 +22,27 @@ function rgvdsa_events_palette() {
 	return array(
 		'chapter'   => array(
 			'label' => 'Chapter-Wide',
-			'color' => '#E9252E',
+			'color' => '#B01B22',
 		),
 		'poled'     => array(
 			'label' => 'Political Education',
-			'color' => '#3A5BA0',
+			'color' => '#33518F',
 		),
 		'mutual'    => array(
 			'label' => 'Mutual Aid',
-			'color' => '#1F7A48',
+			'color' => '#1B6B40',
 		),
 		'labor'     => array(
 			'label' => 'Labor',
-			'color' => '#A3641C',
+			'color' => '#8F5715',
 		),
 		'electoral' => array(
 			'label' => 'Electoral',
-			'color' => '#7C4396',
+			'color' => '#6E3B87',
 		),
 		'social'    => array(
 			'label' => 'Social',
-			'color' => '#0E7C86',
+			'color' => '#0A6B74',
 		),
 	);
 }
@@ -276,7 +276,7 @@ function rgvdsa_event_to_chapter_event( $post ) {
 		'date'     => $start ? $start->format( 'Y-m-d' ) : get_the_date( 'Y-m-d', $wp_post ),
 		'time'     => rgvdsa_events_format_time_range( $start, $end ),
 		'cat'      => $cat,
-		'title'    => get_the_title( $wp_post ),
+		'title'    => html_entity_decode( get_the_title( $wp_post ), ENT_QUOTES, 'UTF-8' ),
 		'location' => $location,
 		'desc'     => trim( wp_strip_all_tags( $wp_post->post_content ) ),
 	);
@@ -443,7 +443,7 @@ function rgvdsa_events_front_page_context( $context ) {
 		$home_events[] = array(
 			'day'   => $start->format( 'd' ),
 			'month' => strtoupper( $start->format( 'M' ) ),
-			'title' => get_the_title( $event_post ),
+			'title' => html_entity_decode( get_the_title( $event_post ), ENT_QUOTES, 'UTF-8' ),
 			'when'  => $start->format( 'l, F j' ) . ' · ' . $start->format( 'g:i A' ),
 			'where' => $city ? $city : $venue,
 		);
