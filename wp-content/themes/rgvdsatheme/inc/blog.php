@@ -618,17 +618,13 @@ function rgvdsa_blog_post_cat( $post ) {
 }
 
 /**
- * ACF read_minutes override, else word count (post_content + prose blocks) at 200 wpm.
+ * Word count (post_content + prose blocks) at 200 wpm. Loads the
+ * post_blocks flexible field — save-time / self-heal only, never per card.
  */
-function rgvdsa_blog_read_minutes( $post ) {
-	$post = get_post( $post );
+function rgvdsa_blog_compute_read_minutes( $post_id ) {
+	$post = get_post( $post_id );
 	if ( ! $post ) {
 		return 1;
-	}
-
-	$override = (int) rgvdsa_blog_field( 'read_minutes', $post->ID );
-	if ( $override > 0 ) {
-		return $override;
 	}
 
 	$text   = $post->post_content;
@@ -646,26 +642,112 @@ function rgvdsa_blog_read_minutes( $post ) {
 	return max( 1, (int) round( $words / 200 ) );
 }
 
+// Precompute at save (priority 20 — after ACF has written post_blocks meta).
+add_action( 'save_post_post', 'rgvdsa_blog_store_read_minutes', 20 );
+
+function rgvdsa_blog_store_read_minutes( $post_id ) {
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	update_post_meta( $post_id, '_rgvdsa_read_minutes', rgvdsa_blog_compute_read_minutes( $post_id ) );
+}
+
+/**
+ * ACF read_minutes override, else precomputed `_rgvdsa_read_minutes` meta
+ * (primed by WP_Query's meta cache — no per-card post_blocks load).
+ * Computes + stores once when the meta is absent (pre-hook posts).
+ */
+function rgvdsa_blog_read_minutes( $post ) {
+	$post = get_post( $post );
+	if ( ! $post ) {
+		return 1;
+	}
+
+	$override = (int) rgvdsa_blog_field( 'read_minutes', $post->ID );
+	if ( $override > 0 ) {
+		return $override;
+	}
+
+	$stored = (int) get_post_meta( $post->ID, '_rgvdsa_read_minutes', true );
+	if ( $stored > 0 ) {
+		return $stored;
+	}
+
+	$minutes = rgvdsa_blog_compute_read_minutes( $post->ID );
+	update_post_meta( $post->ID, '_rgvdsa_read_minutes', $minutes );
+
+	return $minutes;
+}
+
 /**
  * PostImage assoc array from an ACF image array (caption/credit keys omitted when empty).
  */
 function rgvdsa_blog_post_image( $image, $alt, $caption = '', $credit = '' ) {
 	$out = array(
 		'src' => null,
-		'alt' => (string) $alt,
+		'alt' => rgvdsa_blog_kses_plain( $alt ),
 	);
 
 	if ( is_array( $image ) ) {
 		$out['src'] = $image['sizes']['large'] ?? $image['url'] ?? null;
 	}
-	if ( '' !== (string) $caption ) {
-		$out['caption'] = (string) $caption;
+	$caption = rgvdsa_blog_kses_plain( $caption );
+	if ( '' !== $caption ) {
+		$out['caption'] = $caption;
 	}
-	if ( '' !== (string) $credit ) {
-		$out['credit'] = (string) $credit;
+	$credit = rgvdsa_blog_kses_plain( $credit );
+	if ( '' !== $credit ) {
+		$out['credit'] = $credit;
 	}
 
 	return $out;
+}
+
+/**
+ * Sanitize prose HTML (the one field that reaches BlockProse's `v-html`).
+ * Allowlist matches the styleguide prose set (design D4); extend it
+ * deliberately, not reactively. Reused verbatim by the Gutenberg serializer.
+ */
+function rgvdsa_blog_kses_prose( $html ) {
+	$allowed = array(
+		'p'          => array(),
+		'h2'         => array(),
+		'h3'         => array(),
+		'h4'         => array(),
+		'ul'         => array(),
+		'ol'         => array(),
+		'li'         => array(),
+		'a'          => array(
+			'href'   => true,
+			'title'  => true,
+			'rel'    => true,
+			'target' => true,
+		),
+		'strong'     => array(),
+		'em'         => array(),
+		'b'          => array(),
+		'i'          => array(),
+		'br'         => array(),
+		'blockquote' => array(),
+		'cite'       => array(),
+		'code'       => array(),
+		'sub'        => array(),
+		'sup'        => array(),
+		'mark'       => array(),
+		's'          => array(),
+	);
+
+	return wp_kses( (string) $html, $allowed );
+}
+
+/**
+ * Plain-text pass for captions, quotes, attributions, and callout fields:
+ * strips all markup (the islands render these as escaped text, so this is
+ * defense-in-depth + parity with the Gutenberg serializer).
+ */
+function rgvdsa_blog_kses_plain( $text ) {
+	return trim( wp_strip_all_tags( (string) $text ) );
 }
 
 /**
@@ -682,7 +764,7 @@ function rgvdsa_blog_map_blocks( $post_id ) {
 	foreach ( $rows as $row ) {
 		switch ( $row['acf_fc_layout'] ?? '' ) {
 			case 'prose':
-				$html = trim( (string) ( $row['content'] ?? '' ) );
+				$html = rgvdsa_blog_kses_prose( trim( (string) ( $row['content'] ?? '' ) ) );
 				if ( '' === $html ) {
 					break;
 				}
@@ -716,16 +798,17 @@ function rgvdsa_blog_map_blocks( $post_id ) {
 				break;
 
 			case 'pull_quote':
-				$quote = trim( (string) ( $row['quote'] ?? '' ) );
+				$quote = rgvdsa_blog_kses_plain( $row['quote'] ?? '' );
 				if ( '' === $quote ) {
 					break;
 				}
-				$block = array(
+				$block       = array(
 					'type'  => 'pull_quote',
 					'quote' => $quote,
 				);
-				if ( '' !== (string) ( $row['attribution'] ?? '' ) ) {
-					$block['attribution'] = (string) $row['attribution'];
+				$attribution = rgvdsa_blog_kses_plain( $row['attribution'] ?? '' );
+				if ( '' !== $attribution ) {
+					$block['attribution'] = $attribution;
 				}
 				$blocks[] = $block;
 				break;
@@ -756,8 +839,8 @@ function rgvdsa_blog_map_blocks( $post_id ) {
 				break;
 
 			case 'person_quote':
-				$quote = trim( (string) ( $row['quote'] ?? '' ) );
-				$name  = trim( (string) ( $row['name'] ?? '' ) );
+				$quote = rgvdsa_blog_kses_plain( $row['quote'] ?? '' );
+				$name  = rgvdsa_blog_kses_plain( $row['name'] ?? '' );
 				if ( '' === $quote || '' === $name ) {
 					break;
 				}
@@ -773,11 +856,13 @@ function rgvdsa_blog_map_blocks( $post_id ) {
 					'name'  => $name,
 					'lang'  => 'es' === ( $row['lang'] ?? '' ) ? 'es' : 'en',
 				);
-				if ( '' !== (string) ( $row['translation'] ?? '' ) ) {
-					$block['translation'] = (string) $row['translation'];
+				$translation = rgvdsa_blog_kses_plain( $row['translation'] ?? '' );
+				if ( '' !== $translation ) {
+					$block['translation'] = $translation;
 				}
-				if ( '' !== (string) ( $row['role'] ?? '' ) ) {
-					$block['role'] = (string) $row['role'];
+				$role = rgvdsa_blog_kses_plain( $row['role'] ?? '' );
+				if ( '' !== $role ) {
+					$block['role'] = $role;
 				}
 				$blocks[] = $block;
 				break;
@@ -790,8 +875,9 @@ function rgvdsa_blog_map_blocks( $post_id ) {
 				if ( is_array( $row['poster'] ?? null ) ) {
 					$block['poster'] = $row['poster']['sizes']['large'] ?? $row['poster']['url'] ?? null;
 				}
-				if ( '' !== (string) ( $row['caption'] ?? '' ) ) {
-					$block['caption'] = (string) $row['caption'];
+				$caption = rgvdsa_blog_kses_plain( $row['caption'] ?? '' );
+				if ( '' !== $caption ) {
+					$block['caption'] = $caption;
 				}
 				if ( '' !== (string) ( $row['transcript_url'] ?? '' ) ) {
 					$block['transcriptUrl'] = (string) $row['transcript_url'];
@@ -859,26 +945,26 @@ function rgvdsa_blog_map_blocks( $post_id ) {
 				break;
 
 			case 'action_callout':
-				$heading = trim( (string) ( $row['heading'] ?? '' ) );
+				$heading = rgvdsa_blog_kses_plain( $row['heading'] ?? '' );
 				if ( '' === $heading ) {
 					break;
 				}
 				$buttons = array();
 				foreach ( (array) ( $row['buttons'] ?? array() ) as $btn ) {
-					$label = trim( (string) ( $btn['label'] ?? '' ) );
+					$label = rgvdsa_blog_kses_plain( $btn['label'] ?? '' );
 					if ( '' === $label ) {
 						continue;
 					}
 					$buttons[] = array(
 						'label' => $label,
-						'url'   => (string) ( $btn['url'] ?? '' ),
+						'url'   => esc_url_raw( (string) ( $btn['url'] ?? '' ) ),
 						'style' => 'outline' === ( $btn['style'] ?? '' ) ? 'outline' : 'primary',
 					);
 				}
 				$blocks[] = array(
 					'type'    => 'action_callout',
 					'heading' => $heading,
-					'body'    => (string) ( $row['body'] ?? '' ),
+					'body'    => rgvdsa_blog_kses_plain( $row['body'] ?? '' ),
 					'buttons' => $buttons,
 				);
 				break;
@@ -960,11 +1046,13 @@ function rgvdsa_post_to_single( $post ) {
 		'src' => get_the_post_thumbnail_url( $post, 'large' ) ?: null,
 		'alt' => '' !== $thumb_alt ? $thumb_alt : $title,
 	);
-	if ( '' !== (string) rgvdsa_blog_field( 'featured_caption', $post->ID ) ) {
-		$featured_image['caption'] = (string) rgvdsa_blog_field( 'featured_caption', $post->ID );
+	$featured_caption = rgvdsa_blog_kses_plain( rgvdsa_blog_field( 'featured_caption', $post->ID ) );
+	if ( '' !== $featured_caption ) {
+		$featured_image['caption'] = $featured_caption;
 	}
-	if ( '' !== (string) rgvdsa_blog_field( 'featured_credit', $post->ID ) ) {
-		$featured_image['credit'] = (string) rgvdsa_blog_field( 'featured_credit', $post->ID );
+	$featured_credit = rgvdsa_blog_kses_plain( rgvdsa_blog_field( 'featured_credit', $post->ID ) );
+	if ( '' !== $featured_credit ) {
+		$featured_image['credit'] = $featured_credit;
 	}
 
 	$tags = wp_get_post_terms( $post->ID, 'post_tag', array( 'fields' => 'names' ) );
@@ -991,6 +1079,35 @@ function rgvdsa_post_to_single( $post ) {
  * Context wiring.
  * ---------------------------------------------------------------------- */
 
+/**
+ * Shared post-list query (archive / read-next / home teasers; REST later).
+ * Primes author + thumbnail caches for the result set so serializers hit
+ * caches instead of issuing per-post queries (WP_Query already primes
+ * meta/terms).
+ *
+ * @param array $args WP_Query overrides merged over the blog defaults.
+ * @return WP_Query
+ */
+function rgvdsa_blog_posts_query( $args = array() ) {
+	$query = new WP_Query(
+		wp_parse_args(
+			$args,
+			array(
+				'post_type'           => 'post',
+				'post_status'         => 'publish',
+				'ignore_sticky_posts' => true,
+			)
+		)
+	);
+
+	if ( ! empty( $query->posts ) ) {
+		update_post_author_caches( $query->posts );
+		update_post_thumbnail_cache( $query );
+	}
+
+	return $query;
+}
+
 // Blog archive / posts page / search — the BlogArchive island payload.
 add_filter( 'rgvdsa/context/blog_archive', 'rgvdsa_blog_archive_context' );
 
@@ -1000,11 +1117,8 @@ function rgvdsa_blog_archive_context( $context ) {
 	$paged = max( 1, (int) get_query_var( 'paged' ) );
 
 	$args = array(
-		'post_type'           => 'post',
-		'post_status'         => 'publish',
-		'posts_per_page'      => 24,
-		'paged'               => $paged,
-		'ignore_sticky_posts' => true,
+		'posts_per_page' => 24,
+		'paged'          => $paged,
 	);
 
 	// Custom ?category= param (island filter state) → category_name.
@@ -1019,7 +1133,7 @@ function rgvdsa_blog_archive_context( $context ) {
 		$args['s'] = $search;
 	}
 
-	$query = new WP_Query( $args );
+	$query = rgvdsa_blog_posts_query( $args );
 
 	// Leave archive_posts unset pre-seed so the island fixture holds.
 	if ( empty( $query->posts ) ) {
@@ -1062,13 +1176,10 @@ function rgvdsa_blog_single_context( $context, $timber_post ) {
 
 	// Read Next pool — latest 12, current excluded; the island narrows to
 	// same-category latest 3.
-	$pool = new WP_Query(
+	$pool = rgvdsa_blog_posts_query(
 		array(
-			'post_type'           => 'post',
-			'post_status'         => 'publish',
-			'posts_per_page'      => 12,
-			'post__not_in'        => array( (int) $timber_post->ID ),
-			'ignore_sticky_posts' => true,
+			'posts_per_page' => 12,
+			'post__not_in'   => array( (int) $timber_post->ID ),
 		)
 	);
 
@@ -1081,14 +1192,7 @@ function rgvdsa_blog_single_context( $context, $timber_post ) {
 add_filter( 'rgvdsa/context/front_page', 'rgvdsa_blog_front_page_context' );
 
 function rgvdsa_blog_front_page_context( $context ) {
-	$query = new WP_Query(
-		array(
-			'post_type'           => 'post',
-			'post_status'         => 'publish',
-			'posts_per_page'      => 3,
-			'ignore_sticky_posts' => true,
-		)
-	);
+	$query = rgvdsa_blog_posts_query( array( 'posts_per_page' => 3 ) );
 
 	// Leave the twig fixture in place pre-seed.
 	if ( empty( $query->posts ) ) {
