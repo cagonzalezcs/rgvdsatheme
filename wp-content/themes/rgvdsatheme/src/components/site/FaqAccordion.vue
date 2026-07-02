@@ -22,15 +22,15 @@ defineProps<{
       v-for="(item, index) in items"
       :key="item.question"
       :value="`faq-${index}`"
-      class="border-2 border-ink bg-white last:border-b-2"
+      class="overflow-hidden rounded-[14px] border-none bg-white shadow-card"
     >
       <AccordionTrigger
-        class="items-center gap-4 bg-transparent px-5 py-4 text-base font-extrabold text-ink hover:text-brand-red-deep hover:no-underline"
+        class="items-center gap-4 rounded-none bg-transparent px-[22px] py-[18px] text-base font-bold text-ink hover:bg-tint hover:no-underline"
       >
         <span>{{ item.question }}</span>
         <template #icon>
           <svg
-            class="pointer-events-none size-4 shrink-0 text-brand-red-deep"
+            class="pointer-events-none size-4 shrink-0 text-red"
             aria-hidden="true"
             viewBox="0 0 16 16"
             fill="none"
@@ -43,8 +43,8 @@ defineProps<{
           </svg>
         </template>
       </AccordionTrigger>
-      <AccordionContent class="px-5 pb-[18px]">
-        <p class="m-0 text-base leading-[1.7] text-ink">{{ item.answer }}</p>
+      <AccordionContent class="px-[22px] pb-5">
+        <p class="m-0 text-base leading-[1.7] text-text-body">{{ item.answer }}</p>
       </AccordionContent>
     </AccordionItem>
   </Accordion>
