@@ -17,7 +17,8 @@ Open any `designs/*.dc.html` in a browser to see the working prototype.
 1. **`01-ARCHITECTURE.md`** — technical implementation notes: how Vue 3, Tailwind v4, and shadcn-vue slot into the existing Timber/vite-for-wp theme; branch strategy; rendering architecture options; BEM stance; existing-code coexistence.
 2. **`02-PHASES.md`** — the phased build plan, written as self-contained briefs to hand to separate Claude Code agents/contexts, with acceptance criteria per phase.
 3. **`03-DESIGN-SPEC.md`** — design tokens, typography scale, per-page component inventory, interaction specs, the shadcn-vue component mapping, and the **Accessibility (WCAG 2.1 AA)** requirements (contrast in every state incl. hover, focus, motion, targets, ARIA + a per-phase a11y gate).
-4. **`designs/`** — the seven HTML prototypes + runtime + logo assets.
+4. **`04-V2-HANDOFF-NOTES.md`** — **start here for the build.** Which files are the canonical v2 source, the v1→v2 re-skin delta, and the implementer gotchas (the Home-only functional EN/ES toggle, resolved cross-page anchor links, per-page tweak props, and corrections to stale "brutalist" wording in the phase docs).
+5. **`designs/`** — the seven HTML prototypes + runtime + logo assets.
 5. **`UPDATE-ABOUT-PAGE.md`** — delta brief for the About page (added 2026-07-02, after the phase docs were first written). If you are starting fresh, the phase docs already incorporate it; if a build is underway, paste this brief into the active Claude Code context.
 
 ## Screens

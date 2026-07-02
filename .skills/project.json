@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "defaultExportDir": ".skills/exports",
+  "pinnedSkills": [
+    "generate-sitemap",
+    "seo-brief-builder"
+  ],
+  "pins": {
+    "generate-sitemap": {
+      "name": "generate-sitemap",
+      "pinnedAt": "2026-07-02T12:58:54.655Z",
+      "version": "0.1.0",
+      "source": "official"
+    },
+    "seo-brief-builder": {
+      "name": "seo-brief-builder",
+      "pinnedAt": "2026-07-02T13:00:01.189Z",
+      "version": "0.1.0",
+      "source": "official"
+    }
+  },
+  "disabledSkills": [],
+  "createdAt": "2026-07-02T12:58:54.655Z",
+  "updatedAt": "2026-07-02T13:00:01.189Z"
+}
