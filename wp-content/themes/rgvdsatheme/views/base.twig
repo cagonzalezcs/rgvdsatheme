@@ -8,47 +8,27 @@
 
 	<body class="{{body_class}}" data-template="base.twig">
 		{{ function('wp_body_open') }}
-		<a class="skip-link screen-reader-text" href="#content">{{ _e( 'Skip to content') }}</a>
-		<header class="site-header" data-site-header>
-			{% block header %}
-				<div class="site-header__inner wrapper">
-					<a class="site-header__logo" href="{{ site.url }}" rel="home">
-						<img src="{{ site.theme.link }}/static/images/logos/rgv-dsa-full-color.png"
-							alt="Rio Grande Valley DSA — Home" width="600" height="240">
-					</a>
-					<button class="site-header__toggle" type="button" hidden
-							data-nav-toggle aria-expanded="false" aria-controls="site-nav">
-						<span class="sr-only">Menu</span>
-						<span class="site-header__toggle-icon" aria-hidden="true"></span>
-					</button>
-					<nav id="site-nav" class="site-nav" aria-label="Primary" data-nav-panel>
-						{% if menu %}
-							{% include 'partial/nav-menu.twig' with { items: menu.items, depth: 0 } only %}
-						{% endif %}
-						<a class="btn site-nav__cta" href="{{ chapter.join_url }}">Join DSA</a>
-					</nav>
-				</div>
-			{% endblock %}
-		</header>
+		<a class="skip-link absolute -left-[9999px] top-3 z-200 bg-ink px-[18px] py-2.5 text-[0.95rem] font-bold text-cream no-underline focus:left-4" href="#main">Skip to main content</a>
 
-		<section id="content" role="main" class="content-wrapper">
-			{% if title %}<h1>{{title}}</h1>{% endif %}
-			<div class="wrapper">
-				{% block content %}
-					Sorry, no content
-				{% endblock %}
-			</div>
-			{% if sidebar %}
-				<aside class="layout-sidebar">
-					{{sidebar}}
-				</aside>
-			{% endif %}
-		</section>
+		{% set header_props = {
+			joinUrl: chapter.join_url,
+			logoUrl: site.theme.link ~ '/static/images/logos/logo-red.png',
+			homeUrl: site.url,
+			currentPath: current_path|default('')
+		} %}
+		<div data-vue-island="SiteHeader" data-props='{{ header_props|json_encode|e("html_attr") }}'></div>
+
+		<main id="main" class="site-main">
+			{% block content %}
+				Sorry, no content
+			{% endblock %}
+		</main>
 
 		{% block footer %}
-			<footer id="footer">
-				{% include 'footer.twig' %}
-			</footer>
+			{% set footer_props = {
+				logoUrl: site.theme.link ~ '/static/images/logos/logo-green.png'
+			} %}
+			<div data-vue-island="SiteFooter" data-props='{{ footer_props|json_encode|e("html_attr") }}'></div>
 			{{ function('wp_footer') }}
 		{% endblock %}
 	</body>

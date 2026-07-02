@@ -1,8 +1,10 @@
 :root {
-  --color-red: #d11;
-  --color-red-dark: #7c0909;
-  --color-cream: #fff5e5;
-  --color-black: #111;
+  // Aligned to brand tokens in src/css/tailwind.css — this unlayered :root
+  // outranks Tailwind's layered theme vars, so the values must match.
+  --color-red: #e9252e;
+  --color-red-dark: #9e0b13;
+  --color-cream: #faf4ea;
+  --color-black: #1c1917;
   --color-white: #fff;
   --space-xs: 0.25rem;
   --space-sm: 0.5rem;

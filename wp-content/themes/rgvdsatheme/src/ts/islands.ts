@@ -10,6 +10,9 @@ import { createApp, type Component } from "vue";
  */
 const registry: Record<string, () => Promise<{ default: Component }>> = {
   Styleguide: () => import("@/components/site/Styleguide.vue"),
+  SiteHeader: () => import("@/components/site/SiteHeader.vue"),
+  SiteFooter: () => import("@/components/site/SiteFooter.vue"),
+  PageHeader: () => import("@/components/site/PageHeader.vue"),
 };
 
 export function mountIslands(root: ParentNode = document): void {

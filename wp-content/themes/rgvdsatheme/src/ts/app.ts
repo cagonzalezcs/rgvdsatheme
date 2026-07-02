@@ -10,11 +10,9 @@ import "@awesome.me/webawesome/dist/components/input/input.js";
 import "../scss/app.scss";
 
 // Components
-import { initSiteHeader } from "./components/SiteHeader";
 import { mountIslands } from "./islands";
 
 function init() {
-  initSiteHeader();
   mountIslands();
 }
 
