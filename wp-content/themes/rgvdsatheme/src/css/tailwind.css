@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand tokens — full set lands in Phase 1 (see 03-DESIGN-SPEC.md) */
+  --color-brand-red: #e9252e;
+  --color-brand-red-deep: #9e0b13;
+  --color-cream: #faf4ea;
+  --color-ink: #1c1917;
+}
