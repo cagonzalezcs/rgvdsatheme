@@ -60,11 +60,11 @@ Note: shadcn `calendar` is a **date-picker**, not the events calendar — the ev
 ---
 
 ## Phase 3 — Site chrome
-**Agent brief:** Build the shared shell components from the prototypes (all six `designs/*.dc.html` share header/footer — `RGV DSA Home.dc.html` is canonical). Spec: `03-DESIGN-SPEC.md` § Chrome.
+**Agent brief:** Build the shared shell components from the prototypes (all seven `designs/*.dc.html` share header/footer — `RGV DSA Home.dc.html` is canonical, except the About dropdown: `About.dc.html` is canonical for that). Spec: `03-DESIGN-SPEC.md` § Chrome.
 
 Components (`src/components/site/`, Composition API, inline Tailwind, block class on root):
 - `SkipLink.vue`
-- `SiteHeader.vue` — sticky red bar; logo; About dropdown (DropdownMenu); Calendar / Blog / Get Involved links; EN/ES toggle (ES disabled, `title="Español — próximamente"`); A11yWidget; Join DSA CTA. Add a mobile disclosure menu (Sheet) — the prototype only wraps; breakpoint behavior is yours to design within the visual language.
+- `SiteHeader.vue` — sticky red bar; logo; About dropdown (DropdownMenu) whose six items deep-link to the About page anchors (`/about#chapter`, `#mission`, `#counties`, `#committees`, `#bylaws`, `#faq` — see spec § SiteHeader); Calendar / Blog / Get Involved links; EN/ES toggle (ES disabled, `title="Español — próximamente"`); A11yWidget; Join DSA CTA. Add a mobile disclosure menu (Sheet) — the prototype only wraps; breakpoint behavior is yours to design within the visual language.
 - `A11yWidget.vue` + `useA11ySettings.ts` composable — Popover panel: text-size segmented control (A / A+ / A++ → root font 16/18/20px), High-contrast toggle, Reduce-motion toggle; persists to localStorage `rgv-dsa-a11y`; applies via `data-tone` overrides + global style injection exactly as specced.
 - `SiteFooter.vue` — logo, 4 nav columns (props-driven from WP menus later; hardcode prototype content now), ink bottom bar.
 - `PageHeader.vue` — red band: Breadcrumb + uppercase H1 + lede (props: `title`, `lede`, `crumbs`).
@@ -75,15 +75,16 @@ Components (`src/components/site/`, Composition API, inline Tailwind, block clas
 
 ---
 
-## Phase 4 — Pages: Home, Get Involved, Interior template
-**Agent brief:** Implement three page templates against the prototypes. Spec: `03-DESIGN-SPEC.md` § Pages. Hardcode prototype content as component defaults/props; WP data wiring is Phase 6.
+## Phase 4 — Pages: Home, About, Get Involved, Interior template
+**Agent brief:** Implement four page templates against the prototypes. Spec: `03-DESIGN-SPEC.md` § Pages. Hardcode prototype content as component defaults/props; WP data wiring is Phase 6.
 
 - **Home** (`views/front-page.twig` + islands): Hero, CountiesStrip, WhoWeAre (photo is an `<img>` slot with the striped placeholder as fallback), UpcomingEvents list (`EventListItem.vue`), FromTheBlog (1 featured `PostCard.vue` + 2 compact `PostRow.vue`), GetInvolvedSteps (3 numbered `StepCard.vue`), social strip.
+- **About** (`views/page-about.twig`): PageHeader; ink **mission band** directly below it; content+sidebar grid; six anchored sections mirroring the header About dropdown 1:1 — About the Chapter (¶s + photo slot + 3 CTAs), Mission & History (timeline rows; `20XX` years stay as placeholders), Counties We Serve (4 county cards), Committees (definition-style rows — share one committee fixture with Get Involved rather than duplicating copy), Bylaws & Code of Conduct (a real `<table>` of governing documents linking into the Interior template), FAQ (**tabular** two-column Q&A — intentionally NOT the accordion used on Get Involved), then the dues-switching CalloutCard. Spec: `03-DESIGN-SPEC.md` § About.
 - **Get Involved** (`views/page-get-involved.twig`): PageHeader; content+sidebar grid (`minmax(300px,1fr) 300px`, gap 56px); How to Join; Committees; Channels; FAQ (Accordion). Reproduce sidebar cards from the prototype.
 - **Interior Page Template** (`views/page.twig` — the default): PageHeader; content+sidebar; documents list; prose styles for WP content (`h2` w/ bottom border, links, lists — match prototype); grievance `CalloutCard.vue` (white, ink border, red hard shadow).
 
-**Accept:** side-by-side match vs prototypes at 1280w and 375w; all in-page anchors (`#committees`, `#faq`, `#documents`, `#grievance`) work; lighthouse a11y ≥ 95.
-**Commit:** `feat(pages): home, get involved, interior template`
+**Accept:** side-by-side match vs prototypes at 1280w and 375w; all in-page anchors work (Get Involved `#committees`/`#faq`, Interior `#documents`/`#grievance`, About `#chapter`/`#mission`/`#counties`/`#committees`/`#bylaws`/`#faq` — including from the header dropdown on other pages); lighthouse a11y ≥ 95.
+**Commit:** `feat(pages): home, about, get involved, interior template`
 
 ---
 
