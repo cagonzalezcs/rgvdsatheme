@@ -1,3 +1,5 @@
+import { reactive, watchSyncEffect } from "vue";
+
 import {
   type ChapterEvent,
   EVENT_CATEGORIES,
@@ -22,12 +24,21 @@ export interface BlogPost {
   featured?: boolean;
   readMinutes?: number;
   url: string;
+  /** featured/card image (null src = striped placeholder) */
+  image?: { src: string | null; alt: string } | null;
 }
 
-/* Post categories share the event taxonomy colors; only the "all" label differs. */
-export const POST_CATEGORIES: EventCategory[] = EVENT_CATEGORIES.map((c) =>
-  c.id === "all" ? { ...c, label: "All posts" } : c,
-);
+/* Post categories share the event taxonomy colors; only the "all" label
+ * differs. Kept in sync with the reactive store in lib/events.ts so
+ * setCategories() updates blog chips too. */
+export const POST_CATEGORIES: EventCategory[] = reactive([]);
+watchSyncEffect(() => {
+  POST_CATEGORIES.splice(
+    0,
+    POST_CATEGORIES.length,
+    ...EVENT_CATEGORIES.map((c) => (c.id === "all" ? { ...c, label: "All posts" } : c)),
+  );
+});
 
 export function postCategoryById(id: string): EventCategory {
   return POST_CATEGORIES.find((c) => c.id === id) ?? POST_CATEGORIES[0];

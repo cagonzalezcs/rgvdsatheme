@@ -15,9 +15,10 @@
 
 $context          = Timber::context();
 $context['posts'] = Timber::get_posts();
-$context['foo']   = 'bar';
-$templates        = array( 'index.twig' );
-if ( is_home() ) {
-	array_unshift( $templates, 'front-page.twig', 'home.twig' );
-}
-Timber::render( $templates, $context );
+
+// inc/blog.php injects the BlogArchive island payload. The posts page
+// (is_home with a static front page) renders index.twig like any archive;
+// the static front page itself never reaches this template.
+$context = apply_filters( 'rgvdsa/context/blog_archive', $context );
+
+Timber::render( array( 'index.twig' ), $context );

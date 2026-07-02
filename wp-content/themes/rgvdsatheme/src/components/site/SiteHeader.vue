@@ -28,11 +28,16 @@ const props = withDefaults(
     aboutItems?: NavLink[];
     navItems?: NavLink[];
     currentPath?: string;
+    /** Spanish site toggle — a real link only when enabled and a URL exists */
+    esEnabled?: boolean;
+    esUrl?: string;
   }>(),
   {
     joinUrl: "https://act.dsausa.org/donate/membership",
     logoUrl: "",
     homeUrl: "/",
+    esEnabled: false,
+    esUrl: "",
     aboutItems: () => [
       { label: "About the Chapter", href: "/about/#chapter" },
       { label: "Mission & History", href: "/about/#mission" },
@@ -115,7 +120,14 @@ function isCurrent(href: string): boolean {
           class="hidden items-center border-2 border-cream text-[0.8rem] font-extrabold tracking-[0.05em] sm:flex"
         >
           <span class="bg-cream px-2.5 py-[5px] text-brand-red">EN</span>
-          <span class="px-2.5 py-[5px] text-cream opacity-65" title="Español — próximamente"
+          <a
+            v-if="esEnabled && esUrl"
+            :href="esUrl"
+            lang="es"
+            class="px-2.5 py-[5px] text-cream no-underline hover:bg-cream hover:text-brand-red"
+            >ES</a
+          >
+          <span v-else class="px-2.5 py-[5px] text-cream opacity-65" title="Español — próximamente"
             >ES</span
           >
         </div>

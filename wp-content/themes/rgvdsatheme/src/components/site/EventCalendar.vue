@@ -6,14 +6,18 @@ import MonthGrid from "@/components/site/MonthGrid.vue";
 import {
   type ChapterEvent,
   EVENT_CATEGORIES,
+  type EventCategory,
   MONTH_NAMES,
   parseISODate,
   SAMPLE_EVENTS,
+  setCategories,
 } from "@/lib/events";
 
 const props = withDefaults(
   defineProps<{
     events?: ChapterEvent[];
+    /** WP term-driven categories — replaces the fixture palette when provided */
+    categories?: EventCategory[];
     defaultView?: "month" | "list";
     showCategoryColors?: boolean;
     showSubscribe?: boolean;
@@ -22,6 +26,7 @@ const props = withDefaults(
   }>(),
   {
     events: () => SAMPLE_EVENTS,
+    categories: undefined,
     defaultView: "month",
     showCategoryColors: true,
     showSubscribe: true,
@@ -29,6 +34,8 @@ const props = withDefaults(
     icsUrl: "#",
   },
 );
+
+if (props.categories && props.categories.length > 0) setCategories(props.categories);
 
 /* ---- state (view + filter survive reload via URL params) ---- */
 const initialParams = new URLSearchParams(window.location.search);

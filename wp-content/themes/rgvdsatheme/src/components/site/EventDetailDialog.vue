@@ -77,7 +77,7 @@ const dateLine = computed(() => {
             RSVP
           </a>
           <a
-            href="#"
+            :href="event.gcalUrl ?? '#'"
             class="border-2 border-ink bg-transparent px-5 py-[11px] text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white"
           >
             Add to calendar

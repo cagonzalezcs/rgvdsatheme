@@ -1,9 +1,9 @@
 {% extends "base.twig" %}
 
 {#
-  Calendar page. Events are the prototype fixture (default prop inside the
-  island) until Phase 6 passes a Timber query via data-props, e.g.:
-    events: events_json, defaultView: 'month', ...
+  Calendar page. inc/events.php injects calendar_events / calendar_categories /
+  calendar_ics_url / calendar_gcal_url once the event CPT has posts in the
+  window; pre-seed those keys are undefined and the island's fixture renders.
 #}
 
 {% block content %}
@@ -19,5 +19,13 @@
 		showCategoryColors: true,
 		showSubscribe: true
 	} %}
+	{% if calendar_events is defined %}
+		{% set calendar_props = calendar_props|merge({
+			events: calendar_events,
+			categories: calendar_categories,
+			icsUrl: calendar_ics_url,
+			googleCalUrl: calendar_gcal_url
+		}) %}
+	{% endif %}
 	<div data-vue-island="EventCalendar" data-props='{{ calendar_props|json_encode|e("html_attr") }}'></div>
 {% endblock %}

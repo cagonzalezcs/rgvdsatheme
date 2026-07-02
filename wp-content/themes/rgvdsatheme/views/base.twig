@@ -14,8 +14,14 @@
 			joinUrl: chapter.join_url,
 			logoUrl: site.theme.link ~ '/static/images/logos/logo-red.png',
 			homeUrl: site.url,
+			esEnabled: chapter.es_enabled,
+			esUrl: chapter.es_url,
 			currentPath: current_path|default('')
 		} %}
+		{# Omit navItems entirely when no primary menu is assigned so the Vue fixture defaults hold. #}
+		{% if header_nav_items %}
+			{% set header_props = header_props|merge({ navItems: header_nav_items }) %}
+		{% endif %}
 		{# `contents` removes the wrapper's box so the sticky <header> inside sticks against the body scroll, not this div. #}
 		<div class="contents" data-vue-island="SiteHeader" data-props='{{ header_props|json_encode|e("html_attr") }}'></div>
 
@@ -29,6 +35,13 @@
 			{% set footer_props = {
 				logoUrl: site.theme.link ~ '/static/images/logos/logo-green.png'
 			} %}
+			{# Omit keys when unset so the Vue fixture defaults hold. #}
+			{% if footer_columns %}
+				{% set footer_props = footer_props|merge({ columns: footer_columns }) %}
+			{% endif %}
+			{% if chapter.contact_email %}
+				{% set footer_props = footer_props|merge({ a11yContactHref: 'mailto:' ~ chapter.contact_email }) %}
+			{% endif %}
 			<div data-vue-island="SiteFooter" data-props='{{ footer_props|json_encode|e("html_attr") }}'></div>
 			{{ function('wp_footer') }}
 		{% endblock %}

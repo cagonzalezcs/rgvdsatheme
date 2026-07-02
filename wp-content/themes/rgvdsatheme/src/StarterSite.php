@@ -40,55 +40,136 @@ class StarterSite extends Site {
 	 * @param string $context context['this'] Being the Twig's {{ this }}.
 	 */
 	public function add_to_context( $context ) {
-		$context['menu']    = Timber::get_menu( 'primary' ) ?: Timber::get_menu();
-		$context['site']    = $this;
+		$primary         = Timber::get_menu( 'primary' );
+		$context['menu'] = $primary ?: Timber::get_menu();
+		$context['site'] = $this;
+
+		$path                    = parse_url( $_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH );
+		$context['current_path'] = is_string( $path ) ? $path : '';
+
 		$context['chapter'] = array(
-			'join_url'       => 'https://act.dsausa.org/donate/membership',
-			'newsletter_url' => 'https://actionnetwork.org/forms/dsa-rgv-newsletter-sign-up',
-			// Shared fixture — rendered on both Get Involved and About (03-DESIGN-SPEC.md § About).
-			'committees'     => array(
-				array(
-					'name' => 'Political Education',
-					'desc' => 'Reading groups, night school, and workshops that build our shared analysis.',
-				),
-				array(
-					'name' => 'Mutual Aid',
-					'desc' => "Meeting our neighbors' immediate needs while organizing for lasting change.",
-				),
-				array(
-					'name' => 'Labor',
-					'desc' => 'Supporting workers organizing on the job across the Valley.',
-				),
-				array(
-					'name' => 'Communications',
-					'desc' => "Social media, design, and this website — telling the chapter's story.",
-				),
-				array(
-					'name' => 'Electoral',
-					'desc' => 'Backing candidates and ballot measures that fight for working people.',
-				),
-				array(
-					'name' => 'Membership & Onboarding',
-					'desc' => 'Welcoming new members and making sure no one falls through the cracks.',
-				),
-			),
+			'join_url'       => $this->option_field( 'join_url', 'https://act.dsausa.org/donate/membership' ),
+			'newsletter_url' => $this->option_field( 'newsletter_url', 'https://actionnetwork.org/forms/dsa-rgv-newsletter-sign-up' ),
+			'contact_email'  => $this->option_field( 'contact_email', '' ),
+			'es_enabled'     => (bool) $this->option_field( 'es_enabled', false ),
+			'es_url'         => $this->option_field( 'es_url', '' ),
+			'committees'     => function_exists( 'rgvdsa_chapter_committees' ) ? rgvdsa_chapter_committees() : array(),
 			'socials'        => array(
 				array(
 					'name' => 'Facebook',
-					'url'  => 'https://facebook.com/dsargv',
+					'url'  => $this->option_field( 'facebook_url', 'https://facebook.com/dsargv' ),
 				),
 				array(
 					'name' => 'Instagram',
-					'url'  => 'https://instagram.com/dsa_rgv',
+					'url'  => $this->option_field( 'instagram_url', 'https://instagram.com/dsa_rgv' ),
 				),
 				array(
 					'name' => 'Twitter',
-					'url'  => 'https://twitter.com/dsa_rgv',
+					'url'  => $this->option_field( 'twitter_url', 'https://twitter.com/dsa_rgv' ),
 				),
 			),
 		);
 
+		$context['header_nav_items'] = $this->menu_nav_items( $primary );
+		$context['footer_columns']   = $this->footer_columns();
+
 		return $context;
+	}
+
+	/**
+	 * Read an ACF options field, falling back when ACF is inactive or the
+	 * value is empty.
+	 *
+	 * @param string $name     Field name on the Chapter Settings options page.
+	 * @param mixed  $fallback Value used when unset/empty.
+	 *
+	 * @return mixed
+	 */
+	private function option_field( $name, $fallback ) {
+		if ( ! function_exists( 'get_field' ) ) {
+			return $fallback;
+		}
+
+		$value = get_field( $name, 'option' );
+
+		return ( null === $value || '' === $value ) ? $fallback : $value;
+	}
+
+	/**
+	 * Map a Timber menu to the NavLink island shape.
+	 *
+	 * @param \Timber\Menu|null $menu Menu to map.
+	 *
+	 * @return array|null [{ label, href }] or null when the menu is missing/empty.
+	 */
+	private function menu_nav_items( $menu ) {
+		if ( ! $menu || empty( $menu->items ) ) {
+			return null;
+		}
+
+		$items = array();
+		foreach ( $menu->items as $item ) {
+			$items[] = array(
+				'label' => (string) $item->title(),
+				'href'  => (string) $item->link(),
+			);
+		}
+
+		return $items ?: null;
+	}
+
+	/**
+	 * Build SiteFooter columns from the four footer menu locations.
+	 *
+	 * @return array|null [{ title, links: [{ label, href, external? }] }] or
+	 *                    null when no footer location has a menu assigned.
+	 */
+	private function footer_columns() {
+		$locations = array(
+			'footer_about'     => __( 'About', 'rgvdsatheme' ),
+			'footer_involved'  => __( 'Get Involved', 'rgvdsatheme' ),
+			'footer_resources' => __( 'Resources', 'rgvdsatheme' ),
+			'footer_contact'   => __( 'Contact', 'rgvdsatheme' ),
+		);
+
+		$site_host = parse_url( home_url(), PHP_URL_HOST );
+		$columns   = array();
+
+		foreach ( $locations as $location => $title ) {
+			if ( ! has_nav_menu( $location ) ) {
+				continue;
+			}
+
+			$menu = Timber::get_menu( $location );
+			if ( ! $menu || empty( $menu->items ) ) {
+				continue;
+			}
+
+			$links = array();
+			foreach ( $menu->items as $item ) {
+				$href = (string) $item->link();
+				$link = array(
+					'label' => (string) $item->title(),
+					'href'  => $href,
+				);
+
+				$link_host = parse_url( $href, PHP_URL_HOST );
+				if ( $link_host && $site_host && 0 !== strcasecmp( $link_host, $site_host ) ) {
+					$link['external'] = true;
+				}
+
+				$links[] = $link;
+			}
+
+			if ( $links ) {
+				$columns[] = array(
+					'title' => $title,
+					'links' => $links,
+				);
+			}
+		}
+
+		return $columns ?: null;
 	}
 
 	public function theme_supports() {
@@ -144,7 +225,15 @@ class StarterSite extends Site {
 
 		add_theme_support( 'menus' );
 
-		register_nav_menus( array( 'primary' => __( 'Primary Menu', 'rgvdsatheme' ) ) );
+		register_nav_menus(
+			array(
+				'primary'          => __( 'Primary Menu', 'rgvdsatheme' ),
+				'footer_about'     => __( 'Footer — About', 'rgvdsatheme' ),
+				'footer_involved'  => __( 'Footer — Get Involved', 'rgvdsatheme' ),
+				'footer_resources' => __( 'Footer — Resources', 'rgvdsatheme' ),
+				'footer_contact'   => __( 'Footer — Contact', 'rgvdsatheme' ),
+			)
+		);
 	}
 
 	/**

@@ -13,6 +13,9 @@ $context         = Timber::context();
 $timber_post     = Timber::get_post();
 $context['post'] = $timber_post;
 
+// inc/blog.php injects the SinglePost island payload.
+$context = apply_filters( 'rgvdsa/context/single', $context, $timber_post );
+
 if ( post_password_required( $timber_post->ID ) ) {
 	Timber::render( 'single-password.twig', $context );
 } else {

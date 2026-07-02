@@ -21,7 +21,12 @@ defineProps<{
 <template>
   <template v-for="(block, i) in blocks" :key="i">
     <BlockProse v-if="block.type === 'prose'" :html="block.html" />
-    <BlockImage v-else-if="block.type === 'image'" :image="block.image" :accent="accent" />
+    <BlockImage
+      v-else-if="block.type === 'image'"
+      :image="block.image"
+      :breakout="block.breakout"
+      :accent="accent"
+    />
     <BlockPullQuote
       v-else-if="block.type === 'pull_quote'"
       :quote="block.quote"

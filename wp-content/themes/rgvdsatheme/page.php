@@ -25,4 +25,8 @@ $context = Timber::context();
 
 $timber_post     = Timber::get_post();
 $context['post'] = $timber_post;
+
+// Domain files (inc/) inject per-page island props (calendar events, documents, …).
+$context = apply_filters( 'rgvdsa/context/page', $context, $timber_post );
+
 Timber::render( array( 'page-' . $timber_post->post_name . '.twig', 'page.twig' ), $context );

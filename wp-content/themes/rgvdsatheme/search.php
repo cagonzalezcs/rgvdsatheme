@@ -15,4 +15,7 @@ $context          = Timber::context();
 $context['title'] = 'Search results for ' . get_search_query();
 $context['posts'] = Timber::get_posts();
 
+// inc/blog.php injects the BlogArchive island payload.
+$context = apply_filters( 'rgvdsa/context/blog_archive', $context );
+
 Timber::render( $templates, $context );

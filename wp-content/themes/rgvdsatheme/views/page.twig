@@ -2,9 +2,10 @@
 
 {#
   Interior page template (default for all pages).
-  Documents list + conduct copy are prototype fixtures until Phase 6 wires
-  an ACF repeater / editor content; fixture prose only shows when the WP
-  editor content is empty so real pages aren't duplicated.
+  documents + page_lede come from the "Interior page" ACF group
+  (inc/interior.php); the |default() fixtures below render when the page
+  has no rows. Fixture prose only shows when the WP editor content is
+  empty so real pages aren't duplicated.
 #}
 
 {% set documents = documents|default([
@@ -17,7 +18,7 @@
 	{# html_entity_decode: Vue renders props as text, so &#038; would show literally #}
 	{% set page_header_props = {
 		title: function('html_entity_decode', post.title),
-		lede: post.post_excerpt|default(post.content ? '' : 'How our chapter governs itself — and how we take care of each other while we do the work.'),
+		lede: page_lede|default(post.post_excerpt|default(post.content ? '' : 'How our chapter governs itself — and how we take care of each other while we do the work.')),
 		crumbs: [{ label: 'Home', href: '/' }]
 	} %}
 	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>

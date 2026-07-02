@@ -2,14 +2,26 @@
 
 {#
   Single post. The island renders its own red hero, so no PageHeader here.
-  Content is the prototype fixture (default prop inside the island) until
-  Phase 6 wires post title/dek/byline + the post_blocks ACF flexible-content
-  stack via data-props. Comments are out of the design's scope.
+  inc/blog.php injects single_post (post_blocks stack included) plus the
+  Read Next pool / categories / meta-rail flag for post-type posts; the
+  island fixture holds when they are unset. Comments are out of the
+  design's scope.
 #}
 
 {% block content %}
 	{% set post_props = {
-		showMetaRail: false
+		showMetaRail: single_show_meta_rail|default(false),
+		blogUrl: single_blog_url|default('/blog/'),
+		homeUrl: single_home_url|default('/')
 	} %}
+	{% if single_post is defined %}
+		{% set post_props = post_props|merge({ post: single_post }) %}
+	{% endif %}
+	{% if single_posts is defined %}
+		{% set post_props = post_props|merge({ posts: single_posts }) %}
+	{% endif %}
+	{% if single_categories is defined %}
+		{% set post_props = post_props|merge({ categories: single_categories }) %}
+	{% endif %}
 	<div data-vue-island="SinglePost" data-props='{{ post_props|json_encode|e("html_attr") }}'></div>
 {% endblock %}

@@ -4,6 +4,7 @@ import CategoryTag from "@/components/site/blog/CategoryTag.vue";
 import ImageSlot from "@/components/site/blog/ImageSlot.vue";
 import PostBlocks from "@/components/site/blog/PostBlocks.vue";
 import PostCard from "@/components/site/blog/PostCard.vue";
+import { type EventCategory, setCategories } from "@/lib/events";
 import {
   type BlogPost,
   postCategoryById,
@@ -17,6 +18,8 @@ const props = withDefaults(
     post?: SinglePostData;
     /** pool the Read Next query draws from (same category, latest 3) */
     posts?: BlogPost[];
+    /** WP term-driven categories — replaces the fixture palette when provided */
+    categories?: EventCategory[];
     /** overrides the post's own byline_mode (per-post ACF select in Phase 6) */
     bylineMode?: "named" | "committee";
     showMetaRail?: boolean;
@@ -26,12 +29,15 @@ const props = withDefaults(
   {
     post: () => SAMPLE_SINGLE,
     posts: () => SAMPLE_POSTS,
+    categories: undefined,
     bylineMode: undefined,
     showMetaRail: false,
     blogUrl: "/blog/",
     homeUrl: "/",
   },
 );
+
+if (props.categories && props.categories.length > 0) setCategories(props.categories);
 
 const mode = computed(() => props.bylineMode ?? props.post.bylineMode);
 const isNamed = computed(() => mode.value !== "committee");

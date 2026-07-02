@@ -30,7 +30,7 @@ const titleClass = computed(
   >
     <div class="flex aspect-video items-start border-b-[3px] border-ink" aria-hidden="true">
       <div class="relative size-full">
-        <ImageSlot class="absolute inset-0" />
+        <ImageSlot class="absolute inset-0" :src="post.image?.src" :alt="post.image?.alt" />
         <CategoryTag :cat-id="post.cat" size="sm" class="absolute left-3 top-3" />
       </div>
     </div>

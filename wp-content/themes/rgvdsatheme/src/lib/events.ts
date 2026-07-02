@@ -1,3 +1,5 @@
+import { reactive } from "vue";
+
 export interface ChapterEvent {
   id: string;
   /** ISO yyyy-mm-dd */
@@ -9,6 +11,8 @@ export interface ChapterEvent {
   location: string;
   desc: string;
   rsvpUrl?: string;
+  /** Google Calendar render?action=TEMPLATE URL */
+  gcalUrl?: string;
 }
 
 export interface EventCategory {
@@ -18,10 +22,9 @@ export interface EventCategory {
   color: string | null;
 }
 
-/* Term colors match the --color-cat-* tokens in tailwind.css and, in Phase 6,
- * the WP taxonomy term meta. */
-export const EVENT_CATEGORIES: EventCategory[] = [
-  { id: "all", label: "All events", color: null },
+/* Default term colors match the --color-cat-* tokens in tailwind.css; WP term
+ * meta overrides them at island mount via setCategories(). */
+const DEFAULT_CATEGORIES: EventCategory[] = [
   { id: "chapter", label: "Chapter-Wide", color: "#E9252E" },
   { id: "poled", label: "Political Education", color: "#3A5BA0" },
   { id: "mutual", label: "Mutual Aid", color: "#1F7A48" },
@@ -29,6 +32,21 @@ export const EVENT_CATEGORIES: EventCategory[] = [
   { id: "electoral", label: "Electoral", color: "#7C4396" },
   { id: "social", label: "Social", color: "#0E7C86" },
 ];
+
+/* Reactive category store. Index 0 is always the "All events" pseudo-category
+ * (owned by the store); the rest default to the fixture palette until an
+ * island passes WP-driven categories. */
+export const EVENT_CATEGORIES: EventCategory[] = reactive([
+  { id: "all", label: "All events", color: null },
+  ...DEFAULT_CATEGORIES,
+]);
+
+/** Replace the six real categories (the store keeps its own "all" pseudo). */
+export function setCategories(cats: EventCategory[]): void {
+  const real = cats.filter((c) => c.id !== "all");
+  if (real.length === 0) return;
+  EVENT_CATEGORIES.splice(1, EVENT_CATEGORIES.length - 1, ...real);
+}
 
 export function categoryById(id: string): EventCategory {
   return EVENT_CATEGORIES.find((c) => c.id === id) ?? EVENT_CATEGORIES[0];

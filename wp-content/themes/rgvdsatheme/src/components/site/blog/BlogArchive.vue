@@ -4,6 +4,7 @@ import EmailSubscribeStrip from "@/components/site/blog/EmailSubscribeStrip.vue"
 import FeaturedPostCard from "@/components/site/blog/FeaturedPostCard.vue";
 import PostCard from "@/components/site/blog/PostCard.vue";
 import PostResultRow from "@/components/site/blog/PostResultRow.vue";
+import { type EventCategory, setCategories } from "@/lib/events";
 import {
   type BlogPost,
   POST_CATEGORIES,
@@ -14,13 +15,21 @@ import {
 const props = withDefaults(
   defineProps<{
     posts?: BlogPost[];
+    /** WP term-driven categories — replaces the fixture palette when provided */
+    categories?: EventCategory[];
+    /** WP_Query paging — turns the static pager into real links when provided */
+    pagination?: { newerUrl?: string; olderUrl?: string };
     showSubscribe?: boolean;
   }>(),
   {
     posts: () => SAMPLE_POSTS,
+    categories: undefined,
+    pagination: undefined,
     showSubscribe: true,
   },
 );
+
+if (props.categories && props.categories.length > 0) setCategories(props.categories);
 
 /* ---- state (search + filter survive reload via URL params: ?s= & ?category=) ---- */
 const initialParams = new URLSearchParams(window.location.search);
@@ -139,8 +148,30 @@ const gridPosts = computed(() =>
               <PostCard :post="post" :variant="span === 3 ? 'grid-lg' : 'grid'" />
             </div>
           </div>
-          <!-- Pagination: static until Phase 6 wires WP_Query paging -->
-          <div class="flex justify-center gap-3.5 pt-8">
+          <!-- Pagination: real WP_Query links when provided, static fallback otherwise -->
+          <div v-if="pagination" class="flex justify-center gap-3.5 pt-8">
+            <a
+              v-if="pagination.newerUrl"
+              :href="pagination.newerUrl"
+              class="border-2 border-ink px-[22px] py-[11px] text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white"
+            >← Newer</a>
+            <span
+              v-else
+              aria-disabled="true"
+              class="border-2 border-border-muted px-[22px] py-[11px] text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-border-muted"
+            >← Newer</span>
+            <a
+              v-if="pagination.olderUrl"
+              :href="pagination.olderUrl"
+              class="border-2 border-ink px-[22px] py-[11px] text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white"
+            >Older posts →</a>
+            <span
+              v-else
+              aria-disabled="true"
+              class="border-2 border-border-muted px-[22px] py-[11px] text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-border-muted"
+            >Older posts →</span>
+          </div>
+          <div v-else class="flex justify-center gap-3.5 pt-8">
             <span
               aria-disabled="true"
               class="border-2 border-border-muted px-[22px] py-[11px] text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-border-muted"

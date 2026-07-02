@@ -11,7 +11,7 @@ defineProps<{ post: BlogPost }>();
     class="featured-post-card grid border-[3px] border-ink bg-white shadow-brutal-lg md:[grid-template-columns:minmax(300px,1.1fr)_minmax(300px,1fr)]"
   >
     <div class="min-h-[240px] border-b-[3px] border-ink md:min-h-[340px] md:border-b-0 md:border-r-[3px]">
-      <ImageSlot label="Featured photo" />
+      <ImageSlot :src="post.image?.src" :alt="post.image?.alt" label="Featured photo" />
     </div>
     <div class="flex flex-col justify-center gap-4 px-6 py-8 md:px-10 md:py-9">
       <div class="flex flex-wrap items-center gap-3">
