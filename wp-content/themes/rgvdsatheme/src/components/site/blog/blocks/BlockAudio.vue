@@ -71,6 +71,6 @@ const totalLabel = computed(() =>
         </div>
       </div>
     </div>
-    <a :href="transcriptUrl" class="self-start text-[0.9rem] font-bold text-brand-red-deep hover:text-brand-red">Read transcript</a>
+    <a :href="transcriptUrl" class="self-start text-[0.9rem] font-bold text-brand-red-deep hover:text-ink">Read transcript</a>
   </div>
 </template>

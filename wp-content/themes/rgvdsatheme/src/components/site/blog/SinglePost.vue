@@ -187,12 +187,12 @@ const mailShareUrl = computed(
               {{ committeeInitials }}
             </div>
             <div class="flex flex-[1_1_300px] flex-col gap-1.5">
-              <div class="text-[0.8rem] font-extrabold uppercase tracking-[0.1em] text-brand-red">About the author</div>
+              <div class="text-[0.8rem] font-extrabold uppercase tracking-[0.1em] text-brand-red-deep">About the author</div>
               <div class="text-[1.1rem] font-extrabold">{{ authorName }}</div>
               <p class="m-0 text-[0.95rem] leading-[1.6] text-muted-on-cream">{{ authorBio }}</p>
               <a
                 href="/get-involved/#committees"
-                class="mt-1 self-start text-[0.9rem] font-extrabold text-brand-red-deep no-underline hover:text-brand-red"
+                class="mt-1 self-start text-[0.9rem] font-extrabold text-brand-red-deep no-underline hover:text-ink"
               >
                 More about the {{ post.committee }} →
               </a>
@@ -214,12 +214,12 @@ const mailShareUrl = computed(
             <div class="font-display text-[0.85rem] font-extrabold uppercase tracking-[0.08em]">Share</div>
             <button
               type="button"
-              class="cursor-pointer border-none bg-transparent p-0 text-left text-[0.9rem] font-bold text-ink hover:text-brand-red"
+              class="cursor-pointer border-none bg-transparent p-0 text-left text-[0.9rem] font-bold text-ink hover:text-brand-red-deep"
               @click="copyLink"
             >
               {{ copyLabel }}
             </button>
-            <a :href="mailShareUrl" class="text-[0.9rem] font-bold text-ink no-underline hover:text-brand-red">Email this post</a>
+            <a :href="mailShareUrl" class="text-[0.9rem] font-bold text-ink no-underline hover:text-brand-red-deep">Email this post</a>
           </div>
           <div class="flex flex-col gap-2.5 bg-ink p-5 text-cream" data-tone="ink">
             <div class="font-display text-[0.9rem] font-extrabold uppercase tracking-[0.04em]">Get posts by email</div>
@@ -242,7 +242,7 @@ const mailShareUrl = computed(
           <h2 class="m-0 font-display text-[clamp(1.5rem,3.2vw,2.2rem)] font-black uppercase leading-[1.12]">Read next</h2>
           <a
             :href="blogUrl"
-            class="text-base font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:underline hover:underline-offset-4"
+            class="text-base font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:underline hover:underline-offset-4"
           >
             All posts →
           </a>

@@ -44,7 +44,7 @@
 			</p>
 			<div class="flex flex-wrap items-center gap-3.5">
 				<a href="{{ chapter.join_url }}" target="_blank" rel="noopener"
-					class="border-[3px] border-ink bg-cream px-8 py-4 text-[1.05rem] font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm active:translate-x-[5px] active:translate-y-[5px] active:shadow-none">
+					class="border-[3px] border-ink bg-cream px-8 py-4 text-[1.05rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-brutal-sm active:translate-x-[5px] active:translate-y-[5px] active:shadow-none">
 					Join DSA
 				</a>
 				<a href="#events"
@@ -71,7 +71,7 @@
 	<section id="about" class="who-we-are bg-cream px-6 py-24" data-tone="cream">
 		<div class="mx-auto grid max-w-[1100px] items-center gap-14 [grid-template-columns:minmax(300px,1.1fr)_minmax(280px,0.9fr)] max-md:[grid-template-columns:1fr]">
 			<div class="flex flex-col gap-5">
-				<div class="text-[0.85rem] font-extrabold uppercase tracking-[0.18em] text-brand-red">Who we are</div>
+				<div class="text-[0.85rem] font-extrabold uppercase tracking-[0.18em] text-brand-red-deep">Who we are</div>
 				<h2 class="m-0 font-display text-[clamp(1.8rem,4vw,2.9rem)] font-black uppercase leading-[1.12]">We are DSA-RGV</h2>
 				<p class="m-0 text-[1.1rem] leading-[1.7]">
 					The RGV is one of the most economically unequal regions in the country — but it doesn&rsquo;t have to stay that way. As democratic socialists, we&rsquo;re building working-class power to challenge the dominance of the wealthy and the powerful across our border communities.
@@ -80,7 +80,7 @@
 					Together, we&rsquo;re fighting for a Valley where working people have real power, and where everyone can live a dignified life — regardless of where they were born or how they got here.
 				</p>
 				<a href="#get-involved"
-					class="self-start border-b-[3px] border-brand-red pb-0.5 text-base font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:border-brand-red-deep hover:text-brand-red-deep">
+					class="self-start border-b-[3px] border-brand-red pb-0.5 text-base font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:border-brand-red-deep hover:text-ink">
 					More about our chapter →
 				</a>
 			</div>
@@ -95,12 +95,12 @@
 		<div class="mx-auto flex max-w-[1100px] flex-col gap-8">
 			<div class="flex flex-wrap items-baseline justify-between gap-4 border-b-[3px] border-ink pb-4">
 				<h2 class="m-0 font-display text-[clamp(1.8rem,4vw,2.9rem)] font-black uppercase leading-[1.12]">Upcoming events</h2>
-				<a href="/calendar/" class="text-base font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:underline hover:underline-offset-4">Full calendar →</a>
+				<a href="/calendar/" class="text-base font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:underline hover:underline-offset-4">Full calendar →</a>
 			</div>
 			<div class="flex flex-col">
 				{% for ev in home_events|slice(0, event_count) %}
 					<div class="grid items-center gap-6 border-b-2 border-divider-cream py-5 [grid-template-columns:88px_1fr_auto] max-sm:[grid-template-columns:64px_1fr] max-sm:gap-4">
-						<div aria-hidden="true" class="flex flex-col border-2 border-ink bg-brand-red px-1 py-2 text-center text-cream">
+						<div aria-hidden="true" class="flex flex-col border-2 border-ink bg-brand-red-deep px-1 py-2 text-center text-cream">
 							<span class="font-display text-[1.45rem] font-black leading-[1.1]">{{ ev.day }}</span>
 							<span class="text-xs font-extrabold tracking-[0.12em]">{{ ev.month }}</span>
 						</div>
@@ -123,7 +123,7 @@
 		<div class="mx-auto flex max-w-[1100px] flex-col gap-8">
 			<div class="flex flex-wrap items-baseline justify-between gap-4 border-b-[3px] border-ink pb-4">
 				<h2 class="m-0 font-display text-[clamp(1.8rem,4vw,2.9rem)] font-black uppercase leading-[1.12]">From the blog</h2>
-				<a href="/blog/" class="text-base font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:underline hover:underline-offset-4">All posts →</a>
+				<a href="/blog/" class="text-base font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:underline hover:underline-offset-4">All posts →</a>
 			</div>
 			<div class="grid items-stretch gap-9 [grid-template-columns:minmax(300px,1.15fr)_minmax(280px,1fr)] max-md:[grid-template-columns:1fr]">
 				<a href="/blog/" class="flex flex-col border-[3px] border-ink bg-white text-ink no-underline hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[8px_8px_0_var(--color-ink)]">
@@ -134,7 +134,7 @@
 						<span class="text-[0.8rem] font-bold uppercase tracking-[0.04em] text-muted-on-cream">{{ blog_featured.date }} · {{ blog_featured.read }}</span>
 						<span class="font-display text-[clamp(1.2rem,2.4vw,1.55rem)] font-black uppercase leading-[1.2] [text-wrap:balance]">{{ blog_featured.title }}</span>
 						<span class="text-base leading-[1.65] text-muted-on-cream">{{ blog_featured.excerpt }}</span>
-						<span class="mt-1 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red">Read the post →</span>
+						<span class="mt-1 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep">Read the post →</span>
 					</div>
 				</a>
 				<div class="flex flex-col gap-6">
@@ -172,7 +172,7 @@
 						<div class="text-[1.2rem] font-extrabold">{{ step.title }}</div>
 						<p class="m-0 text-base leading-[1.65] text-muted-on-ink">{{ step.body }}</p>
 						<a href="{{ step.href }}"{% if step.external %} target="_blank" rel="noopener"{% endif %}
-							class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:text-brand-red">
+							class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:text-white">
 							{{ step.link_label }}
 						</a>
 					</div>

@@ -22,7 +22,7 @@
 						<div class="flex flex-col gap-2">
 							<div class="text-[1.1rem] font-extrabold">Become a DSA member</div>
 							<p class="m-0 text-base leading-[1.7]">Sign up through national DSA and select the Rio Grande Valley chapter. Dues are sliding-scale &mdash; pay what you can, and <strong>no one is turned away for lack of funds</strong>.</p>
-							<a href="{{ chapter.join_url }}" target="_blank" rel="noopener" class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:border-brand-red-deep hover:text-brand-red-deep">Join at dsausa.org &rarr;</a>
+							<a href="{{ chapter.join_url }}" target="_blank" rel="noopener" class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:border-brand-red-deep hover:text-ink">Join at dsausa.org &rarr;</a>
 						</div>
 					</div>
 					<div class="grid gap-5 border-2 border-ink bg-white p-[22px] [grid-template-columns:64px_1fr]">
@@ -30,7 +30,7 @@
 						<div class="flex flex-col gap-2">
 							<div class="text-[1.1rem] font-extrabold">Come to RGV-DSA 101</div>
 							<p class="m-0 text-base leading-[1.7]">Our intro session for new and curious folks &mdash; what democratic socialism means, what our chapter is working on, and how to plug in. Offered virtually and in person, multiple times a month. You don't have to be a member yet to attend.</p>
-							<a href="/calendar/" class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:border-brand-red-deep hover:text-brand-red-deep">Find a session &rarr;</a>
+							<a href="/calendar/" class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:border-brand-red-deep hover:text-ink">Find a session &rarr;</a>
 						</div>
 					</div>
 					<div class="grid gap-5 border-2 border-ink bg-white p-[22px] [grid-template-columns:64px_1fr]">
@@ -38,7 +38,7 @@
 						<div class="flex flex-col gap-2">
 							<div class="text-[1.1rem] font-extrabold">Get onboarded &amp; plug in</div>
 							<p class="m-0 text-base leading-[1.7]">After 101, we'll add you to our WhatsApp and match you with a committee that fits your interests and capacity &mdash; whether that's an hour a month or a night a week.</p>
-							<a href="#committees" class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:border-brand-red-deep hover:text-brand-red-deep">Browse committees &darr;</a>
+							<a href="#committees" class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:border-brand-red-deep hover:text-ink">Browse committees &darr;</a>
 						</div>
 					</div>
 				</div>
@@ -50,7 +50,7 @@
 				<div class="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]">
 					{% for committee in chapter.committees %}
 						<div class="flex flex-col gap-2 border-2 border-ink bg-white p-5">
-							<div class="font-display text-base font-extrabold uppercase tracking-[0.02em] text-brand-red">{{ committee.name }}</div>
+							<div class="font-display text-base font-extrabold uppercase tracking-[0.02em] text-brand-red-deep">{{ committee.name }}</div>
 							<p class="m-0 text-[0.95rem] leading-[1.65]">{{ committee.desc }}</p>
 						</div>
 					{% endfor %}

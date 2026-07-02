@@ -25,12 +25,12 @@ defineProps<{
       class="border-2 border-ink bg-white last:border-b-2"
     >
       <AccordionTrigger
-        class="items-center gap-4 bg-transparent px-5 py-4 text-base font-extrabold text-ink hover:text-brand-red hover:no-underline"
+        class="items-center gap-4 bg-transparent px-5 py-4 text-base font-extrabold text-ink hover:text-brand-red-deep hover:no-underline"
       >
         <span>{{ item.question }}</span>
         <template #icon>
           <svg
-            class="pointer-events-none size-4 shrink-0 text-brand-red"
+            class="pointer-events-none size-4 shrink-0 text-brand-red-deep"
             aria-hidden="true"
             viewBox="0 0 16 16"
             fill="none"

@@ -25,7 +25,7 @@ withDefaults(defineProps<{ rssUrl?: string }>(), { rssUrl: "/feed/" });
         </button>
         <a
           :href="rssUrl"
-          class="flex items-center px-[18px] text-[0.9rem] font-extrabold text-cream underline underline-offset-4 hover:text-brand-red"
+          class="flex items-center px-[18px] text-[0.9rem] font-extrabold text-cream underline underline-offset-4 hover:text-white"
         >
           RSS
         </a>

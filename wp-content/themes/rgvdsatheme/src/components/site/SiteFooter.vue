@@ -110,7 +110,7 @@ withDefaults(
           :href="link.href"
           :target="link.external ? '_blank' : undefined"
           :rel="link.external ? 'noopener' : undefined"
-          class="text-[0.95rem] text-ink no-underline hover:text-brand-red"
+          class="text-[0.95rem] text-ink no-underline hover:text-brand-red-deep"
         >
           {{ link.label }}
         </a>
@@ -124,7 +124,7 @@ withDefaults(
         <span>{{ orgName }}</span>
         <span>
           Built to be accessible —
-          <a :href="a11yContactHref" class="font-bold text-cream hover:text-brand-red">
+          <a :href="a11yContactHref" class="font-bold text-cream hover:text-white">
             tell us how we can do better
           </a>
         </span>

@@ -72,7 +72,7 @@ const dateLine = computed(() => {
         <div class="mt-1.5 flex flex-wrap gap-2.5">
           <a
             :href="event.rsvpUrl ?? '#'"
-            class="border-2 border-ink bg-brand-red px-5 py-[11px] text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:bg-brand-red-deep"
+            class="border-2 border-ink bg-brand-red-deep px-5 py-[11px] text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:bg-ink"
           >
             RSVP
           </a>

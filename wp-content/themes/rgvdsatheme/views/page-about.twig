@@ -52,7 +52,7 @@
 				<div class="flex flex-col border-2 border-ink bg-white">
 					{% for row in timeline %}
 						<div class="grid items-baseline gap-4 border-b-2 border-ink px-5 py-4 last:border-b-0 [grid-template-columns:110px_1fr]">
-							<span class="font-display text-[1.05rem] font-black text-brand-red">{{ row.year }}</span>
+							<span class="font-display text-[1.05rem] font-black text-brand-red-deep">{{ row.year }}</span>
 							<span class="text-base leading-[1.6]">{{ row.text }} {% if row.note %}<em class="text-muted-2">(Year and details to be filled in by the chapter.)</em>{% endif %}</span>
 						</div>
 					{% endfor %}
@@ -67,7 +67,7 @@
 					<div class="flex flex-col gap-1.5 border-2 border-ink bg-white p-5">
 						<div class="font-display text-[1.05rem] font-extrabold uppercase tracking-[0.02em]">Hidalgo</div>
 						<div class="text-[0.9rem] leading-[1.6] text-muted-on-cream">McAllen <span class="text-brand-red">&starf;</span> &middot; Edinburg &middot; Mission &middot; Pharr</div>
-						<div class="mt-1 text-[0.8rem] font-extrabold uppercase tracking-[0.06em] text-brand-red">Home base &mdash; most meetings held here</div>
+						<div class="mt-1 text-[0.8rem] font-extrabold uppercase tracking-[0.06em] text-brand-red-deep">Home base &mdash; most meetings held here</div>
 					</div>
 					<div class="flex flex-col gap-1.5 border-2 border-ink bg-white p-5">
 						<div class="font-display text-[1.05rem] font-extrabold uppercase tracking-[0.02em]">Cameron</div>
@@ -91,13 +91,13 @@
 				<div class="flex flex-col border-2 border-ink bg-white">
 					{% for committee in chapter.committees %}
 						<div class="grid items-baseline gap-2 border-b-2 border-ink px-5 py-3.5 last:border-b-0 sm:gap-4 sm:[grid-template-columns:200px_1fr]">
-							<span class="font-display text-[0.95rem] font-extrabold uppercase tracking-[0.02em] text-brand-red">{{ committee.name }}</span>
+							<span class="font-display text-[0.95rem] font-extrabold uppercase tracking-[0.02em] text-brand-red-deep">{{ committee.name }}</span>
 							<span class="text-[0.95rem] leading-[1.6]">{{ committee.desc }}</span>
 						</div>
 					{% endfor %}
 				</div>
 
-				<a href="/get-involved/#committees" class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:border-brand-red-deep hover:text-brand-red-deep">Join a committee &rarr;</a>
+				<a href="/get-involved/#committees" class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:border-brand-red-deep hover:text-ink">Join a committee &rarr;</a>
 
 				{# ---- 5. Bylaws & Code of Conduct ---- #}
 				<h2 id="bylaws" class="mx-0 mt-4 mb-0 scroll-mt-[calc(100px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">Bylaws &amp; Code of Conduct</h2>
@@ -124,7 +124,7 @@
 							<tr class="border-b-2 border-ink last:border-b-0">
 								<th scope="row" class="px-5 py-3.5 text-left align-top font-extrabold sm:whitespace-nowrap">{{ doc.title }}</th>
 								<td class="px-5 py-3.5 align-top leading-[1.6]">{{ doc.covers }}</td>
-								<td class="px-5 py-3.5 align-top"><a href="{{ doc.url }}" class="text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:text-brand-red-deep hover:underline">{{ doc.action }}</a></td>
+								<td class="px-5 py-3.5 align-top"><a href="{{ doc.url }}" class="text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:text-ink hover:underline">{{ doc.action }}</a></td>
 							</tr>
 						{% endfor %}
 					</tbody>
@@ -153,7 +153,7 @@
 
 				{# ---- Dues callout ---- #}
 				<aside id="dues" class="mt-3 flex flex-col gap-2.5 border-[3px] border-ink bg-white px-7 py-[26px] shadow-brutal-red">
-					<div class="font-display text-base font-extrabold uppercase tracking-[0.04em] text-brand-red">Switching your dues rate?</div>
+					<div class="font-display text-base font-extrabold uppercase tracking-[0.04em] text-brand-red-deep">Switching your dues rate?</div>
 					<p class="m-0 text-base leading-[1.7]">Already a member but switching to a monthly or Solidarity Dues rate? Enter the email associated with your membership in this form with your new dues amount, and your current dues will be canceled and updated.</p>
 					<a href="{{ chapter.join_url }}" target="_blank" rel="noopener" class="mt-1.5 self-start bg-ink px-[18px] py-2.5 text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:bg-brand-red-deep">Update my dues</a>
 				</aside>

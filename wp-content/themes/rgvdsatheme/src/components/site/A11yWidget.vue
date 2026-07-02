@@ -15,7 +15,7 @@ const sizes: { value: TextSize; label: string }[] = [
 <template>
   <Popover>
     <PopoverTrigger
-      class="a11y-widget cursor-pointer border-2 border-cream bg-cream px-3 py-[5px] text-base font-extrabold text-brand-red hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white"
+      class="a11y-widget cursor-pointer border-2 border-cream bg-cream px-3 py-[5px] text-base font-extrabold text-brand-red-deep hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white"
       aria-label="Accessibility options"
       title="Accessibility options"
     >
@@ -59,7 +59,7 @@ const sizes: { value: TextSize; label: string }[] = [
             class="border-2 px-2.5 py-0.5 text-[0.8rem] font-extrabold uppercase"
             :class="
               settings.highContrast
-                ? 'border-ink bg-brand-red text-cream'
+                ? 'border-ink bg-brand-red-deep text-cream'
                 : 'border-border-muted bg-transparent text-muted-2'
             "
           >
@@ -78,7 +78,7 @@ const sizes: { value: TextSize; label: string }[] = [
             class="border-2 px-2.5 py-0.5 text-[0.8rem] font-extrabold uppercase"
             :class="
               settings.reduceMotion
-                ? 'border-ink bg-brand-red text-cream'
+                ? 'border-ink bg-brand-red-deep text-cream'
                 : 'border-border-muted bg-transparent text-muted-2'
             "
           >

@@ -15,7 +15,7 @@ defineProps<{ post: BlogPost }>();
     </div>
     <div class="flex flex-col justify-center gap-4 px-6 py-8 md:px-10 md:py-9">
       <div class="flex flex-wrap items-center gap-3">
-        <span class="text-[0.8rem] font-extrabold uppercase tracking-[0.14em] text-brand-red">★ Featured</span>
+        <span class="text-[0.8rem] font-extrabold uppercase tracking-[0.14em] text-brand-red-deep">★ Featured</span>
         <CategoryTag :cat-id="post.cat" size="sm" :href="`?category=${post.cat}`" />
       </div>
       <a

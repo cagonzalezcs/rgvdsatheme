@@ -44,5 +44,32 @@ This is a **palette decision, not a code bug** — it can't be fixed without rep
 3. **Accept AA-large / document exception** — keep the palette, rely on the high-contrast widget. Fails a strict AA gate.
 4. Also decide: nudge `labor` category color `#a3641c` (4.36) and reduce `opacity-*` dimming on out-of-month cells / disabled ES.
 
+### Resolution applied (Option 2)
+
+Owner chose **Option 2**. `brand-red-deep #9e0b13` is now used for red **text on light surfaces**;
+bright `#e9252e` stays for large display + decorative fills. Contrast verified: `#9e0b13` on cream
+`#faf4ea` ≈ **7.6:1**, on white ≈ **8.4:1** (AA + AAA).
+
+What changed:
+- **Red text on light** (`text-brand-red` → `text-brand-red-deep`): prose links (`.prose-rgv a`,
+  hover→ink), header EN chip + Join label, footer nav-link hover, a11y-widget trigger, FAQ trigger +
+  chevron, blog eyebrows / share links / "All posts" / featured tag, and the Twig eyebrows / committee
+  names / links across `front-page`, `page-about`, `page-get-involved`, `page`.
+- **Buttons/toggles with cream-on-red small text → darkened fill to `#9e0b13`**: event-dialog RSVP,
+  mobile Join, a11y-widget active state, and the two tiny chips (calendar today-pill, home date badge).
+- **Red text/hover on ink bands → light instead of deep** (deep fails worse on dark): footer contact
+  hover + subscribe RSS hover → white; bright-red hover regressions on light → ink.
+
+What was intentionally **kept bright** (`#e9252e`):
+- Signature **bands** carrying cream text (sticky header, `PageHeader`, blog/home hero) — the residual
+  small-text-on-band cases are a documented **AA-large exception**, covered by the high-contrast widget
+  which maps `data-tone="red"` → `#9e0b13`. *(Owner Q pending: darken these bands too?)*
+- Large display **numerals** (`text-[1.8rem]/[2rem]`, pass 3:1), decorative **stars**, and media
+  **play-button icons** (graphical, 3:1).
+
+Confirmed no shadcn `--primary` buttons render on real pages (only the styleguide), so the global
+`--primary` token was left bright. **Still open (deferred):** `labor` category color `#a3641c` (4.36)
+and `opacity-55/65` dimming on out-of-month cells / disabled ES.
+
 ## Still deferred (unchanged from doc 04)
 Email-subscribe endpoint (#3), ES i18n content (#4), per-event ICS (#5), tag archives (#6), PR to main (#7), owner repo decisions (#8: commit plugins?, delete stock content?, sign commits?).

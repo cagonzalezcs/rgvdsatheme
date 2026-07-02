@@ -53,7 +53,7 @@ const embedUrl = computed(() => {
       class="flex flex-wrap justify-between gap-4 px-1 pt-3 text-[0.9rem] leading-[1.5] text-muted-on-cream"
     >
       <span>{{ caption }}</span>
-      <a v-if="transcriptUrl" :href="transcriptUrl" class="font-bold text-brand-red-deep hover:text-brand-red">Read transcript</a>
+      <a v-if="transcriptUrl" :href="transcriptUrl" class="font-bold text-brand-red-deep hover:text-ink">Read transcript</a>
     </figcaption>
   </figure>
 </template>

@@ -194,7 +194,7 @@ const gridPosts = computed(() =>
           </div>
           <button
             type="button"
-            class="cursor-pointer border-none bg-transparent p-0 text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep underline underline-offset-4 hover:text-brand-red"
+            class="cursor-pointer border-none bg-transparent p-0 text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep underline underline-offset-4 hover:text-ink"
             @click="clearFilters"
           >
             Clear filters ✕

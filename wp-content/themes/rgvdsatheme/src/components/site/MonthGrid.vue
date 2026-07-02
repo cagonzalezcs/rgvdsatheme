@@ -76,7 +76,7 @@ function chipColor(ev: ChapterEvent): string {
         <div class="flex justify-end">
           <span
             v-if="day.isToday"
-            class="bg-brand-red px-2 py-0.5 font-display text-[0.85rem] font-extrabold text-cream"
+            class="bg-brand-red-deep px-2 py-0.5 font-display text-[0.85rem] font-extrabold text-cream"
           >
             {{ day.num }}
           </span>

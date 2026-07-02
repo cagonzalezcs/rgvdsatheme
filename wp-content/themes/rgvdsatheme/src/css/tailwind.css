@@ -203,13 +203,13 @@
   text-transform: uppercase;
 }
 .prose-rgv a {
-  color: var(--color-brand-red);
+  color: var(--color-brand-red-deep); /* deep red passes AA 4.5:1 on cream/white; bright #e9252e is 4.02 */
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .prose-rgv a:hover {
-  color: var(--color-brand-red-deep);
+  color: var(--color-ink);
 }
 .prose-rgv ul {
   padding-left: 1.4em;

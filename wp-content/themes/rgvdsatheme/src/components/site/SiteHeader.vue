@@ -119,12 +119,12 @@ function isCurrent(href: string): boolean {
           aria-label="Language"
           class="hidden items-center border-2 border-cream text-[0.8rem] font-extrabold tracking-[0.05em] sm:flex"
         >
-          <span class="bg-cream px-2.5 py-[5px] text-brand-red">EN</span>
+          <span class="bg-cream px-2.5 py-[5px] text-brand-red-deep">EN</span>
           <a
             v-if="esEnabled && esUrl"
             :href="esUrl"
             lang="es"
-            class="px-2.5 py-[5px] text-cream no-underline hover:bg-cream hover:text-brand-red"
+            class="px-2.5 py-[5px] text-cream no-underline hover:bg-cream hover:text-brand-red-deep"
             >ES</a
           >
           <span
@@ -142,7 +142,7 @@ function isCurrent(href: string): boolean {
           :href="joinUrl"
           target="_blank"
           rel="noopener"
-          class="hidden border-2 border-cream bg-cream px-5 py-2.5 text-[0.95rem] font-extrabold uppercase tracking-[0.04em] text-brand-red no-underline hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white sm:block"
+          class="hidden border-2 border-cream bg-cream px-5 py-2.5 text-[0.95rem] font-extrabold uppercase tracking-[0.04em] text-brand-red-deep no-underline hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white sm:block"
         >
           Join DSA
         </a>
@@ -187,7 +187,7 @@ function isCurrent(href: string): boolean {
                 :href="joinUrl"
                 target="_blank"
                 rel="noopener"
-                class="mt-4 border-[3px] border-ink bg-brand-red px-5 py-3 text-center text-[0.95rem] font-extrabold uppercase tracking-[0.04em] text-cream no-underline shadow-brutal hover:bg-brand-red-deep"
+                class="mt-4 border-[3px] border-ink bg-brand-red-deep px-5 py-3 text-center text-[0.95rem] font-extrabold uppercase tracking-[0.04em] text-cream no-underline shadow-brutal hover:bg-ink"
               >
                 Join DSA
               </a>
