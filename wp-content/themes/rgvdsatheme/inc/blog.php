@@ -1194,7 +1194,12 @@ add_filter( 'rgvdsa/context/front_page', 'rgvdsa_blog_front_page_context' );
 function rgvdsa_blog_front_page_context( $context ) {
 	$query = rgvdsa_blog_posts_query( array( 'posts_per_page' => 3 ) );
 
-	// Leave the twig fixture in place pre-seed.
+	// Always set both keys (null / empty allowed) so Twig owns the empty
+	// state instead of falling back to lorem fixtures. Emit the raw `cat`
+	// slug; Twig maps it to the category pill class.
+	$context['blog_featured'] = null;
+	$context['blog_rows']     = array();
+
 	if ( empty( $query->posts ) ) {
 		return $context;
 	}
@@ -1218,29 +1223,25 @@ function rgvdsa_blog_front_page_context( $context ) {
 
 	$cat                      = rgvdsa_blog_post_cat( $featured );
 	$context['blog_featured'] = array(
+		'cat'       => $cat,
 		'cat_label' => $labels[ $cat ],
-		'cat_class' => 'bg-cat-' . $cat,
 		'date'      => get_the_date( 'F j, Y', $featured ),
 		'read'      => rgvdsa_blog_read_minutes( $featured ) . ' min read',
 		'title'     => html_entity_decode( get_the_title( $featured ), ENT_QUOTES, 'UTF-8' ),
 		'excerpt'   => wp_strip_all_tags( get_the_excerpt( $featured ) ),
 	);
 
-	$rows = array();
 	foreach ( $query->posts as $post ) {
-		if ( $post->ID === $featured->ID || count( $rows ) >= 2 ) {
+		if ( $post->ID === $featured->ID || count( $context['blog_rows'] ) >= 2 ) {
 			continue;
 		}
-		$cat    = rgvdsa_blog_post_cat( $post );
-		$rows[] = array(
+		$cat                    = rgvdsa_blog_post_cat( $post );
+		$context['blog_rows'][] = array(
+			'cat'       => $cat,
 			'cat_label' => $labels[ $cat ],
-			'cat_class' => 'bg-cat-' . $cat,
 			'title'     => html_entity_decode( get_the_title( $post ), ENT_QUOTES, 'UTF-8' ),
 			'date'      => get_the_date( 'F j, Y', $post ),
 		);
-	}
-	if ( ! empty( $rows ) ) {
-		$context['blog_rows'] = $rows;
 	}
 
 	return $context;

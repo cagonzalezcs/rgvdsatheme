@@ -17,16 +17,20 @@
 	{ day: '29', month: 'JUL', title: 'RGV-DSA 101 (Virtual)', when: 'Wednesday, July 29 · 7:00 PM', where: 'Zoom' }
 ]) %}
 {% set counties = ['McAllen', 'Edinburg', 'Brownsville', 'Harlingen', 'Pharr', 'San Juan', 'San Benito', 'Raymondville', 'Roma', 'La Joya', 'Rio Grande City', 'Zapata', 'La Grulla', 'La Feria', 'Rio Hondo'] %}
-{% set blog_featured = {
-	cat_label: 'Mutual Aid', pill_class: 'bg-cat-mutual text-white',
-	date: 'June 14, 2026', read: '6 min read',
-	title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod',
-	excerpt: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.'
+{#
+  blog_featured (map|null) and blog_rows (array) come from
+  rgvdsa_blog_front_page_context() with a raw `cat` slug. Literal class maps
+  keep the Tailwind JIT scanner able to see every category utility.
+#}
+{% set cat_featured_pill = {
+	chapter: 'bg-cat-chapter', poled: 'bg-cat-poled', mutual: 'bg-cat-mutual',
+	labor: 'bg-cat-labor', electoral: 'bg-cat-electoral', social: 'bg-cat-social'
 } %}
-{% set blog_rows = [
-	{ cat_label: 'Political Education', pill_class: 'text-cat-poled border-cat-poled', title: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem', date: 'June 28, 2026' },
-	{ cat_label: 'Labor', pill_class: 'text-cat-labor border-cat-labor', title: 'Nemo enim ipsam voluptatem quia voluptas sit aspernatur', date: 'June 21, 2026' }
-] %}
+{% set cat_row_pill = {
+	chapter: 'text-cat-chapter border-cat-chapter', poled: 'text-cat-poled border-cat-poled',
+	mutual: 'text-cat-mutual border-cat-mutual', labor: 'text-cat-labor border-cat-labor',
+	electoral: 'text-cat-electoral border-cat-electoral', social: 'text-cat-social border-cat-social'
+} %}
 {% set stripe = 'bg-[repeating-linear-gradient(45deg,var(--color-stripe-v2-a)_0_14px,var(--color-stripe-v2-b)_14px_28px)]' %}
 
 {% block content %}
@@ -125,31 +129,38 @@
 				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">From the blog</h2>
 				<a href="/blog/" class="text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">All posts →</a>
 			</div>
-			<div class="grid items-stretch gap-8 [grid-template-columns:minmax(300px,1.15fr)_minmax(280px,1fr)] max-md:[grid-template-columns:1fr]">
-				<a href="/blog/" class="flex flex-col overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card-hover-lg">
-					<div aria-hidden="true" class="flex aspect-video items-start p-3.5 {{ stripe }}">
-						<span class="{{ blog_featured.pill_class }} rounded-full px-3.5 py-[5px] text-[0.75rem] font-bold uppercase tracking-[0.06em]">{{ blog_featured.cat_label }}</span>
+			{% if blog_featured %}
+				<div class="grid items-stretch gap-8 [grid-template-columns:minmax(300px,1.15fr)_minmax(280px,1fr)] max-md:[grid-template-columns:1fr]">
+					<a href="/blog/" class="flex flex-col overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card-hover-lg">
+						<div aria-hidden="true" class="flex aspect-video items-start p-3.5 {{ stripe }}">
+							<span class="{{ cat_featured_pill[blog_featured.cat] }} text-white rounded-full px-3.5 py-[5px] text-[0.75rem] font-bold uppercase tracking-[0.06em]">{{ blog_featured.cat_label }}</span>
+						</div>
+						<div class="flex flex-col gap-2.5 px-7 pb-[30px] pt-[26px]">
+							<span class="text-[0.82rem] font-semibold text-text-muted">{{ blog_featured.date }} · {{ blog_featured.read }}</span>
+							<span class="font-display text-[clamp(1.2rem,2.2vw,1.45rem)] font-extrabold leading-[1.25] [text-wrap:balance]">{{ blog_featured.title }}</span>
+							<span class="text-base leading-[1.65] text-text-muted">{{ blog_featured.excerpt }}</span>
+							<span class="mt-1 text-[0.95rem] font-bold text-red">Read the post →</span>
+						</div>
+					</a>
+					<div class="flex flex-col gap-5">
+						{% for row in blog_rows %}
+							<a href="/blog/" class="grid flex-1 overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] [grid-template-columns:130px_1fr] hover:-translate-y-0.5 hover:shadow-card-hover-lg max-sm:[grid-template-columns:100px_1fr]">
+								<span aria-hidden="true" class="min-h-[130px] {{ stripe }}"></span>
+								<span class="flex flex-col justify-center gap-[9px] px-6 py-5">
+									<span class="{{ cat_row_pill[row.cat] }} self-start rounded-full border-2 px-3 py-[3px] text-[0.72rem] font-bold uppercase tracking-[0.06em]">{{ row.cat_label }}</span>
+									<span class="font-display text-[1.08rem] font-bold leading-[1.35]">{{ row.title }}</span>
+									<span class="text-[0.85rem] font-semibold text-text-muted">{{ row.date }}</span>
+								</span>
+							</a>
+						{% endfor %}
 					</div>
-					<div class="flex flex-col gap-2.5 px-7 pb-[30px] pt-[26px]">
-						<span class="text-[0.82rem] font-semibold text-text-muted">{{ blog_featured.date }} · {{ blog_featured.read }}</span>
-						<span class="font-display text-[clamp(1.2rem,2.2vw,1.45rem)] font-extrabold leading-[1.25] [text-wrap:balance]">{{ blog_featured.title }}</span>
-						<span class="text-base leading-[1.65] text-text-muted">{{ blog_featured.excerpt }}</span>
-						<span class="mt-1 text-[0.95rem] font-bold text-red">Read the post →</span>
-					</div>
-				</a>
-				<div class="flex flex-col gap-5">
-					{% for row in blog_rows %}
-						<a href="/blog/" class="grid flex-1 overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] [grid-template-columns:130px_1fr] hover:-translate-y-0.5 hover:shadow-card-hover-lg max-sm:[grid-template-columns:100px_1fr]">
-							<span aria-hidden="true" class="min-h-[130px] {{ stripe }}"></span>
-							<span class="flex flex-col justify-center gap-[9px] px-6 py-5">
-								<span class="{{ row.pill_class }} self-start rounded-full border-2 px-3 py-[3px] text-[0.72rem] font-bold uppercase tracking-[0.06em]">{{ row.cat_label }}</span>
-								<span class="font-display text-[1.08rem] font-bold leading-[1.35]">{{ row.title }}</span>
-								<span class="text-[0.85rem] font-semibold text-text-muted">{{ row.date }}</span>
-							</span>
-						</a>
-					{% endfor %}
 				</div>
-			</div>
+			{% else %}
+				<div class="flex flex-col items-center gap-2.5 rounded-[18px] border border-hairline bg-off-white px-6 py-16 text-center">
+					<span class="font-display text-[1.15rem] font-bold">Posts coming soon</span>
+					<span class="text-base text-text-muted">The chapter is writing its first dispatches — check back shortly.</span>
+				</div>
+			{% endif %}
 		</div>
 	</section>
 
