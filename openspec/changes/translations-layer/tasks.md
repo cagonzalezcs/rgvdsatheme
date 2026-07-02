@@ -26,8 +26,8 @@ Theme paths relative to `wp-content/themes/rgvdsatheme/`. Sections ordered by de
 
 ## 4. Navigation standdown
 
-- [ ] 4.1 `src/ts/navigation.ts`: early-return in `onClick` (and prefetch-intent path) when `isSpanishPreferred()`
-- [ ] 4.2 `src/ts/navigation.ts` `syncHead()`: sync `data-translation-scope` alongside the existing `data-template` sync
+- [x] 4.1 `src/ts/navigation.ts`: early-return in `onClick` (and prefetch-intent path) when `isSpanishPreferred()`; also guard `onPopState` (pre-ES history entries would otherwise partial-swap)
+- [x] 4.2 `src/ts/navigation.ts` `syncHead()`: sync `data-translation-scope` alongside the existing `data-template` sync
 - [ ] 4.3 Verify: with ES active on home, clicking Blog does a full load and Blog renders EN; returning home auto-resumes ES; EN user still gets partial swaps and can flip ES after SPA-navigating onto home
 
 ## 5. notranslate template pass (all templates)

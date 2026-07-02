@@ -385,6 +385,12 @@ function syncMetaGroup(selector: string, doc: Document): void {
 
 function onPopState(): void {
   const url = new URL(window.location.href);
+  // History entries pushed while EN can fire after a mid-session ES flip —
+  // same standdown rule as clicks: hand the traversal to a real load.
+  if (isSpanishPreferred()) {
+    window.location.reload();
+    return;
+  }
   void navigate(url, { push: false }).then(() => {
     const y = scrollPositions.get(scrollKey(url)) ?? 0;
     window.scrollTo(0, y);
