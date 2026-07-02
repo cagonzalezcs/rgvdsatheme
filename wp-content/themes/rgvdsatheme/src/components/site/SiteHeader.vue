@@ -58,7 +58,7 @@ function isCurrent(href: string): boolean {
 
 <template>
   <header
-    class="site-header sticky top-0 z-100 border-b-[3px] border-ink bg-brand-red"
+    class="site-header sticky top-0 z-100 border-b-[3px] border-ink bg-brand-red [.admin-bar_&]:top-[var(--wp-admin--admin-bar--height,32px)]"
     data-tone="red"
   >
     <div

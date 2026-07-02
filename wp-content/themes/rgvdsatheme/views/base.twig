@@ -16,7 +16,8 @@
 			homeUrl: site.url,
 			currentPath: current_path|default('')
 		} %}
-		<div data-vue-island="SiteHeader" data-props='{{ header_props|json_encode|e("html_attr") }}'></div>
+		{# `contents` removes the wrapper's box so the sticky <header> inside sticks against the body scroll, not this div. #}
+		<div class="contents" data-vue-island="SiteHeader" data-props='{{ header_props|json_encode|e("html_attr") }}'></div>
 
 		<main id="main" class="site-main">
 			{% block content %}
