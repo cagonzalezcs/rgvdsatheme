@@ -1,0 +1,23 @@
+{% extends "base.twig" %}
+
+{#
+  Calendar page. Events are the prototype fixture (default prop inside the
+  island) until Phase 6 passes a Timber query via data-props, e.g.:
+    events: events_json, defaultView: 'month', ...
+#}
+
+{% block content %}
+	{% set page_header_props = {
+		title: 'Event Calendar',
+		lede: 'Meetings, actions, trainings, and socials across the Valley. Everything is open to the public unless noted — bring a friend.',
+		crumbs: [{ label: 'Home', href: '/' }]
+	} %}
+	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
+
+	{% set calendar_props = {
+		defaultView: 'month',
+		showCategoryColors: true,
+		showSubscribe: true
+	} %}
+	<div data-vue-island="EventCalendar" data-props='{{ calendar_props|json_encode|e("html_attr") }}'></div>
+{% endblock %}

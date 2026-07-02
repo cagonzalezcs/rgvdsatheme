@@ -14,6 +14,7 @@ const registry: Record<string, () => Promise<{ default: Component }>> = {
   SiteFooter: () => import("@/components/site/SiteFooter.vue"),
   PageHeader: () => import("@/components/site/PageHeader.vue"),
   FaqAccordion: () => import("@/components/site/FaqAccordion.vue"),
+  EventCalendar: () => import("@/components/site/EventCalendar.vue"),
 };
 
 export function mountIslands(root: ParentNode = document): void {
