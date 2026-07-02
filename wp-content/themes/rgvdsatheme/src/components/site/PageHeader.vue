@@ -19,32 +19,32 @@ withDefaults(
 
 <template>
   <section
-    class="page-header bg-brand-red px-6 py-12 text-cream md:py-14"
+    class="page-header bg-brand-red px-6 pb-14 pt-12 text-white"
     data-tone="red"
   >
-    <div class="mx-auto flex max-w-[1100px] flex-col gap-4">
+    <div class="mx-auto flex max-w-[1140px] flex-col items-start gap-[18px]">
       <nav aria-label="Breadcrumb">
-        <ol class="m-0 flex list-none flex-wrap items-center gap-2 p-0 text-[0.85rem] font-bold uppercase tracking-[0.05em]">
+        <ol class="m-0 flex list-none flex-wrap items-center gap-2 rounded-full bg-white px-4 py-1.5 text-[0.85rem] font-bold">
           <li v-for="crumb in crumbs" :key="crumb.label" class="flex items-center gap-2">
             <a
               v-if="crumb.href"
               :href="crumb.href"
-              class="text-cream/85 no-underline hover:underline hover:underline-offset-4"
+              class="text-red no-underline hover:underline hover:underline-offset-[3px]"
             >
               {{ crumb.label }}
             </a>
-            <span v-else>{{ crumb.label }}</span>
-            <span aria-hidden="true" class="opacity-70">/</span>
+            <span v-else class="text-ink">{{ crumb.label }}</span>
+            <span aria-hidden="true" class="text-text-muted">/</span>
           </li>
-          <li aria-current="page">{{ title }}</li>
+          <li aria-current="page" class="text-ink">{{ title }}</li>
         </ol>
       </nav>
       <h1
-        class="m-0 font-display text-[clamp(2rem,4.8vw,3.4rem)] font-black uppercase leading-[1.1] tracking-[-0.01em]"
+        class="m-0 max-w-[22ch] font-display text-[clamp(2rem,4.8vw,3.4rem)] font-black leading-[1.1] tracking-[-0.01em]"
       >
         {{ title }}
       </h1>
-      <p v-if="lede" class="m-0 max-w-[60ch] text-[1.15rem] leading-relaxed">
+      <p v-if="lede" class="m-0 max-w-[48ch] text-[1.5rem] leading-[1.5]">
         {{ lede }}
       </p>
     </div>

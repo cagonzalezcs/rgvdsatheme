@@ -1,5 +1,14 @@
 {% extends "base.twig" %}
 
+{#
+  About page — v2 (warm/rounded) skin. Ported from
+  design_handoff_rgvdsa_vue/designs/About.dc.html.
+#}
+
+{% set h2class = 'scroll-mt-[calc(110px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-brand-red pb-3 font-display text-[1.55rem] font-extrabold tracking-[-0.01em]' %}
+{% set stripe = 'bg-[repeating-linear-gradient(45deg,var(--color-stripe-v2-a)_0_14px,var(--color-stripe-v2-b)_14px_28px)]' %}
+{% set nav_link = 'rounded-[8px] px-3.5 py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-tint hover:text-red' %}
+
 {% block content %}
 	{% set page_header_props = {
 		title: "About RGV DSA",
@@ -9,39 +18,39 @@
 	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
 
 	{# ---- Mission band ---- #}
-	<section class="bg-ink px-6 py-[72px] text-cream" data-tone="ink">
-		<div class="mx-auto flex max-w-[1100px] flex-col gap-5">
-			<div class="font-display text-[0.9rem] font-extrabold uppercase tracking-[0.1em] text-brand-red">What we believe</div>
-			<p class="m-0 max-w-[32ch] font-display text-[clamp(1.4rem,3vw,2.2rem)] font-extrabold leading-[1.35]">Democratic socialists believe that our economy should be built democratically, by and for working people &mdash; not by billionaires for profit.</p>
+	<section class="bg-ink px-6 py-16 text-white" data-tone="ink">
+		<div class="mx-auto flex max-w-[1140px] flex-col gap-[18px]">
+			<div class="font-display text-[0.85rem] font-bold uppercase tracking-[0.12em] text-pink">What we believe</div>
+			<p class="m-0 max-w-[34ch] font-display text-[clamp(1.35rem,2.8vw,2rem)] font-bold leading-[1.4]">Democratic socialists believe that our economy should be built democratically, by and for working people &mdash; not by billionaires for profit.</p>
 		</div>
 	</section>
 
-	<section class="bg-cream px-6 pt-16 pb-24" data-tone="cream">
-		<div class="mx-auto grid max-w-[1100px] items-start gap-14 lg:[grid-template-columns:minmax(300px,1fr)_300px]">
+	<section class="bg-white px-6 pb-24 pt-16" data-tone="cream">
+		<div class="mx-auto grid max-w-[1140px] items-start gap-14 lg:[grid-template-columns:minmax(300px,1fr)_300px]">
 
 			<article class="flex min-w-0 flex-col gap-7">
 
 				{# ---- 1. About the Chapter ---- #}
-				<h2 id="chapter" class="m-0 scroll-mt-[calc(100px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">About the Chapter</h2>
+				<h2 id="chapter" class="m-0 {{ h2class }}">About the Chapter</h2>
 
-				<p class="m-0 text-[1.1rem] leading-[1.75]">The Rio Grande Valley Democratic Socialists of America (DSA RGV) is a local chapter of the nation's largest socialist organization. Based primarily in McAllen, Texas, our grassroots group focuses on progressive labor organizing, mutual aid, and socialist political education throughout South Texas.</p>
+				<p class="m-0 text-[1.08rem] leading-[1.78] text-text-body">The Rio Grande Valley Democratic Socialists of America (DSA RGV) is a local chapter of the nation&rsquo;s largest socialist organization. Based primarily in McAllen, Texas, our grassroots group focuses on progressive labor organizing, mutual aid, and socialist political education throughout South Texas.</p>
 
-				<p class="m-0 text-[1.05rem] leading-[1.75]">Everything we do is member-led, member-funded, and open to anyone who wants to build a Valley that works for working people. We regularly host community meetings &mdash; often in McAllen &mdash; to share updates, plan campaigns, and hold political education lectures. You can find our organizing platforms on the DSA Rio Grande Valley Action Network, and if you're a student, we operate a collegiate branch: the UTRGV Young Democratic Socialists of America.</p>
+				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">Everything we do is member-led, member-funded, and open to anyone who wants to build a Valley that works for working people. We regularly host community meetings &mdash; often in McAllen &mdash; to share updates, plan campaigns, and hold political education lectures. You can find our organizing platforms on the DSA Rio Grande Valley Action Network, and if you&rsquo;re a student, we operate a collegiate branch: the UTRGV Young Democratic Socialists of America.</p>
 
-				<figure class="m-0 flex h-[340px] items-center justify-center border-[3px] border-ink bg-[repeating-linear-gradient(45deg,var(--color-stripe-a)_0_14px,var(--color-stripe-b)_14px_28px)]">
-					<figcaption class="border border-ink bg-cream px-3.5 py-2 font-mono text-[0.85rem] text-muted-2">photo: chapter members at a meeting or action</figcaption>
+				<figure class="m-0 flex h-[340px] items-center justify-center overflow-hidden rounded-[16px] shadow-card {{ stripe }}">
+					<figcaption class="rounded-lg bg-white px-3.5 py-2 font-mono text-[0.85rem] text-text-muted shadow-subtle">photo: chapter members at a meeting or action</figcaption>
 				</figure>
 
 				<div class="flex flex-wrap gap-3">
-					<a href="/calendar/" class="bg-ink px-[18px] py-2.5 text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:bg-brand-red-deep">Come to a meeting</a>
-					<a href="/get-involved/" class="border-2 border-ink px-4 py-2 text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white">Get involved</a>
-					<a href="/get-involved/" class="border-2 border-ink px-4 py-2 text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white">Students: UTRGV YDSA</a>
+					<a href="/calendar/" class="rounded-full bg-red px-[22px] py-[11px] text-[0.92rem] font-bold text-white no-underline transition-colors hover:bg-red-hover">Come to a meeting</a>
+					<a href="/get-involved/" class="rounded-full border-2 border-red px-5 py-[9px] text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash">Get involved</a>
+					<a href="/get-involved/" class="rounded-full border-2 border-red px-5 py-[9px] text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash">Students: UTRGV YDSA</a>
 				</div>
 
 				{# ---- 2. Mission & History ---- #}
-				<h2 id="mission" class="mx-0 mt-4 mb-0 scroll-mt-[calc(100px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">Mission &amp; History</h2>
+				<h2 id="mission" class="mx-0 mb-0 mt-6 {{ h2class }}">Mission &amp; History</h2>
 
-				<p class="m-0 text-[1.05rem] leading-[1.75]">We fight for a Rio Grande Valley where housing, healthcare, and a dignified living are guaranteed &mdash; and we believe the people who live and work here should be the ones deciding the Valley's future. Our work centers on three pillars: labor organizing, mutual aid, and political education.</p>
+				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">We fight for a Rio Grande Valley where housing, healthcare, and a dignified living are guaranteed &mdash; and we believe the people who live and work here should be the ones deciding the Valley&rsquo;s future. Our work centers on three pillars: labor organizing, mutual aid, and political education.</p>
 
 				{# 20XX years are placeholders for the chapter to fill in — do not invent dates. #}
 				{% set timeline = [
@@ -49,60 +58,60 @@
 					{ year: "20XX", text: "Valley organizers form an organizing committee and begin meeting in McAllen.", note: true },
 					{ year: "20XX", text: "DSA RGV is chartered as an official local chapter, organizing across four counties in South Texas.", note: true }
 				] %}
-				<div class="flex flex-col border-2 border-ink bg-white">
+				<div class="flex flex-col overflow-hidden rounded-[14px] bg-white shadow-card">
 					{% for row in timeline %}
-						<div class="grid items-baseline gap-4 border-b-2 border-ink px-5 py-4 last:border-b-0 [grid-template-columns:110px_1fr]">
-							<span class="font-display text-[1.05rem] font-black text-brand-red-deep">{{ row.year }}</span>
-							<span class="text-base leading-[1.6]">{{ row.text }} {% if row.note %}<em class="text-muted-2">(Year and details to be filled in by the chapter.)</em>{% endif %}</span>
+						<div class="grid items-baseline gap-4 border-b border-divider px-[22px] py-[18px] last:border-b-0 [grid-template-columns:110px_1fr]">
+							<span class="font-display text-[1.05rem] font-extrabold text-red">{{ row.year }}</span>
+							<span class="text-base leading-[1.65] text-text-body">{{ row.text }} {% if row.note %}<em class="text-[#78716c]">(Year and details to be filled in by the chapter.)</em>{% endif %}</span>
 						</div>
 					{% endfor %}
 				</div>
 
 				{# ---- 3. Counties We Serve ---- #}
-				<h2 id="counties" class="mx-0 mt-4 mb-0 scroll-mt-[calc(100px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">Counties We Serve</h2>
+				<h2 id="counties" class="mx-0 mb-0 mt-6 {{ h2class }}">Counties We Serve</h2>
 
-				<p class="m-0 text-[1.05rem] leading-[1.75]">One chapter, four counties. Wherever you are in the Valley, you're covered &mdash; and if you can help us organize deeper in your county, we want to hear from you.</p>
+				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">One chapter, four counties. Wherever you are in the Valley, you&rsquo;re covered &mdash; and if you can help us organize deeper in your county, we want to hear from you.</p>
 
 				<div class="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
-					<div class="flex flex-col gap-1.5 border-2 border-ink bg-white p-5">
-						<div class="font-display text-[1.05rem] font-extrabold uppercase tracking-[0.02em]">Hidalgo</div>
-						<div class="text-[0.9rem] leading-[1.6] text-muted-on-cream">McAllen <span class="text-brand-red">&starf;</span> &middot; Edinburg &middot; Mission &middot; Pharr</div>
-						<div class="mt-1 text-[0.8rem] font-extrabold uppercase tracking-[0.06em] text-brand-red-deep">Home base &mdash; most meetings held here</div>
+					<div class="flex flex-col gap-1.5 rounded-[14px] border-t-4 border-brand-red bg-white p-[22px] shadow-card">
+						<div class="font-display text-[1.05rem] font-extrabold">Hidalgo</div>
+						<div class="text-[0.92rem] leading-[1.6] text-text-muted">McAllen &middot; Edinburg &middot; Mission &middot; Pharr</div>
+						<div class="mt-1 text-[0.82rem] font-bold text-red">Home base &mdash; most meetings held here</div>
 					</div>
-					<div class="flex flex-col gap-1.5 border-2 border-ink bg-white p-5">
-						<div class="font-display text-[1.05rem] font-extrabold uppercase tracking-[0.02em]">Cameron</div>
-						<div class="text-[0.9rem] leading-[1.6] text-muted-on-cream">Brownsville &middot; Harlingen &middot; San Benito</div>
+					<div class="flex flex-col gap-1.5 rounded-[14px] border-t-4 border-brand-red bg-white p-[22px] shadow-card">
+						<div class="font-display text-[1.05rem] font-extrabold">Cameron</div>
+						<div class="text-[0.92rem] leading-[1.6] text-text-muted">Brownsville &middot; Harlingen &middot; San Benito</div>
 					</div>
-					<div class="flex flex-col gap-1.5 border-2 border-ink bg-white p-5">
-						<div class="font-display text-[1.05rem] font-extrabold uppercase tracking-[0.02em]">Willacy</div>
-						<div class="text-[0.9rem] leading-[1.6] text-muted-on-cream">Raymondville &middot; Lyford</div>
+					<div class="flex flex-col gap-1.5 rounded-[14px] border-t-4 border-brand-red bg-white p-[22px] shadow-card">
+						<div class="font-display text-[1.05rem] font-extrabold">Willacy</div>
+						<div class="text-[0.92rem] leading-[1.6] text-text-muted">Raymondville &middot; Lyford</div>
 					</div>
-					<div class="flex flex-col gap-1.5 border-2 border-ink bg-white p-5">
-						<div class="font-display text-[1.05rem] font-extrabold uppercase tracking-[0.02em]">Starr</div>
-						<div class="text-[0.9rem] leading-[1.6] text-muted-on-cream">Rio Grande City &middot; Roma</div>
+					<div class="flex flex-col gap-1.5 rounded-[14px] border-t-4 border-brand-red bg-white p-[22px] shadow-card">
+						<div class="font-display text-[1.05rem] font-extrabold">Starr</div>
+						<div class="text-[0.92rem] leading-[1.6] text-text-muted">Rio Grande City &middot; Roma</div>
 					</div>
 				</div>
 
 				{# ---- 4. Committees ---- #}
-				<h2 id="committees" class="mx-0 mt-4 mb-0 scroll-mt-[calc(100px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">Committees</h2>
+				<h2 id="committees" class="mx-0 mb-0 mt-6 {{ h2class }}">Committees</h2>
 
-				<p class="m-0 text-[1.05rem] leading-[1.75]">Committees are where the work happens. Each one meets regularly and welcomes new members.</p>
+				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">Committees are where the work happens. Each one meets regularly and welcomes new members.</p>
 
-				<div class="flex flex-col border-2 border-ink bg-white">
+				<div class="flex flex-col overflow-hidden rounded-[14px] bg-white shadow-card">
 					{% for committee in chapter.committees %}
-						<div class="grid items-baseline gap-2 border-b-2 border-ink px-5 py-3.5 last:border-b-0 sm:gap-4 sm:[grid-template-columns:200px_1fr]">
-							<span class="font-display text-[0.95rem] font-extrabold uppercase tracking-[0.02em] text-brand-red-deep">{{ committee.name }}</span>
-							<span class="text-[0.95rem] leading-[1.6]">{{ committee.desc }}</span>
+						<div class="grid items-baseline gap-2 border-b border-divider px-[22px] py-4 last:border-b-0 sm:gap-4 sm:[grid-template-columns:200px_1fr]">
+							<span class="font-display text-[0.95rem] font-bold text-red">{{ committee.name }}</span>
+							<span class="text-[0.95rem] leading-[1.6] text-text-body">{{ committee.desc }}</span>
 						</div>
 					{% endfor %}
 				</div>
 
-				<a href="/get-involved/#committees" class="self-start border-b-2 border-brand-red pb-0.5 text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:border-brand-red-deep hover:text-ink">Join a committee &rarr;</a>
+				<a href="/get-involved/#committees" class="self-start text-[0.98rem] font-bold text-red no-underline hover:underline hover:underline-offset-4">Join a committee &rarr;</a>
 
 				{# ---- 5. Bylaws & Code of Conduct ---- #}
-				<h2 id="bylaws" class="mx-0 mt-4 mb-0 scroll-mt-[calc(100px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">Bylaws &amp; Code of Conduct</h2>
+				<h2 id="bylaws" class="mx-0 mb-0 mt-6 {{ h2class }}">Bylaws &amp; Code of Conduct</h2>
 
-				<p class="m-0 text-[1.05rem] leading-[1.75]">The chapter is governed by its members through documents we debate and vote on together. Everything is public.</p>
+				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">The chapter is governed by its members through documents we debate and vote on together. Everything is public.</p>
 
 				{% set governance_docs = [
 					{ title: "Chapter Bylaws", covers: "How the chapter runs: officers, elections, quorum, committees, and how decisions get made.", action: "Read", url: "/bylaws-code-of-conduct/#documents" },
@@ -111,20 +120,20 @@
 					{ title: "Meeting Minutes", covers: "Records and resolutions from general meetings, available to all members.", action: "Browse", url: "/bylaws-code-of-conduct/#documents" }
 				] %}
 				<div class="overflow-x-auto">
-				<table class="w-full border-collapse border-2 border-ink bg-white text-[0.95rem]">
+				<table class="w-full border-separate border-spacing-0 overflow-hidden rounded-[14px] bg-white text-[0.95rem] shadow-card">
 					<thead>
-						<tr class="bg-ink text-left text-cream">
-							<th scope="col" class="px-5 py-3 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.05em]">Document</th>
-							<th scope="col" class="px-5 py-3 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.05em]">What it covers</th>
-							<th scope="col" class="w-[90px] px-5 py-3"><span class="sr-only">Action</span></th>
+						<tr class="bg-ink text-left text-white">
+							<th scope="col" class="px-[22px] py-[13px] font-display text-[0.82rem] font-bold uppercase tracking-[0.06em]">Document</th>
+							<th scope="col" class="px-[22px] py-[13px] font-display text-[0.82rem] font-bold uppercase tracking-[0.06em]">What it covers</th>
+							<th scope="col" class="w-[90px] px-[22px] py-[13px]"><span class="sr-only">Action</span></th>
 						</tr>
 					</thead>
-					<tbody>
+					<tbody class="[&_tr:last-child>*]:border-b-0">
 						{% for doc in governance_docs %}
-							<tr class="border-b-2 border-ink last:border-b-0">
-								<th scope="row" class="px-5 py-3.5 text-left align-top font-extrabold sm:whitespace-nowrap">{{ doc.title }}</th>
-								<td class="px-5 py-3.5 align-top leading-[1.6]">{{ doc.covers }}</td>
-								<td class="px-5 py-3.5 align-top"><a href="{{ doc.url }}" class="text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep no-underline hover:text-ink hover:underline">{{ doc.action }}</a></td>
+							<tr>
+								<th scope="row" class="border-b border-divider px-[22px] py-[15px] text-left align-top font-bold sm:whitespace-nowrap">{{ doc.title }}</th>
+								<td class="border-b border-divider px-[22px] py-[15px] align-top leading-[1.6] text-text-body">{{ doc.covers }}</td>
+								<td class="border-b border-divider px-[22px] py-[15px] align-top"><a href="{{ doc.url }}" class="text-[0.92rem] font-bold text-red no-underline hover:underline hover:underline-offset-[3px]">{{ doc.action }}</a></td>
 							</tr>
 						{% endfor %}
 					</tbody>
@@ -132,7 +141,7 @@
 				</div>
 
 				{# ---- 6. FAQ (tabular rows, intentionally not the Get Involved accordion) ---- #}
-				<h2 id="faq" class="mx-0 mt-4 mb-0 scroll-mt-[calc(100px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">FAQ</h2>
+				<h2 id="faq" class="mx-0 mb-0 mt-6 {{ h2class }}">FAQ</h2>
 
 				{% set faq_rows = [
 					{ question: "Do I have to be a member to come to events?", answer: "Nope — most of our events are open to everyone. Come to a 101 or a social, meet folks, and see if it's for you." },
@@ -142,40 +151,40 @@
 					{ question: "Can I participate without being publicly visible?", answer: "Yes. There are plenty of ways to contribute behind the scenes, and we take members' privacy and safety seriously." },
 					{ question: "How much time does membership take?", answer: "As much or as little as you have. Some members show up to one event a month; others help lead committees." }
 				] %}
-				<div class="flex flex-col border-2 border-ink bg-white">
+				<div class="flex flex-col overflow-hidden rounded-[14px] bg-white shadow-card">
 					{% for row in faq_rows %}
-						<div class="grid gap-2 border-b-2 border-ink px-5 py-4 last:border-b-0 sm:gap-5 sm:[grid-template-columns:minmax(200px,2fr)_3fr]">
-							<span class="text-[0.98rem] font-extrabold leading-[1.5]">{{ row.question }}</span>
-							<span class="text-[0.95rem] leading-[1.65]">{{ row.answer }}</span>
+						<div class="grid gap-2 border-b border-divider px-[22px] py-[18px] last:border-b-0 sm:gap-5 sm:[grid-template-columns:minmax(200px,2fr)_3fr]">
+							<span class="text-[0.98rem] font-bold leading-[1.5]">{{ row.question }}</span>
+							<span class="text-[0.95rem] leading-[1.65] text-text-body">{{ row.answer }}</span>
 						</div>
 					{% endfor %}
 				</div>
 
 				{# ---- Dues callout ---- #}
-				<aside id="dues" class="mt-3 flex flex-col gap-2.5 border-[3px] border-ink bg-white px-7 py-[26px] shadow-brutal-red">
-					<div class="font-display text-base font-extrabold uppercase tracking-[0.04em] text-brand-red-deep">Switching your dues rate?</div>
-					<p class="m-0 text-base leading-[1.7]">Already a member but switching to a monthly or Solidarity Dues rate? Enter the email associated with your membership in this form with your new dues amount, and your current dues will be canceled and updated.</p>
-					<a href="{{ chapter.join_url }}" target="_blank" rel="noopener" class="mt-1.5 self-start bg-ink px-[18px] py-2.5 text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-cream no-underline hover:bg-brand-red-deep">Update my dues</a>
+				<aside id="dues" class="mt-3 flex flex-col gap-2.5 rounded-[16px] border-l-[5px] border-brand-red bg-tint px-7 py-[26px]">
+					<div class="font-display text-base font-extrabold text-red">Switching your dues rate?</div>
+					<p class="m-0 text-base leading-[1.7] text-text-body">Already a member but switching to a monthly or Solidarity Dues rate? Enter the email associated with your membership in this form with your new dues amount, and your current dues will be canceled and updated.</p>
+					<a href="{{ chapter.join_url }}" target="_blank" rel="noopener" class="mt-1.5 self-start rounded-full bg-red px-[22px] py-2.5 text-[0.9rem] font-bold text-white no-underline transition-colors hover:bg-red-hover">Update my dues</a>
 				</aside>
 
 			</article>
 
 			{# ---- Sidebar ---- #}
-			<aside aria-label="Page navigation" class="flex flex-col gap-7 lg:sticky lg:top-[calc(100px+var(--wp-admin--admin-bar--height,0px))]">
-				<nav aria-label="On this page" class="flex flex-col gap-0.5 border-l-[3px] border-ink">
-					<div class="mb-1.5 px-[18px] py-1.5 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.08em]">On this page</div>
-					<a href="#chapter" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">About the Chapter</a>
-					<a href="#mission" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Mission &amp; History</a>
-					<a href="#counties" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Counties We Serve</a>
-					<a href="#committees" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Committees</a>
-					<a href="#bylaws" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Bylaws &amp; Code of Conduct</a>
-					<a href="#faq" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">FAQ</a>
+			<aside aria-label="Page navigation" class="flex flex-col gap-7 lg:sticky lg:top-[calc(110px+var(--wp-admin--admin-bar--height,0px))]">
+				<nav aria-label="On this page" class="flex flex-col gap-0.5 rounded-[14px] bg-off-white p-3">
+					<div class="mb-1 px-3.5 py-1.5 font-display text-[0.82rem] font-bold uppercase tracking-[0.08em] text-text-muted">On this page</div>
+					<a href="#chapter" class="{{ nav_link }}">About the Chapter</a>
+					<a href="#mission" class="{{ nav_link }}">Mission &amp; History</a>
+					<a href="#counties" class="{{ nav_link }}">Counties We Serve</a>
+					<a href="#committees" class="{{ nav_link }}">Committees</a>
+					<a href="#bylaws" class="{{ nav_link }}">Bylaws &amp; Code of Conduct</a>
+					<a href="#faq" class="{{ nav_link }}">FAQ</a>
 				</nav>
 
-				<div class="flex flex-col gap-3 bg-ink p-[22px] text-cream" data-tone="ink">
-					<div class="font-display text-[0.95rem] font-extrabold uppercase tracking-[0.04em]">New here?</div>
+				<div class="flex flex-col gap-3 rounded-[16px] bg-ink p-6 text-white" data-tone="ink">
+					<div class="font-display text-[0.98rem] font-bold">New here?</div>
 					<p class="m-0 text-[0.9rem] leading-[1.6] text-muted-on-ink">Come to an RGV-DSA 101 &mdash; our intro session for new and curious folks.</p>
-					<a href="/calendar/" class="self-start bg-cream px-4 py-[9px] text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white">Find a session</a>
+					<a href="/calendar/" class="self-start rounded-full bg-white px-[18px] py-[9px] text-[0.88rem] font-bold text-ink no-underline transition-colors hover:bg-pink">Find a session</a>
 				</div>
 			</aside>
 
