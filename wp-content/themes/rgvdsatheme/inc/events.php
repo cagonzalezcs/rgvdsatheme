@@ -317,29 +317,38 @@ function rgvdsa_events_calendar_context( $context, $timber_post ) {
 		return $context;
 	}
 
-	$now   = new DateTimeImmutable( 'now', rgvdsa_events_timezone() );
-	$posts = rgvdsa_events_query(
-		array(
-			'meta_query' => array(
+	// Serialized window is cached (rgvdsa_cache_remember) — invalidated by
+	// content-version bumps on event/term/options saves, TTL backstop 15 min.
+	$events = rgvdsa_cache_remember(
+		'calendar_events',
+		static function () {
+			$now   = new DateTimeImmutable( 'now', rgvdsa_events_timezone() );
+			$posts = rgvdsa_events_query(
 				array(
-					'key'     => 'start_datetime',
-					'value'   => array(
-						$now->modify( '-1 month' )->format( 'Y-m-d H:i:s' ),
-						$now->modify( '+12 months' )->format( 'Y-m-d H:i:s' ),
+					'meta_query' => array(
+						array(
+							'key'     => 'start_datetime',
+							'value'   => array(
+								$now->modify( '-1 month' )->format( 'Y-m-d H:i:s' ),
+								$now->modify( '+12 months' )->format( 'Y-m-d H:i:s' ),
+							),
+							'compare' => 'BETWEEN',
+							'type'    => 'DATETIME',
+						),
 					),
-					'compare' => 'BETWEEN',
-					'type'    => 'DATETIME',
-				),
-			),
-		)
+				)
+			);
+
+			return array_values( array_filter( array_map( 'rgvdsa_event_to_chapter_event', $posts ) ) );
+		}
 	);
-	if ( ! $posts ) {
+	if ( ! $events ) {
 		return $context;
 	}
 
 	$ics_url = get_feed_link( 'rgvdsa-events' );
 
-	$context['calendar_events']     = array_values( array_filter( array_map( 'rgvdsa_event_to_chapter_event', $posts ) ) );
+	$context['calendar_events']     = $events;
 	$context['calendar_categories'] = rgvdsa_event_categories();
 	$context['calendar_ics_url']    = $ics_url;
 	$context['calendar_gcal_url']   = 'https://calendar.google.com/calendar/r?cid=' . urlencode( preg_replace( '#^https?://#', 'webcal://', $ics_url ) );

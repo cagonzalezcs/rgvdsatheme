@@ -69,6 +69,26 @@ class TestBlogSanitization extends BaseTestCase {
 		);
 	}
 
+	/** onerror payloads and javascript: hrefs are neutralized end to end. */
+	public function test_map_blocks_strips_onerror_and_javascript_urls() {
+		$this->supply_post_blocks(
+			array(
+				array(
+					'acf_fc_layout' => 'prose',
+					'content'       => '<p>ok <img src="x" onerror="alert(1)"></p>'
+						. '<a href="javascript:alert(2)">bad</a>',
+				),
+			)
+		);
+
+		$blocks = rgvdsa_blog_map_blocks( 456 );
+
+		$this->assertStringNotContainsString( 'onerror', $blocks[0]['html'] );
+		$this->assertStringNotContainsString( '<img', $blocks[0]['html'] );
+		$this->assertStringNotContainsString( 'javascript:', $blocks[0]['html'] );
+		$this->assertStringContainsString( '<p>ok </p>', $blocks[0]['html'] );
+	}
+
 	/** map_blocks sanitizes the prose block and strips the pull-quote fields. */
 	public function test_map_blocks_sanitizes_prose_and_quote() {
 		$this->supply_post_blocks(
