@@ -1,56 +1,97 @@
 {% extends "base.twig" %}
 
-{# Interior page template — PageHeader band + content/sidebar grid + grievance callout. #}
+{#
+  Interior page template (default for all pages).
+  Documents list + conduct copy are prototype fixtures until Phase 6 wires
+  an ACF repeater / editor content; fixture prose only shows when the WP
+  editor content is empty so real pages aren't duplicated.
+#}
+
+{% set documents = documents|default([
+	{ title: 'Chapter Bylaws', meta: 'PDF · Last amended March 2026', url: '#documents' },
+	{ title: 'Code of Conduct', meta: 'PDF · Adopted January 2026', url: '#documents' },
+	{ title: 'Grievance Policy', meta: 'PDF · Adopted January 2026', url: '#documents' }
+]) %}
 
 {% block content %}
+	{# html_entity_decode: Vue renders props as text, so &#038; would show literally #}
 	{% set page_header_props = {
-		title: post.title,
-		lede: post.post_excerpt|default(''),
+		title: function('html_entity_decode', post.title),
+		lede: post.post_excerpt|default(post.content ? '' : 'How our chapter governs itself — and how we take care of each other while we do the work.'),
 		crumbs: [{ label: 'Home', href: '/' }]
 	} %}
 	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
 
-	<div class="interior-page bg-cream px-6 py-16" data-tone="cream">
-		<div class="mx-auto grid max-w-[1100px] items-start gap-14 [grid-template-columns:minmax(300px,1fr)_300px] max-lg:[grid-template-columns:1fr]">
+	<section class="interior-page bg-cream px-6 pb-24 pt-16" data-tone="cream">
+		<div class="mx-auto grid max-w-[1100px] items-start gap-14 lg:[grid-template-columns:minmax(300px,1fr)_300px]">
 
-			<article id="post-{{ post.ID }}" class="post-type-{{ post.post_type }} prose-rgv min-w-0">
-				{{ post.content }}
+			<article id="post-{{ post.ID }}" class="post-type-{{ post.post_type }} flex min-w-0 flex-col gap-7">
 
-				<aside id="grievance" class="callout-card mt-12 border-[3px] border-ink bg-white p-7 shadow-brutal-red">
-					<div class="mb-3 text-[0.85rem] font-extrabold uppercase tracking-[0.18em] text-brand-red">Need to report something?</div>
-					<p class="m-0 text-base leading-relaxed">
-						If you&rsquo;ve experienced or witnessed a violation of our Code of Conduct, contact the grievance officer at
-						<a href="mailto:hello@example.org">hello@example.org</a>. Reports are handled per our Grievance Policy — confidentially and seriously.
-					</p>
-				</aside>
-			</article>
+				{% if post.content %}
+					<div class="prose-rgv">{{ post.content }}</div>
+				{% else %}
+					<p class="m-0 text-[1.1rem] leading-[1.75]">Our chapter is governed by its members. These documents spell out how we make decisions together, how we treat each other, and what to do when something goes wrong. Every member is encouraged to read them &mdash; and every member has the power to propose changes.</p>
+				{% endif %}
 
-			<aside class="interior-sidebar flex flex-col gap-6 max-lg:hidden" aria-label="Page navigation and related links">
-				<nav class="border-2 border-ink bg-white p-5" aria-label="On this page">
-					<div class="mb-3 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.12em]">On this page</div>
-					<div class="flex flex-col gap-2">
-						<a href="#documents" class="text-[0.95rem] font-bold text-ink no-underline hover:text-brand-red">Governing documents</a>
-						<a href="#conduct" class="text-[0.95rem] font-bold text-ink no-underline hover:text-brand-red">What we expect</a>
-						<a href="#grievance" class="text-[0.95rem] font-bold text-ink no-underline hover:text-brand-red">Reporting a grievance</a>
-					</div>
-				</nav>
-
-				<div class="border-2 border-ink bg-white p-5">
-					<div class="mb-3 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.12em]">Related</div>
-					<div class="flex flex-col gap-2">
-						<a href="/get-involved/" class="text-[0.95rem] font-bold text-ink no-underline hover:text-brand-red">Get involved</a>
-						<a href="/calendar/" class="text-[0.95rem] font-bold text-ink no-underline hover:text-brand-red">Event calendar</a>
-						<a href="/get-involved/#faq" class="text-[0.95rem] font-bold text-ink no-underline hover:text-brand-red">FAQ</a>
-					</div>
+				{# ---- Governing documents ---- #}
+				<h2 id="documents" class="mx-0 mb-0 mt-4 border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">Governing documents</h2>
+				<div class="flex flex-col gap-3.5">
+					{% for doc in documents %}
+						<div class="flex flex-wrap items-center justify-between gap-5 border-2 border-ink bg-white px-[22px] py-[18px]">
+							<div class="flex flex-col gap-[3px]">
+								<span class="text-[1.05rem] font-extrabold">{{ doc.title }}</span>
+								<span class="text-[0.85rem] text-muted-on-cream">{{ doc.meta }}</span>
+							</div>
+							<a href="{{ doc.url }}" class="whitespace-nowrap border-2 border-ink px-4 py-[9px] text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white">Download</a>
+						</div>
+					{% endfor %}
 				</div>
 
-				<div class="border-[3px] border-ink bg-brand-red p-5 text-cream shadow-brutal" data-tone="red">
-					<div class="mb-2 font-display text-[1.05rem] font-extrabold uppercase">New here?</div>
-					<p class="m-0 mb-4 text-[0.95rem] leading-relaxed">Start with RGV-DSA 101 — our intro session for new and curious folks.</p>
-					<a href="/calendar/" class="inline-block border-2 border-cream bg-cream px-4 py-2 text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-brand-red no-underline hover:border-brand-red-deep hover:bg-brand-red-deep hover:text-white">Find a session</a>
+				{% if not post.content %}
+					{# ---- Code of conduct (fixture) ---- #}
+					<h2 id="conduct" class="mx-0 mb-0 mt-4 border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase tracking-[0.02em]">What we expect of each other</h2>
+					<p class="m-0 text-[1.05rem] leading-[1.75]">Organizing only works when everyone can participate safely and fully. Our code of conduct applies to all chapter spaces &mdash; meetings, actions, socials, and online channels. In short:</p>
+					<ul class="m-0 flex list-disc flex-col gap-2.5 pl-6 text-[1.05rem] leading-[1.6]">
+						<li>Treat fellow members with respect, across every difference.</li>
+						<li>Honor pronouns, access needs, and language needs.</li>
+						<li>No harassment, intimidation, or discrimination &mdash; full stop.</li>
+						<li>Disagree openly and in good faith; debate ideas, not people.</li>
+					</ul>
+					<h3 class="mx-0 mb-0 mt-2 font-display text-[1.15rem] font-bold">Amending these documents</h3>
+					<p class="m-0 text-[1.05rem] leading-[1.75]">Any member in good standing may propose an amendment. Proposals are read at a general meeting and voted on at the following one. Reach out to the steering committee if you&rsquo;d like help drafting a proposal.</p>
+				{% endif %}
+
+				{# ---- Grievance callout ---- #}
+				<aside id="grievance" class="callout-card mt-3 flex flex-col gap-2.5 border-[3px] border-ink bg-white px-7 py-[26px] shadow-brutal-red">
+					<div class="font-display text-base font-extrabold uppercase tracking-[0.04em] text-brand-red">Need to report something?</div>
+					<p class="m-0 text-base leading-[1.7]">Our grievance officers are here for you. Reports are handled confidentially, and you can always bring a support person. Email <a href="mailto:hello@example.org" class="font-bold text-brand-red hover:text-brand-red-deep">hello@example.org</a> or speak to any grievance officer at a meeting.</p>
+				</aside>
+
+			</article>
+
+			{# ---- Sidebar ---- #}
+			<aside aria-label="Page navigation" class="flex flex-col gap-7 max-lg:hidden lg:sticky lg:top-[100px]">
+				<nav aria-label="On this page" class="flex flex-col gap-0.5 border-l-[3px] border-ink">
+					<div class="mb-1.5 px-[18px] py-1.5 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.08em]">On this page</div>
+					<a href="#documents" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Governing documents</a>
+					<a href="#conduct" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">What we expect</a>
+					<a href="#grievance" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Reporting a grievance</a>
+				</nav>
+
+				<nav aria-label="Related pages" class="flex flex-col gap-0.5 border-l-[3px] border-brand-red">
+					<div class="mb-1.5 px-[18px] py-1.5 font-display text-[0.85rem] font-extrabold uppercase tracking-[0.08em]">Related</div>
+					<a href="/#about" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Mission &amp; History</a>
+					<a href="/get-involved/#committees" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">Committees</a>
+					<a href="/get-involved/#faq" class="px-[18px] py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-brand-red-deep hover:text-white">FAQ</a>
+				</nav>
+
+				<div class="flex flex-col gap-3 bg-ink p-[22px] text-cream" data-tone="ink">
+					<div class="font-display text-[0.95rem] font-extrabold uppercase tracking-[0.04em]">New here?</div>
+					<p class="m-0 text-[0.9rem] leading-[1.6] text-muted-on-ink">Come to an RGV-DSA 101 &mdash; our intro session for new and curious folks.</p>
+					<a href="/calendar/" class="self-start bg-cream px-4 py-[9px] text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white">Find a session</a>
 				</div>
 			</aside>
 
 		</div>
-	</div>
+	</section>
 {% endblock %}
