@@ -1,5 +1,16 @@
 <script setup lang="ts">
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,9 +20,35 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
+import { Kbd, KbdGroup } from "@/components/ui/kbd";
 import { Label } from "@/components/ui/label";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { Progress } from "@/components/ui/progress";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
+import { Toggle } from "@/components/ui/toggle";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const brandColors = [
   { name: "brand-red", hex: "#E9252E", class: "bg-brand-red" },
@@ -42,6 +79,12 @@ const shadows = [
   { name: "shadow-brutal-md (6px ink)", class: "shadow-brutal-md" },
   { name: "shadow-brutal-red (8px red)", class: "shadow-brutal-red" },
   { name: "shadow-brutal-lg (10px ink)", class: "shadow-brutal-lg" },
+];
+
+const sampleEvents = [
+  { event: "Brake Light Clinic", date: "Jul 12", location: "McAllen" },
+  { event: "ABCs of Socialism", date: "Jul 19", location: "Edinburg" },
+  { event: "General Meeting", date: "Jul 26", location: "Harlingen" },
 ];
 </script>
 
@@ -208,6 +251,252 @@ const shadows = [
       <p class="text-sm">Above</p>
       <Separator class="my-4" />
       <p class="text-sm">Below</p>
+    </section>
+
+    <section :id="'sg-alert'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Alert
+      </h2>
+      <div class="max-w-xl space-y-6">
+        <Alert>
+          <AlertTitle>General meeting moved</AlertTitle>
+          <AlertDescription>
+            July's general meeting is now at the McAllen public library, room B.
+          </AlertDescription>
+        </Alert>
+        <Alert variant="destructive">
+          <AlertTitle>Action cancelled</AlertTitle>
+          <AlertDescription>
+            Saturday's brake light clinic is cancelled due to weather.
+          </AlertDescription>
+        </Alert>
+      </div>
+    </section>
+
+    <section :id="'sg-aspect-ratio'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Aspect ratio
+      </h2>
+      <div class="max-w-md">
+        <AspectRatio
+          :ratio="16 / 9"
+          class="flex items-center justify-center border-2 border-ink bg-[repeating-linear-gradient(45deg,var(--color-stripe-a),var(--color-stripe-a)_12px,var(--color-stripe-b)_12px,var(--color-stripe-b)_24px)]"
+        >
+          <span class="font-display text-sm font-extrabold uppercase">16 : 9</span>
+        </AspectRatio>
+      </div>
+    </section>
+
+    <section :id="'sg-avatar'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Avatar
+      </h2>
+      <div class="flex items-center gap-6">
+        <Avatar class="size-12">
+          <AvatarImage src="https://github.com/shadcn.png" alt="Member avatar" />
+          <AvatarFallback>RG</AvatarFallback>
+        </Avatar>
+        <Avatar class="size-12">
+          <AvatarFallback>VD</AvatarFallback>
+        </Avatar>
+      </div>
+    </section>
+
+    <section :id="'sg-breadcrumb'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Breadcrumb
+      </h2>
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#">Events</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Brake Light Clinic</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    </section>
+
+    <section :id="'sg-checkbox'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Checkbox
+      </h2>
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <Checkbox id="sg-check-1" />
+          <Label for="sg-check-1">Get chapter emails</Label>
+        </div>
+        <div class="flex items-center gap-3">
+          <Checkbox id="sg-check-2" :default-value="true" />
+          <Label for="sg-check-2">Agreed to code of conduct</Label>
+        </div>
+        <div class="flex items-center gap-3">
+          <Checkbox id="sg-check-3" disabled />
+          <Label for="sg-check-3" class="opacity-50">Dues autopay (coming soon)</Label>
+        </div>
+      </div>
+    </section>
+
+    <section :id="'sg-kbd'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Kbd
+      </h2>
+      <div class="flex items-center gap-8">
+        <Kbd>Esc</Kbd>
+        <KbdGroup>
+          <Kbd>Ctrl</Kbd>
+          <Kbd>K</Kbd>
+        </KbdGroup>
+      </div>
+    </section>
+
+    <section :id="'sg-pagination'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Pagination
+      </h2>
+      <Pagination v-slot="{ page }" :items-per-page="10" :total="50" :default-page="2">
+        <PaginationContent v-slot="{ items }">
+          <PaginationPrevious />
+          <template v-for="(item, index) in items" :key="index">
+            <PaginationItem
+              v-if="item.type === 'page'"
+              :value="item.value"
+              :is-active="item.value === page"
+            >
+              {{ item.value }}
+            </PaginationItem>
+            <PaginationEllipsis v-else :index="index" />
+          </template>
+          <PaginationNext />
+        </PaginationContent>
+      </Pagination>
+    </section>
+
+    <section :id="'sg-progress'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Progress
+      </h2>
+      <div class="max-w-md space-y-2">
+        <p class="text-xs font-extrabold uppercase tracking-[0.12em]">Dues drive — 40%</p>
+        <Progress :model-value="40" />
+      </div>
+    </section>
+
+    <section :id="'sg-radio-group'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Radio group
+      </h2>
+      <RadioGroup default-value="mcallen">
+        <div class="flex items-center gap-3">
+          <RadioGroupItem id="sg-radio-1" value="mcallen" />
+          <Label for="sg-radio-1">McAllen</Label>
+        </div>
+        <div class="flex items-center gap-3">
+          <RadioGroupItem id="sg-radio-2" value="brownsville" />
+          <Label for="sg-radio-2">Brownsville</Label>
+        </div>
+        <div class="flex items-center gap-3">
+          <RadioGroupItem id="sg-radio-3" value="edinburg" />
+          <Label for="sg-radio-3">Edinburg</Label>
+        </div>
+      </RadioGroup>
+    </section>
+
+    <section :id="'sg-skeleton'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Skeleton
+      </h2>
+      <div class="flex max-w-sm items-start gap-4">
+        <Skeleton class="size-12 shrink-0" />
+        <div class="w-full space-y-3">
+          <Skeleton class="h-4 w-3/4" />
+          <Skeleton class="h-24 w-full" />
+        </div>
+      </div>
+    </section>
+
+    <section :id="'sg-slider'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Slider
+      </h2>
+      <div class="max-w-md">
+        <Slider :default-value="[40]" :max="100" :step="5" aria-label="Pledge amount" />
+      </div>
+    </section>
+
+    <section :id="'sg-switch'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Switch
+      </h2>
+      <div class="space-y-4">
+        <div class="flex items-center gap-3">
+          <Switch id="sg-switch-1" />
+          <Label for="sg-switch-1">Event reminders</Label>
+        </div>
+        <div class="flex items-center gap-3">
+          <Switch id="sg-switch-2" :default-value="true" />
+          <Label for="sg-switch-2">Newsletter</Label>
+        </div>
+      </div>
+    </section>
+
+    <section :id="'sg-table'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Table
+      </h2>
+      <Table class="border-2 border-ink bg-white">
+        <TableHeader>
+          <TableRow>
+            <TableHead>Event</TableHead>
+            <TableHead>Date</TableHead>
+            <TableHead>Location</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow v-for="row in sampleEvents" :key="row.event">
+            <TableCell class="font-medium">{{ row.event }}</TableCell>
+            <TableCell>{{ row.date }}</TableCell>
+            <TableCell>{{ row.location }}</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </section>
+
+    <section :id="'sg-textarea'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Textarea
+      </h2>
+      <div class="max-w-sm space-y-3">
+        <Label for="sg-message" class="font-display font-bold uppercase">Message</Label>
+        <Textarea id="sg-message" placeholder="Tell us about your workplace…" />
+      </div>
+    </section>
+
+    <section :id="'sg-toggle'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Toggle
+      </h2>
+      <div class="flex items-center gap-6">
+        <Toggle aria-label="Toggle off example">Off</Toggle>
+        <Toggle :default-value="true" aria-label="Toggle pressed example">Pressed</Toggle>
+      </div>
+    </section>
+
+    <section :id="'sg-toggle-group'" class="mb-16">
+      <h2 class="mb-6 border-b-[3px] border-ink pb-2 font-display text-2xl font-extrabold uppercase">
+        Toggle group
+      </h2>
+      <ToggleGroup type="single" default-value="month" variant="outline">
+        <ToggleGroupItem value="month">Month</ToggleGroupItem>
+        <ToggleGroupItem value="week">Week</ToggleGroupItem>
+        <ToggleGroupItem value="list">List</ToggleGroupItem>
+      </ToggleGroup>
     </section>
 
     <!-- Tone bands (a11y high-contrast hooks) -->
