@@ -16,7 +16,7 @@ Timber::$dirname = [ 'templates', 'views' ];
 
 new StarterSite();
 
-// WP data wiring, one file per domain (Phase 6).
+// WP data wiring, one file per domain.
 require_once __DIR__ . '/inc/options.php';
 require_once __DIR__ . '/inc/events.php';
 require_once __DIR__ . '/inc/blog.php';

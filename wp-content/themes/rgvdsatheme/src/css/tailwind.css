@@ -1,8 +1,7 @@
 /*
- * Expanded form of `@import "tailwindcss"`, with utilities left UNLAYERED:
- * legacy src/scss is unlayered and would otherwise beat every layered
- * utility class regardless of specificity. Collapse back to the one-line
- * import when the legacy SCSS tree is deleted (Phase 7).
+ * Expanded form of `@import "tailwindcss"`, with utilities left UNLAYERED
+ * (a holdover from the deleted legacy SCSS tree; safe to collapse back to
+ * the one-line import).
  */
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);

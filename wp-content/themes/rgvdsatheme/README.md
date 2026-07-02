@@ -14,7 +14,7 @@ WordPress theme for the Rio Grande Valley Democratic Socialists of America chapt
 ## Commands
 
 ```bash
-npm run dev        # Vite dev server w/ HMR (reads .env; https://rgvdsa.test:8891)
+npm run dev        # Vite dev server w/ HMR (reads .env; https://rgvdsa.test:8890)
 npm run build      # vue-tsc typecheck + production build to dist/
 npm run typecheck  # vue-tsc only
 npm run lint       # eslint

@@ -2,7 +2,7 @@
 
 {#
   Home page — v2 (warm/rounded) skin. Content is hardcoded prototype copy until
-  Phase 6 wires WP data (events, blog teasers, counties, options).
+  WP data wiring lands (events, blog teasers, counties).
   Ported from design_handoff_rgvdsa_vue/designs/RGV DSA Home.dc.html.
 #}
 
@@ -55,7 +55,7 @@
 				<span class="rounded-full bg-[rgba(28,25,23,0.85)] px-[18px] py-2 text-[0.95rem]">New here? Start with <strong>RGV-DSA 101</strong> — no experience needed.</span>
 			</div>
 			<img src="{{ site.theme.link }}/static/images/logos/logo-lg.png" alt="" aria-hidden="true"
-				class="mx-auto h-auto w-[calc(100%-15440px)] max-w-[600px] flex-[1_1_360px]">
+				class="mx-auto h-auto w-full max-w-[800px] flex-[1_1_360px]">
 		</div>
 	</section>
 
@@ -184,7 +184,7 @@
 					class="rounded-full bg-white px-[22px] py-2.5 text-[0.95rem] font-bold text-ink no-underline transition-colors hover:bg-pink">
 					Instagram @dsa_rgv
 				</a>
-				<a href="mailto:hello@example.org"
+				<a href="mailto:{{ chapter.contact_email }}"
 					class="rounded-full border-2 border-[#57534e] px-[21px] py-[9px] text-[0.95rem] font-bold text-white no-underline transition-colors hover:border-white">
 					Email us
 				</a>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-/* Form action is stubbed until Phase 6 wires a real subscribe endpoint. */
+/* Form action is stubbed until a real subscribe endpoint is wired. */
 withDefaults(defineProps<{ rssUrl?: string }>(), { rssUrl: "/feed/" });
 </script>
 

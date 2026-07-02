@@ -1,3 +1,7 @@
 {# Search results render the same BlogArchive island as the blog home;
-   the island reads ?s= from the URL. Real WP_Query wiring is Phase 6. #}
+   search.php computes `title` and inc/blog.php injects the archive payload. #}
 {% extends "index.twig" %}
+{% set page_header_props = {
+	title: title,
+	crumbs: [{ label: 'Home', href: '/' }]
+} %}

@@ -20,7 +20,7 @@ const props = withDefaults(
     posts?: BlogPost[];
     /** WP term-driven categories — replaces the fixture palette when provided */
     categories?: EventCategory[];
-    /** overrides the post's own byline_mode (per-post ACF select in Phase 6) */
+    /** overrides the post's own byline_mode (per-post ACF select) */
     bylineMode?: "named" | "committee";
     showMetaRail?: boolean;
     blogUrl?: string;
@@ -116,8 +116,6 @@ const mailShareUrl = computed(
           </div>
           <span v-else class="rounded-full bg-white px-[18px] py-2.5 text-ink">By the <strong>{{ post.committee }}</strong></span>
           <span class="rounded-full bg-[rgba(28,25,23,0.85)] px-[18px] py-2.5">{{ post.date }} · {{ post.readMinutes }} min read</span>
-          <!-- i18n stub — affordance only until Spanish translations exist -->
-          <a href="#main" lang="es" class="rounded-full bg-[rgba(28,25,23,0.85)] px-[18px] py-2.5 font-bold text-white underline underline-offset-[3px] hover:bg-ink">Léelo en español →</a>
         </div>
       </div>
     </section>

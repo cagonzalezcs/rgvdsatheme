@@ -8,11 +8,12 @@
 #}
 
 {% block content %}
-	{% set page_header_props = {
+	{# archive.twig / search.twig override page_header_props with the computed context title. #}
+	{% set page_header_props = page_header_props|default({
 		title: 'Chapter Blog',
 		lede: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
 		crumbs: [{ label: 'Home', href: '/' }]
-	} %}
+	}) %}
 	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
 
 	{% set archive_props = {
