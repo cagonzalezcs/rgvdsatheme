@@ -39,10 +39,14 @@ Twig renders page shells; Vue mounts on `[data-vue-island]` elements:
 |---|---|
 | `inc/events.php` | `event` CPT, `event_category` taxonomy + color term meta, event ACF fields, ICS feed (`/feed/rgvdsa-events/`), ChapterEvent serialization |
 | `inc/blog.php` | category term colors, post settings (dek, byline mode, committee…), `post_blocks` ACF flexible content (10 layouts), BlogPost/SinglePostData serialization |
-| `inc/options.php` | "Chapter Settings" ACF options page, committees fixture, menu locations, chrome props |
-| `inc/interior.php` | governing-documents repeater on pages |
+| `inc/categories.php` | canonical category registry (`categories.json`), term-name/color merge, canonical-slug rename guard |
+| `inc/cache.php` | `rgvdsa_cache_remember()` transient helper + content-version invalidation |
+| `inc/options.php` | "Chapter Settings" ACF options page (committees, counties, contact email, newsletter URL…), the front-page Home hero group, menu locations, chrome props |
+| `inc/interior.php` | governing-documents repeater, page lede override, and the grievance callout (toggle + wysiwyg) on pages |
 
 Template routers (`front-page.php`, `page.php`, `index.php`, `single.php`, …) expose filters (`rgvdsa/context/front_page`, `…/page`, `…/blog_archive`, `…/single`) the domain files hook to inject island props.
+
+The calendar is driven by the **"Calendar" page template** (`page-templates/calendar.php`), not a magic `calendar` slug — assign it under Page Attributes → Template (the seeder does this). Renaming the page's slug/title won't break the events wiring.
 
 Category slugs `chapter | poled | mutual | labor | electoral | social` are load-bearing (URLs + Vue types) — don't rename terms. Colors live on the terms (ACF color picker) and flow to the islands via props.
 
@@ -59,6 +63,15 @@ Re-theme via the semantic CSS variables in `src/css/tailwind.css`, not per-compo
 - Inline Tailwind utilities in templates; extract to `cva()` variants only when a pattern repeats.
 - Every component root gets one kebab-case block class (`site-header`, `event-calendar`) — a style-free hook for debugging/tests.
 - Accessibility: a11y widget settings persist to localStorage `rgv-dsa-a11y`; respect `prefers-reduced-motion`; keep ≥4.5:1 label contrast in hover states.
+
+## Testing
+
+```bash
+composer test   # PHPUnit via WorDBless (no DB/WP install needed)
+npm test        # vitest — category-token drift check
+```
+
+PHPUnit runs on [WorDBless](https://github.com/Automattic/wordbless): the first run creates a `wordpress/` directory in the theme (the WorDBless WP install + a symlink back to the theme). It is a test artifact — **untracked and expected**, not part of the theme. ACF Pro is absent under WorDBless, so `tests/bootstrap.php` polyfills `get_field()` (post meta / options / term meta backed).
 
 ## Seeding demo content
 
