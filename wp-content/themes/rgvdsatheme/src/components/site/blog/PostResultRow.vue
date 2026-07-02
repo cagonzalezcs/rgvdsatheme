@@ -10,23 +10,23 @@ const category = computed(() => postCategoryById(props.post.cat));
 <template>
   <a
     :href="post.url"
-    class="post-result-row grid items-center gap-5 border-[3px] border-ink bg-white px-6 py-5 text-ink no-underline transition-[box-shadow,transform] duration-100 [grid-template-columns:auto_1fr_auto] hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-md"
+    class="post-result-row grid items-center gap-5 rounded-[16px] bg-white px-6 py-5 text-ink no-underline shadow-card transition-[box-shadow,transform] duration-150 [grid-template-columns:auto_1fr_auto] hover:-translate-y-0.5 hover:shadow-card-hover"
   >
     <span
       aria-hidden="true"
-      class="h-11 w-3.5 border-2 border-ink"
+      class="h-12 w-3 rounded-full"
       :style="{ background: category.color ?? undefined }"
     ></span>
     <span class="flex min-w-0 flex-col gap-[5px]">
       <span
-        class="text-[0.78rem] font-extrabold uppercase tracking-[0.08em]"
+        class="text-[0.78rem] font-bold uppercase tracking-[0.06em]"
         :style="{ color: category.color ?? undefined }"
       >
         {{ category.label }} · {{ post.date }}
       </span>
-      <span class="font-display text-[1.15rem] font-extrabold leading-[1.3]">{{ post.title }}</span>
-      <span class="text-[0.95rem] leading-[1.55] text-muted-on-cream">{{ post.excerpt }}</span>
+      <span class="font-display text-[1.15rem] font-bold leading-[1.3]">{{ post.title }}</span>
+      <span class="text-[0.95rem] leading-[1.55] text-text-muted">{{ post.excerpt }}</span>
     </span>
-    <span aria-hidden="true" class="text-[1.1rem] font-extrabold text-ink">→</span>
+    <span aria-hidden="true" class="text-[1.1rem] font-bold text-red">→</span>
   </a>
 </template>

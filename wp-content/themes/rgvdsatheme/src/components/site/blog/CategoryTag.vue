@@ -13,7 +13,7 @@ const props = withDefaults(
 
 const category = computed(() => postCategoryById(props.catId));
 const sizeClass = computed(() =>
-  props.size === "sm" ? "px-2.5 py-1 text-[0.72rem]" : "px-3.5 py-1.5 text-[0.8rem]",
+  props.size === "sm" ? "px-3 py-1 text-[0.72rem]" : "px-3.5 py-1.5 text-[0.8rem]",
 );
 </script>
 
@@ -21,8 +21,8 @@ const sizeClass = computed(() =>
   <component
     :is="href ? 'a' : 'span'"
     :href="href || undefined"
-    class="category-tag inline-block self-start border-2 border-ink bg-[var(--tag-bg)] font-extrabold uppercase tracking-[0.08em] text-cream no-underline"
-    :class="[sizeClass, href ? 'hover:bg-ink' : '']"
+    class="category-tag inline-block self-start rounded-full bg-[var(--tag-bg)] font-bold uppercase tracking-[0.06em] text-white no-underline"
+    :class="[sizeClass, href ? 'hover:opacity-90' : '']"
     :style="{ '--tag-bg': category.color ?? 'var(--color-ink)' }"
   >
     {{ category.label }}

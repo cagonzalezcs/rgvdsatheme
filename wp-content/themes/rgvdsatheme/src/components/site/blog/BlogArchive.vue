@@ -89,37 +89,36 @@ const gridPosts = computed(() =>
 <template>
   <div class="blog-archive">
     <!-- Toolbar: search + category filter -->
-    <section class="bg-cream px-6 pt-9" data-tone="cream">
+    <section class="bg-white px-6 pt-10" data-tone="cream">
       <div class="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4">
-        <div role="search" class="flex max-w-[460px] flex-[1_1_320px] items-stretch">
+        <div role="search" class="flex max-w-[460px] flex-[1_1_320px] items-stretch overflow-hidden rounded-full border border-border-control bg-white shadow-subtle">
           <input
             v-model="query"
             type="search"
             placeholder="Search posts…"
             aria-label="Search blog posts"
-            class="min-w-0 flex-1 border-[3px] border-ink bg-white px-4 py-3 text-base text-ink"
+            class="min-w-0 flex-1 border-none bg-transparent px-5 py-3 text-base text-ink outline-offset-[-3px]"
           />
           <span
             aria-hidden="true"
-            class="flex w-[52px] items-center justify-center border-[3px] border-l-0 border-ink bg-ink text-[1.1rem] font-extrabold text-cream"
+            class="flex w-[52px] items-center justify-center bg-ink text-[1.1rem] font-bold text-white"
           >⌕</span>
         </div>
         <div aria-label="Filter by category" class="flex flex-wrap items-center gap-2">
-          <span class="mr-1 text-[0.85rem] font-extrabold uppercase tracking-[0.08em] text-muted-on-cream">Filter:</span>
+          <span class="mr-1 text-[0.82rem] font-bold uppercase tracking-[0.06em] text-text-muted">Filter:</span>
           <button
             v-for="cat in POST_CATEGORIES"
             :key="cat.id"
             type="button"
             :aria-pressed="activeCat === cat.id"
-            class="inline-flex cursor-pointer items-center gap-2 border-2 border-ink px-3.5 py-2 text-[0.85rem] font-extrabold uppercase tracking-[0.04em]"
-            :class="activeCat === cat.id ? 'bg-ink text-cream' : 'bg-white text-ink'"
+            class="inline-flex cursor-pointer items-center gap-2 rounded-full border px-3.5 py-2 text-[0.85rem] font-bold"
+            :class="activeCat === cat.id ? 'border-ink bg-ink text-white' : 'border-border-control bg-white text-ink'"
             @click="activeCat = cat.id"
           >
             <span
               v-if="cat.color"
               aria-hidden="true"
-              class="inline-block size-[11px] flex-none border"
-              :class="activeCat === cat.id ? 'border-cream' : 'border-ink'"
+              class="inline-block size-2.5 flex-none rounded-full"
               :style="{ background: cat.color }"
             ></span>
             {{ cat.label }}
@@ -130,13 +129,13 @@ const gridPosts = computed(() =>
 
     <!-- Browse state: featured + editorial grid -->
     <template v-if="isBrowsing">
-      <section v-if="featuredPost" class="bg-cream px-6 pt-8" data-tone="cream">
+      <section v-if="featuredPost" class="bg-white px-6 pt-8" data-tone="cream">
         <div class="mx-auto max-w-[1200px]">
           <FeaturedPostCard :post="featuredPost" />
         </div>
       </section>
 
-      <section class="bg-cream px-6 pb-12 pt-10" data-tone="cream">
+      <section class="bg-white px-6 pb-12 pt-10" data-tone="cream">
         <div class="mx-auto flex max-w-[1200px] flex-col">
           <div class="grid grid-cols-1 gap-6 md:grid-cols-6">
             <div
@@ -153,32 +152,32 @@ const gridPosts = computed(() =>
             <a
               v-if="pagination.newerUrl"
               :href="pagination.newerUrl"
-              class="border-2 border-ink px-[22px] py-[11px] text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white"
+              class="rounded-full border-2 border-red px-6 py-2.5 text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash"
             >← Newer</a>
             <span
               v-else
               aria-disabled="true"
-              class="border-2 border-border-muted px-[22px] py-[11px] text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-border-muted"
+              class="rounded-full border-2 border-border-control px-6 py-2.5 text-[0.92rem] font-bold text-text-faint"
             >← Newer</span>
             <a
               v-if="pagination.olderUrl"
               :href="pagination.olderUrl"
-              class="border-2 border-ink px-[22px] py-[11px] text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white"
+              class="rounded-full border-2 border-red px-6 py-2.5 text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash"
             >Older posts →</a>
             <span
               v-else
               aria-disabled="true"
-              class="border-2 border-border-muted px-[22px] py-[11px] text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-border-muted"
+              class="rounded-full border-2 border-border-control px-6 py-2.5 text-[0.92rem] font-bold text-text-faint"
             >Older posts →</span>
           </div>
           <div v-else class="flex justify-center gap-3.5 pt-8">
             <span
               aria-disabled="true"
-              class="border-2 border-border-muted px-[22px] py-[11px] text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-border-muted"
+              class="rounded-full border-2 border-border-control px-6 py-2.5 text-[0.92rem] font-bold text-text-faint"
             >← Newer</span>
             <a
               href="#main"
-              class="border-2 border-ink px-[22px] py-[11px] text-[0.9rem] font-extrabold uppercase tracking-[0.05em] text-ink no-underline hover:bg-brand-red-deep hover:text-white"
+              class="rounded-full border-2 border-red px-6 py-2.5 text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash"
             >Older posts →</a>
           </div>
         </div>
@@ -186,15 +185,15 @@ const gridPosts = computed(() =>
     </template>
 
     <!-- Filter/search state: uniform result rows -->
-    <section v-else class="bg-cream px-6 pb-16 pt-8" data-tone="cream">
+    <section v-else class="bg-white px-6 pb-16 pt-8" data-tone="cream">
       <div class="mx-auto flex max-w-[920px] flex-col gap-[18px]">
-        <div class="flex flex-wrap items-baseline justify-between gap-4 border-b-[3px] border-ink pb-3">
-          <div role="status" class="font-display text-[1.15rem] font-extrabold uppercase tracking-[0.02em]">
+        <div class="flex flex-wrap items-baseline justify-between gap-4 border-b-[3px] border-brand-red pb-3">
+          <div role="status" class="font-display text-[1.15rem] font-bold">
             {{ resultLine }}
           </div>
           <button
             type="button"
-            class="cursor-pointer border-none bg-transparent p-0 text-[0.85rem] font-extrabold uppercase tracking-[0.05em] text-brand-red-deep underline underline-offset-4 hover:text-ink"
+            class="cursor-pointer border-none bg-transparent p-0 text-[0.9rem] font-bold text-red underline underline-offset-4 hover:text-red-hover"
             @click="clearFilters"
           >
             Clear filters ✕
@@ -207,10 +206,10 @@ const gridPosts = computed(() =>
 
         <div
           v-else
-          class="flex flex-col items-center gap-2.5 border-[3px] border-dashed border-border-muted px-8 py-12 text-center"
+          class="flex flex-col items-center gap-2.5 rounded-[16px] border-2 border-dashed border-border-control px-8 py-12 text-center"
         >
-          <div class="font-display text-[1.2rem] font-extrabold uppercase">No posts match</div>
-          <p class="m-0 max-w-[44ch] text-base leading-[1.6] text-muted-on-cream">
+          <div class="font-display text-[1.2rem] font-bold">No posts match</div>
+          <p class="m-0 max-w-[44ch] text-base leading-[1.6] text-text-muted">
             Try another word, or browse by category.
           </p>
         </div>

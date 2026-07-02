@@ -26,9 +26,9 @@ const titleClass = computed(
 <template>
   <a
     :href="post.url"
-    class="post-card flex flex-1 flex-col border-[3px] border-ink bg-white text-ink no-underline transition-[box-shadow,transform] duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-md"
+    class="post-card flex flex-1 flex-col overflow-hidden rounded-[16px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] duration-150 hover:-translate-y-0.5 hover:shadow-card-hover"
   >
-    <div class="flex aspect-video items-start border-b-[3px] border-ink" aria-hidden="true">
+    <div class="flex aspect-video items-start" aria-hidden="true">
       <div class="relative size-full">
         <ImageSlot class="absolute inset-0" :src="post.image?.src" :alt="post.image?.alt" />
         <CategoryTag :cat-id="post.cat" size="sm" class="absolute left-3 top-3" />
@@ -38,9 +38,9 @@ const titleClass = computed(
       class="flex flex-col gap-2.5"
       :class="variant === 'compact' ? 'px-5 pb-[22px] pt-[18px]' : 'px-[22px] pb-6 pt-5'"
     >
-      <span class="text-[0.8rem] font-bold uppercase tracking-[0.04em] text-muted-on-cream">{{ post.date }}</span>
-      <span class="font-display font-extrabold leading-[1.25]" :class="titleClass">{{ post.title }}</span>
-      <span v-if="variant === 'grid-lg'" class="text-[0.98rem] leading-[1.6] text-muted-on-cream">{{ post.excerpt }}</span>
+      <span class="text-[0.8rem] font-semibold text-text-muted">{{ post.date }}</span>
+      <span class="font-display font-bold leading-[1.3]" :class="titleClass">{{ post.title }}</span>
+      <span v-if="variant === 'grid-lg'" class="text-[0.98rem] leading-[1.6] text-text-muted">{{ post.excerpt }}</span>
     </div>
   </a>
 </template>
