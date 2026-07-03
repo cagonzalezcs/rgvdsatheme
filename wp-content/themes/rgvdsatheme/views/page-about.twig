@@ -10,6 +10,9 @@
 {% set h2class = 'scroll-mt-[calc(110px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-brand-red pb-3 font-display text-[1.55rem] font-extrabold tracking-[-0.01em]' %}
 {% set stripe = 'bg-[repeating-linear-gradient(45deg,var(--color-stripe-v2-a)_0_14px,var(--color-stripe-v2-b)_14px_28px)]' %}
 {% set nav_link = 'rounded-[8px] px-3.5 py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-tint hover:text-red' %}
+{# Editor prose (kses'd WYSIWYG rendered |raw): wrapper owns the typography so
+   wpautop's <p> tags don't nest inside a template <p>. #}
+{% set prose = '[&_p]:m-0 [&_p+p]:mt-4 [&_a]:font-bold [&_a]:text-red [&_a]:underline [&_a]:underline-offset-2 [&_ul]:my-0 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:my-0 [&_ol]:list-decimal [&_ol]:pl-5' %}
 
 {% block content %}
 	{% set page_header_props = {
@@ -20,36 +23,39 @@
 	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
 
 	{# ---- Mission band ---- #}
+	{% if about.mission.visible %}
 	<section class="bg-ink px-4 py-12 text-white md:px-6 md:py-16" data-tone="ink">
 		<div class="mx-auto flex max-w-[1140px] flex-col gap-[18px]">
 			<div class="font-display text-[0.85rem] font-bold uppercase tracking-[0.12em] text-pink">{{ about.mission.eyebrow }}</div>
 			<p class="m-0 max-w-[34ch] font-display text-[clamp(1.35rem,2.8vw,2rem)] font-bold leading-[1.4]">{{ about.mission.body }}</p>
 		</div>
 	</section>
+	{% endif %}
 
 	<section class="bg-white px-4 pb-20 pt-12 md:px-6 md:pb-24 md:pt-16" data-tone="cream">
 		<div class="mx-auto grid max-w-[1140px] items-start gap-10 md:gap-14 lg:[grid-template-columns:minmax(300px,1fr)_300px]">
 
 			{# On-this-page nav hoisted above the article for <lg (05 §4): vertical list on
-			   mobile, chip row on tablet. The sticky sidebar copy below is lg-only. #}
-			<nav aria-label="On this page" class="flex flex-col gap-0.5 rounded-[14px] bg-off-white p-3 md:flex-row md:flex-wrap md:items-center md:gap-2 lg:hidden">
-				<div class="mb-1 px-3.5 py-1.5 font-display text-[0.82rem] font-bold uppercase tracking-[0.08em] text-text-muted md:mb-0 md:py-0">On this page</div>
-				<a href="#chapter" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">{{ about.chapter.heading }}</a>
-				<a href="#mission" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">{{ about.history.heading }}</a>
-				<a href="#counties" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">{{ about.counties.heading }}</a>
-				<a href="#committees" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">{{ about.committees.heading }}</a>
-				<a href="#bylaws" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">{{ about.governance.heading }}</a>
-				<a href="#faq" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">{{ about.faq.heading }}</a>
-			</nav>
+			   mobile, chip row on tablet. The sticky sidebar copy below is lg-only.
+			   `about.nav` is PHP-computed from visible sections (inc/pages.php). #}
+			{% if about.nav|length %}
+				<nav aria-label="On this page" class="flex flex-col gap-0.5 rounded-[14px] bg-off-white p-3 md:flex-row md:flex-wrap md:items-center md:gap-2 lg:hidden">
+					<div class="mb-1 px-3.5 py-1.5 font-display text-[0.82rem] font-bold uppercase tracking-[0.08em] text-text-muted md:mb-0 md:py-0">{{ pll__('On this page') }}</div>
+					{% for item in about.nav %}
+						<a href="{{ item.href }}" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">{{ item.label }}</a>
+					{% endfor %}
+				</nav>
+			{% endif %}
 
 			<article class="flex min-w-0 flex-col gap-7">
 
 				{# ---- 1. About the Chapter ---- #}
+				{% if about.chapter.visible %}
 				<h2 id="chapter" class="m-0 {{ h2class }}">{{ about.chapter.heading }}</h2>
 
-				<p class="m-0 text-[1.08rem] leading-[1.78] text-text-body">{{ about.chapter.p1 }}</p>
+				<div class="text-[1.08rem] leading-[1.78] text-text-body {{ prose }}">{{ about.chapter.p1|raw }}</div>
 
-				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">{{ about.chapter.p2 }}</p>
+				<div class="text-[1.05rem] leading-[1.78] text-text-body {{ prose }}">{{ about.chapter.p2|raw }}</div>
 
 				{% if about.chapter.photo %}
 					<figure class="m-0 flex h-[340px] items-center justify-center overflow-hidden rounded-[16px] shadow-card">
@@ -70,11 +76,13 @@
 						{% endif %}
 					{% endfor %}
 				</div>
+				{% endif %}
 
 				{# ---- 2. Mission & History ---- #}
+				{% if about.history.visible %}
 				<h2 id="mission" class="mx-0 mb-0 mt-6 {{ h2class }}">{{ about.history.heading }}</h2>
 
-				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">{{ about.history.body }}</p>
+				<div class="text-[1.05rem] leading-[1.78] text-text-body {{ prose }}">{{ about.history.body|raw }}</div>
 
 				<div class="flex flex-col overflow-hidden rounded-[14px] bg-white shadow-card">
 					{% for row in about.history.timeline %}
@@ -84,11 +92,13 @@
 						</div>
 					{% endfor %}
 				</div>
+				{% endif %}
 
 				{# ---- 3. Counties We Serve ---- #}
+				{% if about.counties.visible %}
 				<h2 id="counties" class="mx-0 mb-0 mt-6 {{ h2class }}">{{ about.counties.heading }}</h2>
 
-				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">{{ about.counties.intro }}</p>
+				<div class="text-[1.05rem] leading-[1.78] text-text-body {{ prose }}">{{ about.counties.intro|raw }}</div>
 
 				<div class="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
 					{% for card in about.counties.cards %}
@@ -103,11 +113,13 @@
 						</div>
 					{% endfor %}
 				</div>
+				{% endif %}
 
 				{# ---- 4. Committees (rows edited under Chapter Settings) ---- #}
+				{% if about.committees.visible %}
 				<h2 id="committees" class="mx-0 mb-0 mt-6 {{ h2class }}">{{ about.committees.heading }}</h2>
 
-				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">{{ about.committees.intro }}</p>
+				<div class="text-[1.05rem] leading-[1.78] text-text-body {{ prose }}">{{ about.committees.intro|raw }}</div>
 
 				<div class="flex flex-col overflow-hidden rounded-[14px] bg-white shadow-card">
 					{% for committee in chapter.committees %}
@@ -118,12 +130,16 @@
 					{% endfor %}
 				</div>
 
-				<a href="/get-involved/#committees" class="self-start text-[0.98rem] font-bold text-red no-underline hover:underline hover:underline-offset-4">Join a committee &rarr;</a>
+				{% if about.committees.link.url %}
+					<a href="{{ about.committees.link.url }}"{% if about.committees.link.external %} target="_blank" rel="noopener"{% endif %} class="self-start text-[0.98rem] font-bold text-red no-underline hover:underline hover:underline-offset-4">{{ about.committees.link.label }} &rarr;</a>
+				{% endif %}
+				{% endif %}
 
 				{# ---- 5. Bylaws & Code of Conduct ---- #}
+				{% if about.governance.visible %}
 				<h2 id="bylaws" class="mx-0 mb-0 mt-6 {{ h2class }}">{{ about.governance.heading }}</h2>
 
-				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">{{ about.governance.intro }}</p>
+				<div class="text-[1.05rem] leading-[1.78] text-text-body {{ prose }}">{{ about.governance.intro|raw }}</div>
 
 				{# Mobile: stack of cards; sm+: the real table (05 §4 About bylaws). #}
 				<div class="flex flex-col gap-3 sm:hidden">
@@ -139,9 +155,9 @@
 				<table class="w-full border-separate border-spacing-0 overflow-hidden rounded-[14px] bg-white text-[0.95rem] shadow-card">
 					<thead>
 						<tr class="bg-ink text-left text-white">
-							<th scope="col" class="px-[22px] py-[13px] font-display text-[0.82rem] font-bold uppercase tracking-[0.06em]">Document</th>
-							<th scope="col" class="px-[22px] py-[13px] font-display text-[0.82rem] font-bold uppercase tracking-[0.06em]">What it covers</th>
-							<th scope="col" class="w-[90px] px-[22px] py-[13px]"><span class="sr-only">Action</span></th>
+							<th scope="col" class="px-[22px] py-[13px] font-display text-[0.82rem] font-bold uppercase tracking-[0.06em]">{{ pll__('Document') }}</th>
+							<th scope="col" class="px-[22px] py-[13px] font-display text-[0.82rem] font-bold uppercase tracking-[0.06em]">{{ pll__('What it covers') }}</th>
+							<th scope="col" class="w-[90px] px-[22px] py-[13px]"><span class="sr-only">{{ pll__('Action') }}</span></th>
 						</tr>
 					</thead>
 					<tbody class="[&_tr:last-child>*]:border-b-0">
@@ -155,8 +171,10 @@
 					</tbody>
 				</table>
 				</div>
+				{% endif %}
 
 				{# ---- 6. FAQ (tabular rows, intentionally not the Get Involved accordion) ---- #}
+				{% if about.faq.visible %}
 				<h2 id="faq" class="mx-0 mb-0 mt-6 {{ h2class }}">{{ about.faq.heading }}</h2>
 
 				<div class="flex flex-col overflow-hidden rounded-[14px] bg-white shadow-card">
@@ -167,27 +185,29 @@
 						</div>
 					{% endfor %}
 				</div>
+				{% endif %}
 
 				{# ---- Dues callout ---- #}
+				{% if about.dues.visible %}
 				<aside id="dues" class="mt-3 flex flex-col gap-2.5 rounded-[16px] border-l-[5px] border-brand-red bg-tint px-7 py-[26px]">
 					<div class="font-display text-base font-extrabold text-red">{{ about.dues.heading }}</div>
-					<p class="m-0 text-base leading-[1.7] text-text-body">{{ about.dues.body }}</p>
+					<div class="text-base leading-[1.7] text-text-body {{ prose }}">{{ about.dues.body|raw }}</div>
 					<a href="{{ chapter.join_url }}" target="_blank" rel="noopener" class="mt-1.5 self-start rounded-full bg-red px-[22px] py-2.5 text-[0.9rem] font-bold text-white no-underline transition-colors hover:bg-red-hover">Update my dues</a>
 				</aside>
+				{% endif %}
 
 			</article>
 
 			{# ---- Sidebar ---- #}
 			<aside aria-label="Page navigation" class="flex flex-col gap-7 lg:sticky lg:top-[calc(110px+var(--wp-admin--admin-bar--height,0px))]">
-				<nav aria-label="On this page" class="hidden flex-col gap-0.5 rounded-[14px] bg-off-white p-3 lg:flex">
-					<div class="mb-1 px-3.5 py-1.5 font-display text-[0.82rem] font-bold uppercase tracking-[0.08em] text-text-muted">On this page</div>
-					<a href="#chapter" class="{{ nav_link }}">{{ about.chapter.heading }}</a>
-					<a href="#mission" class="{{ nav_link }}">{{ about.history.heading }}</a>
-					<a href="#counties" class="{{ nav_link }}">{{ about.counties.heading }}</a>
-					<a href="#committees" class="{{ nav_link }}">{{ about.committees.heading }}</a>
-					<a href="#bylaws" class="{{ nav_link }}">{{ about.governance.heading }}</a>
-					<a href="#faq" class="{{ nav_link }}">{{ about.faq.heading }}</a>
-				</nav>
+				{% if about.nav|length %}
+					<nav aria-label="On this page" class="hidden flex-col gap-0.5 rounded-[14px] bg-off-white p-3 lg:flex">
+						<div class="mb-1 px-3.5 py-1.5 font-display text-[0.82rem] font-bold uppercase tracking-[0.08em] text-text-muted">{{ pll__('On this page') }}</div>
+						{% for item in about.nav %}
+							<a href="{{ item.href }}" class="{{ nav_link }}">{{ item.label }}</a>
+						{% endfor %}
+					</nav>
+				{% endif %}
 
 				{# "New here?" card — Chapter Settings (inc/options.php), shared with page.twig. #}
 				<div class="flex flex-col gap-3 rounded-[16px] bg-ink p-6 text-white" data-tone="ink">

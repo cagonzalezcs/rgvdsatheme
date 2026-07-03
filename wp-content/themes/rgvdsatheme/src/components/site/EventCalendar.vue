@@ -16,6 +16,8 @@ const props = withDefaults(
   defineProps<{
     /** rgvdsa/v1 base URL — the island fetches its window on mount */
     apiBase: string;
+    /** Polylang language slug of the page; scopes the fetched events to it */
+    lang?: string;
     defaultView?: "month" | "list";
     showCategoryColors?: boolean;
     showSubscribe?: boolean;
@@ -40,7 +42,7 @@ async function loadEvents() {
   loading.value = true;
   failed.value = false;
   try {
-    const envelope = await fetchEvents(props.apiBase);
+    const envelope = await fetchEvents(props.apiBase, { lang: props.lang });
     events.value = envelope.events;
     if (envelope.categories.length > 0) setCategories(envelope.categories);
   } catch (err) {

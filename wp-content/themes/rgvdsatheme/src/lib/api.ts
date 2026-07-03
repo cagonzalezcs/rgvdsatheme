@@ -74,17 +74,20 @@ export interface FetchPostsParams {
   s?: string;
   category?: string;
   page?: number;
+  /** Polylang language slug of the embedding page; scopes results to it. */
+  lang?: string;
 }
 
 export function fetchPosts(
   apiBase: string,
-  { s, category, page }: FetchPostsParams = {},
+  { s, category, page, lang }: FetchPostsParams = {},
   signal?: AbortSignal,
 ): Promise<PostsEnvelope> {
   const params = new URLSearchParams();
   if (s && s.trim() !== "") params.set("s", s.trim());
   if (category && category !== "all") params.set("category", category);
   if (page && page > 1) params.set("page", String(page));
+  if (lang) params.set("lang", lang);
 
   return getJson(endpoint(apiBase, "/posts", params), signal).then((data) =>
     validate(postsEnvelopeSchema, data),
@@ -96,10 +99,13 @@ export function fetchPosts(
 export function fetchSinglePost(
   apiBase: string,
   slug: string,
+  lang?: string,
   signal?: AbortSignal,
 ): Promise<SinglePostEnvelope> {
   const path = `/posts/${encodeURIComponent(slug)}`;
-  return getJson(endpoint(apiBase, path, new URLSearchParams()), signal).then((data) =>
+  const params = new URLSearchParams();
+  if (lang) params.set("lang", lang);
+  return getJson(endpoint(apiBase, path, params), signal).then((data) =>
     validate(singlePostEnvelopeSchema, data),
   );
 }
@@ -107,16 +113,19 @@ export function fetchSinglePost(
 export interface FetchEventsParams {
   after?: string;
   before?: string;
+  /** Polylang language slug of the embedding page; scopes results to it. */
+  lang?: string;
 }
 
 export function fetchEvents(
   apiBase: string,
-  { after, before }: FetchEventsParams = {},
+  { after, before, lang }: FetchEventsParams = {},
   signal?: AbortSignal,
 ): Promise<EventsEnvelope> {
   const params = new URLSearchParams();
   if (after) params.set("after", after);
   if (before) params.set("before", before);
+  if (lang) params.set("lang", lang);
 
   return getJson(endpoint(apiBase, "/events", params), signal).then((data) =>
     validate(eventsEnvelopeSchema, data),

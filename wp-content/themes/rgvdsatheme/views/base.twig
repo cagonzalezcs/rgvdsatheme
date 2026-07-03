@@ -15,7 +15,7 @@
 			joinLabel: join_label|default('Join DSA'),
 			aboutLabel: about_label|default('About'),
 			logoUrl: site.theme.link ~ '/static/images/logos/logo-red.png',
-			homeUrl: site.url,
+			homeUrl: home_url|default(site.url),
 			languages: languages|default([]),
 			currentPath: current_path|default('')
 		} %}

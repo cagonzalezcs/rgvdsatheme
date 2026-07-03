@@ -719,25 +719,42 @@ function rgvdsa_post_to_single( $post ) {
  * ---------------------------------------------------------------------- */
 
 /**
- * Shared post-list query (archive / read-next / home teasers; REST later).
+ * Shared post-list query (archive / read-next / home teasers; REST).
  * Primes author + thumbnail caches for the result set so serializers hit
  * caches instead of issuing per-post queries (WP_Query already primes
  * meta/terms).
+ *
+ * Language-aware under Polylang via a direct `language` tax_query (see
+ * rgvdsa_events_query for why the taxonomy is used over the `lang` query var):
+ * an explicit `'lang'` in $args wins (the REST layer passes the page language),
+ * otherwise the current front-end language. `'lang' => ''` queries all languages.
  *
  * @param array $args WP_Query overrides merged over the blog defaults.
  * @return WP_Query
  */
 function rgvdsa_blog_posts_query( $args = array() ) {
-	$query = new WP_Query(
-		wp_parse_args(
-			$args,
-			array(
-				'post_type'           => 'post',
-				'post_status'         => 'publish',
-				'ignore_sticky_posts' => true,
-			)
-		)
+	$lang = array_key_exists( 'lang', $args )
+		? (string) $args['lang']
+		: ( function_exists( 'pll_current_language' ) ? (string) pll_current_language() : '' );
+	unset( $args['lang'] );
+
+	$defaults = array(
+		'post_type'           => 'post',
+		'post_status'         => 'publish',
+		'ignore_sticky_posts' => true,
 	);
+
+	if ( '' !== $lang && taxonomy_exists( 'language' ) ) {
+		$defaults['tax_query'] = array(
+			array(
+				'taxonomy' => 'language',
+				'field'    => 'slug',
+				'terms'    => $lang,
+			),
+		);
+	}
+
+	$query = new WP_Query( wp_parse_args( $args, $defaults ) );
 
 	if ( ! empty( $query->posts ) ) {
 		update_post_author_caches( $query->posts );

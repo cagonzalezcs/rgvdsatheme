@@ -69,6 +69,12 @@ function rgvdsa_i18n_strings() {
 		'home_follow'        => 'Follow along:',
 		'home_email_us'      => 'Email us',
 		'home_communities'   => 'Communities we serve',
+		// Interior page chrome (page.twig / page-about / page-get-involved).
+		'chrome_on_this_page' => 'On this page',
+		'chrome_related'      => 'Related',
+		'chrome_document'     => 'Document',
+		'chrome_what_covers'  => 'What it covers',
+		'chrome_action'       => 'Action',
 	);
 }
 
@@ -128,9 +134,58 @@ function rgvdsa_i18n_languages() {
 }
 
 /**
- * Header nav / about menu items, labels translated via the registered strings.
- * Hrefs stay pointing at the canonical (English) inner pages — only the labels
- * localize in v1. Mirrors the Vue fixture defaults in SiteHeader.vue.
+ * Localize an internal path to the current language's translation URL.
+ *
+ * On the default language (or for external / mailto links) the path is returned
+ * unchanged. On a secondary language, the page whose slug matches the path is
+ * resolved to its translation and that permalink is returned (preserving any
+ * `#fragment`); when no translation exists, the language home is used so a link
+ * never lands on the wrong-language page.
+ *
+ * @param string $path Internal path (e.g. '/about/#mission') or absolute URL.
+ * @return string
+ */
+function rgvdsa_i18n_localize_url( $path ) {
+	if ( ! is_string( $path ) || '' === $path
+		|| preg_match( '#^(https?:)?//#', $path ) || 0 === strpos( $path, 'mailto:' ) ) {
+		return $path;
+	}
+	if ( ! function_exists( 'pll_current_language' ) ) {
+		return $path;
+	}
+
+	$current = (string) pll_current_language();
+	$default = function_exists( 'pll_default_language' ) ? (string) pll_default_language() : '';
+	if ( '' === $current || $current === $default ) {
+		return $path;
+	}
+
+	$fragment = '';
+	$hash     = strpos( $path, '#' );
+	if ( false !== $hash ) {
+		$fragment = substr( $path, $hash );
+		$path     = substr( $path, 0, $hash );
+	}
+
+	$slug = trim( (string) wp_parse_url( $path, PHP_URL_PATH ), '/' );
+	if ( '' !== $slug && function_exists( 'pll_get_post' ) ) {
+		$en_page = get_page_by_path( $slug );
+		if ( $en_page ) {
+			$translated = pll_get_post( $en_page->ID, $current );
+			if ( $translated ) {
+				return get_permalink( $translated ) . $fragment;
+			}
+		}
+	}
+
+	return function_exists( 'pll_home_url' ) ? pll_home_url( $current ) : home_url( '/' );
+}
+
+/**
+ * Header nav / about menu items, labels translated via the registered strings
+ * and hrefs resolved to the current language's translation URLs (falling back
+ * to the language home when a target is untranslated). Mirrors the Vue fixture
+ * defaults in SiteHeader.vue.
  *
  * @return array{nav:array<int,array{label:string,href:string}>,about:array<int,array{label:string,href:string}>}
  */
@@ -179,6 +234,15 @@ function rgvdsa_i18n_header_menus() {
 		),
 	);
 
+	foreach ( $nav as &$nav_item ) {
+		$nav_item['href'] = rgvdsa_i18n_localize_url( $nav_item['href'] );
+	}
+	unset( $nav_item );
+	foreach ( $about as &$about_item ) {
+		$about_item['href'] = rgvdsa_i18n_localize_url( $about_item['href'] );
+	}
+	unset( $about_item );
+
 	return array(
 		'nav'   => $nav,
 		'about' => $about,
@@ -194,6 +258,9 @@ function rgvdsa_i18n_header_menus() {
 function rgvdsa_i18n_context( $context ) {
 	$context['languages']        = rgvdsa_i18n_languages();
 	$context['current_language'] = function_exists( 'pll_current_language' ) ? pll_current_language() : 'en';
+	$context['home_url']         = function_exists( 'pll_home_url' )
+		? pll_home_url( $context['current_language'] )
+		: home_url( '/' );
 
 	$menus                        = rgvdsa_i18n_header_menus();
 	$context['header_nav_items']  = $menus['nav'];

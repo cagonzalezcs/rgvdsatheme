@@ -39,6 +39,8 @@ const VT_HERO = "post-hero";
 let current: AbortController | null = null;
 let liveRegion: HTMLElement | null = null;
 let apiBase = "";
+/** Polylang slug of the current page — scopes the single-post JSON fast-path. */
+let lang = "";
 
 /** In-flight/settled prefetch responses keyed by URL href (Phase 2). */
 const prefetchCache = new Map<string, Promise<string>>();
@@ -63,6 +65,7 @@ export function initNavigation(): void {
   if (document.getElementById("wpadminbar")) return;
   history.scrollRestoration = "manual";
   apiBase = readApiBase();
+  lang = readLang();
 
   document.addEventListener("click", onClick);
   window.addEventListener("popstate", onPopState);
@@ -208,7 +211,7 @@ async function resolveMain(
 
 /** Build the new <main> content for a single post entirely from JSON. */
 async function buildMainFromJson(slug: string, signal: AbortSignal): Promise<ResolvedMain> {
-  const env = await fetchSinglePost(apiBase, slug, signal);
+  const env = await fetchSinglePost(apiBase, slug, lang, signal);
   const { readNext, ...post } = env;
   const props = { post, posts: readNext, blogUrl: "/blog/", homeUrl: "/" };
 
@@ -337,6 +340,7 @@ function syncHead(doc: Document): void {
   syncMeta('meta[name="description"]', doc);
   syncMeta('link[rel="canonical"]', doc);
   syncMeta('meta[name="rgvdsa:api-base"]', doc);
+  syncMeta('meta[name="rgvdsa:lang"]', doc);
   syncMetaGroup('meta[property^="og:"]', doc);
   syncMetaGroup('meta[name^="twitter:"]', doc);
 
@@ -454,6 +458,10 @@ function readApiBase(): string {
   return (
     document.querySelector<HTMLMetaElement>('meta[name="rgvdsa:api-base"]')?.content ?? ""
   );
+}
+
+function readLang(): string {
+  return document.querySelector<HTMLMetaElement>('meta[name="rgvdsa:lang"]')?.content ?? "";
 }
 
 function supportsFetch(): boolean {

@@ -6,6 +6,10 @@
  * (page-templates/about.php, page-templates/get-involved.php — template-keyed
  * per design D9) and their Twig contexts. Every field falls back to the
  * design copy in PHP, so an unseeded page renders exactly the prototype.
+ *
+ * Sections carry a `visible` toggle (unset = shown), rich prose fields are
+ * kses'd WYSIWYG, and each context exposes a `nav` array ({ href, label })
+ * of visible sections — both on-this-page navs in the Twig render from it.
  */
 
 /**
@@ -44,6 +48,24 @@ function rgvdsa_pages_text( $post_id, $name, $default, $kses = false ) {
 	$value = trim( $value );
 
 	return $kses ? wp_kses_post( $value ) : $value;
+}
+
+/**
+ * Read a section-visibility toggle. Tri-state: a page saved before the field
+ * existed (null/'' meta) reads as visible, so deploys never hide content.
+ *
+ * @param int    $post_id Post ID.
+ * @param string $name    true_false field name.
+ * @return bool
+ */
+function rgvdsa_pages_visible( $post_id, $name ) {
+	if ( ! function_exists( 'get_field' ) || ! $post_id ) {
+		return true;
+	}
+
+	$value = get_field( $name, $post_id );
+
+	return ( null === $value || '' === $value ) ? true : (bool) $value;
 }
 
 /**
@@ -135,6 +157,80 @@ function rgvdsa_pages_link_row( $row ) {
 	);
 }
 
+/**
+ * Custom ACF location rule "Page slug" — matches the edited post's post_name.
+ *
+ * Gives the template-keyed page groups editor parity with the front-end render,
+ * which gates on the slug (page.php falls back to page-{slug}.twig and the
+ * context filter keys on `'about' === $slug`). Matching post_name works per-post
+ * across languages, unlike a single resolved page ID, so every translation of
+ * the About / Get Involved page shows its fields even before a template is set.
+ */
+add_filter(
+	'acf/location/rule_types',
+	function ( $choices ) {
+		$choices['Page']['page_slug'] = 'Page Slug';
+
+		return $choices;
+	}
+);
+
+add_filter(
+	'acf/location/rule_values/type=page_slug',
+	function ( $choices ) {
+		return array(
+			'about'        => 'about',
+			'get-involved' => 'get-involved',
+		);
+	}
+);
+
+/**
+ * Match the `page_slug` location rule against the edited post's post_name.
+ *
+ * @param bool  $result Result carried from earlier rules (unused).
+ * @param array $rule   Location rule: { param, operator, value }.
+ * @param array $screen ACF screen args; 'post_id' identifies the edited post.
+ * @return bool
+ */
+function rgvdsa_pages_slug_match( $result, $rule, $screen ) {
+	$post_id = isset( $screen['post_id'] ) ? (int) $screen['post_id'] : 0;
+	$post    = $post_id ? get_post( $post_id ) : null;
+	$match   = $post ? ( $post->post_name === $rule['value'] ) : false;
+
+	return ( '!=' === $rule['operator'] ) ? ! $match : $match;
+}
+add_filter( 'acf/location/rule_match/page_slug', 'rgvdsa_pages_slug_match', 10, 3 );
+
+/**
+ * Location rules for a template-keyed page group: match the page template OR
+ * the page slug (see the custom `page_slug` rule above). The slug arm gives the
+ * editor parity with the front-end render, so the fields show on the canonical
+ * page even before its template is assigned.
+ *
+ * @param string $template Template path, e.g. page-templates/about.php.
+ * @param string $slug     Canonical page slug, e.g. about.
+ * @return array ACF location rule groups (outer array OR'd).
+ */
+function rgvdsa_pages_location( $template, $slug ) {
+	return array(
+		array(
+			array(
+				'param'    => 'page_template',
+				'operator' => '==',
+				'value'    => $template,
+			),
+		),
+		array(
+			array(
+				'param'    => 'page_slug',
+				'operator' => '==',
+				'value'    => $slug,
+			),
+		),
+	);
+}
+
 /* -------------------------------------------------------------------------
  * ACF field groups
  * ---------------------------------------------------------------------- */
@@ -150,20 +246,20 @@ add_action(
 			array(
 				'key'      => 'group_rgvdsa_about_page',
 				'title'    => 'About page',
-				'location' => array(
-					array(
-						array(
-							'param'    => 'page_template',
-							'operator' => '==',
-							'value'    => 'page-templates/about.php',
-						),
-					),
-				),
+				'location' => rgvdsa_pages_location( 'page-templates/about.php', 'about' ),
 				'fields'   => array(
 					array(
 						'key'   => 'field_rgvdsa_about_tab_mission_band',
 						'label' => 'Mission band',
 						'type'  => 'tab',
+					),
+					array(
+						'key'           => 'field_rgvdsa_about_show_mission',
+						'label'         => 'Show section',
+						'name'          => 'about_show_mission',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
 					),
 					array(
 						'key'   => 'field_rgvdsa_about_mission_eyebrow',
@@ -184,24 +280,34 @@ add_action(
 						'type'  => 'tab',
 					),
 					array(
+						'key'           => 'field_rgvdsa_about_show_chapter',
+						'label'         => 'Show section',
+						'name'          => 'about_show_chapter',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
+					),
+					array(
 						'key'   => 'field_rgvdsa_about_chapter_heading',
 						'label' => 'Heading',
 						'name'  => 'about_chapter_heading',
 						'type'  => 'text',
 					),
 					array(
-						'key'   => 'field_rgvdsa_about_intro_p1',
-						'label' => 'First paragraph',
-						'name'  => 'about_intro_p1',
-						'type'  => 'textarea',
-						'rows'  => 4,
+						'key'          => 'field_rgvdsa_about_intro_p1',
+						'label'        => 'First paragraph',
+						'name'         => 'about_intro_p1',
+						'type'         => 'wysiwyg',
+						'media_upload' => 0,
+						'toolbar'      => 'basic',
 					),
 					array(
-						'key'   => 'field_rgvdsa_about_intro_p2',
-						'label' => 'Second paragraph',
-						'name'  => 'about_intro_p2',
-						'type'  => 'textarea',
-						'rows'  => 4,
+						'key'          => 'field_rgvdsa_about_intro_p2',
+						'label'        => 'Second paragraph',
+						'name'         => 'about_intro_p2',
+						'type'         => 'wysiwyg',
+						'media_upload' => 0,
+						'toolbar'      => 'basic',
 					),
 					array(
 						'key'           => 'field_rgvdsa_about_photo',
@@ -243,17 +349,26 @@ add_action(
 						'type'  => 'tab',
 					),
 					array(
+						'key'           => 'field_rgvdsa_about_show_history',
+						'label'         => 'Show section',
+						'name'          => 'about_show_history',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
+					),
+					array(
 						'key'   => 'field_rgvdsa_about_history_heading',
 						'label' => 'Heading',
 						'name'  => 'about_history_heading',
 						'type'  => 'text',
 					),
 					array(
-						'key'   => 'field_rgvdsa_about_history_body',
-						'label' => 'Intro paragraph',
-						'name'  => 'about_history_body',
-						'type'  => 'textarea',
-						'rows'  => 4,
+						'key'          => 'field_rgvdsa_about_history_body',
+						'label'        => 'Intro paragraph',
+						'name'         => 'about_history_body',
+						'type'         => 'wysiwyg',
+						'media_upload' => 0,
+						'toolbar'      => 'basic',
 					),
 					array(
 						'key'          => 'field_rgvdsa_about_timeline',
@@ -285,17 +400,26 @@ add_action(
 						'type'  => 'tab',
 					),
 					array(
+						'key'           => 'field_rgvdsa_about_show_counties',
+						'label'         => 'Show section',
+						'name'          => 'about_show_counties',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
+					),
+					array(
 						'key'   => 'field_rgvdsa_about_counties_heading',
 						'label' => 'Heading',
 						'name'  => 'about_counties_heading',
 						'type'  => 'text',
 					),
 					array(
-						'key'   => 'field_rgvdsa_about_counties_intro',
-						'label' => 'Intro paragraph',
-						'name'  => 'about_counties_intro',
-						'type'  => 'textarea',
-						'rows'  => 3,
+						'key'          => 'field_rgvdsa_about_counties_intro',
+						'label'        => 'Intro paragraph',
+						'name'         => 'about_counties_intro',
+						'type'         => 'wysiwyg',
+						'media_upload' => 0,
+						'toolbar'      => 'basic',
 					),
 					array(
 						'key'          => 'field_rgvdsa_about_county_cards',
@@ -334,6 +458,14 @@ add_action(
 						'type'  => 'tab',
 					),
 					array(
+						'key'           => 'field_rgvdsa_about_show_committees',
+						'label'         => 'Show section',
+						'name'          => 'about_show_committees',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
+					),
+					array(
 						'key'   => 'field_rgvdsa_about_committees_heading',
 						'label' => 'Heading',
 						'name'  => 'about_committees_heading',
@@ -343,14 +475,36 @@ add_action(
 						'key'          => 'field_rgvdsa_about_committees_intro',
 						'label'        => 'Intro paragraph',
 						'name'         => 'about_committees_intro',
-						'type'         => 'textarea',
-						'rows'         => 2,
+						'type'         => 'wysiwyg',
+						'media_upload' => 0,
+						'toolbar'      => 'basic',
 						'instructions' => 'The committee rows themselves are edited under Chapter Settings.',
+					),
+					array(
+						'key'   => 'field_rgvdsa_about_committees_link_label',
+						'label' => 'Cross-link label',
+						'name'  => 'about_committees_link_label',
+						'type'  => 'text',
+					),
+					array(
+						'key'          => 'field_rgvdsa_about_committees_link_url',
+						'label'        => 'Cross-link URL',
+						'name'         => 'about_committees_link_url',
+						'type'         => 'text',
+						'instructions' => 'Link below the committee rows. Full URL, relative path, or #anchor.',
 					),
 					array(
 						'key'   => 'field_rgvdsa_about_tab_governance',
 						'label' => 'Bylaws & Code of Conduct',
 						'type'  => 'tab',
+					),
+					array(
+						'key'           => 'field_rgvdsa_about_show_governance',
+						'label'         => 'Show section',
+						'name'          => 'about_show_governance',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
 					),
 					array(
 						'key'   => 'field_rgvdsa_about_governance_heading',
@@ -359,11 +513,12 @@ add_action(
 						'type'  => 'text',
 					),
 					array(
-						'key'   => 'field_rgvdsa_about_governance_intro',
-						'label' => 'Intro paragraph',
-						'name'  => 'about_governance_intro',
-						'type'  => 'textarea',
-						'rows'  => 2,
+						'key'          => 'field_rgvdsa_about_governance_intro',
+						'label'        => 'Intro paragraph',
+						'name'         => 'about_governance_intro',
+						'type'         => 'wysiwyg',
+						'media_upload' => 0,
+						'toolbar'      => 'basic',
 					),
 					array(
 						'key'          => 'field_rgvdsa_about_governance_docs',
@@ -409,6 +564,14 @@ add_action(
 						'type'  => 'tab',
 					),
 					array(
+						'key'           => 'field_rgvdsa_about_show_faq',
+						'label'         => 'Show section',
+						'name'          => 'about_show_faq',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
+					),
+					array(
 						'key'   => 'field_rgvdsa_about_faq_heading',
 						'label' => 'Heading',
 						'name'  => 'about_faq_heading',
@@ -429,6 +592,14 @@ add_action(
 						'type'  => 'tab',
 					),
 					array(
+						'key'           => 'field_rgvdsa_about_show_dues',
+						'label'         => 'Show section',
+						'name'          => 'about_show_dues',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
+					),
+					array(
 						'key'   => 'field_rgvdsa_about_dues_heading',
 						'label' => 'Heading',
 						'name'  => 'about_dues_heading',
@@ -438,8 +609,9 @@ add_action(
 						'key'          => 'field_rgvdsa_about_dues_body',
 						'label'        => 'Body',
 						'name'         => 'about_dues_body',
-						'type'         => 'textarea',
-						'rows'         => 3,
+						'type'         => 'wysiwyg',
+						'media_upload' => 0,
+						'toolbar'      => 'basic',
 						'instructions' => 'The button below it links to the Join URL from Chapter Settings.',
 					),
 				),
@@ -450,20 +622,26 @@ add_action(
 			array(
 				'key'      => 'group_rgvdsa_get_involved_page',
 				'title'    => 'Get Involved page',
-				'location' => array(
-					array(
-						array(
-							'param'    => 'page_template',
-							'operator' => '==',
-							'value'    => 'page-templates/get-involved.php',
-						),
-					),
-				),
+				'location' => rgvdsa_pages_location( 'page-templates/get-involved.php', 'get-involved' ),
 				'fields'   => array(
 					array(
 						'key'   => 'field_rgvdsa_gi_tab_join',
 						'label' => 'How to join',
 						'type'  => 'tab',
+					),
+					array(
+						'key'           => 'field_rgvdsa_gi_show_join',
+						'label'         => 'Show section',
+						'name'          => 'gi_show_join',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
+					),
+					array(
+						'key'   => 'field_rgvdsa_gi_join_heading',
+						'label' => 'Heading',
+						'name'  => 'gi_join_heading',
+						'type'  => 'text',
 					),
 					array(
 						'key'          => 'field_rgvdsa_gi_steps',
@@ -482,11 +660,12 @@ add_action(
 								'required' => 1,
 							),
 							array(
-								'key'   => 'field_rgvdsa_gi_steps_body',
-								'label' => 'Body',
-								'name'  => 'body',
-								'type'  => 'textarea',
-								'rows'  => 3,
+								'key'          => 'field_rgvdsa_gi_steps_body',
+								'label'        => 'Body',
+								'name'         => 'body',
+								'type'         => 'wysiwyg',
+								'media_upload' => 0,
+								'toolbar'      => 'basic',
 							),
 							array(
 								'key'   => 'field_rgvdsa_gi_steps_link_label',
@@ -509,17 +688,46 @@ add_action(
 						'type'  => 'tab',
 					),
 					array(
+						'key'           => 'field_rgvdsa_gi_show_committees',
+						'label'         => 'Show section',
+						'name'          => 'gi_show_committees',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
+					),
+					array(
+						'key'   => 'field_rgvdsa_gi_committees_heading',
+						'label' => 'Heading',
+						'name'  => 'gi_committees_heading',
+						'type'  => 'text',
+					),
+					array(
 						'key'          => 'field_rgvdsa_gi_committees_intro',
 						'label'        => 'Intro paragraph',
 						'name'         => 'gi_committees_intro',
-						'type'         => 'textarea',
-						'rows'         => 2,
+						'type'         => 'wysiwyg',
+						'media_upload' => 0,
+						'toolbar'      => 'basic',
 						'instructions' => 'The committee cards themselves are edited under Chapter Settings.',
 					),
 					array(
 						'key'   => 'field_rgvdsa_gi_tab_channels',
 						'label' => 'Communication channels',
 						'type'  => 'tab',
+					),
+					array(
+						'key'           => 'field_rgvdsa_gi_show_channels',
+						'label'         => 'Show section',
+						'name'          => 'gi_show_channels',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
+					),
+					array(
+						'key'   => 'field_rgvdsa_gi_channels_heading',
+						'label' => 'Heading',
+						'name'  => 'gi_channels_heading',
+						'type'  => 'text',
 					),
 					array(
 						'key'          => 'field_rgvdsa_gi_channels',
@@ -570,6 +778,20 @@ add_action(
 						'type'  => 'tab',
 					),
 					array(
+						'key'           => 'field_rgvdsa_gi_show_faq',
+						'label'         => 'Show section',
+						'name'          => 'gi_show_faq',
+						'type'          => 'true_false',
+						'default_value' => 1,
+						'ui'            => 1,
+					),
+					array(
+						'key'   => 'field_rgvdsa_gi_faq_heading',
+						'label' => 'Heading',
+						'name'  => 'gi_faq_heading',
+						'type'  => 'text',
+					),
+					array(
 						'key'          => 'field_rgvdsa_gi_faq',
 						'label'        => 'FAQ items',
 						'name'         => 'gi_faq',
@@ -590,11 +812,12 @@ add_action(
 						'type'  => 'text',
 					),
 					array(
-						'key'   => 'field_rgvdsa_gi_card_body',
-						'label' => 'Body',
-						'name'  => 'gi_card_body',
-						'type'  => 'textarea',
-						'rows'  => 2,
+						'key'          => 'field_rgvdsa_gi_card_body',
+						'label'        => 'Body',
+						'name'         => 'gi_card_body',
+						'type'         => 'wysiwyg',
+						'media_upload' => 0,
+						'toolbar'      => 'basic',
 					),
 					array(
 						'key'   => 'field_rgvdsa_gi_card_link_label',
@@ -608,6 +831,31 @@ add_action(
 						'name'         => 'gi_card_link_url',
 						'type'         => 'text',
 						'instructions' => 'Leave empty to use the Join URL from Chapter Settings.',
+					),
+					array(
+						'key'          => 'field_rgvdsa_gi_related_links',
+						'label'        => 'Related links',
+						'name'         => 'gi_related_links',
+						'type'         => 'repeater',
+						'layout'       => 'table',
+						'button_label' => 'Add link',
+						'instructions' => 'The "Related" sidebar list. Leave empty for the theme defaults.',
+						'sub_fields'   => array(
+							array(
+								'key'      => 'field_rgvdsa_gi_related_links_label',
+								'label'    => 'Label',
+								'name'     => 'label',
+								'type'     => 'text',
+								'required' => 1,
+							),
+							array(
+								'key'          => 'field_rgvdsa_gi_related_links_url',
+								'label'        => 'URL',
+								'name'         => 'url',
+								'type'         => 'text',
+								'instructions' => 'Full URL, relative path, or #anchor.',
+							),
+						),
 					),
 				),
 			)
@@ -637,15 +885,19 @@ function rgvdsa_about_context( $post_id ) {
 		}
 	}
 
-	return array(
+	$committees_link_url = rgvdsa_pages_text( $post_id, 'about_committees_link_url', '/get-involved/#committees' );
+
+	$about = array(
 		'mission'    => array(
+			'visible' => rgvdsa_pages_visible( $post_id, 'about_show_mission' ),
 			'eyebrow' => rgvdsa_pages_text( $post_id, 'about_mission_eyebrow', 'What we believe' ),
 			'body'    => rgvdsa_pages_text( $post_id, 'about_mission_body', 'Democratic socialists believe that our economy should be built democratically, by and for working people — not by billionaires for profit.' ),
 		),
 		'chapter'    => array(
+			'visible' => rgvdsa_pages_visible( $post_id, 'about_show_chapter' ),
 			'heading' => rgvdsa_pages_text( $post_id, 'about_chapter_heading', 'About the Chapter' ),
-			'p1'      => rgvdsa_pages_text( $post_id, 'about_intro_p1', 'The Rio Grande Valley Democratic Socialists of America (DSA RGV) is a local chapter of the nation’s largest socialist organization. Based primarily in McAllen, Texas, our grassroots group focuses on progressive labor organizing, mutual aid, and socialist political education throughout South Texas.' ),
-			'p2'      => rgvdsa_pages_text( $post_id, 'about_intro_p2', 'Everything we do is member-led, member-funded, and open to anyone who wants to build a Valley that works for working people. We regularly host community meetings — often in McAllen — to share updates, plan campaigns, and hold political education lectures. You can find our organizing platforms on the DSA Rio Grande Valley Action Network, and if you’re a student, we operate a collegiate branch: the UTRGV Young Democratic Socialists of America.' ),
+			'p1'      => rgvdsa_pages_text( $post_id, 'about_intro_p1', 'The Rio Grande Valley Democratic Socialists of America (DSA RGV) is a local chapter of the nation’s largest socialist organization. Based primarily in McAllen, Texas, our grassroots group focuses on progressive labor organizing, mutual aid, and socialist political education throughout South Texas.', true ),
+			'p2'      => rgvdsa_pages_text( $post_id, 'about_intro_p2', 'Everything we do is member-led, member-funded, and open to anyone who wants to build a Valley that works for working people. We regularly host community meetings — often in McAllen — to share updates, plan campaigns, and hold political education lectures. You can find our organizing platforms on the DSA Rio Grande Valley Action Network, and if you’re a student, we operate a collegiate branch: the UTRGV Young Democratic Socialists of America.', true ),
 			'photo'   => $photo,
 			'ctas'    => rgvdsa_pages_rows(
 				$post_id,
@@ -659,8 +911,9 @@ function rgvdsa_about_context( $post_id ) {
 			),
 		),
 		'history'    => array(
+			'visible'  => rgvdsa_pages_visible( $post_id, 'about_show_history' ),
 			'heading'  => rgvdsa_pages_text( $post_id, 'about_history_heading', 'Mission & History' ),
-			'body'     => rgvdsa_pages_text( $post_id, 'about_history_body', 'We fight for a Rio Grande Valley where housing, healthcare, and a dignified living are guaranteed — and we believe the people who live and work here should be the ones deciding the Valley’s future. Our work centers on three pillars: labor organizing, mutual aid, and political education.' ),
+			'body'     => rgvdsa_pages_text( $post_id, 'about_history_body', 'We fight for a Rio Grande Valley where housing, healthcare, and a dignified living are guaranteed — and we believe the people who live and work here should be the ones deciding the Valley’s future. Our work centers on three pillars: labor organizing, mutual aid, and political education.', true ),
 			// 20XX years are chapter-copy placeholders (edited in wp-admin) — do not invent dates.
 			'timeline' => rgvdsa_pages_rows(
 				$post_id,
@@ -683,8 +936,9 @@ function rgvdsa_about_context( $post_id ) {
 			),
 		),
 		'counties'   => array(
+			'visible' => rgvdsa_pages_visible( $post_id, 'about_show_counties' ),
 			'heading' => rgvdsa_pages_text( $post_id, 'about_counties_heading', 'Counties We Serve' ),
-			'intro'   => rgvdsa_pages_text( $post_id, 'about_counties_intro', 'One chapter, four counties. Wherever you are in the Valley, you’re covered — and if you can help us organize deeper in your county, we want to hear from you.' ),
+			'intro'   => rgvdsa_pages_text( $post_id, 'about_counties_intro', 'One chapter, four counties. Wherever you are in the Valley, you’re covered — and if you can help us organize deeper in your county, we want to hear from you.', true ),
 			'cards'   => rgvdsa_pages_rows(
 				$post_id,
 				'about_county_cards',
@@ -708,12 +962,19 @@ function rgvdsa_about_context( $post_id ) {
 			),
 		),
 		'committees' => array(
+			'visible' => rgvdsa_pages_visible( $post_id, 'about_show_committees' ),
 			'heading' => rgvdsa_pages_text( $post_id, 'about_committees_heading', 'Committees' ),
-			'intro'   => rgvdsa_pages_text( $post_id, 'about_committees_intro', 'Committees are where the work happens. Each one meets regularly and welcomes new members.' ),
+			'intro'   => rgvdsa_pages_text( $post_id, 'about_committees_intro', 'Committees are where the work happens. Each one meets regularly and welcomes new members.', true ),
+			'link'    => array(
+				'label'    => rgvdsa_pages_text( $post_id, 'about_committees_link_label', 'Join a committee' ),
+				'url'      => $committees_link_url,
+				'external' => rgvdsa_pages_external( $committees_link_url ),
+			),
 		),
 		'governance' => array(
+			'visible' => rgvdsa_pages_visible( $post_id, 'about_show_governance' ),
 			'heading' => rgvdsa_pages_text( $post_id, 'about_governance_heading', 'Bylaws & Code of Conduct' ),
-			'intro'   => rgvdsa_pages_text( $post_id, 'about_governance_intro', 'The chapter is governed by its members through documents we debate and vote on together. Everything is public.' ),
+			'intro'   => rgvdsa_pages_text( $post_id, 'about_governance_intro', 'The chapter is governed by its members through documents we debate and vote on together. Everything is public.', true ),
 			'docs'    => rgvdsa_pages_rows(
 				$post_id,
 				'about_governance_docs',
@@ -739,6 +1000,7 @@ function rgvdsa_about_context( $post_id ) {
 			),
 		),
 		'faq'        => array(
+			'visible' => rgvdsa_pages_visible( $post_id, 'about_show_faq' ),
 			'heading' => rgvdsa_pages_text( $post_id, 'about_faq_heading', 'FAQ' ),
 			'rows'    => rgvdsa_pages_rows(
 				$post_id,
@@ -755,10 +1017,32 @@ function rgvdsa_about_context( $post_id ) {
 			),
 		),
 		'dues'       => array(
+			'visible' => rgvdsa_pages_visible( $post_id, 'about_show_dues' ),
 			'heading' => rgvdsa_pages_text( $post_id, 'about_dues_heading', 'Switching your dues rate?' ),
-			'body'    => rgvdsa_pages_text( $post_id, 'about_dues_body', 'Already a member but switching to a monthly or Solidarity Dues rate? Enter the email associated with your membership in this form with your new dues amount, and your current dues will be canceled and updated.' ),
+			'body'    => rgvdsa_pages_text( $post_id, 'about_dues_body', 'Already a member but switching to a monthly or Solidarity Dues rate? Enter the email associated with your membership in this form with your new dues amount, and your current dues will be canceled and updated.', true ),
 		),
 	);
+
+	// On-this-page nav — visible sections only, labels track the headings.
+	// Anchors match the section ids in page-about.twig.
+	$about['nav'] = array();
+	foreach ( array(
+		'chapter'    => '#chapter',
+		'history'    => '#mission',
+		'counties'   => '#counties',
+		'committees' => '#committees',
+		'governance' => '#bylaws',
+		'faq'        => '#faq',
+	) as $key => $href ) {
+		if ( $about[ $key ]['visible'] ) {
+			$about['nav'][] = array(
+				'href'  => $href,
+				'label' => $about[ $key ]['heading'],
+			);
+		}
+	}
+
+	return $about;
 }
 
 /**
@@ -779,10 +1063,13 @@ function rgvdsa_get_involved_context( $post_id, $join_url ) {
 
 	$card_url = rgvdsa_pages_text( $post_id, 'gi_card_link_url', $join_url );
 
-	return array(
-		'steps'            => rgvdsa_pages_rows(
-			$post_id,
-			'gi_steps',
+	$gi = array(
+		'join'       => array(
+			'visible' => rgvdsa_pages_visible( $post_id, 'gi_show_join' ),
+			'heading' => rgvdsa_pages_text( $post_id, 'gi_join_heading', 'How to join' ),
+			'steps'   => rgvdsa_pages_rows(
+				$post_id,
+				'gi_steps',
 			function ( $row ) {
 				$title = trim( (string) ( $row['title'] ?? '' ) );
 				if ( '' === $title ) {
@@ -802,11 +1089,19 @@ function rgvdsa_get_involved_context( $post_id, $join_url ) {
 				array( 'title' => 'Come to RGV-DSA 101', 'body' => "Our intro session for new and curious folks — what democratic socialism means, what our chapter is working on, and how to plug in. Offered virtually and in person, multiple times a month. You don't have to be a member yet to attend.", 'link_label' => 'Find a session →', 'href' => '/calendar/', 'external' => false ),
 				array( 'title' => 'Get onboarded & plug in', 'body' => "After 101, we'll add you to our WhatsApp and match you with a committee that fits your interests and capacity — whether that's an hour a month or a night a week.", 'link_label' => 'Browse committees ↓', 'href' => '#committees', 'external' => false ),
 			)
+			),
 		),
-		'committees_intro' => rgvdsa_pages_text( $post_id, 'gi_committees_intro', 'Committees are where the work happens. Each one meets regularly and welcomes new members — reach out through the WhatsApp or at any general meeting.' ),
-		'channels'         => rgvdsa_pages_rows(
-			$post_id,
-			'gi_channels',
+		'committees' => array(
+			'visible' => rgvdsa_pages_visible( $post_id, 'gi_show_committees' ),
+			'heading' => rgvdsa_pages_text( $post_id, 'gi_committees_heading', 'Committees' ),
+			'intro'   => rgvdsa_pages_text( $post_id, 'gi_committees_intro', 'Committees are where the work happens. Each one meets regularly and welcomes new members — reach out through the WhatsApp or at any general meeting.', true ),
+		),
+		'channels'   => array(
+			'visible' => rgvdsa_pages_visible( $post_id, 'gi_show_channels' ),
+			'heading' => rgvdsa_pages_text( $post_id, 'gi_channels_heading', 'Communication channels' ),
+			'items'   => rgvdsa_pages_rows(
+				$post_id,
+				'gi_channels',
 			function ( $row ) {
 				$label = trim( (string) ( $row['label'] ?? '' ) );
 				if ( '' === $label ) {
@@ -828,11 +1123,15 @@ function rgvdsa_get_involved_context( $post_id, $join_url ) {
 				array( 'label' => 'Instagram — <span class="notranslate">@dsa_rgv</span>', 'desc' => 'Events, actions, and updates for everyone', 'link_label' => 'Follow', 'url' => $instagram, 'badge' => '', 'external' => true ),
 				array( 'label' => 'Email', 'desc' => 'Questions, press, and anything else', 'link_label' => 'Write us', 'url' => 'mailto:', 'badge' => '', 'external' => false ),
 			)
+			),
 		),
-		'faq_items'        => rgvdsa_pages_rows(
-			$post_id,
-			'gi_faq',
-			'rgvdsa_pages_faq_row',
+		'faq'        => array(
+			'visible' => rgvdsa_pages_visible( $post_id, 'gi_show_faq' ),
+			'heading' => rgvdsa_pages_text( $post_id, 'gi_faq_heading', 'Common questions' ),
+			'items'   => rgvdsa_pages_rows(
+				$post_id,
+				'gi_faq',
+				'rgvdsa_pages_faq_row',
 			array(
 				array( 'question' => 'Do I have to be a member to come to events?', 'answer' => "Nope — most of our events are open to everyone. Come to a 101 or a social, meet folks, and see if it's for you. No pressure." ),
 				array( 'question' => 'How much are dues?', 'answer' => 'Dues are sliding-scale through national DSA — most folks pay a few dollars a month. If dues are a barrier, talk to us: no one is turned away for lack of funds.' ),
@@ -840,15 +1139,45 @@ function rgvdsa_get_involved_context( $post_id, $join_url ) {
 				array( 'question' => 'Can I participate without being publicly visible?', 'answer' => "Yes. There are plenty of ways to contribute behind the scenes, and we take members' privacy and safety seriously. Talk to us about what you're comfortable with." ),
 				array( 'question' => 'How much time does membership take?', 'answer' => "As much or as little as you have. Some members show up to one event a month; others help lead committees. Capacity changes — that's fine. The work is a marathon, not a sprint." ),
 			)
+			),
 		),
-		'card'             => array(
+		'card'       => array(
 			'heading'    => rgvdsa_pages_text( $post_id, 'gi_card_heading', 'Ready right now?' ),
-			'body'       => rgvdsa_pages_text( $post_id, 'gi_card_body', 'Membership takes five minutes, and dues are pay-what-you-can.' ),
+			'body'       => rgvdsa_pages_text( $post_id, 'gi_card_body', 'Membership takes five minutes, and dues are pay-what-you-can.', true ),
 			'link_label' => rgvdsa_pages_text( $post_id, 'gi_card_link_label', 'Join DSA' ),
 			'url'        => $card_url,
 			'external'   => rgvdsa_pages_external( $card_url ),
 		),
+		'related'    => rgvdsa_pages_rows(
+			$post_id,
+			'gi_related_links',
+			'rgvdsa_pages_link_row',
+			array(
+				array( 'label' => 'Event Calendar', 'url' => '/calendar/', 'external' => false ),
+				array( 'label' => 'Bylaws & Code of Conduct', 'url' => '/bylaws-code-of-conduct/', 'external' => false ),
+				array( 'label' => 'Mission & History', 'url' => '/about/#mission', 'external' => false ),
+			)
+		),
 	);
+
+	// On-this-page nav — visible sections only, labels track the headings.
+	// Anchors match the section ids in page-get-involved.twig.
+	$gi['nav'] = array();
+	foreach ( array(
+		'join'       => '#join',
+		'committees' => '#committees',
+		'channels'   => '#channels',
+		'faq'        => '#faq',
+	) as $key => $href ) {
+		if ( $gi[ $key ]['visible'] ) {
+			$gi['nav'][] = array(
+				'href'  => $href,
+				'label' => $gi[ $key ]['heading'],
+			);
+		}
+	}
+
+	return $gi;
 }
 
 /**
@@ -871,9 +1200,9 @@ add_filter(
 			$context['gi']       = rgvdsa_get_involved_context( $post_id, $join_url );
 			// Email channel default: complete the mailto with the chapter address.
 			if ( ! empty( $context['chapter']['contact_email'] ) ) {
-				foreach ( $context['gi']['channels'] as $i => $channel ) {
+				foreach ( $context['gi']['channels']['items'] as $i => $channel ) {
 					if ( 'mailto:' === $channel['url'] ) {
-						$context['gi']['channels'][ $i ]['url'] = 'mailto:' . $context['chapter']['contact_email'];
+						$context['gi']['channels']['items'][ $i ]['url'] = 'mailto:' . $context['chapter']['contact_email'];
 					}
 				}
 			}

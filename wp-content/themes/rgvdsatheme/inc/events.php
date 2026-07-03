@@ -541,15 +541,25 @@ function rgvdsa_event_categories() {
 /**
  * Published events ordered by start_datetime meta.
  *
- * Language-aware under Polylang: `get_posts()` defaults `suppress_filters` to
- * true, which bypasses Polylang's query filter, so we pass the current language
- * explicitly (and turn suppression off) — on `/es/` only Spanish events return.
- * A caller can still pass `'lang' => ''` to query across all languages.
+ * Language-aware under Polylang, filtered on the `language` taxonomy directly
+ * (not the `lang` query var). That tax_query is honored in every context —
+ * including a bare REST request, where Polylang's front-end query filter is not
+ * loaded and `pll_current_language()` does not resolve to the page language —
+ * and is unaffected by `get_posts()`'s default `suppress_filters => true`.
  *
- * @param array $args Overrides merged over the defaults (meta_query etc.).
+ * The target language is an explicit `'lang'` in $args when provided (the REST
+ * layer passes the page language it received from the island), otherwise the
+ * current front-end language. Pass `'lang' => ''` to query across all languages.
+ *
+ * @param array $args Overrides merged over the defaults (meta_query, lang, etc.).
  * @return WP_Post[]
  */
 function rgvdsa_events_query( $args = array() ) {
+	$lang = array_key_exists( 'lang', $args )
+		? (string) $args['lang']
+		: ( function_exists( 'pll_current_language' ) ? (string) pll_current_language() : '' );
+	unset( $args['lang'] );
+
 	$defaults = array(
 		'post_type'      => 'event',
 		'post_status'    => 'publish',
@@ -561,12 +571,16 @@ function rgvdsa_events_query( $args = array() ) {
 		'no_found_rows'  => true,
 	);
 
-	if ( function_exists( 'pll_current_language' ) ) {
-		$lang = pll_current_language();
-		if ( $lang ) {
-			$defaults['lang']             = $lang;
-			$defaults['suppress_filters'] = false;
-		}
+	// No current caller passes its own tax_query, so this default never collides
+	// (meta_query + tax_query coexist as distinct keys under wp_parse_args).
+	if ( '' !== $lang && taxonomy_exists( 'language' ) ) {
+		$defaults['tax_query'] = array(
+			array(
+				'taxonomy' => 'language',
+				'field'    => 'slug',
+				'terms'    => $lang,
+			),
+		);
 	}
 
 	return get_posts( wp_parse_args( $args, $defaults ) );

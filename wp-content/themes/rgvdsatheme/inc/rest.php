@@ -47,6 +47,10 @@ function rgvdsa_rest_register_routes() {
 					'maxLength'         => 100,
 					'sanitize_callback' => 'sanitize_text_field',
 				),
+				'lang'     => array(
+					'type'              => 'string',
+					'sanitize_callback' => 'sanitize_key',
+				),
 			),
 		)
 	);
@@ -62,6 +66,10 @@ function rgvdsa_rest_register_routes() {
 				'slug' => array(
 					'type'              => 'string',
 					'sanitize_callback' => 'sanitize_title',
+				),
+				'lang' => array(
+					'type'              => 'string',
+					'sanitize_callback' => 'sanitize_key',
 				),
 			),
 		)
@@ -82,6 +90,10 @@ function rgvdsa_rest_register_routes() {
 				'before' => array(
 					'type'              => 'string',
 					'validate_callback' => 'rgvdsa_rest_validate_date',
+				),
+				'lang'   => array(
+					'type'              => 'string',
+					'sanitize_callback' => 'sanitize_key',
 				),
 			),
 		)
@@ -109,6 +121,33 @@ function rgvdsa_rest_validate_date( $value ) {
 	return checkdate( (int) $m[2], (int) $m[3], (int) $m[1] );
 }
 
+/**
+ * Resolve the request language for the first-party API.
+ *
+ * The islands send the page language as `?lang=` (Polylang does not resolve the
+ * language of a bare `/wp-json/rgvdsa/v1` request on its own). A valid slug is
+ * honored; anything else falls back to the site default language so a param-less
+ * hit behaves as the English site. Returns '' only when Polylang is inactive
+ * (queries then run unfiltered across all languages). The value is threaded into
+ * the shared query builders and the transient cache keys, so each language keeps
+ * its own cached payload.
+ *
+ * @param WP_REST_Request $request Current request.
+ * @return string Language slug, or '' when Polylang is unavailable.
+ */
+function rgvdsa_rest_resolve_lang( WP_REST_Request $request ) {
+	if ( ! function_exists( 'pll_languages_list' ) ) {
+		return '';
+	}
+
+	$requested = sanitize_key( (string) ( $request['lang'] ?? '' ) );
+	if ( '' !== $requested && in_array( $requested, (array) pll_languages_list(), true ) ) {
+		return $requested;
+	}
+
+	return function_exists( 'pll_default_language' ) ? (string) pll_default_language() : '';
+}
+
 /* -------------------------------------------------------------------------
  * Handlers.
  * ---------------------------------------------------------------------- */
@@ -122,13 +161,15 @@ function rgvdsa_rest_posts( WP_REST_Request $request ) {
 	$per_page = (int) $request['per_page'];
 	$category = (string) ( $request['category'] ?? '' );
 	$search   = trim( (string) ( $request['s'] ?? '' ) );
+	$lang     = rgvdsa_rest_resolve_lang( $request );
 
 	$payload = rgvdsa_cache_remember(
-		'rest_posts_' . md5( wp_json_encode( array( $page, $per_page, $category, $search ) ) ),
-		static function () use ( $page, $per_page, $category, $search ) {
+		'rest_posts_' . md5( wp_json_encode( array( $lang, $page, $per_page, $category, $search ) ) ),
+		static function () use ( $lang, $page, $per_page, $category, $search ) {
 			$args = array(
 				'posts_per_page' => $per_page,
 				'paged'          => $page,
+				'lang'           => $lang,
 			);
 			if ( '' !== $category ) {
 				$args['category_name'] = $category;
@@ -157,18 +198,20 @@ function rgvdsa_rest_posts( WP_REST_Request $request ) {
  */
 function rgvdsa_rest_single_post( WP_REST_Request $request ) {
 	$slug = (string) $request['slug'];
+	$lang = rgvdsa_rest_resolve_lang( $request );
 
 	$payload = rgvdsa_cache_remember(
-		'rest_single_' . md5( $slug ),
-		static function () use ( $slug ) {
-			$found = get_posts(
+		'rest_single_' . md5( $lang . '|' . $slug ),
+		static function () use ( $lang, $slug ) {
+			// Language-scoped slug lookup: a translated post can share its
+			// slug, so resolve within the requested language.
+			$found = rgvdsa_blog_posts_query(
 				array(
-					'post_type'      => 'post',
-					'post_status'    => 'publish',
 					'name'           => $slug,
 					'posts_per_page' => 1,
+					'lang'           => $lang,
 				)
-			);
+			)->posts;
 			if ( ! $found ) {
 				return array();
 			}
@@ -178,6 +221,7 @@ function rgvdsa_rest_single_post( WP_REST_Request $request ) {
 				array(
 					'posts_per_page' => 12,
 					'post__not_in'   => array( (int) $post->ID ),
+					'lang'           => $lang,
 				)
 			);
 
@@ -203,15 +247,17 @@ function rgvdsa_rest_single_post( WP_REST_Request $request ) {
  * GET /events — the calendar window (defaults −1 month → +12 months).
  */
 function rgvdsa_rest_events( WP_REST_Request $request ) {
+	$lang   = rgvdsa_rest_resolve_lang( $request );
 	$now    = new DateTimeImmutable( 'now', rgvdsa_events_timezone() );
 	$after  = (string) ( $request['after'] ?? $now->modify( '-1 month' )->format( 'Y-m-d' ) );
 	$before = (string) ( $request['before'] ?? $now->modify( '+12 months' )->format( 'Y-m-d' ) );
 
 	$payload = rgvdsa_cache_remember(
-		'rest_events_' . md5( $after . $before ),
-		static function () use ( $after, $before ) {
+		'rest_events_' . md5( $lang . '|' . $after . '|' . $before ),
+		static function () use ( $lang, $after, $before ) {
 			$posts = rgvdsa_events_query(
 				array(
+					'lang'       => $lang,
 					'meta_query' => array(
 						array(
 							'key'     => 'start_datetime',

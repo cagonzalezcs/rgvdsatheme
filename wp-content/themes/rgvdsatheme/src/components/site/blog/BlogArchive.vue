@@ -18,6 +18,8 @@ const props = withDefaults(
     initialTotal: number;
     /** rgvdsa/v1 base URL */
     apiBase: string;
+    /** Polylang language slug of the page; scopes fetched posts to it */
+    lang?: string;
     /** WP term-driven categories — replaces the registry palette */
     categories?: EventCategory[];
     /** server-paged archive URLs (crawl path; island intercepts clicks) */
@@ -79,7 +81,7 @@ async function runFetch() {
   try {
     const envelope = await fetchPosts(
       props.apiBase,
-      { s: query.value, category: activeCat.value, page: page.value },
+      { s: query.value, category: activeCat.value, page: page.value, lang: props.lang },
       ctl.signal,
     );
     if (ctl !== controller) return;

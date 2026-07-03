@@ -962,6 +962,74 @@ function rgvdsa_seed_translate_event( $en_id, $es_title ) {
 }
 
 /**
+ * Create (idempotently) a Spanish translation of a page, linking it to the
+ * English original and copying its page template so the template-keyed context
+ * wiring (D9) fires. ACF/lede values in $es_fields are written only on create,
+ * so re-runs never clobber an editor's Spanish edits. Returns the ES page id
+ * (0 on failure).
+ *
+ * @param int    $en_id    English page ID.
+ * @param string $es_title Spanish post_title.
+ * @param string $es_slug  Spanish post_name (the /es/<slug>/ segment).
+ * @param array  $es_fields field_key => value pairs for update_field (create only).
+ * @return int
+ */
+function rgvdsa_seed_translate_page( $en_id, $es_title, $es_slug, $es_fields = array() ) {
+	if ( ! $en_id ) {
+		return 0;
+	}
+	if ( ! pll_get_post_language( $en_id ) ) {
+		pll_set_post_language( $en_id, 'en' );
+	}
+
+	$existing = pll_get_post( $en_id, 'es' );
+	if ( $existing ) {
+		// Keep the template link current, but never overwrite existing ES copy.
+		$tmpl = get_post_meta( $en_id, '_wp_page_template', true );
+		if ( $tmpl ) {
+			update_post_meta( $existing, '_wp_page_template', $tmpl );
+		}
+		rgvdsa_seed_log( "polylang: es page '{$es_slug}' exists (#{$existing})" );
+		return (int) $existing;
+	}
+
+	$es_id = wp_insert_post( array(
+		'post_type'    => 'page',
+		'post_status'  => 'publish',
+		'post_title'   => $es_title,
+		'post_name'    => $es_slug,
+		'post_content' => get_post_field( 'post_content', $en_id ),
+	), true );
+	if ( is_wp_error( $es_id ) ) {
+		rgvdsa_seed_log( "ERROR es page '{$es_slug}': " . $es_id->get_error_message() );
+		return 0;
+	}
+
+	pll_set_post_language( $es_id, 'es' );
+	pll_save_post_translations( array( 'en' => (int) $en_id, 'es' => (int) $es_id ) );
+
+	// wp_insert_post enforces global slug uniqueness *before* the language is
+	// set, so a slug shared with the English original (e.g. 'blog') gets deduped
+	// to 'blog-2'. Now that Polylang knows the language — and allows the same
+	// slug across languages — re-assert the intended slug.
+	if ( get_post_field( 'post_name', $es_id ) !== $es_slug ) {
+		wp_update_post( array( 'ID' => (int) $es_id, 'post_name' => $es_slug ) );
+	}
+
+	$tmpl = get_post_meta( $en_id, '_wp_page_template', true );
+	if ( $tmpl ) {
+		update_post_meta( $es_id, '_wp_page_template', $tmpl );
+	}
+
+	foreach ( $es_fields as $key => $value ) {
+		update_field( $key, $value, $es_id );
+	}
+
+	rgvdsa_seed_log( "polylang: es page '{$es_slug}' created (#{$es_id}, " . count( $es_fields ) . ' fields)' );
+	return (int) $es_id;
+}
+
+/**
  * Seed source→translation string pairs into Polylang's per-language MO store.
  * These power `pll__()` in the theme (see inc/i18n.php).
  */
@@ -1053,14 +1121,14 @@ if ( function_exists( 'pll_set_post_language' ) && function_exists( 'pll_save_po
 			update_field( 'field_rgvdsa_who_p1', 'El Valle del Río Grande es una de las regiones con mayor desigualdad económica del país, pero no tiene por qué seguir así. Como socialistas democráticos, construimos poder para la clase trabajadora y desafiamos el dominio de los ricos y poderosos en nuestras comunidades fronterizas.', $rgvdsa_seed_es_home );
 			update_field( 'field_rgvdsa_who_p2', 'Juntos luchamos por un Valle donde la gente trabajadora tenga poder real, y donde todas las personas puedan vivir con dignidad, sin importar dónde nacieron ni cómo llegaron aquí.', $rgvdsa_seed_es_home );
 			update_field( 'field_rgvdsa_who_link_label', 'Más sobre nuestro capítulo →', $rgvdsa_seed_es_home );
-			update_field( 'field_rgvdsa_who_link_url', '/about/', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_who_link_url', '/es/acerca-de/', $rgvdsa_seed_es_home );
 
 			update_field( 'field_rgvdsa_home_involved_eyebrow', 'Participa', $rgvdsa_seed_es_home );
 			update_field( 'field_rgvdsa_home_involved_heading', 'Tres pasos para empezar a organizar', $rgvdsa_seed_es_home );
 			update_field( 'field_rgvdsa_home_steps', array(
 				array( 'title' => 'Únete al DSA', 'body' => 'Hazte miembro del DSA nacional —las cuotas son de escala móvil— y tu membresía te conecta automáticamente con nuestro capítulo.', 'link_label' => 'Regístrate en dsausa.org →', 'link_url' => 'https://act.dsausa.org/donate/membership' ),
 				array( 'title' => 'Ven a RGV-DSA 101', 'body' => 'Nuestra sesión introductoria para gente nueva y curiosa: qué hacemos, cómo funciona el capítulo y cómo puedes sumarte. Opciones virtuales y presenciales.', 'link_label' => 'Encuentra una sesión →', 'link_url' => '#events' ),
-				array( 'title' => 'Súmate al trabajo', 'body' => 'Únete a un comité, entra a nuestro WhatsApp y participa. Los miembros reciben una invitación a nuestros canales de comunicación tras la orientación.', 'link_label' => 'Ver comités →', 'link_url' => '/get-involved/#committees' ),
+				array( 'title' => 'Súmate al trabajo', 'body' => 'Únete a un comité, entra a nuestro WhatsApp y participa. Los miembros reciben una invitación a nuestros canales de comunicación tras la orientación.', 'link_label' => 'Ver comités →', 'link_url' => '/es/participa/#committees' ),
 			), $rgvdsa_seed_es_home );
 
 			// Reuse the English "who we are" illustration on the ES page.
@@ -1099,6 +1167,12 @@ if ( function_exists( 'pll_set_post_language' ) && function_exists( 'pll_save_po
 		'Follow along:'          => 'Síguenos:',
 		'Email us'               => 'Escríbenos',
 		'Communities we serve'   => 'Comunidades que servimos',
+		// Interior page chrome (page-about / page-get-involved / page.twig).
+		'On this page'           => 'En esta página',
+		'Related'                => 'Relacionado',
+		'Document'               => 'Documento',
+		'What it covers'         => 'Qué cubre',
+		'Action'                 => 'Acción',
 	) );
 
 	// 6.9e — Spanish translations of the upcoming events (home teasers). Keyed
@@ -1129,6 +1203,120 @@ if ( function_exists( 'pll_set_post_language' ) && function_exists( 'pll_save_po
 		if ( isset( $rgvdsa_seed_es_events[ $rgvdsa_title ] ) ) {
 			rgvdsa_seed_translate_event( $rgvdsa_ev->ID, $rgvdsa_seed_es_events[ $rgvdsa_title ] );
 		}
+	}
+
+	// 6.9f — Spanish translations of the interior pages (Calendar, Blog, About,
+	// Get Involved). Each is a translated page pair carrying its EN template
+	// (D9); internal link fields point at the /es/ slugs seeded here. Bylaws +
+	// Privacy are intentionally deferred — their bodies are prose/legal copy
+	// that needs human authoring (see the change docs).
+
+	// Calendar — shell only (events are a language-filtered island); the ES lede
+	// replaces the English Twig fallback.
+	if ( $calendar_page_id ) {
+		rgvdsa_seed_translate_page( $calendar_page_id, 'Calendario de eventos', 'calendario', array(
+			'field_rgvdsa_interior_lede' => 'Reuniones, acciones, capacitaciones y convivios por todo el Valle. Todo es abierto al público a menos que se indique — trae a alguien.',
+		) );
+	}
+
+	// Blog (page_for_posts) — Polylang resolves the ES posts page from the link.
+	if ( $blog_page_id ) {
+		rgvdsa_seed_translate_page( $blog_page_id, 'Blog', 'blog', array(
+			'field_rgvdsa_interior_lede' => 'Noticias, análisis y crónicas de los organizadores de RGV-DSA en todo el Valle.',
+		) );
+	}
+
+	// About — full page ACF group in Spanish. Internal links use /es/ slugs.
+	if ( $rgvdsa_seed_about_id ) {
+		rgvdsa_seed_translate_page( $rgvdsa_seed_about_id, 'Acerca de RGV DSA', 'acerca-de', array(
+			'field_rgvdsa_interior_lede'               => 'Un capítulo dirigido por sus miembros de los Socialistas Democráticos de América, organizando por la gente trabajadora en todo el Valle del Río Grande.',
+			'field_rgvdsa_about_mission_eyebrow'       => 'En qué creemos',
+			'field_rgvdsa_about_mission_body'          => 'Los socialistas democráticos creemos que nuestra economía debe construirse democráticamente, por y para la gente trabajadora — no por los multimillonarios para su lucro.',
+			'field_rgvdsa_about_chapter_heading'       => 'Sobre el capítulo',
+			'field_rgvdsa_about_intro_p1'              => 'Los Socialistas Democráticos de América del Valle del Río Grande (DSA RGV) somos un capítulo local de la organización socialista más grande del país. Con base principalmente en McAllen, Texas, nuestro grupo de base se enfoca en la organización laboral progresista, la ayuda mutua y la educación política socialista en todo el sur de Texas.',
+			'field_rgvdsa_about_intro_p2'              => 'Todo lo que hacemos es dirigido por los miembros, financiado por los miembros y abierto a cualquiera que quiera construir un Valle que funcione para la gente trabajadora. Organizamos reuniones comunitarias con regularidad —a menudo en McAllen— para compartir novedades, planear campañas y ofrecer charlas de educación política. Puedes encontrar nuestras plataformas de organización en la Action Network de DSA Rio Grande Valley, y si eres estudiante, tenemos una rama universitaria: los Jóvenes Socialistas Democráticos de América de UTRGV.',
+			'field_rgvdsa_about_ctas'                  => array(
+				array( 'label' => 'Ven a una reunión', 'url' => '/es/calendario/' ),
+				array( 'label' => 'Participa', 'url' => '/es/participa/' ),
+				array( 'label' => 'Estudiantes: UTRGV YDSA', 'url' => '/es/participa/' ),
+			),
+			'field_rgvdsa_about_history_heading'       => 'Misión e historia',
+			'field_rgvdsa_about_history_body'          => 'Luchamos por un Valle del Río Grande donde la vivienda, la salud y una vida digna estén garantizadas — y creemos que quienes viven y trabajan aquí deben ser quienes decidan el futuro del Valle. Nuestro trabajo se centra en tres pilares: la organización laboral, la ayuda mutua y la educación política.',
+			'field_rgvdsa_about_timeline'              => array(
+				array( 'year' => '1982', 'text' => 'Se fundan los Socialistas Democráticos de América, que llegan a ser la organización socialista más grande de los Estados Unidos.' ),
+				array( 'year' => '20XX', 'text' => 'Organizadores del Valle forman un comité organizador y comienzan a reunirse en McAllen. <em class="text-[#78716c]">(El capítulo completará el año y los detalles.)</em>' ),
+				array( 'year' => '20XX', 'text' => 'DSA RGV se constituye como capítulo local oficial, organizando en cuatro condados del sur de Texas. <em class="text-[#78716c]">(El capítulo completará el año y los detalles.)</em>' ),
+			),
+			'field_rgvdsa_about_counties_heading'      => 'Condados que servimos',
+			'field_rgvdsa_about_counties_intro'        => 'Un capítulo, cuatro condados. Dondequiera que estés en el Valle, te tenemos cubierto — y si puedes ayudarnos a organizar más a fondo en tu condado, queremos saber de ti.',
+			'field_rgvdsa_about_county_cards'          => array(
+				array( 'name' => 'Hidalgo', 'cities' => 'McAllen · Edinburg · Mission · Pharr', 'note' => 'Base principal — aquí se realizan la mayoría de las reuniones' ),
+				array( 'name' => 'Cameron', 'cities' => 'Brownsville · Harlingen · San Benito', 'note' => '' ),
+				array( 'name' => 'Willacy', 'cities' => 'Raymondville · Lyford', 'note' => '' ),
+				array( 'name' => 'Starr', 'cities' => 'Rio Grande City · Roma', 'note' => '' ),
+			),
+			'field_rgvdsa_about_committees_heading'     => 'Comités',
+			'field_rgvdsa_about_committees_intro'       => 'Los comités son donde ocurre el trabajo. Cada uno se reúne con regularidad y da la bienvenida a nuevos miembros.',
+			'field_rgvdsa_about_committees_link_label'  => 'Únete a un comité',
+			'field_rgvdsa_about_committees_link_url'    => '/es/participa/#committees',
+			'field_rgvdsa_about_governance_heading'     => 'Estatutos y código de conducta',
+			'field_rgvdsa_about_governance_intro'       => 'El capítulo se gobierna por sus miembros a través de documentos que debatimos y votamos juntos. Todo es público.',
+			'field_rgvdsa_about_governance_docs'        => array(
+				array( 'title' => 'Estatutos del capítulo', 'covers' => 'Cómo funciona el capítulo: dirigentes, elecciones, quórum, comités y cómo se toman las decisiones.', 'action' => 'Leer', 'url' => '/bylaws-code-of-conduct/#documents' ),
+				array( 'title' => 'Código de conducta', 'covers' => 'Lo que esperamos de cada quien en todos los espacios del capítulo: reuniones, acciones y en línea.', 'action' => 'Leer', 'url' => '/bylaws-code-of-conduct/#documents' ),
+				array( 'title' => 'Política de quejas', 'covers' => 'Cómo reportar un daño y cómo el capítulo maneja los conflictos, de forma confidencial y justa.', 'action' => 'Leer', 'url' => '/bylaws-code-of-conduct/#grievance' ),
+				array( 'title' => 'Actas de reuniones', 'covers' => 'Registros y resoluciones de las reuniones generales, disponibles para todos los miembros.', 'action' => 'Explorar', 'url' => '/bylaws-code-of-conduct/#documents' ),
+			),
+			'field_rgvdsa_about_faq_heading'           => 'Preguntas frecuentes',
+			'field_rgvdsa_about_faq'                   => array(
+				array( 'question' => '¿Tengo que ser miembro para asistir a los eventos?', 'answer' => 'No — la mayoría de nuestros eventos son abiertos a todo el mundo. Ven a un 101 o a un convivio, conoce a la gente y ve si es para ti.' ),
+				array( 'question' => '¿Cuánto son las cuotas?', 'answer' => 'Las cuotas son de escala móvil a través del DSA nacional — la mayoría paga unos pocos dólares al mes. A nadie se le rechaza por no poder pagar.' ),
+				array( 'question' => '¿Cómo cambio a una cuota mensual o de Solidaridad?', 'answer' => 'Ingresa el correo asociado a tu membresía en el formulario nacional de cuotas con tu nuevo monto, y tu cuota actual se cancelará y se actualizará.' ),
+				array( 'question' => 'Nunca he participado en algo político. ¿Está bien?', 'answer' => 'Más que bien — es lo normal. La mayoría de los miembros se unieron sin experiencia organizando. RGV-DSA 101 existe justo para esto.' ),
+				array( 'question' => '¿Puedo participar sin ser visible públicamente?', 'answer' => 'Sí. Hay muchas maneras de contribuir tras bambalinas, y tomamos en serio la privacidad y la seguridad de los miembros.' ),
+				array( 'question' => '¿Cuánto tiempo requiere la membresía?', 'answer' => 'Tanto o tan poco como tengas. Algunos miembros asisten a un evento al mes; otros ayudan a dirigir comités.' ),
+			),
+			'field_rgvdsa_about_dues_heading'          => '¿Cambiando tu cuota?',
+			'field_rgvdsa_about_dues_body'             => '¿Ya eres miembro pero quieres cambiar a una cuota mensual o de Solidaridad? Ingresa el correo asociado a tu membresía en este formulario con tu nuevo monto, y tu cuota actual se cancelará y se actualizará.',
+		) );
+	}
+
+	// Get Involved — full page ACF group in Spanish.
+	if ( $rgvdsa_seed_gi_id ) {
+		rgvdsa_seed_translate_page( $rgvdsa_seed_gi_id, 'Participa', 'participa', array(
+			'field_rgvdsa_interior_lede'        => 'No se necesita experiencia ni una política perfecta. Si quieres un Valle mejor, aquí hay un lugar para ti.',
+			'field_rgvdsa_gi_join_heading'      => 'Cómo unirte',
+			'field_rgvdsa_gi_steps'             => array(
+				array( 'title' => 'Hazte miembro del DSA', 'body' => 'Regístrate a través del DSA nacional y selecciona el capítulo del Valle del Río Grande. Las cuotas son de escala móvil — paga lo que puedas, y <strong>a nadie se le rechaza por falta de fondos</strong>.', 'link_label' => 'Únete en dsausa.org →', 'link_url' => 'https://act.dsausa.org/donate/membership' ),
+				array( 'title' => 'Ven a RGV-DSA 101', 'body' => 'Nuestra sesión introductoria para gente nueva y curiosa: qué significa el socialismo democrático, en qué trabaja nuestro capítulo y cómo sumarte. Se ofrece virtual y en persona, varias veces al mes. No tienes que ser miembro todavía para asistir.', 'link_label' => 'Encuentra una sesión →', 'link_url' => '/es/calendario/' ),
+				array( 'title' => 'Recibe orientación y súmate', 'body' => 'Después del 101, te agregamos a nuestro WhatsApp y te conectamos con un comité que se ajuste a tus intereses y tu disponibilidad — ya sea una hora al mes o una noche a la semana.', 'link_label' => 'Explora los comités ↓', 'link_url' => '#committees' ),
+			),
+			'field_rgvdsa_gi_committees_heading' => 'Comités',
+			'field_rgvdsa_gi_committees_intro'   => 'Los comités son donde ocurre el trabajo. Cada uno se reúne con regularidad y da la bienvenida a nuevos miembros — comunícate por el WhatsApp o en cualquier reunión general.',
+			'field_rgvdsa_gi_channels_heading'  => 'Canales de comunicación',
+			'field_rgvdsa_gi_channels'          => array(
+				array( 'label' => 'WhatsApp', 'desc' => 'Nuestro canal principal — los miembros reciben una invitación durante la orientación', 'link_label' => '', 'url' => '', 'badge' => 'Solo miembros' ),
+				array( 'label' => 'Instagram — <span class="notranslate">@dsa_rgv</span>', 'desc' => 'Eventos, acciones y novedades para todos', 'link_label' => 'Seguir', 'url' => 'https://www.instagram.com/dsa_rgv/', 'badge' => '' ),
+				array( 'label' => 'Correo', 'desc' => 'Preguntas, prensa y cualquier otra cosa', 'link_label' => 'Escríbenos', 'url' => 'mailto:hello@example.org', 'badge' => '' ),
+			),
+			'field_rgvdsa_gi_faq_heading'       => 'Preguntas comunes',
+			'field_rgvdsa_gi_faq'               => array(
+				array( 'question' => '¿Tengo que ser miembro para asistir a los eventos?', 'answer' => 'No — la mayoría de nuestros eventos son abiertos a todo el mundo. Ven a un 101 o a un convivio, conoce a la gente y ve si es para ti. Sin presión.' ),
+				array( 'question' => '¿Cuánto son las cuotas?', 'answer' => 'Las cuotas son de escala móvil a través del DSA nacional — la mayoría paga unos pocos dólares al mes. Si las cuotas son un obstáculo, háblanos: a nadie se le rechaza por falta de fondos.' ),
+				array( 'question' => 'Nunca he participado en algo político. ¿Está bien?', 'answer' => 'Más que bien — es lo normal. La mayoría de los miembros se unieron sin experiencia organizando. RGV-DSA 101 existe justo para esto, y los comités te enseñarán todo sobre la marcha.' ),
+				array( 'question' => '¿Puedo participar sin ser visible públicamente?', 'answer' => 'Sí. Hay muchas maneras de contribuir tras bambalinas, y tomamos en serio la privacidad y la seguridad de los miembros. Háblanos sobre con qué te sientes cómodo.' ),
+				array( 'question' => '¿Cuánto tiempo requiere la membresía?', 'answer' => 'Tanto o tan poco como tengas. Algunos miembros asisten a un evento al mes; otros ayudan a dirigir comités. La disponibilidad cambia — está bien. El trabajo es una maratón, no un sprint.' ),
+			),
+			'field_rgvdsa_gi_card_heading'      => '¿Con ganas de empezar ya?',
+			'field_rgvdsa_gi_card_body'         => 'Hacerte miembro toma cinco minutos, y las cuotas son de paga-lo-que-puedas.',
+			'field_rgvdsa_gi_card_link_label'   => 'Únete al DSA',
+			'field_rgvdsa_gi_card_link_url'     => 'https://act.dsausa.org/donate/membership',
+			'field_rgvdsa_gi_related_links'     => array(
+				array( 'label' => 'Calendario de eventos', 'url' => '/es/calendario/' ),
+				array( 'label' => 'Estatutos y código de conducta', 'url' => '/bylaws-code-of-conduct/' ),
+				array( 'label' => 'Misión e historia', 'url' => '/es/acerca-de/#mission' ),
+			),
+		) );
 	}
 } else {
 	rgvdsa_seed_log( 'WARN: Polylang not active — Spanish home / strings not seeded' );
