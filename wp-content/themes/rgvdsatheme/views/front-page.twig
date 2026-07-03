@@ -64,7 +64,7 @@
 
 	{# ============ COUNTIES STRIP ============ #}
 	{% if show_counties_strip %}
-		<section id="counties" class="counties-strip bg-ink px-4 py-5 text-white md:px-6" data-tone="ink" aria-label="Communities we serve">
+		<section id="counties" class="counties-strip bg-ink px-4 py-5 text-white md:px-6" data-tone="ink" aria-label="{{ pll__('Communities we serve') }}">
 			<div class="mx-auto flex max-w-[1200px] flex-wrap justify-center gap-x-[18px] gap-y-2 font-display text-[0.75rem] font-bold uppercase tracking-[0.05em] md:text-[0.92rem]">
 				{% for county in counties %}
 					<span class="notranslate">{{ county }}</span>{% if not loop.last %}<span aria-hidden="true" class="text-brand-red">★</span>{% endif %}
@@ -102,12 +102,12 @@
 	<section id="events" class="upcoming-events bg-off-white px-4 py-14 md:px-6 md:py-[88px]" data-tone="cream">
 		<div class="mx-auto flex max-w-[1140px] flex-col gap-9">
 			<div class="flex flex-wrap items-baseline justify-between gap-4">
-				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">Upcoming events</h2>
-				<a href="{{ calendar_url }}" class="text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">Full calendar →</a>
+				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">{{ pll__('Upcoming events') }}</h2>
+				<a href="{{ calendar_url }}" class="text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">{{ pll__('Full calendar →') }}</a>
 			</div>
 			{% if home_events is empty %}
 				<div class="flex flex-col items-center gap-2.5 rounded-[16px] border-2 border-dashed border-border-control px-8 py-12 text-center">
-					<div class="font-display text-[1.2rem] font-bold">No events on the books yet</div>
+					<div class="font-display text-[1.2rem] font-bold">{{ pll__('No events on the books yet') }}</div>
 					<p class="m-0 max-w-[48ch] text-base leading-[1.6] text-text-muted">New meetings and actions land on the <a href="{{ calendar_url }}" class="font-bold text-red">calendar</a> first — subscribe there and never miss one.</p>
 				</div>
 			{% endif %}
@@ -124,11 +124,11 @@
 						<div class="flex flex-col gap-1">
 							<div class="text-[1.12rem] font-bold">{{ ev.title }}</div>
 							<div class="text-[0.95rem] text-text-muted">{{ ev.when }} · {{ ev.where }}</div>
-							<span class="mt-1 text-[0.92rem] font-bold text-red md:hidden">View event →</span>
+							<span class="mt-1 text-[0.92rem] font-bold text-red md:hidden">{{ pll__('View event') }} →</span>
 						</div>
 						<span aria-hidden="true"
 							class="hidden whitespace-nowrap rounded-full border-2 border-red px-5 py-[9px] text-[0.92rem] font-bold text-red transition-colors group-hover:border-red-hover group-hover:bg-wash md:inline-block">
-							View event
+							{{ pll__('View event') }}
 						</span>
 					</a>
 				{% endfor %}
@@ -140,8 +140,8 @@
 	<section id="blog" class="from-the-blog bg-white px-4 py-14 md:px-6 md:py-[88px]" data-tone="cream">
 		<div class="mx-auto flex max-w-[1140px] flex-col gap-9">
 			<div class="flex flex-wrap items-baseline justify-between gap-4">
-				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">From the blog</h2>
-				<a href="/blog/" class="text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">All posts →</a>
+				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">{{ pll__('From the blog') }}</h2>
+				<a href="/blog/" class="text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">{{ pll__('All posts →') }}</a>
 			</div>
 			{% if blog_featured %}
 				<div class="grid grid-cols-1 items-stretch gap-8 md:grid-cols-2 lg:[grid-template-columns:minmax(300px,1.15fr)_minmax(280px,1fr)]">
@@ -156,7 +156,7 @@
 							<span class="text-[0.82rem] font-semibold text-text-muted">{{ blog_featured.date }} · {{ blog_featured.read }}</span>
 							<span class="font-display text-[clamp(1.2rem,2.2vw,1.45rem)] font-extrabold leading-[1.25] [text-wrap:balance]">{{ blog_featured.title }}</span>
 							<span class="text-base leading-[1.65] text-text-muted">{{ blog_featured.excerpt }}</span>
-							<span class="mt-1 text-[0.95rem] font-bold text-red">Read the post →</span>
+							<span class="mt-1 text-[0.95rem] font-bold text-red">{{ pll__('Read the post →') }}</span>
 						</div>
 					</a>
 					<div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-1">
@@ -178,8 +178,8 @@
 				</div>
 			{% else %}
 				<div class="flex flex-col items-center gap-2.5 rounded-[18px] border border-hairline bg-off-white px-6 py-16 text-center">
-					<span class="font-display text-[1.15rem] font-bold">Posts coming soon</span>
-					<span class="text-base text-text-muted">The chapter is writing its first dispatches — check back shortly.</span>
+					<span class="font-display text-[1.15rem] font-bold">{{ pll__('Posts coming soon') }}</span>
+					<span class="text-base text-text-muted">{{ pll__('The chapter is writing its first dispatches — check back shortly.') }}</span>
 				</div>
 			{% endif %}
 		</div>
@@ -209,14 +209,14 @@
 				{% endfor %}
 			</div>
 			<div class="flex flex-col items-stretch gap-3 border-t border-ink-soft pt-8 md:flex-row md:flex-wrap md:items-center md:gap-4">
-				<span class="text-[0.95rem] font-bold text-muted-on-ink">Follow along:</span>
+				<span class="text-[0.95rem] font-bold text-muted-on-ink">{{ pll__('Follow along:') }}</span>
 				<a href="{{ chapter.instagram_url }}" target="_blank" rel="noopener"
 					class="w-full rounded-full bg-white px-[22px] py-2.5 text-center text-[0.95rem] font-bold text-ink no-underline transition-colors hover:bg-pink md:w-auto">
 					Instagram <span class="notranslate">@dsa_rgv</span>
 				</a>
 				<a href="mailto:{{ chapter.contact_email }}"
 					class="w-full rounded-full border-2 border-[#57534e] px-[21px] py-[9px] text-center text-[0.95rem] font-bold text-white no-underline transition-colors hover:border-white md:w-auto">
-					Email us
+					{{ pll__('Email us') }}
 				</a>
 			</div>
 		</div>

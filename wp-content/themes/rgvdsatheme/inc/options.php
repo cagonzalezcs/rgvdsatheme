@@ -83,30 +83,6 @@ add_action(
 						'instructions'  => 'Shown in link previews (social, messengers) when content has no featured image. Falls back to the theme logo.',
 					),
 					array(
-						'key'           => 'field_rgvdsa_options_es_enabled',
-						'label'         => 'Spanish site enabled',
-						'name'          => 'es_enabled',
-						'type'          => 'true_false',
-						'instructions'  => 'Turns the header ES toggle into a live link.',
-						'default_value' => 0,
-						'ui'            => 1,
-					),
-					array(
-						'key'               => 'field_rgvdsa_options_es_url',
-						'label'             => 'Spanish site URL',
-						'name'              => 'es_url',
-						'type'              => 'url',
-						'conditional_logic' => array(
-							array(
-								array(
-									'field'    => 'field_rgvdsa_options_es_enabled',
-									'operator' => '==',
-									'value'    => '1',
-								),
-							),
-						),
-					),
-					array(
 						'key'           => 'field_rgvdsa_options_event_count',
 						'label'         => 'Home: upcoming event count',
 						'name'          => 'event_count',
@@ -520,7 +496,14 @@ add_filter(
 			}
 		}
 
-		$front_id = (int) get_option( 'page_on_front' );
+		// Read the ACF hero/who/get-involved copy from the CURRENT front page so
+		// Polylang serves the Spanish page's own fields on `/es/`. The queried
+		// object is the front page (EN at `/`, its ES translation at `/es/`);
+		// fall back to the configured English front page.
+		$front_id = get_queried_object_id();
+		if ( ! $front_id ) {
+			$front_id = (int) get_option( 'page_on_front' );
+		}
 		$join_url = isset( $context['chapter']['join_url'] ) ? (string) $context['chapter']['join_url'] : 'https://act.dsausa.org/donate/membership';
 
 		$context['event_count']         = $event_count;

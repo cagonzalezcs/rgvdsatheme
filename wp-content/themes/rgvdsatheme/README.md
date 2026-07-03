@@ -133,19 +133,21 @@ php -d error_reporting=0 -d display_errors=0 \
 
 ## Translations (EN/ES)
 
-Home-only machine translation via the GTranslate plugin (free tier — client-side Google Translate, no `/es/` URLs). The header EN/ES toggle drives it.
+Real translated content via **Polylang Pro** — English at `/`, Spanish at `/es/…`. No machine translation: each language is its own content, and the header EN/ES toggle is a plain language switcher (an `<a>` to the current page's translation).
 
-**Gate:** `inc/translation.php` — active when the Chapter Settings **Spanish site enabled** option is on AND `is_front_page()`. To extend translation to inner pages, hook `rgvdsa/translation/active` (or lift the `is_front_page()` predicate). Pages where the gate is off ship zero gtranslate assets — a stale cookie is inert.
+**Setup (Polylang, one-time):** languages EN (`en_US`, default) + ES (`es`, `es_MX`); URL modifications = language in the directory with the default language hidden; pretty permalinks on. The `event` CPT is made translatable in code (`pll_get_post_types` filter in `inc/i18n.php`); `page`/`post` are translatable by default.
 
-**Flow:** `base.twig` renders a hidden `[gt-link]` shortcode on active pages → plugin enqueues its `base.js` (defines `window.doGTranslate`, hides Google's UI). `src/ts/translation.ts` bridges the toggle: ES loads Google's `element.js` and fires `doGTranslate('en|es')` in place; EN expires the `googtrans` cookie variants and reloads (avoids `<font>` artifacts).
+**Theme layer:** `inc/i18n.php` — builds the `languages` switcher context (each language's translation URL via `pll_the_languages`), exposes `pll__`/`pll_e` as Twig functions, registers the theme's static UI strings, and passes Polylang-translated header nav labels + `joinLabel`/`aboutLabel` to the `SiteHeader` island. Front-page BODY copy (hero, who-we-are, get-involved) is **not** string-translated — it comes from the Spanish page's own ACF fields. `inc/options.php` reads that ACF from the **current** front page (`get_queried_object_id()`), so `/es/` serves the Spanish page's fields.
 
-**Cookie contract:** `rgvdsa_lang` (theme, authoritative) · `googtrans` (Google, derived). While the ES preference is set, the client-nav layer (`src/ts/navigation.ts`) stands down — full page loads only.
+**Language-filtered teasers:** `rgvdsa_events_query()` passes the current language (`get_posts` would otherwise bypass Polylang via `suppress_filters`); the blog query is a `WP_Query` Polylang filters automatically.
 
-**notranslate policy:** identifiers only (county names, `@dsa_rgv`, emails, "RGV DSA" tokens) plus the LanguageToggle (EN/ES are codes). Header and footer islands translate. Content-island mounts must stay translatable — future inner-page ES should come from data/props, not DOM machine translation.
+**Seeding (`bin/seed.php`):** backfills `en` on untagged posts, creates the Spanish front page (#linked to the EN home) with Spanish ACF copy, seeds `es` string translations (via `PLL_MO`), and creates Spanish translations of the upcoming events (home teasers).
 
-**Pinned plugin config** (`GTranslate` option, seeded by `bin/seed.php`): `default_language: en`, languages `en,es` only, `detect_browser_language` OFF (it fights the toggle), no widget placement.
-
-**Gotchas:** never pre-set `<html lang>` from the preference — Google then treats the page as already Spanish and silently skips translation (Google owns `<html lang>` while translating). Rapid automated flip/reload cycles trip Google's rate limiting (`element.js` → 503 + `/sorry/` interstitial); it clears on its own.
+**Gotchas / known items:**
+- After creating front-page translations programmatically, run `PLL()->model->clean_languages_cache()` + `flush_rewrite_rules()` — Polylang caches each language's `page_on_front`, and a stale cache makes `/es/` fall through to the blog index. The seed handles this via its final rewrite flush.
+- The Spanish home currently resolves at `/es/inicio/` (Polylang 301s bare `/es/` there). It renders correctly and the toggle round-trips; making `/es/` the canonical front-page URL is a pending refinement (Polylang static-front-page canonical).
+- Event teaser **dates** render in English (`DateTimeImmutable::format` isn't locale-aware); switch to `wp_date()`/`date_i18n` to localize — deferred.
+- The blog demo posts are lorem-ipsum, so the Spanish home shows the translated "Posts coming soon" empty state rather than seeded ES posts.
 
 ## Design reference
 

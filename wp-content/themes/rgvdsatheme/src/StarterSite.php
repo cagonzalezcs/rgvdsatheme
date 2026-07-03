@@ -53,8 +53,6 @@ class StarterSite extends Site {
 			'join_url'       => $this->option_field( 'join_url', 'https://act.dsausa.org/donate/membership' ),
 			'newsletter_url' => $this->option_field( 'newsletter_url', 'https://actionnetwork.org/forms/dsa-rgv-newsletter-sign-up' ),
 			'contact_email'  => $this->option_field( 'contact_email', '' ),
-			'es_enabled'     => (bool) $this->option_field( 'es_enabled', false ),
-			'es_url'         => $this->option_field( 'es_url', '' ),
 			'footer_tagline' => $this->option_field( 'footer_tagline', '' ),
 			'instagram_url'  => $this->option_field( 'instagram_url', 'https://www.instagram.com/dsa_rgv/' ),
 			'committees'     => function_exists( 'rgvdsa_chapter_committees' ) ? rgvdsa_chapter_committees() : array(),

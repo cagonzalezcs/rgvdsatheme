@@ -541,25 +541,35 @@ function rgvdsa_event_categories() {
 /**
  * Published events ordered by start_datetime meta.
  *
+ * Language-aware under Polylang: `get_posts()` defaults `suppress_filters` to
+ * true, which bypasses Polylang's query filter, so we pass the current language
+ * explicitly (and turn suppression off) — on `/es/` only Spanish events return.
+ * A caller can still pass `'lang' => ''` to query across all languages.
+ *
  * @param array $args Overrides merged over the defaults (meta_query etc.).
  * @return WP_Post[]
  */
 function rgvdsa_events_query( $args = array() ) {
-	return get_posts(
-		wp_parse_args(
-			$args,
-			array(
-				'post_type'      => 'event',
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'meta_key'       => 'start_datetime',
-				'orderby'        => 'meta_value',
-				'meta_type'      => 'DATETIME',
-				'order'          => 'ASC',
-				'no_found_rows'  => true,
-			)
-		)
+	$defaults = array(
+		'post_type'      => 'event',
+		'post_status'    => 'publish',
+		'posts_per_page' => -1,
+		'meta_key'       => 'start_datetime',
+		'orderby'        => 'meta_value',
+		'meta_type'      => 'DATETIME',
+		'order'          => 'ASC',
+		'no_found_rows'  => true,
 	);
+
+	if ( function_exists( 'pll_current_language' ) ) {
+		$lang = pll_current_language();
+		if ( $lang ) {
+			$defaults['lang']             = $lang;
+			$defaults['suppress_filters'] = false;
+		}
+	}
+
+	return get_posts( wp_parse_args( $args, $defaults ) );
 }
 
 /* -------------------------------------------------------------------------

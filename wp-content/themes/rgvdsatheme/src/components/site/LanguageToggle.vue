@@ -1,46 +1,38 @@
 <script setup lang="ts">
-// EN/ES language toggle — a segmented pill per the design handoff (03-DESIGN-SPEC.md
-// §SiteHeader; "RGV DSA Home.dc.html" langStyle). Two <button> segments; the active
-// language is a deep-red filled pill, the other is muted red text. Records the visitor's
-// preference in a cookie and flips <html lang> (see useLanguagePreference). On
-// translation-active pages (esEnabled, currently home only — inc/translation.php) it
-// also drives live GTranslate machine translation via src/ts/translation.ts; elsewhere
-// it stays a preference recorder and the ES tooltip states the scope. The shared
-// module-level preference keeps all three responsive header instances in sync.
-import { useLanguagePreference, type Lang } from "@/composables/useLanguagePreference";
-import { activateSpanish, restoreEnglish } from "@/ts/translation";
+// EN/ES language switcher — a segmented pill per the design handoff (03-DESIGN-SPEC.md
+// §SiteHeader; "RGV DSA Home.dc.html" langStyle). Under Polylang each language is a
+// real URL (English at "/", Spanish at "/es/…"), so each segment is an <a> linking to
+// the current page's translation (Polylang falls back to the language home when the
+// page has no translation). The active language is a deep-red filled pill marked
+// aria-current; navigating is the entire behavior — no cookie, no machine translation.
+export interface LanguageLink {
+  code: string;
+  label: string;
+  name: string;
+  active: boolean;
+  url: string;
+}
 
-const props = withDefaults(
+withDefaults(
   defineProps<{
-    // True on pages where flipping ES translates live (fed from translation.active).
-    esEnabled?: boolean;
-    // Kept for API stability (SiteHeader passes it); unused under cookie-based gtranslate.
-    esUrl?: string;
-    // Off-white container for the mobile drop panel (white surface) vs white on the red bar.
+    /** One entry per site language, from the server (see inc/i18n.php). */
+    languages?: LanguageLink[];
+    /** Off-white container for the mobile drop panel (white surface) vs white on the red bar. */
     onLight?: boolean;
   }>(),
   {
-    esEnabled: false,
-    esUrl: "",
+    languages: () => [],
     onLight: false,
   },
 );
 
-const { isSpanish, setLanguage } = useLanguagePreference();
-
-function onSelect(lang: Lang): void {
-  setLanguage(lang);
-  if (!props.esEnabled) return;
-  if (lang === "es") activateSpanish();
-  else restoreEnglish();
-}
-
 const segmentClass =
-  "cursor-pointer rounded-full border-0 px-3 py-1 text-[0.8rem] font-bold tracking-[0.04em]";
+  "cursor-pointer rounded-full border-0 px-3 py-1 text-[0.8rem] font-bold tracking-[0.04em] no-underline";
 </script>
 
 <template>
   <div
+    v-if="languages.length > 1"
     role="group"
     aria-label="Language"
     :class="[
@@ -48,23 +40,16 @@ const segmentClass =
       onLight ? 'bg-off-white' : 'bg-white',
     ]"
   >
-    <button
-      type="button"
-      :aria-pressed="!isSpanish"
-      :class="[segmentClass, isSpanish ? 'bg-transparent text-red' : 'bg-red text-white']"
-      @click="onSelect('en')"
+    <a
+      v-for="lang in languages"
+      :key="lang.code"
+      :href="lang.url"
+      :lang="lang.code"
+      :title="lang.name"
+      :aria-current="lang.active ? 'true' : undefined"
+      :class="[segmentClass, lang.active ? 'bg-red text-white' : 'bg-transparent text-red']"
     >
-      EN
-    </button>
-    <button
-      type="button"
-      lang="es"
-      :title="esEnabled ? 'Español' : 'Español — disponible en la página de inicio'"
-      :aria-pressed="isSpanish"
-      :class="[segmentClass, isSpanish ? 'bg-red text-white' : 'bg-transparent text-red']"
-      @click="onSelect('es')"
-    >
-      ES
-    </button>
+      {{ lang.label }}
+    </a>
   </div>
 </template>

@@ -737,7 +737,6 @@ update_field( 'field_rgvdsa_options_counties', array_map(
 		'Zapata', 'La Grulla', 'La Feria', 'Rio Hondo',
 	)
 ), 'option' );
-update_field( 'field_rgvdsa_options_es_enabled', 1, 'option' );
 update_field( 'field_rgvdsa_options_footer_tagline', 'Organizing across Hidalgo, Cameron, Willacy, and Starr counties.', 'option' );
 update_field( 'field_rgvdsa_options_newhere_heading', 'New here?', 'option' );
 update_field( 'field_rgvdsa_options_newhere_body', 'Come to an <span class="notranslate">RGV-DSA 101</span> — our intro session for new and curious folks.', 'option' );
@@ -745,22 +744,8 @@ update_field( 'field_rgvdsa_options_newhere_link_label', 'Find a session', 'opti
 update_field( 'field_rgvdsa_options_newhere_link_url', '/calendar/', 'option' );
 rgvdsa_seed_log( 'chapter settings options seeded' );
 
-/* --- GTranslate plugin option, pinned (translations-layer). EN+ES only,
- *     browser-language auto-switch OFF (it would fire doGTranslate on its own
- *     and fight the header toggle + home-only gate), no widget placement —
- *     the hidden gt-link bootstrap in base.twig is the only integration
- *     surface. Merged over existing values so plugin-added keys survive. */
-$rgvdsa_seed_gt = get_option( 'GTranslate', array() );
-$rgvdsa_seed_gt = array_merge( is_array( $rgvdsa_seed_gt ) ? $rgvdsa_seed_gt : array(), array(
-	'default_language'           => 'en',
-	'incl_langs'                 => array( 'en', 'es' ),
-	'fincl_langs'                => array( 'en', 'es' ),
-	'detect_browser_language'    => '',
-	'floating_language_selector' => 'no',
-	'show_in_menu'               => '',
-) );
-update_option( 'GTranslate', $rgvdsa_seed_gt );
-rgvdsa_seed_log( 'GTranslate option pinned: en+es, detect_browser_language off, no widget placement' );
+/* --- Translation is now Polylang (see the Spanish-home seed at the end of this
+ *     file). No GTranslate option to pin. */
 
 /* --- Posts-page lede (interior `lede` field on the page_for_posts page). */
 if ( $blog_page_id ) {
@@ -875,6 +860,8 @@ if ( $rgvdsa_seed_about_id ) {
 	), $rgvdsa_seed_about_id );
 	update_field( 'field_rgvdsa_about_committees_heading', 'Committees', $rgvdsa_seed_about_id );
 	update_field( 'field_rgvdsa_about_committees_intro', 'Committees are where the work happens. Each one meets regularly and welcomes new members.', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_committees_link_label', 'Join a committee', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_committees_link_url', '/get-involved/#committees', $rgvdsa_seed_about_id );
 	update_field( 'field_rgvdsa_about_governance_heading', 'Bylaws & Code of Conduct', $rgvdsa_seed_about_id );
 	update_field( 'field_rgvdsa_about_governance_intro', 'The chapter is governed by its members through documents we debate and vote on together. Everything is public.', $rgvdsa_seed_about_id );
 	update_field( 'field_rgvdsa_about_governance_docs', array(
@@ -900,17 +887,21 @@ if ( $rgvdsa_seed_about_id ) {
 $rgvdsa_seed_gi_id = rgvdsa_seed_template_page( 'get-involved', 'Get involved', 'page-templates/get-involved.php' );
 if ( $rgvdsa_seed_gi_id ) {
 	update_field( 'field_rgvdsa_interior_lede', "No experience needed, no perfect politics required. If you want a better Valley, there's a place for you here.", $rgvdsa_seed_gi_id );
+	update_field( 'field_rgvdsa_gi_join_heading', 'How to join', $rgvdsa_seed_gi_id );
 	update_field( 'field_rgvdsa_gi_steps', array(
 		array( 'title' => 'Become a DSA member', 'body' => 'Sign up through national DSA and select the Rio Grande Valley chapter. Dues are sliding-scale — pay what you can, and <strong>no one is turned away for lack of funds</strong>.', 'link_label' => 'Join at dsausa.org →', 'link_url' => 'https://act.dsausa.org/donate/membership' ),
 		array( 'title' => 'Come to RGV-DSA 101', 'body' => "Our intro session for new and curious folks — what democratic socialism means, what our chapter is working on, and how to plug in. Offered virtually and in person, multiple times a month. You don't have to be a member yet to attend.", 'link_label' => 'Find a session →', 'link_url' => '/calendar/' ),
 		array( 'title' => 'Get onboarded & plug in', 'body' => "After 101, we'll add you to our WhatsApp and match you with a committee that fits your interests and capacity — whether that's an hour a month or a night a week.", 'link_label' => 'Browse committees ↓', 'link_url' => '#committees' ),
 	), $rgvdsa_seed_gi_id );
+	update_field( 'field_rgvdsa_gi_committees_heading', 'Committees', $rgvdsa_seed_gi_id );
 	update_field( 'field_rgvdsa_gi_committees_intro', 'Committees are where the work happens. Each one meets regularly and welcomes new members — reach out through the WhatsApp or at any general meeting.', $rgvdsa_seed_gi_id );
+	update_field( 'field_rgvdsa_gi_channels_heading', 'Communication channels', $rgvdsa_seed_gi_id );
 	update_field( 'field_rgvdsa_gi_channels', array(
 		array( 'label' => 'WhatsApp', 'desc' => 'Our main channel — members receive an invite during onboarding', 'link_label' => '', 'url' => '', 'badge' => 'Members only' ),
 		array( 'label' => 'Instagram — <span class="notranslate">@dsa_rgv</span>', 'desc' => 'Events, actions, and updates for everyone', 'link_label' => 'Follow', 'url' => 'https://www.instagram.com/dsa_rgv/', 'badge' => '' ),
 		array( 'label' => 'Email', 'desc' => 'Questions, press, and anything else', 'link_label' => 'Write us', 'url' => 'mailto:hello@example.org', 'badge' => '' ),
 	), $rgvdsa_seed_gi_id );
+	update_field( 'field_rgvdsa_gi_faq_heading', 'Common questions', $rgvdsa_seed_gi_id );
 	update_field( 'field_rgvdsa_gi_faq', array(
 		array( 'question' => 'Do I have to be a member to come to events?', 'answer' => "Nope — most of our events are open to everyone. Come to a 101 or a social, meet folks, and see if it's for you. No pressure." ),
 		array( 'question' => 'How much are dues?', 'answer' => 'Dues are sliding-scale through national DSA — most folks pay a few dollars a month. If dues are a barrier, talk to us: no one is turned away for lack of funds.' ),
@@ -922,7 +913,225 @@ if ( $rgvdsa_seed_gi_id ) {
 	update_field( 'field_rgvdsa_gi_card_body', 'Membership takes five minutes, and dues are pay-what-you-can.', $rgvdsa_seed_gi_id );
 	update_field( 'field_rgvdsa_gi_card_link_label', 'Join DSA', $rgvdsa_seed_gi_id );
 	update_field( 'field_rgvdsa_gi_card_link_url', 'https://act.dsausa.org/donate/membership', $rgvdsa_seed_gi_id );
+	update_field( 'field_rgvdsa_gi_related_links', array(
+		array( 'label' => 'Event Calendar', 'url' => '/calendar/' ),
+		array( 'label' => 'Bylaws & Code of Conduct', 'url' => '/bylaws-code-of-conduct/' ),
+		array( 'label' => 'Mission & History', 'url' => '/about/#mission' ),
+	), $rgvdsa_seed_gi_id );
 	rgvdsa_seed_log( "get-involved page copy seeded (#{$rgvdsa_seed_gi_id})" );
+}
+
+/* -------------------------------------------------------------------------
+ * 6.9 Spanish home (Polylang Pro) — language assignment, ES page + ACF copy,
+ *     and UI string translations. Idempotent: guarded by translation lookups.
+ * ---------------------------------------------------------------------- */
+
+/**
+ * Create (idempotently) a Spanish translation of an event, copying its meta so
+ * the date/location render, and linking it to the English original. Keyed by
+ * the English post_title so it survives changing IDs.
+ */
+function rgvdsa_seed_translate_event( $en_id, $es_title ) {
+	if ( pll_get_post( $en_id, 'es' ) ) {
+		return; // already translated
+	}
+	$es_id = wp_insert_post( array(
+		'post_type'    => 'event',
+		'post_status'  => 'publish',
+		'post_title'   => $es_title,
+		'post_name'    => sanitize_title( $es_title ),
+		'post_content' => get_post_field( 'post_content', $en_id ),
+	), true );
+	if ( is_wp_error( $es_id ) ) {
+		rgvdsa_seed_log( "ERROR es event '{$es_title}': " . $es_id->get_error_message() );
+		return;
+	}
+	// Copy every meta value (ACF start_datetime, city, venue, links, …).
+	foreach ( get_post_meta( $en_id ) as $key => $values ) {
+		if ( '_edit_lock' === $key || '_edit_last' === $key ) {
+			continue;
+		}
+		delete_post_meta( $es_id, $key );
+		foreach ( $values as $value ) {
+			add_post_meta( $es_id, $key, maybe_unserialize( $value ) );
+		}
+	}
+	pll_set_post_language( $es_id, 'es' );
+	pll_save_post_translations( array( 'en' => $en_id, 'es' => $es_id ) );
+	rgvdsa_seed_log( "polylang: es event '{$es_title}' created (#{$es_id})" );
+}
+
+/**
+ * Seed source→translation string pairs into Polylang's per-language MO store.
+ * These power `pll__()` in the theme (see inc/i18n.php).
+ */
+function rgvdsa_seed_string_translations( $lang_slug, $pairs ) {
+	if ( ! function_exists( 'PLL' ) || ! class_exists( 'PLL_MO' ) ) {
+		rgvdsa_seed_log( 'WARN: Polylang PLL_MO unavailable — strings not translated' );
+		return;
+	}
+	$lang = PLL()->model->get_language( $lang_slug );
+	if ( ! $lang ) {
+		rgvdsa_seed_log( "WARN: Polylang language '{$lang_slug}' not found — strings not translated" );
+		return;
+	}
+	$mo = new PLL_MO();
+	$mo->import_from_db( $lang );
+	foreach ( $pairs as $source => $translation ) {
+		$mo->add_entry( $mo->make_entry( $source, $translation ) );
+	}
+	$mo->export_to_db( $lang );
+	rgvdsa_seed_log( 'polylang: ' . count( $pairs ) . " '{$lang_slug}' string translations seeded" );
+}
+
+if ( function_exists( 'pll_set_post_language' ) && function_exists( 'pll_save_post_translations' ) ) {
+
+	// 6.9a — Every published page/post/event needs a language so Polylang's
+	// per-language query filter includes it. Backfill 'en' where missing.
+	$rgvdsa_seed_all = get_posts( array(
+		'post_type'   => array( 'page', 'post', 'event' ),
+		'post_status' => 'publish',
+		'numberposts' => -1,
+		'fields'      => 'ids',
+	) );
+	$rgvdsa_seed_tagged = 0;
+	foreach ( $rgvdsa_seed_all as $rgvdsa_pid ) {
+		if ( ! pll_get_post_language( $rgvdsa_pid ) ) {
+			pll_set_post_language( $rgvdsa_pid, 'en' );
+			++$rgvdsa_seed_tagged;
+		}
+	}
+	rgvdsa_seed_log( "polylang: backfilled 'en' on {$rgvdsa_seed_tagged} untagged posts" );
+
+	// 6.9b — Spanish translation of the static front page.
+	$rgvdsa_seed_front_id = (int) get_option( 'page_on_front' );
+	if ( $rgvdsa_seed_front_id ) {
+		if ( ! pll_get_post_language( $rgvdsa_seed_front_id ) ) {
+			pll_set_post_language( $rgvdsa_seed_front_id, 'en' );
+		}
+
+		$rgvdsa_seed_es_home = pll_get_post( $rgvdsa_seed_front_id, 'es' );
+		if ( ! $rgvdsa_seed_es_home ) {
+			$rgvdsa_seed_es_home = wp_insert_post( array(
+				'post_type'    => 'page',
+				'post_status'  => 'publish',
+				'post_title'   => 'Inicio',
+				'post_name'    => 'inicio',
+				'post_content' => get_post_field( 'post_content', $rgvdsa_seed_front_id ),
+			), true );
+			if ( is_wp_error( $rgvdsa_seed_es_home ) ) {
+				rgvdsa_seed_log( 'ERROR es home: ' . $rgvdsa_seed_es_home->get_error_message() );
+				$rgvdsa_seed_es_home = 0;
+			} else {
+				pll_set_post_language( $rgvdsa_seed_es_home, 'es' );
+				pll_save_post_translations( array(
+					'en' => $rgvdsa_seed_front_id,
+					'es' => $rgvdsa_seed_es_home,
+				) );
+				$rgvdsa_seed_tmpl = get_post_meta( $rgvdsa_seed_front_id, '_wp_page_template', true );
+				if ( $rgvdsa_seed_tmpl ) {
+					update_post_meta( $rgvdsa_seed_es_home, '_wp_page_template', $rgvdsa_seed_tmpl );
+				}
+				rgvdsa_seed_log( "polylang: es home created (#{$rgvdsa_seed_es_home})" );
+			}
+		} else {
+			rgvdsa_seed_log( "polylang: es home exists (#{$rgvdsa_seed_es_home})" );
+		}
+
+		// 6.9c — Spanish front-page ACF copy (mirrors the EN fields above).
+		if ( $rgvdsa_seed_es_home ) {
+			update_field( 'field_rgvdsa_hero_heading', 'Otro mundo es posible. Lo estamos construyendo en el Valle.', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_hero_lede', 'Somos el capítulo del Valle del Río Grande de los Socialistas Democráticos de América —la organización socialista más grande de los Estados Unidos— organizando el poder de la clase trabajadora en nuestras comunidades fronterizas.', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_hero_cta_primary_label', 'Únete al DSA', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_hero_cta_primary_url', 'https://act.dsausa.org/donate/membership', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_hero_cta_secondary_label', 'Ven a una reunión ↓', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_hero_cta_secondary_url', '#events', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_hero_badge', '¿Nuevo por aquí? Empieza con <strong class="notranslate">RGV-DSA 101</strong> — no se necesita experiencia.', $rgvdsa_seed_es_home );
+
+			update_field( 'field_rgvdsa_who_eyebrow', 'Quiénes somos', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_who_heading', 'Somos <span class="notranslate">DSA-RGV</span>', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_who_p1', 'El Valle del Río Grande es una de las regiones con mayor desigualdad económica del país, pero no tiene por qué seguir así. Como socialistas democráticos, construimos poder para la clase trabajadora y desafiamos el dominio de los ricos y poderosos en nuestras comunidades fronterizas.', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_who_p2', 'Juntos luchamos por un Valle donde la gente trabajadora tenga poder real, y donde todas las personas puedan vivir con dignidad, sin importar dónde nacieron ni cómo llegaron aquí.', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_who_link_label', 'Más sobre nuestro capítulo →', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_who_link_url', '/about/', $rgvdsa_seed_es_home );
+
+			update_field( 'field_rgvdsa_home_involved_eyebrow', 'Participa', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_home_involved_heading', 'Tres pasos para empezar a organizar', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_home_steps', array(
+				array( 'title' => 'Únete al DSA', 'body' => 'Hazte miembro del DSA nacional —las cuotas son de escala móvil— y tu membresía te conecta automáticamente con nuestro capítulo.', 'link_label' => 'Regístrate en dsausa.org →', 'link_url' => 'https://act.dsausa.org/donate/membership' ),
+				array( 'title' => 'Ven a RGV-DSA 101', 'body' => 'Nuestra sesión introductoria para gente nueva y curiosa: qué hacemos, cómo funciona el capítulo y cómo puedes sumarte. Opciones virtuales y presenciales.', 'link_label' => 'Encuentra una sesión →', 'link_url' => '#events' ),
+				array( 'title' => 'Súmate al trabajo', 'body' => 'Únete a un comité, entra a nuestro WhatsApp y participa. Los miembros reciben una invitación a nuestros canales de comunicación tras la orientación.', 'link_label' => 'Ver comités →', 'link_url' => '/get-involved/#committees' ),
+			), $rgvdsa_seed_es_home );
+
+			// Reuse the English "who we are" illustration on the ES page.
+			$rgvdsa_seed_about_img = get_field( 'about_image', $rgvdsa_seed_front_id, false );
+			if ( $rgvdsa_seed_about_img ) {
+				update_field( 'field_rgvdsa_about_image', $rgvdsa_seed_about_img, $rgvdsa_seed_es_home );
+			}
+			rgvdsa_seed_log( "polylang: es home ACF copy seeded (#{$rgvdsa_seed_es_home})" );
+		}
+	} else {
+		rgvdsa_seed_log( 'WARN: no page_on_front — Spanish home not seeded' );
+	}
+
+	// 6.9d — UI string translations (chrome + home section labels / empty states).
+	rgvdsa_seed_string_translations( 'es', array(
+		'About'                  => 'Acerca de',
+		'Calendar'               => 'Calendario',
+		'Blog'                   => 'Blog',
+		'Get Involved'           => 'Participa',
+		'Join DSA'               => 'Únete al DSA',
+		'About the Chapter'      => 'Sobre el capítulo',
+		'Mission & History'      => 'Misión e historia',
+		'Counties We Serve'      => 'Condados que servimos',
+		'Committees'             => 'Comités',
+		'Bylaws & Code of Conduct' => 'Estatutos y código de conducta',
+		'FAQ'                    => 'Preguntas frecuentes',
+		'Upcoming events'        => 'Próximos eventos',
+		'Full calendar →'        => 'Calendario completo →',
+		'No events on the books yet' => 'Aún no hay eventos programados',
+		'View event'             => 'Ver evento',
+		'From the blog'          => 'Del blog',
+		'All posts →'            => 'Todas las publicaciones →',
+		'Read the post →'        => 'Leer la publicación →',
+		'Posts coming soon'      => 'Publicaciones muy pronto',
+		'The chapter is writing its first dispatches — check back shortly.' => 'El capítulo está escribiendo sus primeras publicaciones — vuelve pronto.',
+		'Follow along:'          => 'Síguenos:',
+		'Email us'               => 'Escríbenos',
+		'Communities we serve'   => 'Comunidades que servimos',
+	) );
+
+	// 6.9e — Spanish translations of the upcoming events (home teasers). Keyed
+	// by English title so re-runs and ID shifts stay stable.
+	$rgvdsa_seed_es_events = array(
+		'Community Fridge Restock & Cleanup'        => 'Reabastecimiento y limpieza del refrigerador comunitario',
+		'Know Your Rights at Work'                  => 'Conoce tus derechos en el trabajo',
+		'July General Meeting'                      => 'Reunión general de julio',
+		'RGV-DSA 101 (New Member Orientation)'      => 'RGV-DSA 101 (Orientación para nuevos miembros)',
+		'Brake Light Clinic'                        => 'Clínica de luces de freno',
+		'Candidate Endorsement Forum'               => 'Foro de respaldo a candidatos',
+		'Reading Circle: A People’s Guide to Capitalism' => 'Círculo de lectura: una guía popular del capitalismo',
+		'Paleta Social'                             => 'Convivio con paletas',
+		'Picket Support Training'                   => 'Capacitación de apoyo a piquetes',
+		'August General Meeting'                    => 'Reunión general de agosto',
+		'School Supply Distro Prep'                 => 'Preparación de la distribución de útiles escolares',
+		'Voter Registration Drive'                  => 'Jornada de registro de votantes',
+		'Night School: Socialism & the Border'      => 'Escuela nocturna: el socialismo y la frontera',
+	);
+	$rgvdsa_seed_en_events = get_posts( array(
+		'post_type'   => 'event',
+		'post_status' => 'publish',
+		'numberposts' => -1,
+		'lang'        => 'en',
+	) );
+	foreach ( $rgvdsa_seed_en_events as $rgvdsa_ev ) {
+		$rgvdsa_title = html_entity_decode( $rgvdsa_ev->post_title, ENT_QUOTES, 'UTF-8' );
+		if ( isset( $rgvdsa_seed_es_events[ $rgvdsa_title ] ) ) {
+			rgvdsa_seed_translate_event( $rgvdsa_ev->ID, $rgvdsa_seed_es_events[ $rgvdsa_title ] );
+		}
+	}
+} else {
+	rgvdsa_seed_log( 'WARN: Polylang not active — Spanish home / strings not seeded' );
 }
 
 /* -------------------------------------------------------------------------

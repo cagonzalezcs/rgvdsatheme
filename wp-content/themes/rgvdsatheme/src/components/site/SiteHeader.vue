@@ -9,7 +9,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import A11yWidget from "@/components/site/A11yWidget.vue";
-import LanguageToggle from "@/components/site/LanguageToggle.vue";
+import LanguageToggle, {
+  type LanguageLink,
+} from "@/components/site/LanguageToggle.vue";
 
 interface NavLink {
   label: string;
@@ -19,21 +21,23 @@ interface NavLink {
 const props = withDefaults(
   defineProps<{
     joinUrl?: string;
+    joinLabel?: string;
+    aboutLabel?: string;
     logoUrl?: string;
     homeUrl?: string;
     aboutItems?: NavLink[];
     navItems?: NavLink[];
     currentPath?: string;
-    /** Spanish site toggle — a real link only when enabled and a URL exists */
-    esEnabled?: boolean;
-    esUrl?: string;
+    /** One entry per site language (Polylang) — drives the header switcher. */
+    languages?: LanguageLink[];
   }>(),
   {
     joinUrl: "https://act.dsausa.org/donate/membership",
+    joinLabel: "Join DSA",
+    aboutLabel: "About",
     logoUrl: "",
     homeUrl: "/",
-    esEnabled: false,
-    esUrl: "",
+    languages: () => [],
     aboutItems: () => [
       { label: "About the Chapter", href: "/about/" },
       { label: "Mission & History", href: "/about/#mission" },
@@ -57,7 +61,7 @@ const navLinkClass =
 
 // Below lg the About▾ hover-dropdown collapses to a plain About link (05 §3a).
 const flatNav = computed<NavLink[]>(() => [
-  { label: "About", href: "/about/" },
+  { label: props.aboutLabel, href: "/about/" },
   ...props.navItems,
 ]);
 
@@ -145,7 +149,7 @@ watch(
           {{ item.label }}
         </a>
         <div class="flex items-center justify-between gap-3 px-5 py-3.5">
-          <LanguageToggle :es-enabled="esEnabled" :es-url="esUrl" on-light />
+          <LanguageToggle :languages="languages" on-light />
           <A11yWidget />
         </div>
         <div class="px-5 pb-5 pt-1">
@@ -155,7 +159,7 @@ watch(
             rel="noopener"
             class="block rounded-full bg-red px-6 py-3.5 text-center text-base font-bold text-white no-underline hover:bg-red-hover"
           >
-            Join DSA
+            {{ joinLabel }}
           </a>
         </div>
       </nav>
@@ -180,7 +184,7 @@ watch(
           />
         </a>
         <div class="flex items-center gap-2.5">
-          <LanguageToggle :es-enabled="esEnabled" :es-url="esUrl" />
+          <LanguageToggle :languages="languages" />
           <A11yWidget />
           <a
             :href="joinUrl"
@@ -188,7 +192,7 @@ watch(
             rel="noopener"
             class="rounded-full bg-white px-5 py-2.5 text-[0.95rem] font-bold text-red no-underline hover:text-red-hover hover:shadow-[0_0_0_3px_rgba(28,25,23,0.25)]"
           >
-            Join DSA
+            {{ joinLabel }}
           </a>
         </div>
       </div>
@@ -236,7 +240,7 @@ watch(
           <DropdownMenuTrigger
             :class="`cursor-pointer border-0 bg-transparent ${navLinkClass}`"
           >
-            About&nbsp;▾
+            {{ aboutLabel }}&nbsp;▾
           </DropdownMenuTrigger>
           <DropdownMenuContent
             align="start"
@@ -274,7 +278,7 @@ watch(
       </nav>
 
       <div class="flex flex-wrap items-center gap-2.5">
-        <LanguageToggle :es-enabled="esEnabled" :es-url="esUrl" />
+        <LanguageToggle :languages="languages" />
         <A11yWidget />
         <a
           :href="joinUrl"
@@ -282,7 +286,7 @@ watch(
           rel="noopener"
           class="rounded-full bg-white px-[22px] py-2.5 text-[0.95rem] font-bold text-red no-underline hover:text-red-hover hover:shadow-[0_0_0_3px_rgba(28,25,23,0.25)]"
         >
-          Join DSA
+          {{ joinLabel }}
         </a>
       </div>
     </div>

@@ -13,7 +13,6 @@ import { nextTick } from "vue";
 import { ApiError, fetchSinglePost, isAbortError } from "@/lib/api";
 import { mountIslands, mountIslandsAsync, unmountIslands } from "./islands";
 import { setLocation } from "@/lib/location";
-import { isSpanishPreferred } from "./translation";
 
 /** Resolved destination content — either a parsed HTML document or a built,
  * ready-to-mount node from the JSON fast-path. */
@@ -86,11 +85,6 @@ export function initNavigation(): void {
 function onClick(e: MouseEvent): void {
   if (e.defaultPrevented) return; // an island (pagination, dropdown) already handled it
   if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-  // Under the ES preference the nav layer stands down entirely: partial swaps
-  // would splice untranslated EN content into a Google-translated page (home →
-  // inner) or land on home without the gtranslate bootstrap (inner → home).
-  // Full loads are correct-by-construction while translation is active.
-  if (isSpanishPreferred()) return;
 
   const a = (e.target as Element | null)?.closest("a");
   if (!a) return;
@@ -350,12 +344,6 @@ function syncHead(doc: Document): void {
   document.body.className = doc.body.className;
   const tmpl = doc.body.getAttribute("data-template");
   if (tmpl !== null) document.body.setAttribute("data-template", tmpl);
-
-  // Translation scope must track the destination so an EN visitor who swaps
-  // onto home can still flip ES (translation.ts falls back to cookie+reload
-  // there, since the swap can't add the gtranslate scripts).
-  const scope = doc.body.getAttribute("data-translation-scope");
-  if (scope !== null) document.body.setAttribute("data-translation-scope", scope);
 }
 
 /** Replace a single unique head element's attributes from the fetched doc. */
@@ -385,12 +373,6 @@ function syncMetaGroup(selector: string, doc: Document): void {
 
 function onPopState(): void {
   const url = new URL(window.location.href);
-  // History entries pushed while EN can fire after a mid-session ES flip —
-  // same standdown rule as clicks: hand the traversal to a real load.
-  if (isSpanishPreferred()) {
-    window.location.reload();
-    return;
-  }
   void navigate(url, { push: false }).then(() => {
     const y = scrollPositions.get(scrollKey(url)) ?? 0;
     window.scrollTo(0, y);
@@ -411,7 +393,6 @@ function queueScrollWrite(): void {
 // ---------------------------------------------------------------------------
 
 function onPrefetchIntent(e: Event): void {
-  if (isSpanishPreferred()) return; // standdown: clicks won't be intercepted
   if (!shouldPrefetch()) return;
   const a = (e.target as Element | null)?.closest("a");
   if (!a) return;

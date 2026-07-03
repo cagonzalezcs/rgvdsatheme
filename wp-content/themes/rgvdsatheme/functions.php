@@ -27,4 +27,4 @@ require_once __DIR__ . '/inc/rest.php';
 require_once __DIR__ . '/inc/interior.php';
 require_once __DIR__ . '/inc/pages.php';
 require_once __DIR__ . '/inc/seo.php';
-require_once __DIR__ . '/inc/translation.php';
+require_once __DIR__ . '/inc/i18n.php';
