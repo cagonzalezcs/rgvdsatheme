@@ -674,6 +674,15 @@ rgvdsa_seed_menu( 'Primary', 'primary', array(
 	'Get Involved' => '/get-involved/',
 ) );
 
+rgvdsa_seed_menu( 'Header — About', 'about', array(
+	'About the Chapter'        => '/about/#chapter',
+	'Mission & History'        => '/about/#mission',
+	'Counties We Serve'        => '/about/#counties',
+	'Committees'               => '/about/#committees',
+	'Bylaws & Code of Conduct' => '/about/#bylaws',
+	'FAQ'                      => '/about/#faq',
+) );
+
 rgvdsa_seed_menu( 'Footer — About', 'footer_about', array(
 	'About the Chapter'        => '/about/',
 	'Mission & History'        => '/about/#mission',
@@ -729,6 +738,11 @@ update_field( 'field_rgvdsa_options_counties', array_map(
 	)
 ), 'option' );
 update_field( 'field_rgvdsa_options_es_enabled', 1, 'option' );
+update_field( 'field_rgvdsa_options_footer_tagline', 'Organizing across Hidalgo, Cameron, Willacy, and Starr counties.', 'option' );
+update_field( 'field_rgvdsa_options_newhere_heading', 'New here?', 'option' );
+update_field( 'field_rgvdsa_options_newhere_body', 'Come to an <span class="notranslate">RGV-DSA 101</span> — our intro session for new and curious folks.', 'option' );
+update_field( 'field_rgvdsa_options_newhere_link_label', 'Find a session', 'option' );
+update_field( 'field_rgvdsa_options_newhere_link_url', '/calendar/', 'option' );
 rgvdsa_seed_log( 'chapter settings options seeded' );
 
 /* --- GTranslate plugin option, pinned (translations-layer). EN+ES only,
@@ -763,7 +777,24 @@ if ( $rgvdsa_seed_front_id ) {
 	update_field( 'field_rgvdsa_hero_cta_primary_url', 'https://act.dsausa.org/donate/membership', $rgvdsa_seed_front_id );
 	update_field( 'field_rgvdsa_hero_cta_secondary_label', 'Come to a meeting ↓', $rgvdsa_seed_front_id );
 	update_field( 'field_rgvdsa_hero_cta_secondary_url', '#events', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_hero_badge', 'New here? Start with <strong class="notranslate">RGV-DSA 101</strong> — no experience needed.', $rgvdsa_seed_front_id );
 	rgvdsa_seed_log( "home hero copy seeded (#{$rgvdsa_seed_front_id})" );
+
+	// Home sections (Who we are + Get involved steps).
+	update_field( 'field_rgvdsa_who_eyebrow', 'Who we are', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_who_heading', 'We are <span class="notranslate">DSA-RGV</span>', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_who_p1', 'The RGV is one of the most economically unequal regions in the country — but it doesn’t have to stay that way. As democratic socialists, we’re building working-class power to challenge the dominance of the wealthy and the powerful across our border communities.', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_who_p2', 'Together, we’re fighting for a Valley where working people have real power, and where everyone can live a dignified life — regardless of where they were born or how they got here.', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_who_link_label', 'More about our chapter →', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_who_link_url', '/about/', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_home_involved_eyebrow', 'Get involved', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_home_involved_heading', 'Three steps to start organizing', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_home_steps', array(
+		array( 'title' => 'Join DSA', 'body' => 'Become a national DSA member — dues are sliding-scale, and membership automatically connects you to our chapter.', 'link_label' => 'Sign up at dsausa.org →', 'link_url' => 'https://act.dsausa.org/donate/membership' ),
+		array( 'title' => 'Come to RGV-DSA 101', 'body' => 'Our intro session for new and curious folks — what we do, how the chapter works, and how you can plug in. Virtual and in-person options.', 'link_label' => 'Find a session →', 'link_url' => '#events' ),
+		array( 'title' => 'Plug into the work', 'body' => 'Join a committee, get on our WhatsApp, and show up. Members receive an invite to our communication channels after onboarding.', 'link_label' => 'See committees →', 'link_url' => '/get-involved/#committees' ),
+	), $rgvdsa_seed_front_id );
+	rgvdsa_seed_log( "home sections copy seeded (#{$rgvdsa_seed_front_id})" );
 } else {
 	rgvdsa_seed_log( 'WARN: no page_on_front — home hero copy not seeded (assign a static front page)' );
 }
@@ -782,6 +813,116 @@ if ( $rgvdsa_seed_bylaws && $rgvdsa_seed_pdf_id ) {
 	rgvdsa_seed_log( "bylaws documents seeded (#{$rgvdsa_seed_bylaws->ID}, 3 rows)" );
 } else {
 	rgvdsa_seed_log( 'WARN: bylaws-code-of-conduct page or placeholder PDF missing — documents not seeded' );
+}
+
+/* -------------------------------------------------------------------------
+ * 6.5 About + Get Involved pages — template assignment (D9) + section copy.
+ * ---------------------------------------------------------------------- */
+
+function rgvdsa_seed_template_page( $slug, $title, $template ) {
+	$page = get_page_by_path( $slug );
+	if ( ! $page ) {
+		$page_id = wp_insert_post( array(
+			'post_type'   => 'page',
+			'post_status' => 'publish',
+			'post_title'  => $title,
+			'post_name'   => $slug,
+		), true );
+		if ( is_wp_error( $page_id ) ) {
+			rgvdsa_seed_log( "ERROR page {$slug}: " . $page_id->get_error_message() );
+			return 0;
+		}
+		rgvdsa_seed_log( "page created: {$slug} (#{$page_id})" );
+	} else {
+		$page_id = (int) $page->ID;
+		rgvdsa_seed_log( "page exists: {$slug} (#{$page_id})" );
+	}
+
+	update_post_meta( $page_id, '_wp_page_template', $template );
+	rgvdsa_seed_log( "{$slug} page template assigned: {$template}" );
+
+	return $page_id;
+}
+
+$rgvdsa_seed_about_id = rgvdsa_seed_template_page( 'about', 'About RGV DSA', 'page-templates/about.php' );
+if ( $rgvdsa_seed_about_id ) {
+	update_field( 'field_rgvdsa_interior_lede', 'A member-run chapter of the Democratic Socialists of America, organizing for working people across the Rio Grande Valley.', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_mission_eyebrow', 'What we believe', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_mission_body', 'Democratic socialists believe that our economy should be built democratically, by and for working people — not by billionaires for profit.', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_chapter_heading', 'About the Chapter', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_intro_p1', 'The Rio Grande Valley Democratic Socialists of America (DSA RGV) is a local chapter of the nation’s largest socialist organization. Based primarily in McAllen, Texas, our grassroots group focuses on progressive labor organizing, mutual aid, and socialist political education throughout South Texas.', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_intro_p2', 'Everything we do is member-led, member-funded, and open to anyone who wants to build a Valley that works for working people. We regularly host community meetings — often in McAllen — to share updates, plan campaigns, and hold political education lectures. You can find our organizing platforms on the DSA Rio Grande Valley Action Network, and if you’re a student, we operate a collegiate branch: the UTRGV Young Democratic Socialists of America.', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_ctas', array(
+		array( 'label' => 'Come to a meeting', 'url' => '/calendar/' ),
+		array( 'label' => 'Get involved', 'url' => '/get-involved/' ),
+		array( 'label' => 'Students: UTRGV YDSA', 'url' => '/get-involved/' ),
+	), $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_history_heading', 'Mission & History', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_history_body', 'We fight for a Rio Grande Valley where housing, healthcare, and a dignified living are guaranteed — and we believe the people who live and work here should be the ones deciding the Valley’s future. Our work centers on three pillars: labor organizing, mutual aid, and political education.', $rgvdsa_seed_about_id );
+	// 20XX years are chapter-copy placeholders — the chapter fills them in via wp-admin.
+	update_field( 'field_rgvdsa_about_timeline', array(
+		array( 'year' => '1982', 'text' => 'The Democratic Socialists of America is founded, growing into the largest socialist organization in the United States.' ),
+		array( 'year' => '20XX', 'text' => 'Valley organizers form an organizing committee and begin meeting in McAllen. <em class="text-[#78716c]">(Year and details to be filled in by the chapter.)</em>' ),
+		array( 'year' => '20XX', 'text' => 'DSA RGV is chartered as an official local chapter, organizing across four counties in South Texas. <em class="text-[#78716c]">(Year and details to be filled in by the chapter.)</em>' ),
+	), $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_counties_heading', 'Counties We Serve', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_counties_intro', 'One chapter, four counties. Wherever you are in the Valley, you’re covered — and if you can help us organize deeper in your county, we want to hear from you.', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_county_cards', array(
+		array( 'name' => 'Hidalgo', 'cities' => 'McAllen · Edinburg · Mission · Pharr', 'note' => 'Home base — most meetings held here' ),
+		array( 'name' => 'Cameron', 'cities' => 'Brownsville · Harlingen · San Benito', 'note' => '' ),
+		array( 'name' => 'Willacy', 'cities' => 'Raymondville · Lyford', 'note' => '' ),
+		array( 'name' => 'Starr', 'cities' => 'Rio Grande City · Roma', 'note' => '' ),
+	), $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_committees_heading', 'Committees', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_committees_intro', 'Committees are where the work happens. Each one meets regularly and welcomes new members.', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_governance_heading', 'Bylaws & Code of Conduct', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_governance_intro', 'The chapter is governed by its members through documents we debate and vote on together. Everything is public.', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_governance_docs', array(
+		array( 'title' => 'Chapter Bylaws', 'covers' => 'How the chapter runs: officers, elections, quorum, committees, and how decisions get made.', 'action' => 'Read', 'url' => '/bylaws-code-of-conduct/#documents' ),
+		array( 'title' => 'Code of Conduct', 'covers' => 'What we expect of each other in every chapter space — meetings, actions, and online.', 'action' => 'Read', 'url' => '/bylaws-code-of-conduct/#documents' ),
+		array( 'title' => 'Grievance Policy', 'covers' => 'How to report harm and how the chapter handles conflict, confidentially and fairly.', 'action' => 'Read', 'url' => '/bylaws-code-of-conduct/#grievance' ),
+		array( 'title' => 'Meeting Minutes', 'covers' => 'Records and resolutions from general meetings, available to all members.', 'action' => 'Browse', 'url' => '/bylaws-code-of-conduct/#documents' ),
+	), $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_faq_heading', 'FAQ', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_faq', array(
+		array( 'question' => 'Do I have to be a member to come to events?', 'answer' => "Nope — most of our events are open to everyone. Come to a 101 or a social, meet folks, and see if it's for you." ),
+		array( 'question' => 'How much are dues?', 'answer' => 'Dues are sliding-scale through national DSA — most folks pay a few dollars a month. No one is turned away for inability to pay.' ),
+		array( 'question' => 'How do I switch to a monthly or Solidarity Dues rate?', 'answer' => 'Enter the email associated with your membership in the national dues form with your new dues amount, and your current dues will be canceled and updated.' ),
+		array( 'question' => "I've never done anything political before. Is that okay?", 'answer' => "More than okay — it's the norm. Most members joined without any organizing experience. RGV-DSA 101 exists exactly for this." ),
+		array( 'question' => 'Can I participate without being publicly visible?', 'answer' => "Yes. There are plenty of ways to contribute behind the scenes, and we take members' privacy and safety seriously." ),
+		array( 'question' => 'How much time does membership take?', 'answer' => 'As much or as little as you have. Some members show up to one event a month; others help lead committees.' ),
+	), $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_dues_heading', 'Switching your dues rate?', $rgvdsa_seed_about_id );
+	update_field( 'field_rgvdsa_about_dues_body', 'Already a member but switching to a monthly or Solidarity Dues rate? Enter the email associated with your membership in this form with your new dues amount, and your current dues will be canceled and updated.', $rgvdsa_seed_about_id );
+	rgvdsa_seed_log( "about page copy seeded (#{$rgvdsa_seed_about_id})" );
+}
+
+$rgvdsa_seed_gi_id = rgvdsa_seed_template_page( 'get-involved', 'Get involved', 'page-templates/get-involved.php' );
+if ( $rgvdsa_seed_gi_id ) {
+	update_field( 'field_rgvdsa_interior_lede', "No experience needed, no perfect politics required. If you want a better Valley, there's a place for you here.", $rgvdsa_seed_gi_id );
+	update_field( 'field_rgvdsa_gi_steps', array(
+		array( 'title' => 'Become a DSA member', 'body' => 'Sign up through national DSA and select the Rio Grande Valley chapter. Dues are sliding-scale — pay what you can, and <strong>no one is turned away for lack of funds</strong>.', 'link_label' => 'Join at dsausa.org →', 'link_url' => 'https://act.dsausa.org/donate/membership' ),
+		array( 'title' => 'Come to RGV-DSA 101', 'body' => "Our intro session for new and curious folks — what democratic socialism means, what our chapter is working on, and how to plug in. Offered virtually and in person, multiple times a month. You don't have to be a member yet to attend.", 'link_label' => 'Find a session →', 'link_url' => '/calendar/' ),
+		array( 'title' => 'Get onboarded & plug in', 'body' => "After 101, we'll add you to our WhatsApp and match you with a committee that fits your interests and capacity — whether that's an hour a month or a night a week.", 'link_label' => 'Browse committees ↓', 'link_url' => '#committees' ),
+	), $rgvdsa_seed_gi_id );
+	update_field( 'field_rgvdsa_gi_committees_intro', 'Committees are where the work happens. Each one meets regularly and welcomes new members — reach out through the WhatsApp or at any general meeting.', $rgvdsa_seed_gi_id );
+	update_field( 'field_rgvdsa_gi_channels', array(
+		array( 'label' => 'WhatsApp', 'desc' => 'Our main channel — members receive an invite during onboarding', 'link_label' => '', 'url' => '', 'badge' => 'Members only' ),
+		array( 'label' => 'Instagram — <span class="notranslate">@dsa_rgv</span>', 'desc' => 'Events, actions, and updates for everyone', 'link_label' => 'Follow', 'url' => 'https://www.instagram.com/dsa_rgv/', 'badge' => '' ),
+		array( 'label' => 'Email', 'desc' => 'Questions, press, and anything else', 'link_label' => 'Write us', 'url' => 'mailto:hello@example.org', 'badge' => '' ),
+	), $rgvdsa_seed_gi_id );
+	update_field( 'field_rgvdsa_gi_faq', array(
+		array( 'question' => 'Do I have to be a member to come to events?', 'answer' => "Nope — most of our events are open to everyone. Come to a 101 or a social, meet folks, and see if it's for you. No pressure." ),
+		array( 'question' => 'How much are dues?', 'answer' => 'Dues are sliding-scale through national DSA — most folks pay a few dollars a month. If dues are a barrier, talk to us: no one is turned away for lack of funds.' ),
+		array( 'question' => "I've never done anything political before. Is that okay?", 'answer' => "More than okay — it's the norm. Most members joined without any organizing experience. RGV-DSA 101 exists exactly for this, and committees will teach you everything as you go." ),
+		array( 'question' => 'Can I participate without being publicly visible?', 'answer' => "Yes. There are plenty of ways to contribute behind the scenes, and we take members' privacy and safety seriously. Talk to us about what you're comfortable with." ),
+		array( 'question' => 'How much time does membership take?', 'answer' => "As much or as little as you have. Some members show up to one event a month; others help lead committees. Capacity changes — that's fine. The work is a marathon, not a sprint." ),
+	), $rgvdsa_seed_gi_id );
+	update_field( 'field_rgvdsa_gi_card_heading', 'Ready right now?', $rgvdsa_seed_gi_id );
+	update_field( 'field_rgvdsa_gi_card_body', 'Membership takes five minutes, and dues are pay-what-you-can.', $rgvdsa_seed_gi_id );
+	update_field( 'field_rgvdsa_gi_card_link_label', 'Join DSA', $rgvdsa_seed_gi_id );
+	update_field( 'field_rgvdsa_gi_card_link_url', 'https://act.dsausa.org/donate/membership', $rgvdsa_seed_gi_id );
+	rgvdsa_seed_log( "get-involved page copy seeded (#{$rgvdsa_seed_gi_id})" );
 }
 
 /* -------------------------------------------------------------------------

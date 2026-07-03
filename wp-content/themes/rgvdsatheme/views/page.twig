@@ -98,10 +98,11 @@
 					<a href="/about/#faq" class="rounded-[8px] px-3.5 py-2 text-[0.95rem] font-semibold text-ink no-underline hover:bg-white hover:text-red">FAQ</a>
 				</nav>
 
+				{# "New here?" card — Chapter Settings (inc/options.php), shared with page-about.twig. #}
 				<div class="flex flex-col gap-3 rounded-[16px] bg-ink p-6 text-white" data-tone="ink">
-					<div class="font-display text-[0.98rem] font-bold">New here?</div>
-					<p class="m-0 text-[0.9rem] leading-[1.6] text-muted-on-ink">Come to an <span class="notranslate">RGV-DSA 101</span> &mdash; our intro session for new and curious folks.</p>
-					<a href="/calendar/" class="self-start rounded-full bg-white px-[18px] py-[9px] text-[0.88rem] font-bold text-ink no-underline transition-colors hover:bg-pink">Find a session</a>
+					<div class="font-display text-[0.98rem] font-bold">{{ newhere.heading }}</div>
+					<p class="m-0 text-[0.9rem] leading-[1.6] text-muted-on-ink">{{ newhere.body }}</p>
+					<a href="{{ newhere.url }}" class="self-start rounded-full bg-white px-[18px] py-[9px] text-[0.88rem] font-bold text-ink no-underline transition-colors hover:bg-pink">{{ newhere.link_label }}</a>
 				</div>
 			</aside>
 

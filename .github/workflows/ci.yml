@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'cg/**', 'feat/**']
+  pull_request:
+
+defaults:
+  run:
+    working-directory: wp-content/themes/rgvdsatheme
+
+jobs:
+  js:
+    name: Lint / typecheck / vitest / build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: wp-content/themes/rgvdsatheme/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build # includes vue-tsc typecheck
+
+  php:
+    name: PHPUnit (WorDBless)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+      - uses: ramsey/composer-install@v3
+        with:
+          working-directory: wp-content/themes/rgvdsatheme
+      - run: composer test

@@ -1,5 +1,59 @@
 {% extends "base.twig" %}
 
+{#
+  404 Not Found. Ported from the Claude Design project (404.dc.html).
+  Self-contained page: a full-bleed brand-red hero (custom — not the
+  PageHeader island, which carries breadcrumbs we don't want here) followed
+  by a helpful-links card grid. 404.php sets the Timber context; inc/seo.php
+  already forces noindex,follow + empty canonical on is_404().
+#}
+
 {% block content %}
-	Sorry, we couldn't find what you're looking for.
+	{# ---- 404 hero (bright brand-red band) ---- #}
+	<section class="flex min-h-[52vh] items-center bg-brand-red px-6 pb-[104px] pt-24 text-white" data-tone="red">
+		<div class="mx-auto flex max-w-[900px] flex-col items-center gap-[22px] text-center">
+			<span class="rounded-full bg-white px-[18px] py-2 font-mono text-[0.85rem] font-bold uppercase tracking-[0.14em] text-red">Error 404</span>
+			<div aria-hidden="true" class="font-display text-[clamp(5rem,18vw,11rem)] font-black leading-[0.92] tracking-[-0.03em]">404</div>
+			<h1 class="m-0 max-w-[20ch] font-display text-[clamp(1.7rem,4vw,2.6rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">This page couldn&rsquo;t be found</h1>
+			<p class="m-0 max-w-[46ch] text-[1.35rem] leading-[1.55] text-white/90">The link may be broken or the page may have moved. Let&rsquo;s get you back to the work.</p>
+			<div class="mt-2 flex flex-wrap justify-center gap-3.5">
+				<a href="/" class="rounded-full bg-white px-[30px] py-3.5 font-display text-[1.02rem] font-bold text-red no-underline transition-shadow hover:bg-wash hover:shadow-[0_0_0_3px_rgba(28,25,23,0.22)]">Back to home</a>
+				<a href="/get-involved/" class="rounded-full border-2 border-white px-[30px] py-3.5 font-display text-[1.02rem] font-bold text-white no-underline transition-colors hover:bg-ink/20">Get involved</a>
+			</div>
+		</div>
+	</section>
+
+	{# ---- Helpful links ---- #}
+	<section class="bg-white px-6 pb-[88px] pt-16" data-tone="cream">
+		<div class="mx-auto flex max-w-[1040px] flex-col gap-7">
+			<h2 class="m-0 border-b-[3px] border-brand-red pb-3 font-display text-[1.5rem] font-extrabold tracking-[-0.01em]">Try one of these instead</h2>
+			<div class="grid gap-4 [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]">
+
+				<a href="/about/" class="flex flex-col gap-2 rounded-[14px] bg-white p-6 no-underline shadow-card transition-shadow hover:shadow-card-hover">
+					<span class="font-display text-[1.12rem] font-extrabold text-ink">About the Chapter</span>
+					<span class="text-[0.95rem] leading-[1.55] text-text-muted">Who we are and the counties we organize across.</span>
+					<span class="mt-0.5 text-[0.9rem] font-bold text-red">Learn more &rarr;</span>
+				</a>
+
+				<a href="/calendar/" class="flex flex-col gap-2 rounded-[14px] bg-white p-6 no-underline shadow-card transition-shadow hover:shadow-card-hover">
+					<span class="font-display text-[1.12rem] font-extrabold text-ink">Event Calendar</span>
+					<span class="text-[0.95rem] leading-[1.55] text-text-muted">Meetings, actions, and socials happening near you.</span>
+					<span class="mt-0.5 text-[0.9rem] font-bold text-red">See events &rarr;</span>
+				</a>
+
+				<a href="/blog/" class="flex flex-col gap-2 rounded-[14px] bg-white p-6 no-underline shadow-card transition-shadow hover:shadow-card-hover">
+					<span class="font-display text-[1.12rem] font-extrabold text-ink">Blog</span>
+					<span class="text-[0.95rem] leading-[1.55] text-text-muted">Updates, analysis, and reports from the chapter.</span>
+					<span class="mt-0.5 text-[0.9rem] font-bold text-red">Read posts &rarr;</span>
+				</a>
+
+				<a href="/get-involved/" class="flex flex-col gap-2 rounded-[14px] bg-tint p-6 no-underline shadow-card transition-shadow hover:shadow-card-hover">
+					<span class="font-display text-[1.12rem] font-extrabold text-red">Get Involved</span>
+					<span class="text-[0.95rem] leading-[1.55] text-text-muted">Join a committee and start organizing with us.</span>
+					<span class="mt-0.5 text-[0.9rem] font-bold text-red">Take action &rarr;</span>
+				</a>
+
+			</div>
+		</div>
+	</section>
 {% endblock %}

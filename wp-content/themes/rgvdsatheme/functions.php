@@ -25,5 +25,6 @@ require_once __DIR__ . '/inc/blocks.php';
 require_once __DIR__ . '/inc/blog.php';
 require_once __DIR__ . '/inc/rest.php';
 require_once __DIR__ . '/inc/interior.php';
+require_once __DIR__ . '/inc/pages.php';
 require_once __DIR__ . '/inc/seo.php';
 require_once __DIR__ . '/inc/translation.php';

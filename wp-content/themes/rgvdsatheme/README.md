@@ -45,13 +45,16 @@ Twig renders page shells; Vue mounts on `[data-vue-island]` elements:
 | `inc/rest.php` | `rgvdsa/v1` read API (`/posts`, `/posts/{slug}`, `/events`, `/categories`), transient + ETag/304 caching |
 | `inc/categories.php` | canonical category registry (`categories.json`), term-name/color merge, canonical-slug rename guard |
 | `inc/cache.php` | `rgvdsa_cache_remember()` transient helper + content-version invalidation |
-| `inc/options.php` | "Chapter Settings" ACF options page (committees, counties, contact email, newsletter URL…), the front-page Home hero group, menu locations, chrome props |
+| `inc/options.php` | "Chapter Settings" ACF options page (committees, counties, contact email, newsletter URL, footer tagline, "New here?" card…), the front-page Home hero + Home sections groups ("Who we are", "Get involved" steps), menu locations, chrome props |
 | `inc/interior.php` | governing-documents repeater, page lede + search-description overrides, and the grievance callout (toggle + wysiwyg) on pages |
+| `inc/pages.php` | About + Get Involved page ACF groups (mission band, timeline, county cards, governance docs, FAQ repeaters, join steps, channels, sidebar cards) + their Twig contexts, defaulted in PHP to the design copy |
 | `inc/seo.php` | head SEO output: meta description, canonical, robots, Open Graph/Twitter cards, JSON-LD (`wp_head` priority 5) |
 
 Template routers (`front-page.php`, `page.php`, `index.php`, `single.php`, …) expose filters (`rgvdsa/context/front_page`, `…/page`, `…/blog_archive`, `…/single`) the domain files hook to inject island props.
 
-The calendar is driven by the **"Calendar" page template** (`page-templates/calendar.php`), not a magic `calendar` slug — assign it under Page Attributes → Template (the seeder does this). Renaming the page's slug/title won't break the events wiring.
+The calendar is driven by the **"Calendar" page template** (`page-templates/calendar.php`), not a magic `calendar` slug — assign it under Page Attributes → Template (the seeder does this). Renaming the page's slug/title won't break the events wiring. **About** and **Get Involved** work the same way (`page-templates/about.php`, `page-templates/get-involved.php`): the template locates the page's ACF group and pins the view.
+
+**Editable content contract:** every content area in the templates is editable in wp-admin — ACF groups registered in PHP (`inc/`, never DB-only; `acf-json/` catches any group edited via the UI). Every field falls back in PHP to the design copy, so an empty field renders exactly the prototype. Page headers take the WP page title + the Interior "Lede" field. The header About▾ dropdown is the `about` menu location (Vue fixture fallback); the footer tagline and the shared "New here?" sidebar card live in Chapter Settings.
 
 Category slugs `chapter | poled | mutual | labor | electoral | social` are load-bearing (URLs + Vue types) — don't rename terms. Colors live on the terms (ACF color picker) and flow to the islands via props.
 

@@ -55,6 +55,8 @@ class StarterSite extends Site {
 			'contact_email'  => $this->option_field( 'contact_email', '' ),
 			'es_enabled'     => (bool) $this->option_field( 'es_enabled', false ),
 			'es_url'         => $this->option_field( 'es_url', '' ),
+			'footer_tagline' => $this->option_field( 'footer_tagline', '' ),
+			'instagram_url'  => $this->option_field( 'instagram_url', 'https://www.instagram.com/dsa_rgv/' ),
 			'committees'     => function_exists( 'rgvdsa_chapter_committees' ) ? rgvdsa_chapter_committees() : array(),
 			'socials'        => array(
 				array(
@@ -73,7 +75,10 @@ class StarterSite extends Site {
 		);
 
 		$context['header_nav_items'] = $this->menu_nav_items( $primary );
-		$context['footer_columns']   = $this->footer_columns();
+		// About▾ dropdown: `about` menu location; SiteHeader.vue's fixture
+		// default holds when no menu is assigned (same contract as navItems).
+		$context['header_about_items'] = has_nav_menu( 'about' ) ? $this->menu_nav_items( Timber::get_menu( 'about' ) ) : null;
+		$context['footer_columns']     = $this->footer_columns();
 
 		return $context;
 	}
@@ -230,6 +235,7 @@ class StarterSite extends Site {
 		register_nav_menus(
 			array(
 				'primary'          => __( 'Primary Menu', 'rgvdsatheme' ),
+				'about'            => __( 'Header — About Dropdown', 'rgvdsatheme' ),
 				'footer_about'     => __( 'Footer — About', 'rgvdsatheme' ),
 				'footer_involved'  => __( 'Footer — Get Involved', 'rgvdsatheme' ),
 				'footer_resources' => __( 'Footer — Resources', 'rgvdsatheme' ),

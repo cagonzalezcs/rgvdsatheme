@@ -79,7 +79,8 @@ const dateLine = computed(() => {
             View event
           </a>
           <a
-            :href="event.gcalUrl ?? '#'"
+            v-if="event.gcalUrl"
+            :href="event.gcalUrl"
             class="rounded-full border-2 border-red px-[22px] py-[9px] text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash"
           >
             Add to calendar

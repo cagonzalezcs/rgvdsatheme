@@ -218,6 +218,11 @@ function rgvdsa_seo_is_noindex() {
 		return true;
 	}
 
+	// Styleguide is a component demo surface, not content.
+	if ( is_page_template( 'page-templates/styleguide.php' ) ) {
+		return true;
+	}
+
 	if ( ( is_home() || is_archive() ) && ( isset( $_GET['s'] ) || isset( $_GET['category'] ) ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		return true;
 	}

@@ -55,7 +55,7 @@
 						{{ hero.cta_secondary_label }}
 					</a>
 				</div>
-				<span class="rounded-full bg-[rgba(28,25,23,0.85)] px-[18px] py-2 text-[0.95rem]">New here? Start with <strong class="notranslate">RGV-DSA 101</strong> — no experience needed.</span>
+				<span class="rounded-full bg-[rgba(28,25,23,0.85)] px-[18px] py-2 text-[0.95rem]">{{ hero.badge }}</span>
 			</div>
 			<img src="{{ site.theme.link }}/static/images/logos/logo-lg.png" alt="" aria-hidden="true"
 				class="mx-auto block h-auto w-full max-w-[150px] md:max-w-[190px] md:flex-[1_1_360px] lg:max-w-[800px]">
@@ -76,16 +76,17 @@
 	{# ============ WHO WE ARE ============ #}
 	<section id="about" class="who-we-are bg-white px-4 py-16 md:px-6 md:py-24" data-tone="cream">
 		<div class="mx-auto grid max-w-[1140px] grid-cols-1 items-center gap-10 md:gap-16 md:[grid-template-columns:minmax(300px,1.1fr)_minmax(280px,0.9fr)]">
+			{# who.* comes from inc/options.php (rgvdsa_front_who) — ACF w/ design-copy defaults. #}
 			<div class="flex flex-col gap-5">
-				<div class="text-[0.82rem] font-bold uppercase tracking-[0.14em] text-red">Who we are</div>
-				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">We are <span class="notranslate">DSA-RGV</span></h2>
+				<div class="text-[0.82rem] font-bold uppercase tracking-[0.14em] text-red">{{ who.eyebrow }}</div>
+				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">{{ who.heading }}</h2>
 				<p class="m-0 text-[1.08rem] leading-[1.75] text-text-body">
-					The RGV is one of the most economically unequal regions in the country — but it doesn&rsquo;t have to stay that way. As democratic socialists, we&rsquo;re building working-class power to challenge the dominance of the wealthy and the powerful across our border communities.
+					{{ who.p1 }}
 				</p>
 				<p class="m-0 text-[1.08rem] leading-[1.75] text-text-body">
-					Together, we&rsquo;re fighting for a Valley where working people have real power, and where everyone can live a dignified life — regardless of where they were born or how they got here.
+					{{ who.p2 }}
 				</p>
-				<a href="/about/" class="self-start text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">More about our chapter →</a>
+				<a href="{{ who.link_url }}" class="self-start text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">{{ who.link_label }}</a>
 			</div>
 			{% if about_image %}
 				<figure class="m-0 aspect-[4/3] overflow-hidden rounded-[18px] shadow-photo">
@@ -187,31 +188,29 @@
 	{# ============ GET INVOLVED STEPS ============ #}
 	<section id="get-involved" class="get-involved-steps bg-ink px-4 py-16 text-white md:px-6 md:py-24" data-tone="ink">
 		<div class="mx-auto flex max-w-[1140px] flex-col gap-12">
+			{# home_involved.* comes from inc/options.php (rgvdsa_front_involved) — ACF w/ design-copy defaults. #}
 			<div class="flex flex-col gap-3.5">
-				<div class="text-[0.82rem] font-bold uppercase tracking-[0.14em] text-pink">Get involved</div>
-				<h2 class="m-0 max-w-[20ch] font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">Three steps to start organizing</h2>
+				<div class="text-[0.82rem] font-bold uppercase tracking-[0.14em] text-pink">{{ home_involved.eyebrow }}</div>
+				<h2 class="m-0 max-w-[20ch] font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">{{ home_involved.heading }}</h2>
 			</div>
 			<div class="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-7">
-				{% set steps = [
-					{ num: '01', title: 'Join DSA', body: 'Become a national DSA member — dues are sliding-scale, and membership automatically connects you to our chapter.', link_label: 'Sign up at dsausa.org →', href: chapter.join_url, external: true },
-					{ num: '02', title: 'Come to RGV-DSA 101', body: 'Our intro session for new and curious folks — what we do, how the chapter works, and how you can plug in. Virtual and in-person options.', link_label: 'Find a session →', href: '#events', external: false },
-					{ num: '03', title: 'Plug into the work', body: 'Join a committee, get on our WhatsApp, and show up. Members receive an invite to our communication channels after onboarding.', link_label: 'See committees →', href: '/get-involved/#committees', external: false }
-				] %}
-				{% for step in steps %}
+				{% for step in home_involved.steps %}
 					<div class="step-card flex flex-col gap-3 rounded-[18px] bg-ink-card p-7">
-						<div class="font-display text-[1.7rem] font-extrabold text-pink">{{ step.num }}</div>
+						<div class="font-display text-[1.7rem] font-extrabold text-pink">{{ '%02d'|format(loop.index) }}</div>
 						<div class="text-[1.18rem] font-bold">{{ step.title }}</div>
 						<p class="m-0 text-base leading-[1.65] text-muted-on-ink">{{ step.body }}</p>
-						<a href="{{ step.href }}"{% if step.external %} target="_blank" rel="noopener"{% endif %}
-							class="mt-auto self-start text-[0.95rem] font-bold text-white underline underline-offset-4 hover:text-pink">
-							{{ step.link_label }}
-						</a>
+						{% if step.link_label and step.href %}
+							<a href="{{ step.href }}"{% if step.external %} target="_blank" rel="noopener"{% endif %}
+								class="mt-auto self-start text-[0.95rem] font-bold text-white underline underline-offset-4 hover:text-pink">
+								{{ step.link_label }}
+							</a>
+						{% endif %}
 					</div>
 				{% endfor %}
 			</div>
 			<div class="flex flex-col items-stretch gap-3 border-t border-ink-soft pt-8 md:flex-row md:flex-wrap md:items-center md:gap-4">
 				<span class="text-[0.95rem] font-bold text-muted-on-ink">Follow along:</span>
-				<a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener"
+				<a href="{{ chapter.instagram_url }}" target="_blank" rel="noopener"
 					class="w-full rounded-full bg-white px-[22px] py-2.5 text-center text-[0.95rem] font-bold text-ink no-underline transition-colors hover:bg-pink md:w-auto">
 					Instagram <span class="notranslate">@dsa_rgv</span>
 				</a>

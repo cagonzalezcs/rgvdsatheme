@@ -20,9 +20,12 @@
 			esUrl: chapter.es_url,
 			currentPath: current_path|default('')
 		} %}
-		{# Omit navItems entirely when no primary menu is assigned so the Vue fixture defaults hold. #}
+		{# Omit navItems/aboutItems entirely when no menu is assigned so the Vue fixture defaults hold. #}
 		{% if header_nav_items %}
 			{% set header_props = header_props|merge({ navItems: header_nav_items }) %}
+		{% endif %}
+		{% if header_about_items %}
+			{% set header_props = header_props|merge({ aboutItems: header_about_items }) %}
 		{% endif %}
 		{# `contents` removes the wrapper's box so the sticky <header> inside sticks against the body scroll, not this div.
 		   The header island translates (nav labels are static text nodes Vue never
@@ -46,6 +49,9 @@
 			{% endif %}
 			{% if chapter.contact_email %}
 				{% set footer_props = footer_props|merge({ contactEmail: chapter.contact_email }) %}
+			{% endif %}
+			{% if chapter.footer_tagline %}
+				{% set footer_props = footer_props|merge({ tagline: chapter.footer_tagline }) %}
 			{% endif %}
 			{# Footer translates like the header — static text nodes, reconciliation-safe. #}
 			<div data-vue-island="SiteFooter" data-props='{{ footer_props|json_encode|e("html_attr") }}'></div>

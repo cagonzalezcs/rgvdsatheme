@@ -143,6 +143,40 @@ add_action(
 						),
 					),
 					array(
+						'key'          => 'field_rgvdsa_options_footer_tagline',
+						'label'        => 'Footer tagline',
+						'name'         => 'footer_tagline',
+						'type'         => 'text',
+						'instructions' => 'Short line under the footer logo. Leave blank to use the theme default.',
+					),
+					array(
+						'key'          => 'field_rgvdsa_options_newhere_heading',
+						'label'        => '"New here?" card heading',
+						'name'         => 'newhere_heading',
+						'type'         => 'text',
+						'instructions' => 'Sidebar card shown on About and interior pages. Leave blank to use the theme defaults.',
+					),
+					array(
+						'key'          => 'field_rgvdsa_options_newhere_body',
+						'label'        => '"New here?" card body',
+						'name'         => 'newhere_body',
+						'type'         => 'textarea',
+						'rows'         => 2,
+					),
+					array(
+						'key'          => 'field_rgvdsa_options_newhere_link_label',
+						'label'        => '"New here?" card button label',
+						'name'         => 'newhere_link_label',
+						'type'         => 'text',
+					),
+					array(
+						'key'          => 'field_rgvdsa_options_newhere_link_url',
+						'label'        => '"New here?" card button URL',
+						'name'         => 'newhere_link_url',
+						'type'         => 'text',
+						'instructions' => 'Full URL, relative path, or #anchor.',
+					),
+					array(
 						'key'          => 'field_rgvdsa_options_committees',
 						'label'        => 'Committees',
 						'name'         => 'committees',
@@ -291,6 +325,7 @@ function rgvdsa_front_hero( $front_id ) {
 		'cta_primary_url'     => 'https://act.dsausa.org/donate/membership',
 		'cta_secondary_label' => 'Come to a meeting ↓',
 		'cta_secondary_url'   => '#events',
+		'badge'               => 'New here? Start with <strong class="notranslate">RGV-DSA 101</strong> — no experience needed.',
 	);
 
 	if ( ! function_exists( 'get_field' ) || ! $front_id ) {
@@ -305,7 +340,139 @@ function rgvdsa_front_hero( $front_id ) {
 		}
 	}
 
+	// Rendered unescaped in the Twig (inline markup allowed).
+	$hero['badge'] = wp_kses_post( $hero['badge'] );
+
 	return $hero;
+}
+
+/**
+ * "Who we are" front-page section copy: ACF fields on the front page,
+ * falling back to the design copy.
+ *
+ * @param int $front_id Front page ID.
+ * @return array{eyebrow:string,heading:string,p1:string,p2:string,link_label:string,link_url:string}
+ */
+function rgvdsa_front_who( $front_id ) {
+	$defaults = array(
+		'eyebrow'    => 'Who we are',
+		'heading'    => 'We are <span class="notranslate">DSA-RGV</span>',
+		'p1'         => 'The RGV is one of the most economically unequal regions in the country — but it doesn’t have to stay that way. As democratic socialists, we’re building working-class power to challenge the dominance of the wealthy and the powerful across our border communities.',
+		'p2'         => 'Together, we’re fighting for a Valley where working people have real power, and where everyone can live a dignified life — regardless of where they were born or how they got here.',
+		'link_label' => 'More about our chapter →',
+		'link_url'   => '/about/',
+	);
+
+	if ( ! function_exists( 'get_field' ) || ! $front_id ) {
+		return $defaults;
+	}
+
+	$who = $defaults;
+	foreach ( array_keys( $defaults ) as $key ) {
+		$value = get_field( 'who_' . $key, $front_id );
+		if ( is_string( $value ) && '' !== trim( $value ) ) {
+			$who[ $key ] = trim( $value );
+		}
+	}
+
+	// Heading is rendered unescaped (inline markup allowed).
+	$who['heading'] = wp_kses_post( $who['heading'] );
+
+	return $who;
+}
+
+/**
+ * Front-page "Get involved" section: eyebrow, heading, and the steps
+ * repeater, falling back to the design copy. Step numbers are positional
+ * (01, 02, …) — computed here, not stored.
+ *
+ * @param int    $front_id Front page ID.
+ * @param string $join_url Chapter join URL (default step 1 href).
+ * @return array{eyebrow:string,heading:string,steps:array}
+ */
+function rgvdsa_front_involved( $front_id, $join_url ) {
+	$steps = array(
+		array( 'title' => 'Join DSA', 'body' => 'Become a national DSA member — dues are sliding-scale, and membership automatically connects you to our chapter.', 'link_label' => 'Sign up at dsausa.org →', 'href' => $join_url, 'external' => true ),
+		array( 'title' => 'Come to RGV-DSA 101', 'body' => 'Our intro session for new and curious folks — what we do, how the chapter works, and how you can plug in. Virtual and in-person options.', 'link_label' => 'Find a session →', 'href' => '#events', 'external' => false ),
+		array( 'title' => 'Plug into the work', 'body' => 'Join a committee, get on our WhatsApp, and show up. Members receive an invite to our communication channels after onboarding.', 'link_label' => 'See committees →', 'href' => '/get-involved/#committees', 'external' => false ),
+	);
+
+	$involved = array(
+		'eyebrow' => 'Get involved',
+		'heading' => 'Three steps to start organizing',
+	);
+
+	if ( function_exists( 'get_field' ) && $front_id ) {
+		foreach ( array( 'eyebrow', 'heading' ) as $key ) {
+			$value = get_field( 'home_involved_' . $key, $front_id );
+			if ( is_string( $value ) && '' !== trim( $value ) ) {
+				$involved[ $key ] = trim( $value );
+			}
+		}
+
+		$rows = get_field( 'home_steps', $front_id );
+		if ( is_array( $rows ) && $rows ) {
+			$mapped = array();
+			foreach ( $rows as $row ) {
+				$title = trim( (string) ( $row['title'] ?? '' ) );
+				if ( '' === $title ) {
+					continue;
+				}
+				$url      = trim( (string) ( $row['link_url'] ?? '' ) );
+				$mapped[] = array(
+					'title'      => $title,
+					'body'       => trim( (string) ( $row['body'] ?? '' ) ),
+					'link_label' => trim( (string) ( $row['link_label'] ?? '' ) ),
+					'href'       => $url,
+					'external'   => function_exists( 'rgvdsa_pages_external' ) ? rgvdsa_pages_external( $url ) : false,
+				);
+			}
+			if ( $mapped ) {
+				$steps = $mapped;
+			}
+		}
+	}
+
+	$involved['steps'] = $steps;
+
+	return $involved;
+}
+
+/**
+ * "New here?" sidebar card (About + interior pages): Chapter Settings fields,
+ * falling back to the design copy.
+ *
+ * @return array{heading:string,body:string,link_label:string,url:string}
+ */
+function rgvdsa_newhere_card() {
+	$card = array(
+		'heading'    => 'New here?',
+		'body'       => 'Come to an <span class="notranslate">RGV-DSA 101</span> — our intro session for new and curious folks.',
+		'link_label' => 'Find a session',
+		'url'        => '/calendar/',
+	);
+
+	if ( ! function_exists( 'get_field' ) ) {
+		return $card;
+	}
+
+	$fields = array(
+		'heading'    => 'newhere_heading',
+		'body'       => 'newhere_body',
+		'link_label' => 'newhere_link_label',
+		'url'        => 'newhere_link_url',
+	);
+	foreach ( $fields as $key => $name ) {
+		$value = get_field( $name, 'option' );
+		if ( is_string( $value ) && '' !== trim( $value ) ) {
+			$card[ $key ] = trim( $value );
+		}
+	}
+
+	// Body is rendered unescaped in the Twig (inline markup allowed).
+	$card['body'] = wp_kses_post( $card['body'] );
+
+	return $card;
 }
 
 /**
@@ -353,11 +520,16 @@ add_filter(
 			}
 		}
 
+		$front_id = (int) get_option( 'page_on_front' );
+		$join_url = isset( $context['chapter']['join_url'] ) ? (string) $context['chapter']['join_url'] : 'https://act.dsausa.org/donate/membership';
+
 		$context['event_count']         = $event_count;
 		$context['show_counties_strip'] = $show_counties_strip;
 		$context['counties']            = rgvdsa_chapter_counties();
-		$context['hero']                = rgvdsa_front_hero( (int) get_option( 'page_on_front' ) );
-		$context['about_image']         = rgvdsa_front_about_image( (int) get_option( 'page_on_front' ) );
+		$context['hero']                = rgvdsa_front_hero( $front_id );
+		$context['about_image']         = rgvdsa_front_about_image( $front_id );
+		$context['who']                 = rgvdsa_front_who( $front_id );
+		$context['home_involved']       = rgvdsa_front_involved( $front_id, $join_url );
 
 		return $context;
 	},
@@ -419,6 +591,13 @@ add_action(
 						'instructions' => 'An in-page anchor (e.g. #events) or a full URL.',
 					),
 					array(
+						'key'          => 'field_rgvdsa_hero_badge',
+						'label'        => 'Badge line',
+						'name'         => 'hero_badge',
+						'type'         => 'text',
+						'instructions' => 'Small pill under the CTAs. Basic HTML (e.g. <strong>) allowed. Leave blank for the theme default.',
+					),
+					array(
 						'key'           => 'field_rgvdsa_about_image',
 						'label'         => 'Who we are photo',
 						'name'          => 'about_image',
@@ -426,6 +605,124 @@ add_action(
 						'return_format' => 'array',
 						'preview_size'  => 'medium',
 						'instructions'  => 'Optional. Shown in the "Who we are" section; a decorative panel renders when empty.',
+					),
+				),
+				'location' => array(
+					array(
+						array(
+							'param'    => 'page_type',
+							'operator' => '==',
+							'value'    => 'front_page',
+						),
+					),
+				),
+			)
+		);
+
+		acf_add_local_field_group(
+			array(
+				'key'      => 'group_rgvdsa_front_sections',
+				'title'    => 'Home sections',
+				'fields'   => array(
+					array(
+						'key'   => 'field_rgvdsa_front_tab_who',
+						'label' => 'Who we are',
+						'type'  => 'tab',
+					),
+					array(
+						'key'   => 'field_rgvdsa_who_eyebrow',
+						'label' => 'Eyebrow',
+						'name'  => 'who_eyebrow',
+						'type'  => 'text',
+					),
+					array(
+						'key'          => 'field_rgvdsa_who_heading',
+						'label'        => 'Heading',
+						'name'         => 'who_heading',
+						'type'         => 'text',
+						'instructions' => 'Basic HTML allowed.',
+					),
+					array(
+						'key'   => 'field_rgvdsa_who_p1',
+						'label' => 'First paragraph',
+						'name'  => 'who_p1',
+						'type'  => 'textarea',
+						'rows'  => 4,
+					),
+					array(
+						'key'   => 'field_rgvdsa_who_p2',
+						'label' => 'Second paragraph',
+						'name'  => 'who_p2',
+						'type'  => 'textarea',
+						'rows'  => 4,
+					),
+					array(
+						'key'   => 'field_rgvdsa_who_link_label',
+						'label' => 'Link label',
+						'name'  => 'who_link_label',
+						'type'  => 'text',
+					),
+					array(
+						'key'          => 'field_rgvdsa_who_link_url',
+						'label'        => 'Link URL',
+						'name'         => 'who_link_url',
+						'type'         => 'text',
+						'instructions' => 'Full URL, relative path, or #anchor.',
+					),
+					array(
+						'key'   => 'field_rgvdsa_front_tab_involved',
+						'label' => 'Get involved',
+						'type'  => 'tab',
+					),
+					array(
+						'key'   => 'field_rgvdsa_home_involved_eyebrow',
+						'label' => 'Eyebrow',
+						'name'  => 'home_involved_eyebrow',
+						'type'  => 'text',
+					),
+					array(
+						'key'   => 'field_rgvdsa_home_involved_heading',
+						'label' => 'Heading',
+						'name'  => 'home_involved_heading',
+						'type'  => 'text',
+					),
+					array(
+						'key'          => 'field_rgvdsa_home_steps',
+						'label'        => 'Steps',
+						'name'         => 'home_steps',
+						'type'         => 'repeater',
+						'layout'       => 'block',
+						'button_label' => 'Add step',
+						'instructions' => 'Numbered automatically (01, 02, …). Leave empty for the theme defaults.',
+						'sub_fields'   => array(
+							array(
+								'key'      => 'field_rgvdsa_home_steps_title',
+								'label'    => 'Title',
+								'name'     => 'title',
+								'type'     => 'text',
+								'required' => 1,
+							),
+							array(
+								'key'   => 'field_rgvdsa_home_steps_body',
+								'label' => 'Body',
+								'name'  => 'body',
+								'type'  => 'textarea',
+								'rows'  => 3,
+							),
+							array(
+								'key'   => 'field_rgvdsa_home_steps_link_label',
+								'label' => 'Link label',
+								'name'  => 'link_label',
+								'type'  => 'text',
+							),
+							array(
+								'key'          => 'field_rgvdsa_home_steps_link_url',
+								'label'        => 'Link URL',
+								'name'         => 'link_url',
+								'type'         => 'text',
+								'instructions' => 'Full URL, relative path, or #anchor.',
+							),
+						),
 					),
 				),
 				'location' => array(

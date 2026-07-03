@@ -3,6 +3,8 @@
 {#
   About page — v2 (warm/rounded) skin. Ported from
   design_handoff_rgvdsa_vue/designs/About.dc.html.
+  Section content comes from the "About page" ACF group (inc/pages.php),
+  defaulted in PHP to the design copy — `about.*` is always fully set.
 #}
 
 {% set h2class = 'scroll-mt-[calc(110px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-brand-red pb-3 font-display text-[1.55rem] font-extrabold tracking-[-0.01em]' %}
@@ -11,8 +13,8 @@
 
 {% block content %}
 	{% set page_header_props = {
-		title: "About RGV DSA",
-		lede: "A member-run chapter of the Democratic Socialists of America, organizing for working people across the Rio Grande Valley.",
+		title: post.title ? function('html_entity_decode', post.title) : "About RGV DSA",
+		lede: page_lede|default('') ?: "A member-run chapter of the Democratic Socialists of America, organizing for working people across the Rio Grande Valley.",
 		crumbs: [{ label: "Home", href: "/" }]
 	} %}
 	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
@@ -20,8 +22,8 @@
 	{# ---- Mission band ---- #}
 	<section class="bg-ink px-4 py-12 text-white md:px-6 md:py-16" data-tone="ink">
 		<div class="mx-auto flex max-w-[1140px] flex-col gap-[18px]">
-			<div class="font-display text-[0.85rem] font-bold uppercase tracking-[0.12em] text-pink">What we believe</div>
-			<p class="m-0 max-w-[34ch] font-display text-[clamp(1.35rem,2.8vw,2rem)] font-bold leading-[1.4]">Democratic socialists believe that our economy should be built democratically, by and for working people &mdash; not by billionaires for profit.</p>
+			<div class="font-display text-[0.85rem] font-bold uppercase tracking-[0.12em] text-pink">{{ about.mission.eyebrow }}</div>
+			<p class="m-0 max-w-[34ch] font-display text-[clamp(1.35rem,2.8vw,2rem)] font-bold leading-[1.4]">{{ about.mission.body }}</p>
 		</div>
 	</section>
 
@@ -32,82 +34,80 @@
 			   mobile, chip row on tablet. The sticky sidebar copy below is lg-only. #}
 			<nav aria-label="On this page" class="flex flex-col gap-0.5 rounded-[14px] bg-off-white p-3 md:flex-row md:flex-wrap md:items-center md:gap-2 lg:hidden">
 				<div class="mb-1 px-3.5 py-1.5 font-display text-[0.82rem] font-bold uppercase tracking-[0.08em] text-text-muted md:mb-0 md:py-0">On this page</div>
-				<a href="#chapter" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">About the Chapter</a>
-				<a href="#mission" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">Mission &amp; History</a>
-				<a href="#counties" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">Counties We Serve</a>
-				<a href="#committees" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">Committees</a>
-				<a href="#bylaws" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">Bylaws &amp; Code of Conduct</a>
-				<a href="#faq" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">FAQ</a>
+				<a href="#chapter" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">{{ about.chapter.heading }}</a>
+				<a href="#mission" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">{{ about.history.heading }}</a>
+				<a href="#counties" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">{{ about.counties.heading }}</a>
+				<a href="#committees" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">{{ about.committees.heading }}</a>
+				<a href="#bylaws" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">{{ about.governance.heading }}</a>
+				<a href="#faq" class="{{ nav_link }} md:rounded-full md:border md:border-border-control md:bg-white">{{ about.faq.heading }}</a>
 			</nav>
 
 			<article class="flex min-w-0 flex-col gap-7">
 
 				{# ---- 1. About the Chapter ---- #}
-				<h2 id="chapter" class="m-0 {{ h2class }}">About the Chapter</h2>
+				<h2 id="chapter" class="m-0 {{ h2class }}">{{ about.chapter.heading }}</h2>
 
-				<p class="m-0 text-[1.08rem] leading-[1.78] text-text-body">The Rio Grande Valley Democratic Socialists of America (DSA RGV) is a local chapter of the nation&rsquo;s largest socialist organization. Based primarily in McAllen, Texas, our grassroots group focuses on progressive labor organizing, mutual aid, and socialist political education throughout South Texas.</p>
+				<p class="m-0 text-[1.08rem] leading-[1.78] text-text-body">{{ about.chapter.p1 }}</p>
 
-				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">Everything we do is member-led, member-funded, and open to anyone who wants to build a Valley that works for working people. We regularly host community meetings &mdash; often in McAllen &mdash; to share updates, plan campaigns, and hold political education lectures. You can find our organizing platforms on the DSA Rio Grande Valley Action Network, and if you&rsquo;re a student, we operate a collegiate branch: the UTRGV Young Democratic Socialists of America.</p>
+				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">{{ about.chapter.p2 }}</p>
 
-				<figure class="m-0 flex h-[340px] items-center justify-center overflow-hidden rounded-[16px] shadow-card {{ stripe }}">
-					<figcaption class="rounded-lg bg-white px-3.5 py-2 font-mono text-[0.85rem] text-text-muted shadow-subtle">photo: chapter members at a meeting or action</figcaption>
-				</figure>
+				{% if about.chapter.photo %}
+					<figure class="m-0 flex h-[340px] items-center justify-center overflow-hidden rounded-[16px] shadow-card">
+						<img src="{{ about.chapter.photo.src }}" alt="{{ about.chapter.photo.alt }}" class="h-full w-full object-cover">
+					</figure>
+				{% else %}
+					<figure class="m-0 flex h-[340px] items-center justify-center overflow-hidden rounded-[16px] shadow-card {{ stripe }}">
+						<figcaption class="rounded-lg bg-white px-3.5 py-2 font-mono text-[0.85rem] text-text-muted shadow-subtle">photo: chapter members at a meeting or action</figcaption>
+					</figure>
+				{% endif %}
 
 				<div class="flex flex-wrap gap-3">
-					<a href="/calendar/" class="rounded-full bg-red px-[22px] py-[11px] text-[0.92rem] font-bold text-white no-underline transition-colors hover:bg-red-hover">Come to a meeting</a>
-					<a href="/get-involved/" class="rounded-full border-2 border-red px-5 py-[9px] text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash">Get involved</a>
-					<a href="/get-involved/" class="rounded-full border-2 border-red px-5 py-[9px] text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash">Students: UTRGV YDSA</a>
+					{% for cta in about.chapter.ctas %}
+						{% if loop.first %}
+							<a href="{{ cta.url }}"{% if cta.external %} target="_blank" rel="noopener"{% endif %} class="rounded-full bg-red px-[22px] py-[11px] text-[0.92rem] font-bold text-white no-underline transition-colors hover:bg-red-hover">{{ cta.label }}</a>
+						{% else %}
+							<a href="{{ cta.url }}"{% if cta.external %} target="_blank" rel="noopener"{% endif %} class="rounded-full border-2 border-red px-5 py-[9px] text-[0.92rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash">{{ cta.label }}</a>
+						{% endif %}
+					{% endfor %}
 				</div>
 
 				{# ---- 2. Mission & History ---- #}
-				<h2 id="mission" class="mx-0 mb-0 mt-6 {{ h2class }}">Mission &amp; History</h2>
+				<h2 id="mission" class="mx-0 mb-0 mt-6 {{ h2class }}">{{ about.history.heading }}</h2>
 
-				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">We fight for a Rio Grande Valley where housing, healthcare, and a dignified living are guaranteed &mdash; and we believe the people who live and work here should be the ones deciding the Valley&rsquo;s future. Our work centers on three pillars: labor organizing, mutual aid, and political education.</p>
+				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">{{ about.history.body }}</p>
 
-				{# 20XX years are placeholders for the chapter to fill in — do not invent dates. #}
-				{% set timeline = [
-					{ year: "1982", text: "The Democratic Socialists of America is founded, growing into the largest socialist organization in the United States.", note: false },
-					{ year: "20XX", text: "Valley organizers form an organizing committee and begin meeting in McAllen.", note: true },
-					{ year: "20XX", text: "DSA RGV is chartered as an official local chapter, organizing across four counties in South Texas.", note: true }
-				] %}
 				<div class="flex flex-col overflow-hidden rounded-[14px] bg-white shadow-card">
-					{% for row in timeline %}
+					{% for row in about.history.timeline %}
 						<div class="grid grid-cols-1 items-baseline gap-1 border-b border-divider px-[22px] py-[18px] last:border-b-0 sm:gap-4 sm:[grid-template-columns:90px_1fr]">
 							<span class="font-display text-[1.05rem] font-extrabold text-red">{{ row.year }}</span>
-							<span class="text-base leading-[1.65] text-text-body">{{ row.text }} {% if row.note %}<em class="text-[#78716c]">(Year and details to be filled in by the chapter.)</em>{% endif %}</span>
+							<span class="text-base leading-[1.65] text-text-body">{{ row.text }}</span>
 						</div>
 					{% endfor %}
 				</div>
 
 				{# ---- 3. Counties We Serve ---- #}
-				<h2 id="counties" class="mx-0 mb-0 mt-6 {{ h2class }}">Counties We Serve</h2>
+				<h2 id="counties" class="mx-0 mb-0 mt-6 {{ h2class }}">{{ about.counties.heading }}</h2>
 
-				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">One chapter, four counties. Wherever you are in the Valley, you&rsquo;re covered &mdash; and if you can help us organize deeper in your county, we want to hear from you.</p>
+				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">{{ about.counties.intro }}</p>
 
 				<div class="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
-					<div class="flex flex-col gap-1.5 rounded-[14px] border-t-4 border-brand-red bg-white p-[22px] shadow-card">
-						<div class="notranslate font-display text-[1.05rem] font-extrabold">Hidalgo</div>
-						<div class="notranslate text-[0.92rem] leading-[1.6] text-text-muted">McAllen &middot; Edinburg &middot; Mission &middot; Pharr</div>
-						<div class="mt-1 text-[0.82rem] font-bold text-red">Home base &mdash; most meetings held here</div>
-					</div>
-					<div class="flex flex-col gap-1.5 rounded-[14px] border-t-4 border-brand-red bg-white p-[22px] shadow-card">
-						<div class="notranslate font-display text-[1.05rem] font-extrabold">Cameron</div>
-						<div class="notranslate text-[0.92rem] leading-[1.6] text-text-muted">Brownsville &middot; Harlingen &middot; San Benito</div>
-					</div>
-					<div class="flex flex-col gap-1.5 rounded-[14px] border-t-4 border-brand-red bg-white p-[22px] shadow-card">
-						<div class="notranslate font-display text-[1.05rem] font-extrabold">Willacy</div>
-						<div class="notranslate text-[0.92rem] leading-[1.6] text-text-muted">Raymondville &middot; Lyford</div>
-					</div>
-					<div class="flex flex-col gap-1.5 rounded-[14px] border-t-4 border-brand-red bg-white p-[22px] shadow-card">
-						<div class="notranslate font-display text-[1.05rem] font-extrabold">Starr</div>
-						<div class="notranslate text-[0.92rem] leading-[1.6] text-text-muted">Rio Grande City &middot; Roma</div>
-					</div>
+					{% for card in about.counties.cards %}
+						<div class="flex flex-col gap-1.5 rounded-[14px] border-t-4 border-brand-red bg-white p-[22px] shadow-card">
+							<div class="notranslate font-display text-[1.05rem] font-extrabold">{{ card.name }}</div>
+							{% if card.cities %}
+								<div class="notranslate text-[0.92rem] leading-[1.6] text-text-muted">{{ card.cities }}</div>
+							{% endif %}
+							{% if card.note %}
+								<div class="mt-1 text-[0.82rem] font-bold text-red">{{ card.note }}</div>
+							{% endif %}
+						</div>
+					{% endfor %}
 				</div>
 
-				{# ---- 4. Committees ---- #}
-				<h2 id="committees" class="mx-0 mb-0 mt-6 {{ h2class }}">Committees</h2>
+				{# ---- 4. Committees (rows edited under Chapter Settings) ---- #}
+				<h2 id="committees" class="mx-0 mb-0 mt-6 {{ h2class }}">{{ about.committees.heading }}</h2>
 
-				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">Committees are where the work happens. Each one meets regularly and welcomes new members.</p>
+				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">{{ about.committees.intro }}</p>
 
 				<div class="flex flex-col overflow-hidden rounded-[14px] bg-white shadow-card">
 					{% for committee in chapter.committees %}
@@ -121,19 +121,13 @@
 				<a href="/get-involved/#committees" class="self-start text-[0.98rem] font-bold text-red no-underline hover:underline hover:underline-offset-4">Join a committee &rarr;</a>
 
 				{# ---- 5. Bylaws & Code of Conduct ---- #}
-				<h2 id="bylaws" class="mx-0 mb-0 mt-6 {{ h2class }}">Bylaws &amp; Code of Conduct</h2>
+				<h2 id="bylaws" class="mx-0 mb-0 mt-6 {{ h2class }}">{{ about.governance.heading }}</h2>
 
-				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">The chapter is governed by its members through documents we debate and vote on together. Everything is public.</p>
+				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">{{ about.governance.intro }}</p>
 
-				{% set governance_docs = [
-					{ title: "Chapter Bylaws", covers: "How the chapter runs: officers, elections, quorum, committees, and how decisions get made.", action: "Read", url: "/bylaws-code-of-conduct/#documents" },
-					{ title: "Code of Conduct", covers: "What we expect of each other in every chapter space — meetings, actions, and online.", action: "Read", url: "/bylaws-code-of-conduct/#documents" },
-					{ title: "Grievance Policy", covers: "How to report harm and how the chapter handles conflict, confidentially and fairly.", action: "Read", url: "/bylaws-code-of-conduct/#grievance" },
-					{ title: "Meeting Minutes", covers: "Records and resolutions from general meetings, available to all members.", action: "Browse", url: "/bylaws-code-of-conduct/#documents" }
-				] %}
 				{# Mobile: stack of cards; sm+: the real table (05 §4 About bylaws). #}
 				<div class="flex flex-col gap-3 sm:hidden">
-					{% for doc in governance_docs %}
+					{% for doc in about.governance.docs %}
 						<div class="flex flex-col gap-1.5 rounded-[14px] bg-white p-[18px] shadow-card">
 							<div class="font-display text-[1rem] font-bold">{{ doc.title }}</div>
 							<p class="m-0 text-[0.92rem] leading-[1.6] text-text-body">{{ doc.covers }}</p>
@@ -151,7 +145,7 @@
 						</tr>
 					</thead>
 					<tbody class="[&_tr:last-child>*]:border-b-0">
-						{% for doc in governance_docs %}
+						{% for doc in about.governance.docs %}
 							<tr>
 								<th scope="row" class="border-b border-divider px-[22px] py-[15px] text-left align-top font-bold sm:whitespace-nowrap">{{ doc.title }}</th>
 								<td class="border-b border-divider px-[22px] py-[15px] align-top leading-[1.6] text-text-body">{{ doc.covers }}</td>
@@ -163,18 +157,10 @@
 				</div>
 
 				{# ---- 6. FAQ (tabular rows, intentionally not the Get Involved accordion) ---- #}
-				<h2 id="faq" class="mx-0 mb-0 mt-6 {{ h2class }}">FAQ</h2>
+				<h2 id="faq" class="mx-0 mb-0 mt-6 {{ h2class }}">{{ about.faq.heading }}</h2>
 
-				{% set faq_rows = [
-					{ question: "Do I have to be a member to come to events?", answer: "Nope — most of our events are open to everyone. Come to a 101 or a social, meet folks, and see if it's for you." },
-					{ question: "How much are dues?", answer: "Dues are sliding-scale through national DSA — most folks pay a few dollars a month. No one is turned away for inability to pay." },
-					{ question: "How do I switch to a monthly or Solidarity Dues rate?", answer: "Enter the email associated with your membership in the national dues form with your new dues amount, and your current dues will be canceled and updated." },
-					{ question: "I've never done anything political before. Is that okay?", answer: "More than okay — it's the norm. Most members joined without any organizing experience. RGV-DSA 101 exists exactly for this." },
-					{ question: "Can I participate without being publicly visible?", answer: "Yes. There are plenty of ways to contribute behind the scenes, and we take members' privacy and safety seriously." },
-					{ question: "How much time does membership take?", answer: "As much or as little as you have. Some members show up to one event a month; others help lead committees." }
-				] %}
 				<div class="flex flex-col overflow-hidden rounded-[14px] bg-white shadow-card">
-					{% for row in faq_rows %}
+					{% for row in about.faq.rows %}
 						<div class="grid gap-2 border-b border-divider px-[22px] py-[18px] last:border-b-0 sm:gap-5 sm:[grid-template-columns:minmax(200px,2fr)_3fr]">
 							<span class="text-[0.98rem] font-bold leading-[1.5]">{{ row.question }}</span>
 							<span class="text-[0.95rem] leading-[1.65] text-text-body">{{ row.answer }}</span>
@@ -184,8 +170,8 @@
 
 				{# ---- Dues callout ---- #}
 				<aside id="dues" class="mt-3 flex flex-col gap-2.5 rounded-[16px] border-l-[5px] border-brand-red bg-tint px-7 py-[26px]">
-					<div class="font-display text-base font-extrabold text-red">Switching your dues rate?</div>
-					<p class="m-0 text-base leading-[1.7] text-text-body">Already a member but switching to a monthly or Solidarity Dues rate? Enter the email associated with your membership in this form with your new dues amount, and your current dues will be canceled and updated.</p>
+					<div class="font-display text-base font-extrabold text-red">{{ about.dues.heading }}</div>
+					<p class="m-0 text-base leading-[1.7] text-text-body">{{ about.dues.body }}</p>
 					<a href="{{ chapter.join_url }}" target="_blank" rel="noopener" class="mt-1.5 self-start rounded-full bg-red px-[22px] py-2.5 text-[0.9rem] font-bold text-white no-underline transition-colors hover:bg-red-hover">Update my dues</a>
 				</aside>
 
@@ -195,18 +181,19 @@
 			<aside aria-label="Page navigation" class="flex flex-col gap-7 lg:sticky lg:top-[calc(110px+var(--wp-admin--admin-bar--height,0px))]">
 				<nav aria-label="On this page" class="hidden flex-col gap-0.5 rounded-[14px] bg-off-white p-3 lg:flex">
 					<div class="mb-1 px-3.5 py-1.5 font-display text-[0.82rem] font-bold uppercase tracking-[0.08em] text-text-muted">On this page</div>
-					<a href="#chapter" class="{{ nav_link }}">About the Chapter</a>
-					<a href="#mission" class="{{ nav_link }}">Mission &amp; History</a>
-					<a href="#counties" class="{{ nav_link }}">Counties We Serve</a>
-					<a href="#committees" class="{{ nav_link }}">Committees</a>
-					<a href="#bylaws" class="{{ nav_link }}">Bylaws &amp; Code of Conduct</a>
-					<a href="#faq" class="{{ nav_link }}">FAQ</a>
+					<a href="#chapter" class="{{ nav_link }}">{{ about.chapter.heading }}</a>
+					<a href="#mission" class="{{ nav_link }}">{{ about.history.heading }}</a>
+					<a href="#counties" class="{{ nav_link }}">{{ about.counties.heading }}</a>
+					<a href="#committees" class="{{ nav_link }}">{{ about.committees.heading }}</a>
+					<a href="#bylaws" class="{{ nav_link }}">{{ about.governance.heading }}</a>
+					<a href="#faq" class="{{ nav_link }}">{{ about.faq.heading }}</a>
 				</nav>
 
+				{# "New here?" card — Chapter Settings (inc/options.php), shared with page.twig. #}
 				<div class="flex flex-col gap-3 rounded-[16px] bg-ink p-6 text-white" data-tone="ink">
-					<div class="font-display text-[0.98rem] font-bold">New here?</div>
-					<p class="m-0 text-[0.9rem] leading-[1.6] text-muted-on-ink">Come to an <span class="notranslate">RGV-DSA 101</span> &mdash; our intro session for new and curious folks.</p>
-					<a href="/calendar/" class="self-start rounded-full bg-white px-[18px] py-[9px] text-[0.88rem] font-bold text-ink no-underline transition-colors hover:bg-pink">Find a session</a>
+					<div class="font-display text-[0.98rem] font-bold">{{ newhere.heading }}</div>
+					<p class="m-0 text-[0.9rem] leading-[1.6] text-muted-on-ink">{{ newhere.body }}</p>
+					<a href="{{ newhere.url }}" class="self-start rounded-full bg-white px-[18px] py-[9px] text-[0.88rem] font-bold text-ink no-underline transition-colors hover:bg-pink">{{ newhere.link_label }}</a>
 				</div>
 			</aside>
 

@@ -3,6 +3,9 @@
 {#
   Get Involved page — v2 (warm/rounded) skin. Ported from
   design_handoff_rgvdsa_vue/designs/Get Involved.dc.html.
+  Section content comes from the "Get Involved page" ACF group
+  (inc/pages.php), defaulted in PHP to the design copy — `gi.*` is always
+  fully set.
 #}
 
 {% set h2class = 'scroll-mt-[calc(110px+var(--wp-admin--admin-bar--height,0px))] border-b-[3px] border-brand-red pb-3 font-display text-[1.55rem] font-extrabold tracking-[-0.01em]' %}
@@ -10,8 +13,8 @@
 
 {% block content %}
 	{% set page_header_props = {
-		title: "Get involved",
-		lede: "No experience needed, no perfect politics required. If you want a better Valley, there's a place for you here.",
+		title: post.title ? function('html_entity_decode', post.title) : "Get involved",
+		lede: page_lede|default('') ?: "No experience needed, no perfect politics required. If you want a better Valley, there's a place for you here.",
 		crumbs: [{ label: "Home", href: "/" }]
 	} %}
 	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
@@ -34,27 +37,24 @@
 				{# ---- How to join ---- #}
 				<h2 id="join" class="m-0 {{ h2class }}">How to join</h2>
 
-				{% set steps = [
-					{ num: '1', title: 'Become a DSA member', body: 'Sign up through national DSA and select the Rio Grande Valley chapter. Dues are sliding-scale — pay what you can, and <strong>no one is turned away for lack of funds</strong>.', link_label: 'Join at dsausa.org →', href: chapter.join_url, external: true },
-					{ num: '2', title: 'Come to RGV-DSA 101', body: 'Our intro session for new and curious folks — what democratic socialism means, what our chapter is working on, and how to plug in. Offered virtually and in person, multiple times a month. You don\'t have to be a member yet to attend.', link_label: 'Find a session →', href: '/calendar/', external: false },
-					{ num: '3', title: 'Get onboarded & plug in', body: 'After 101, we\'ll add you to our WhatsApp and match you with a committee that fits your interests and capacity — whether that\'s an hour a month or a night a week.', link_label: 'Browse committees ↓', href: '#committees', external: false }
-				] %}
 				<div class="flex flex-col gap-3.5">
-					{% for step in steps %}
+					{% for step in gi.steps %}
 						<div class="grid grid-cols-[52px_1fr] gap-4 rounded-[16px] bg-white p-6 shadow-card sm:gap-5 sm:[grid-template-columns:64px_1fr]">
-							<div class="flex size-[52px] items-center justify-center rounded-[12px] bg-brand-red font-display text-[1.6rem] font-extrabold text-white">{{ step.num }}</div>
+							<div class="flex size-[52px] items-center justify-center rounded-[12px] bg-brand-red font-display text-[1.6rem] font-extrabold text-white">{{ loop.index }}</div>
 							<div class="flex flex-col gap-2">
 								<div class="text-[1.1rem] font-bold">{{ step.title }}</div>
 								<p class="m-0 text-base leading-[1.7] text-text-body">{{ step.body|raw }}</p>
-								<a href="{{ step.href }}"{% if step.external %} target="_blank" rel="noopener"{% endif %} class="self-start text-[0.95rem] font-bold text-red no-underline hover:underline hover:underline-offset-4">{{ step.link_label }}</a>
+								{% if step.link_label and step.href %}
+									<a href="{{ step.href }}"{% if step.external %} target="_blank" rel="noopener"{% endif %} class="self-start text-[0.95rem] font-bold text-red no-underline hover:underline hover:underline-offset-4">{{ step.link_label }}</a>
+								{% endif %}
 							</div>
 						</div>
 					{% endfor %}
 				</div>
 
-				{# ---- Committees ---- #}
+				{# ---- Committees (cards edited under Chapter Settings) ---- #}
 				<h2 id="committees" class="mx-0 mb-0 mt-4 {{ h2class }}">Committees</h2>
-				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">Committees are where the work happens. Each one meets regularly and welcomes new members &mdash; reach out through the WhatsApp or at any general meeting.</p>
+				<p class="m-0 text-[1.05rem] leading-[1.78] text-text-body">{{ gi.committees_intro }}</p>
 
 				<div class="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]">
 					{% for committee in chapter.committees %}
@@ -69,55 +69,27 @@
 				<h2 id="channels" class="mx-0 mb-0 mt-4 {{ h2class }}">Communication channels</h2>
 
 				<div class="flex flex-col gap-3.5">
-					<div class="flex flex-col items-start gap-4 rounded-[14px] bg-white px-6 py-5 shadow-card sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-5">
-						<div class="flex flex-col gap-[3px]">
-							<span class="text-[1.05rem] font-bold">WhatsApp</span>
-							<span class="text-[0.9rem] text-text-muted">Our main channel &mdash; members receive an invite during onboarding</span>
+					{% for channel in gi.channels %}
+						<div class="flex flex-col items-start gap-4 rounded-[14px] bg-white px-6 py-5 shadow-card sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-5">
+							<div class="flex flex-col gap-[3px]">
+								<span class="text-[1.05rem] font-bold">{{ channel.label }}</span>
+								{% if channel.desc %}
+									<span class="text-[0.9rem] text-text-muted">{{ channel.desc }}</span>
+								{% endif %}
+							</div>
+							{% if channel.url and channel.link_label %}
+								<a href="{{ channel.url }}"{% if channel.external %} target="_blank" rel="noopener"{% endif %} class="whitespace-nowrap rounded-full border-2 border-red px-5 py-2 text-[0.9rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash">{{ channel.link_label }}</a>
+							{% elseif channel.badge %}
+								<span class="rounded-full border border-dashed border-border-muted px-4 py-2 text-[0.8rem] font-bold text-text-muted">{{ channel.badge }}</span>
+							{% endif %}
 						</div>
-						<span class="rounded-full border border-dashed border-border-muted px-4 py-2 text-[0.8rem] font-bold text-text-muted">Members only</span>
-					</div>
-					<div class="flex flex-col items-start gap-4 rounded-[14px] bg-white px-6 py-5 shadow-card sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-5">
-						<div class="flex flex-col gap-[3px]">
-							<span class="text-[1.05rem] font-bold">Instagram &mdash; <span class="notranslate">@dsa_rgv</span></span>
-							<span class="text-[0.9rem] text-text-muted">Events, actions, and updates for everyone</span>
-						</div>
-						<a href="https://www.instagram.com/dsa_rgv/" target="_blank" rel="noopener" class="whitespace-nowrap rounded-full border-2 border-red px-5 py-2 text-[0.9rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash">Follow</a>
-					</div>
-					<div class="flex flex-col items-start gap-4 rounded-[14px] bg-white px-6 py-5 shadow-card sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-5">
-						<div class="flex flex-col gap-[3px]">
-							<span class="text-[1.05rem] font-bold">Email</span>
-							<span class="text-[0.9rem] text-text-muted">Questions, press, and anything else</span>
-						</div>
-						<a href="mailto:{{ chapter.contact_email }}" class="whitespace-nowrap rounded-full border-2 border-red px-5 py-2 text-[0.9rem] font-bold text-red no-underline transition-colors hover:border-red-hover hover:bg-wash">Write us</a>
-					</div>
+					{% endfor %}
 				</div>
 
 				{# ---- Common questions ---- #}
 				<h2 id="faq" class="mx-0 mb-0 mt-4 {{ h2class }}">Common questions</h2>
 
-				{% set faq_items = [
-					{
-						question: "Do I have to be a member to come to events?",
-						answer: "Nope — most of our events are open to everyone. Come to a 101 or a social, meet folks, and see if it's for you. No pressure."
-					},
-					{
-						question: "How much are dues?",
-						answer: "Dues are sliding-scale through national DSA — most folks pay a few dollars a month. If dues are a barrier, talk to us: no one is turned away for lack of funds."
-					},
-					{
-						question: "I've never done anything political before. Is that okay?",
-						answer: "More than okay — it's the norm. Most members joined without any organizing experience. RGV-DSA 101 exists exactly for this, and committees will teach you everything as you go."
-					},
-					{
-						question: "Can I participate without being publicly visible?",
-						answer: "Yes. There are plenty of ways to contribute behind the scenes, and we take members' privacy and safety seriously. Talk to us about what you're comfortable with."
-					},
-					{
-						question: "How much time does membership take?",
-						answer: "As much or as little as you have. Some members show up to one event a month; others help lead committees. Capacity changes — that's fine. The work is a marathon, not a sprint."
-					}
-				] %}
-				<div data-vue-island="FaqAccordion" data-props='{{ { items: faq_items }|json_encode|e("html_attr") }}'></div>
+				<div data-vue-island="FaqAccordion" data-props='{{ { items: gi.faq_items }|json_encode|e("html_attr") }}'></div>
 
 			</article>
 
@@ -132,9 +104,9 @@
 				</nav>
 
 				<div class="flex flex-col gap-3 rounded-[16px] bg-ink p-6 text-white" data-tone="ink">
-					<div class="font-display text-[0.98rem] font-bold">Ready right now?</div>
-					<p class="m-0 text-[0.9rem] leading-[1.6] text-muted-on-ink">Membership takes five minutes, and dues are pay-what-you-can.</p>
-					<a href="{{ chapter.join_url }}" target="_blank" rel="noopener" class="self-start rounded-full bg-white px-[18px] py-[9px] text-[0.88rem] font-bold text-ink no-underline transition-colors hover:bg-pink">Join DSA</a>
+					<div class="font-display text-[0.98rem] font-bold">{{ gi.card.heading }}</div>
+					<p class="m-0 text-[0.9rem] leading-[1.6] text-muted-on-ink">{{ gi.card.body }}</p>
+					<a href="{{ gi.card.url }}"{% if gi.card.external %} target="_blank" rel="noopener"{% endif %} class="self-start rounded-full bg-white px-[18px] py-[9px] text-[0.88rem] font-bold text-ink no-underline transition-colors hover:bg-pink">{{ gi.card.link_label }}</a>
 				</div>
 
 				<nav aria-label="Related pages" class="flex flex-col gap-0.5 rounded-[14px] bg-tint p-3">

@@ -143,6 +143,13 @@ add_filter( 'rgvdsa/context/page', function ( $context, $timber_post ) {
 	$context['show_grievance'] = true;
 	$context['grievance_body'] = '';
 	$context['documents']      = array();
+	// "New here?" sidebar card — Chapter Settings copy w/ design fallback.
+	$context['newhere'] = function_exists( 'rgvdsa_newhere_card' ) ? rgvdsa_newhere_card() : array(
+		'heading'    => 'New here?',
+		'body'       => 'Come to an <span class="notranslate">RGV-DSA 101</span> — our intro session for new and curious folks.',
+		'link_label' => 'Find a session',
+		'url'        => '/calendar/',
+	);
 
 	if ( ! function_exists( 'get_field' ) || ! $timber_post ) {
 		return $context;

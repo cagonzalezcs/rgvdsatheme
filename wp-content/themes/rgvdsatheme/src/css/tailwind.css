@@ -204,6 +204,20 @@
     outline-offset: 2px;
     border-radius: 6px;
   }
+
+  /* On dark bands the ink focus ring is invisible against the ink/red
+     background (ring color === --color-ink). Re-point it to cream so
+     native + shadcn focus indicators stay visible. WCAG 2.4.11: cream on
+     ink ~15:1, on red ~3.7:1.
+     Both tokens are overridden here: the native focus outline reads
+     var(--color-ring) (which is var(--ring), but resolved at :root so it
+     must be re-declared on this scope), while shadcn/reka controls read
+     var(--ring) directly. */
+  [data-tone="ink"],
+  [data-tone="red"] {
+    --ring: var(--color-cream); /* #faf4ea — shadcn ring/border */
+    --color-ring: var(--color-cream); /* native focus outline */
+  }
 }
 
 /* WP editor content on interior pages (unlayered so it beats legacy scss) */

@@ -8,9 +8,10 @@
 #}
 
 {% block content %}
+	{# Title/lede editable in wp-admin (page title + Interior "Lede" field); literals are fallbacks. #}
 	{% set page_header_props = {
-		title: 'Event Calendar',
-		lede: 'Meetings, actions, trainings, and socials across the Valley. Everything is open to the public unless noted — bring a friend.',
+		title: post.title ? function('html_entity_decode', post.title) : 'Event Calendar',
+		lede: page_lede|default('') ?: 'Meetings, actions, trainings, and socials across the Valley. Everything is open to the public unless noted — bring a friend.',
 		crumbs: [{ label: 'Home', href: '/' }]
 	} %}
 	<div data-vue-island="PageHeader" data-props='{{ page_header_props|json_encode|e("html_attr") }}'></div>
