@@ -23,7 +23,7 @@ const sizes: { value: TextSize; label: string }[] = [
     </PopoverTrigger>
     <PopoverContent
       align="end"
-      class="w-[280px] rounded-[14px] border-hairline bg-white p-[18px] shadow-popover"
+      class="z-[200] w-[280px] rounded-[14px] border-hairline bg-white p-[18px] shadow-popover"
     >
       <div class="flex flex-col gap-4">
         <div class="font-display text-[0.95rem] font-bold">Accessibility</div>

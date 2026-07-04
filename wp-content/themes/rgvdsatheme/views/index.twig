@@ -27,16 +27,36 @@
 		showSubscribe: true,
 		newsletterUrl: chapter.newsletter_url
 	} %}
-	<div data-vue-island="BlogArchive" data-props='{{ archive_props|json_encode|e("html_attr") }}'></div>
+	{% set cat_labels = {} %}
+	{% for c in archive_categories %}
+		{% set cat_labels = cat_labels|merge({ (c.id): c.label }) %}
+	{% endfor %}
 
-	{# Crawlable fallback: current-page post links for no-JS/crawlers #}
-	<noscript>
-		<section class="bg-white px-6 py-10">
-			<ul class="mx-auto flex max-w-[920px] list-disc flex-col gap-2 pl-6">
+	<div data-vue-island="BlogArchive" data-props='{{ archive_props|json_encode|e("html_attr") }}'>
+		{# Server-rendered fallback: crawlable + readable without JS (excerpts,
+		   dates, pagination in the initial HTML). createApp().mount() replaces
+		   it on hydration — same pattern as single.twig. #}
+		<section class="bg-white px-6 py-12">
+			<div class="mx-auto flex max-w-[920px] flex-col gap-10">
 				{% for p in archive_posts %}
-					<li><a href="{{ p.url }}">{{ p.title }}</a></li>
+					<article class="flex flex-col gap-2">
+						<p class="text-[0.82rem] font-bold uppercase tracking-wide text-text-muted">{{ cat_labels[p.cat]|default(p.cat) }}</p>
+						<h2 class="font-display text-[1.4rem] font-black leading-[1.2]">
+							<a href="{{ p.url }}">{{ p.title }}</a>
+						</h2>
+						{% if p.dek|default(p.excerpt) %}
+							<p class="text-text-muted">{{ p.dek|default(p.excerpt) }}</p>
+						{% endif %}
+						<p class="text-[0.92rem] text-text-muted">{{ p.date }} · {{ p.readMinutes }} min read</p>
+					</article>
 				{% endfor %}
-			</ul>
+				{% if archive_pagination %}
+					<nav class="flex justify-between gap-4" aria-label="Posts pagination">
+						{% if archive_pagination.newerUrl %}<a href="{{ archive_pagination.newerUrl }}">Newer posts</a>{% endif %}
+						{% if archive_pagination.olderUrl %}<a class="ml-auto" href="{{ archive_pagination.olderUrl }}">Older posts</a>{% endif %}
+					</nav>
+				{% endif %}
+			</div>
 		</section>
-	</noscript>
+	</div>
 {% endblock %}

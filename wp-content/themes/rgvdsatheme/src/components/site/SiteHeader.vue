@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import {
+  ref,
+  computed,
+  watch,
+  nextTick,
+  type ComponentPublicInstance,
+} from "vue";
 import { Menu, X } from "lucide-vue-next";
 import { location } from "@/lib/location";
 import {
@@ -8,6 +14,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import A11yWidget from "@/components/site/A11yWidget.vue";
 import LanguageToggle, {
   type LanguageLink,
@@ -66,6 +79,14 @@ const flatNav = computed<NavLink[]>(() => [
 ]);
 
 const isMenuOpen = ref(false);
+const drawerCloseRef = ref<ComponentPublicInstance | null>(null);
+
+// vaul-vue hardcodes a `.prevent` on openAutoFocus (to keep mobile keyboards from
+// popping), so reka never moves focus into the drawer — do it ourselves.
+function onDrawerOpenFocus(e: Event) {
+  e.preventDefault();
+  nextTick(() => (drawerCloseRef.value?.$el as HTMLElement | undefined)?.focus());
+}
 
 // Reactive current path so active state updates during client-side navigation
 // (the header stays mounted across swaps). Falls back to the SSR prop first paint.
@@ -124,45 +145,63 @@ watch(
           type="button"
           class="flex size-11 cursor-pointer items-center justify-center rounded-[10px] border-2 border-white/65 bg-transparent text-white hover:bg-[rgba(28,25,23,0.18)]"
           :aria-expanded="isMenuOpen"
-          aria-controls="mobile-menu-panel"
           aria-label="Menu"
-          @click="isMenuOpen = !isMenuOpen"
+          @click="isMenuOpen = true"
         >
-          <X v-if="isMenuOpen" class="size-6" />
-          <Menu v-else class="size-6" />
+          <Menu class="size-6" />
         </button>
       </div>
 
-      <nav
-        v-show="isMenuOpen"
-        id="mobile-menu-panel"
-        aria-label="Main"
-        class="flex flex-col border-t border-pink bg-white shadow-[0_18px_30px_rgba(28,25,23,0.25)]"
+      <Drawer
+        v-model:open="isMenuOpen"
+        direction="right"
+        :should-scale-background="false"
       >
-        <a
-          v-for="item in flatNav"
-          :key="item.label"
-          :href="item.href"
-          class="border-b border-hairline px-5 py-[15px] font-display text-[1.05rem] font-bold text-ink no-underline hover:bg-tint hover:text-red"
-          :aria-current="isCurrent(item.href) ? 'page' : undefined"
+        <DrawerContent
+          class="z-[160] rounded-none border-l border-pink bg-white [.admin-bar_&]:top-[var(--wp-admin--admin-bar--height,32px)]"
+          aria-label="Menu"
+          @open-auto-focus="onDrawerOpenFocus"
         >
-          {{ item.label }}
-        </a>
-        <div class="flex items-center justify-between gap-3 px-5 py-3.5">
-          <LanguageToggle :languages="languages" on-light />
-          <A11yWidget />
-        </div>
-        <div class="px-5 pb-5 pt-1">
-          <a
-            :href="joinUrl"
-            target="_blank"
-            rel="noopener"
-            class="block rounded-full bg-red px-6 py-3.5 text-center text-base font-bold text-white no-underline hover:bg-red-hover"
-          >
-            {{ joinLabel }}
-          </a>
-        </div>
-      </nav>
+          <DrawerTitle class="sr-only">Menu</DrawerTitle>
+          <DrawerDescription class="sr-only">
+            Site navigation, language and accessibility options
+          </DrawerDescription>
+          <div class="flex justify-end px-4 py-2.5">
+            <DrawerClose
+              ref="drawerCloseRef"
+              class="flex size-11 cursor-pointer items-center justify-center rounded-[10px] border-2 border-hairline bg-transparent text-ink hover:bg-tint"
+              aria-label="Close menu"
+            >
+              <X class="size-6" />
+            </DrawerClose>
+          </div>
+          <nav aria-label="Main" class="flex flex-col overflow-y-auto">
+            <a
+              v-for="item in flatNav"
+              :key="item.label"
+              :href="item.href"
+              class="border-b border-hairline px-5 py-[15px] font-display text-[1.05rem] font-bold text-ink no-underline first:border-t hover:bg-tint hover:text-red"
+              :aria-current="isCurrent(item.href) ? 'page' : undefined"
+            >
+              {{ item.label }}
+            </a>
+          </nav>
+          <div class="flex items-center justify-between gap-3 px-5 py-3.5">
+            <LanguageToggle :languages="languages" on-light />
+            <A11yWidget />
+          </div>
+          <div class="mt-auto px-5 pb-5 pt-1">
+            <a
+              :href="joinUrl"
+              target="_blank"
+              rel="noopener"
+              class="block rounded-full bg-red px-6 py-3.5 text-center text-base font-bold text-white no-underline hover:bg-red-hover"
+            >
+              {{ joinLabel }}
+            </a>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
 
     <!-- ============ TABLET (md → lg): two-tier, red nav strip ============ -->
