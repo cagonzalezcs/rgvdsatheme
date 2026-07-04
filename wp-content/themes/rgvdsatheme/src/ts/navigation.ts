@@ -14,6 +14,7 @@ import { ApiError, fetchSinglePost, isAbortError } from "@/lib/api";
 import { mountIslands, mountIslandsAsync, unmountIslands } from "./islands";
 import { setLocation } from "@/lib/location";
 import { setLanguages } from "@/lib/languages";
+import { closeMenu } from "@/lib/menu";
 import type { LanguageLink } from "@/components/site/LanguageToggle.vue";
 
 /** Resolved destination content — either a parsed HTML document or a built,
@@ -175,6 +176,14 @@ async function navigate(url: URL, opts: NavOptions): Promise<void> {
   const ctl = new AbortController();
   current = ctl;
 
+  // Dismiss the mobile drawer instantly *before* the View Transition snapshots the
+  // page. The portaled drawer/overlay sit in the root VT group; letting them slide
+  // out (vaul) while the root cross-fades reads as jitter on mobile. The
+  // data-navigating flag suppresses their exit animation (see css/tailwind.css) so
+  // reka unmounts them synchronously, ahead of commit()'s startViewTransition.
+  document.documentElement.setAttribute("data-navigating", "");
+  closeMenu();
+
   try {
     const next = await resolveMain(url, opts, ctl.signal);
     if (ctl !== current) return; // superseded
@@ -183,6 +192,8 @@ async function navigate(url: URL, opts: NavOptions): Promise<void> {
     if (isAbortError(err)) return;
     console.warn("[nav] falling back to full load", err);
     window.location.href = url.href;
+  } finally {
+    document.documentElement.removeAttribute("data-navigating");
   }
 }
 

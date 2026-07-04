@@ -2,12 +2,12 @@
 import {
   ref,
   computed,
-  watch,
   nextTick,
   type ComponentPublicInstance,
 } from "vue";
 import { Menu, X } from "lucide-vue-next";
 import { location } from "@/lib/location";
+import { menu } from "@/lib/menu";
 import { languageState, setLanguages } from "@/lib/languages";
 import {
   DropdownMenu,
@@ -79,7 +79,6 @@ const flatNav = computed<NavLink[]>(() => [
   ...props.navItems,
 ]);
 
-const isMenuOpen = ref(false);
 const drawerCloseRef = ref<ComponentPublicInstance | null>(null);
 
 // vaul-vue hardcodes a `.prevent` on openAutoFocus (to keep mobile keyboards from
@@ -118,14 +117,6 @@ function isCurrent(href: string): boolean {
   if (currentPath.value === "") return false;
   return normalizePath(href) === normalizePath(currentPath.value);
 }
-
-// Close the mobile menu whenever a client navigation commits.
-watch(
-  () => location.path,
-  () => {
-    isMenuOpen.value = false;
-  },
-);
 </script>
 
 <template>
@@ -154,16 +145,16 @@ watch(
         <button
           type="button"
           class="flex size-11 cursor-pointer items-center justify-center rounded-[10px] border-2 border-white/65 bg-transparent text-white hover:bg-[rgba(28,25,23,0.18)]"
-          :aria-expanded="isMenuOpen"
+          :aria-expanded="menu.open"
           aria-label="Menu"
-          @click="isMenuOpen = true"
+          @click="menu.open = true"
         >
           <Menu class="size-6" />
         </button>
       </div>
 
       <Drawer
-        v-model:open="isMenuOpen"
+        v-model:open="menu.open"
         direction="right"
         :should-scale-background="false"
       >

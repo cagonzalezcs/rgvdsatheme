@@ -297,6 +297,16 @@ main#main {
 .site-header {
   view-transition-name: vt-header;
 }
+
+/* During client nav the mobile drawer is dismissed instantly so it never competes
+   with the content View Transition — the overlap reads as jitter on mobile. vaul's
+   runtime rules are highly specific, hence !important. Manual close (X / overlay /
+   Esc) is unaffected: data-navigating is only set while a navigation is in flight. */
+html[data-navigating] [data-vaul-drawer],
+html[data-navigating] [data-vaul-overlay] {
+  animation: none !important;
+  transition: none !important;
+}
 .site-footer {
   view-transition-name: vt-footer;
 }
