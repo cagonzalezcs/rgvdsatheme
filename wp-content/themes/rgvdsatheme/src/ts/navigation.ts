@@ -13,12 +13,14 @@ import { nextTick } from "vue";
 import { ApiError, fetchSinglePost, isAbortError } from "@/lib/api";
 import { mountIslands, mountIslandsAsync, unmountIslands } from "./islands";
 import { setLocation } from "@/lib/location";
+import { setLanguages } from "@/lib/languages";
+import type { LanguageLink } from "@/components/site/LanguageToggle.vue";
 
 /** Resolved destination content — either a parsed HTML document or a built,
  * ready-to-mount node from the JSON fast-path. */
 type ResolvedMain =
   | { kind: "html"; doc: Document }
-  | { kind: "json"; node: HTMLElement; title: string };
+  | { kind: "json"; node: HTMLElement; title: string; languages: LanguageLink[] };
 
 /** Optional shared-element morph carried from click → commit. */
 interface MorphContext {
@@ -212,14 +214,14 @@ async function resolveMain(
 /** Build the new <main> content for a single post entirely from JSON. */
 async function buildMainFromJson(slug: string, signal: AbortSignal): Promise<ResolvedMain> {
   const env = await fetchSinglePost(apiBase, slug, lang, signal);
-  const { readNext, ...post } = env;
+  const { readNext, languages, ...post } = env;
   const props = { post, posts: readNext, blogUrl: "/blog/", homeUrl: "/" };
 
   const node = document.createElement("div");
   node.setAttribute("data-vue-island", "SinglePost");
   node.dataset.props = JSON.stringify(props);
 
-  return { kind: "json", node, title: `${post.title} — RGV DSA` };
+  return { kind: "json", node, title: `${post.title} — RGV DSA`, languages };
 }
 
 async function fetchDocument(url: URL, signal: AbortSignal): Promise<string> {
@@ -264,11 +266,18 @@ async function commit(url: URL, next: ResolvedMain, opts: NavOptions): Promise<v
       oldMain.replaceChildren(...Array.from(newMain.childNodes));
       syncHead(next.doc);
       setLocation(url.pathname, url.search);
+      // SiteHeader stays mounted across swaps, so refresh its switcher URLs from
+      // the fetched page's header island (the JSON fast-path has no doc to read).
+      const langs = readLanguagesFromDoc(next.doc);
+      if (langs) setLanguages(langs);
       mountIslands(oldMain); // SSR markup is already present; hydrate async
     } else {
       oldMain.replaceChildren(next.node);
       patchHeadForJson(url, next.title);
       setLocation(url.pathname, url.search);
+      // Refresh the switcher for the single post (the REST envelope carries its
+      // per-language URLs). Empty only when Polylang is inactive — leave as-is.
+      if (next.languages.length) setLanguages(next.languages);
       // Await hydration so the new hero exists before the transition snapshots it.
       await mountIslandsAsync(oldMain);
       if (useMorph) {
@@ -301,6 +310,21 @@ async function commit(url: URL, next: ResolvedMain, opts: NavOptions): Promise<v
         ?.querySelector<HTMLElement>("[data-post-hero]");
       if (hero) hero.style.viewTransitionName = "";
     });
+}
+
+/** Read the fresh language-switcher URLs from the fetched page's SiteHeader
+ * island props. Returns null (leaving the current URLs in place) if the island
+ * or its props are missing/unparseable. */
+export function readLanguagesFromDoc(doc: Document): LanguageLink[] | null {
+  const el = doc.querySelector<HTMLElement>('[data-vue-island="SiteHeader"]');
+  if (!el?.dataset.props) return null;
+  try {
+    const langs = (JSON.parse(el.dataset.props) as { languages?: LanguageLink[] })
+      .languages;
+    return Array.isArray(langs) ? langs : null;
+  } catch {
+    return null;
+  }
 }
 
 /** Head patch for the JSON path (no fetched <head>): title + canonical only. */

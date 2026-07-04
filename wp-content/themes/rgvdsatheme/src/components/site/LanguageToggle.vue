@@ -5,8 +5,11 @@
 // the current page's translation (Polylang falls back to the language home when the
 // page has no translation). The active language is a deep-red filled pill marked
 // aria-current; navigating is the entire behavior — no cookie, no machine translation.
-// data-native-nav forces a full page load: the header island lives outside #main, so a
-// client-side swap would leave its languages/nav props (and this pill) stale.
+// data-native-nav forces a full page load: switching language must re-render the whole
+// page server-side. The header island lives outside #main and stays mounted across client
+// swaps, so its `languages` URLs are refreshed per-navigation via the reactive lib/languages
+// store (see ts/navigation.ts + SiteHeader.vue) — otherwise each pill's href would freeze at
+// the entry page's translation.
 export interface LanguageLink {
   code: string;
   label: string;

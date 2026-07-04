@@ -9,7 +9,7 @@
  *
  * Routes:
  * - GET /posts            → { posts: BlogPost[], page, perPage, total, totalPages }
- * - GET /posts/{slug}     → SinglePostData + { readNext: BlogPost[] }
+ * - GET /posts/{slug}     → SinglePostData + { readNext: BlogPost[], languages: LanguageLink[] }
  * - GET /events           → { events: ChapterEvent[], categories: EventCategory[] }
  * - GET /categories       → { categories: EventCategory[] }
  *
@@ -225,8 +225,11 @@ function rgvdsa_rest_single_post( WP_REST_Request $request ) {
 				)
 			);
 
-			$payload             = rgvdsa_post_to_single( $post );
-			$payload['readNext'] = array_map( 'rgvdsa_post_to_blog_post', $pool->posts );
+			$payload              = rgvdsa_post_to_single( $post );
+			$payload['readNext']  = array_map( 'rgvdsa_post_to_blog_post', $pool->posts );
+			// Header switcher URLs for THIS post — lets the JSON fast-path keep
+			// the language toggle current (see rgvdsa_i18n_languages_for_post).
+			$payload['languages'] = rgvdsa_i18n_languages_for_post( $post->ID );
 
 			return $payload;
 		}

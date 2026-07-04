@@ -8,6 +8,7 @@ import {
 } from "vue";
 import { Menu, X } from "lucide-vue-next";
 import { location } from "@/lib/location";
+import { languageState, setLanguages } from "@/lib/languages";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -91,6 +92,15 @@ function onDrawerOpenFocus(e: Event) {
 // Reactive current path so active state updates during client-side navigation
 // (the header stays mounted across swaps). Falls back to the SSR prop first paint.
 const currentPath = computed(() => location.path || props.currentPath);
+
+// Switcher URLs are the current page's translations. The header stays mounted
+// across client navigations, so the mount-time `languages` prop would freeze at
+// the entry page's URLs; ts/navigation.ts refreshes the reactive store on every
+// commit. Seed it from the SSR prop so the first paint (pre-nav) is correct.
+if (!languageState.list.length) setLanguages(props.languages);
+const currentLanguages = computed(() =>
+  languageState.list.length ? languageState.list : props.languages,
+);
 
 /** Normalize to a comparable pathname: strip origin from absolute menu hrefs,
  * drop hash/query, and normalize the trailing slash. */
@@ -187,7 +197,7 @@ watch(
             </a>
           </nav>
           <div class="flex items-center justify-between gap-3 px-5 py-3.5">
-            <LanguageToggle :languages="languages" on-light />
+            <LanguageToggle :languages="currentLanguages" on-light />
             <A11yWidget />
           </div>
           <div class="mt-auto px-5 pb-5 pt-1">
@@ -223,7 +233,7 @@ watch(
           />
         </a>
         <div class="flex items-center gap-2.5">
-          <LanguageToggle :languages="languages" />
+          <LanguageToggle :languages="currentLanguages" />
           <A11yWidget />
           <a
             :href="joinUrl"

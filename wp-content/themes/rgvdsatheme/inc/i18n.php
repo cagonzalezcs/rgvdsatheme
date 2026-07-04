@@ -134,6 +134,55 @@ function rgvdsa_i18n_languages() {
 }
 
 /**
+ * The language switcher model for a specific post, independent of the global
+ * queried object.
+ *
+ * The REST single-post handler runs outside the main query, so
+ * `pll_the_languages()` (which reads the queried object) can't resolve the
+ * switcher there. This builds the same shape as rgvdsa_i18n_languages() for a
+ * given post by resolving each language's translation permalink directly, so
+ * the JSON fast-path can refresh the header switcher after a client-side
+ * navigation to a single post (otherwise it stays frozen at the archive's URLs).
+ *
+ * @param int $post_id Post whose translations to resolve.
+ * @return array<int,array{code:string,label:string,name:string,active:bool,url:string}>
+ */
+function rgvdsa_i18n_languages_for_post( $post_id ) {
+	if ( ! function_exists( 'pll_languages_list' ) || ! function_exists( 'pll_get_post' ) ) {
+		return array();
+	}
+
+	$slugs = (array) pll_languages_list();
+	if ( empty( $slugs ) ) {
+		return array();
+	}
+	$names   = (array) pll_languages_list( array( 'fields' => 'name' ) );
+	$current = function_exists( 'pll_get_post_language' )
+		? (string) pll_get_post_language( (int) $post_id )
+		: '';
+
+	$languages = array();
+	foreach ( $slugs as $i => $slug ) {
+		$slug       = (string) $slug;
+		$translated = pll_get_post( (int) $post_id, $slug );
+		if ( $translated ) {
+			$url = (string) get_permalink( $translated );
+		} else {
+			$url = function_exists( 'pll_home_url' ) ? (string) pll_home_url( $slug ) : home_url( '/' );
+		}
+		$languages[] = array(
+			'code'   => $slug,
+			'label'  => strtoupper( $slug ),
+			'name'   => isset( $names[ $i ] ) ? (string) $names[ $i ] : strtoupper( $slug ),
+			'active' => $slug === $current,
+			'url'    => $url,
+		);
+	}
+
+	return $languages;
+}
+
+/**
  * Localize an internal path to the current language's translation URL.
  *
  * On the default language (or for external / mailto links) the path is returned

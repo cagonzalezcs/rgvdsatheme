@@ -216,8 +216,21 @@ export const postsEnvelopeSchema = z.object({
   totalPages: z.number().int(),
 });
 
+/** Header language-switcher entry (mirrors LanguageLink in LanguageToggle.vue
+ * and rgvdsa_i18n_languages_for_post() in inc/i18n.php). Carried on the
+ * single-post envelope so the JSON fast-path can refresh the switcher after a
+ * client-side navigation. */
+export const languageLinkSchema = z.object({
+  code: z.string(),
+  label: z.string(),
+  name: z.string(),
+  active: z.boolean(),
+  url: z.string(),
+});
+
 export const singlePostEnvelopeSchema = singlePostDataSchema.extend({
   readNext: z.array(blogPostSchema),
+  languages: z.array(languageLinkSchema),
 });
 
 export const eventsEnvelopeSchema = z.object({
