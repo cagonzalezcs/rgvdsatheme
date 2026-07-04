@@ -61,7 +61,7 @@ const navLinkClass =
 
 // Below lg the About▾ hover-dropdown collapses to a plain About link (05 §3a).
 const flatNav = computed<NavLink[]>(() => [
-  { label: props.aboutLabel, href: "/about/" },
+  { label: props.aboutLabel, href: props.aboutItems[0]?.href ?? "/about/" },
   ...props.navItems,
 ]);
 

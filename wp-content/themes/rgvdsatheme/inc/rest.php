@@ -172,7 +172,7 @@ function rgvdsa_rest_posts( WP_REST_Request $request ) {
 				'lang'           => $lang,
 			);
 			if ( '' !== $category ) {
-				$args['category_name'] = $category;
+				$args['category'] = $category;
 			}
 			if ( '' !== $search ) {
 				$args['s'] = $search;

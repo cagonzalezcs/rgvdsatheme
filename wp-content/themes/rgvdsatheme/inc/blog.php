@@ -160,15 +160,17 @@ function rgvdsa_blog_load_committee_choices( $field ) {
 
 /**
  * First canonical category slug on the post, fallback "chapter".
+ * Matched through the Polylang translation group, so posts attached to a
+ * translated term (suffixed slug, e.g. `poled-en`) resolve to the
+ * canonical slug instead of degrading to the fallback.
  */
 function rgvdsa_blog_post_cat( $post ) {
-	$canonical = array_keys( rgvdsa_category_registry() );
-
 	$terms = get_the_category( $post->ID );
 	if ( is_array( $terms ) ) {
 		foreach ( $terms as $term ) {
-			if ( in_array( $term->slug, $canonical, true ) ) {
-				return $term->slug;
+			$canonical = rgvdsa_canonical_term_slug( $term );
+			if ( '' !== $canonical ) {
+				return $canonical;
 			}
 		}
 	}
@@ -729,6 +731,9 @@ function rgvdsa_post_to_single( $post ) {
  * an explicit `'lang'` in $args wins (the REST layer passes the page language),
  * otherwise the current front-end language. `'lang' => ''` queries all languages.
  *
+ * A `'category'` arg takes a canonical registry slug and filters via the whole
+ * Polylang translation group (`category__in`), so it works in every language.
+ *
  * @param array $args WP_Query overrides merged over the blog defaults.
  * @return WP_Query
  */
@@ -738,11 +743,19 @@ function rgvdsa_blog_posts_query( $args = array() ) {
 		: ( function_exists( 'pll_current_language' ) ? (string) pll_current_language() : '' );
 	unset( $args['lang'] );
 
+	$category = isset( $args['category'] ) ? (string) $args['category'] : '';
+	unset( $args['category'] );
+
 	$defaults = array(
 		'post_type'           => 'post',
 		'post_status'         => 'publish',
 		'ignore_sticky_posts' => true,
 	);
+
+	if ( '' !== $category ) {
+		$ids                      = rgvdsa_category_term_ids( $category );
+		$defaults['category__in'] = $ids ? $ids : array( 0 ); // No term → no posts, not all posts.
+	}
 
 	if ( '' !== $lang && taxonomy_exists( 'language' ) ) {
 		$defaults['tax_query'] = array(
@@ -787,10 +800,11 @@ function rgvdsa_blog_archive_context( $context ) {
 		'paged'          => $paged,
 	);
 
-	// Custom ?category= param (island filter state) → category_name.
+	// Custom ?category= param (island filter state) → canonical slug, resolved
+	// language-aware inside rgvdsa_blog_posts_query.
 	$category = isset( $_GET['category'] ) ? sanitize_key( (string) wp_unslash( $_GET['category'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 	if ( array_key_exists( $category, rgvdsa_category_registry() ) ) {
-		$args['category_name'] = $category;
+		$args['category'] = $category;
 	}
 
 	// Native ?s= search.

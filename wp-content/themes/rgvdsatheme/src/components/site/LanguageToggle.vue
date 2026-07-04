@@ -5,6 +5,8 @@
 // the current page's translation (Polylang falls back to the language home when the
 // page has no translation). The active language is a deep-red filled pill marked
 // aria-current; navigating is the entire behavior — no cookie, no machine translation.
+// data-native-nav forces a full page load: the header island lives outside #main, so a
+// client-side swap would leave its languages/nav props (and this pill) stale.
 export interface LanguageLink {
   code: string;
   label: string;
@@ -44,6 +46,7 @@ const segmentClass =
       v-for="lang in languages"
       :key="lang.code"
       :href="lang.url"
+      data-native-nav
       :lang="lang.code"
       :title="lang.name"
       :aria-current="lang.active ? 'true' : undefined"
