@@ -17,7 +17,7 @@
  *   empty states) so their Spanish values live in Polylang → Strings.
  * - Translated header nav / about menu labels passed to the SiteHeader island.
  *
- * Front-page BODY copy (hero, who-we-are, get-involved) is NOT translated here:
+ * Front-page BODY copy (hero subhead/CTAs, who-we-are) is NOT translated here:
  * it comes from the Spanish page's own ACF fields (see bin/seed.php).
  */
 
@@ -56,19 +56,27 @@ function rgvdsa_i18n_strings() {
 		'about_committees'   => 'Committees',
 		'about_bylaws'       => 'Bylaws & Code of Conduct',
 		'about_faq'          => 'FAQ',
-		// Home — section headings + links.
+		// Chrome — footer + skip link.
+		'skip_link'          => 'Skip to main content',
+		'footer_a11y_lead'   => 'Built to be accessible —',
+		'footer_a11y_link'   => 'tell us how we can do better.',
+		// Home (v3) — art alt text, section headings + arrow links, empty states.
+		// Arrow links carry no "→": the v3 arrow is a shared SVG (partials/arrow.twig).
+		'home_hero_alt'      => 'A better Rio Grande Valley is possible!',
+		'home_hero_photo_alt' => 'RGV DSA members gathered at a chapter action',
+		'home_map_alt'       => 'Map of Starr, Hidalgo, Willacy, and Cameron counties with stars marking chapter activity',
+		'home_luchador_alt'  => 'Illustration of a luchador wearing a yellow 956 mask',
 		'home_events_head'   => 'Upcoming events',
-		'home_events_all'    => 'Full calendar →',
+		'home_events_all'    => 'Full calendar',
 		'home_events_empty_h' => 'No events on the books yet',
+		'home_events_empty_p' => 'New meetings and actions land on the %s first — subscribe there and never miss one.',
+		'home_events_empty_link' => 'calendar',
 		'home_view_event'    => 'View event',
 		'home_blog_head'     => 'From the blog',
-		'home_blog_all'      => 'All posts →',
-		'home_blog_read'     => 'Read the post →',
+		'home_blog_all'      => 'All posts',
+		'home_blog_read'     => 'Read the post',
 		'home_blog_empty_h'  => 'Posts coming soon',
 		'home_blog_empty_p'  => 'The chapter is writing its first dispatches — check back shortly.',
-		'home_follow'        => 'Follow along:',
-		'home_email_us'      => 'Email us',
-		'home_communities'   => 'Communities we serve',
 		// Interior page chrome (page.twig / page-about / page-get-involved).
 		'chrome_on_this_page' => 'On this page',
 		'chrome_related'      => 'Related',
@@ -322,7 +330,9 @@ function rgvdsa_i18n_context( $context ) {
 add_filter( 'timber/context', 'rgvdsa_i18n_context' );
 
 /**
- * Register `pll__` and `pll_e` as Twig functions so views can localize strings.
+ * Register `pll__` / `pll_e` (string translation) and `localize_url` (internal
+ * path → current-language permalink, see rgvdsa_i18n_localize_url()) as Twig
+ * functions so views can localize strings and links.
  *
  * @param \Twig\Environment $twig Timber's Twig environment.
  * @return \Twig\Environment
@@ -336,6 +346,7 @@ function rgvdsa_i18n_twig( $twig ) {
 		$twig->addFunction( new \Twig\TwigFunction( 'pll__', 'strval' ) );
 		$twig->addFunction( new \Twig\TwigFunction( 'pll_e', 'strval' ) );
 	}
+	$twig->addFunction( new \Twig\TwigFunction( 'localize_url', 'rgvdsa_i18n_localize_url' ) );
 	return $twig;
 }
 add_filter( 'timber/twig', 'rgvdsa_i18n_twig' );

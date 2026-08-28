@@ -1,13 +1,22 @@
 <?php
 /**
- * The front page template. Static front page or posts index both land here;
- * content is the designed Home layout in views/front-page.twig.
+ * The template for displaying the static front page.
+ *
+ * Renders the designed Home layout (views/front-page.twig). The posts index
+ * never lands here — with a static front page it renders index.twig.
+ *
+ * @package  WordPress
+ * @subpackage  Timber
+ * @since    Timber 0.1
  */
 
-$context         = Timber::context();
-$context['post'] = Timber::get_post();
+$context = Timber::context();
 
-// Domain files (inc/) inject home_events, blog_featured, blog_rows, options.
-$context = apply_filters( 'rgvdsa/context/front_page', $context );
+$timber_post     = Timber::get_post();
+$context['post'] = $timber_post;
 
-Timber::render( 'front-page.twig', $context );
+// inc/options.php injects hero/who copy + event_count (priority 5); inc/events.php
+// home_events + calendar_url; inc/blog.php blog_featured + blog_rows.
+$context = apply_filters( 'rgvdsa/context/front_page', $context, $timber_post );
+
+Timber::render( array( 'front-page.twig' ), $context );

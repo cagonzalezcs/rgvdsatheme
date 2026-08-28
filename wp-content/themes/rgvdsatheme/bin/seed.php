@@ -718,7 +718,6 @@ update_field( 'field_rgvdsa_options_join_url', 'https://act.dsausa.org/donate/me
 update_field( 'field_rgvdsa_options_contact_email', 'hello@example.org', 'option' );
 update_field( 'field_rgvdsa_options_instagram_url', 'https://www.instagram.com/dsa_rgv/', 'option' );
 update_field( 'field_rgvdsa_options_event_count', 5, 'option' );
-update_field( 'field_rgvdsa_options_show_counties_strip', 1, 'option' );
 update_field( 'field_rgvdsa_options_committees', array(
 	array( 'name' => 'Political Education', 'desc' => 'Reading groups, night school, and workshops that build our shared analysis.' ),
 	array( 'name' => 'Mutual Aid', 'desc' => "Meeting our neighbors' immediate needs while organizing for lasting change." ),
@@ -737,7 +736,9 @@ update_field( 'field_rgvdsa_options_counties', array_map(
 		'Zapata', 'La Grulla', 'La Feria', 'Rio Hondo',
 	)
 ), 'option' );
-update_field( 'field_rgvdsa_options_footer_tagline', 'Organizing across Hidalgo, Cameron, Willacy, and Starr counties.', 'option' );
+// v3 footer (06-V3-BRAND-REFRESH.md) carries no tagline under the logo; leave the
+// Chapter Settings field empty so the design default renders (editors may still set one).
+update_field( 'field_rgvdsa_options_footer_tagline', '', 'option' );
 update_field( 'field_rgvdsa_options_newhere_heading', 'New here?', 'option' );
 update_field( 'field_rgvdsa_options_newhere_body', 'Come to an <span class="notranslate">RGV-DSA 101</span> — our intro session for new and curious folks.', 'option' );
 update_field( 'field_rgvdsa_options_newhere_link_label', 'Find a session', 'option' );
@@ -756,29 +757,24 @@ if ( $blog_page_id ) {
 /* --- Home hero copy (front-page ACF group). Needs a front page assigned. */
 $rgvdsa_seed_front_id = (int) get_option( 'page_on_front' );
 if ( $rgvdsa_seed_front_id ) {
-	update_field( 'field_rgvdsa_hero_heading', 'A better world is possible. We’re building it in the Valley.', $rgvdsa_seed_front_id );
 	update_field( 'field_rgvdsa_hero_lede', 'We’re the Rio Grande Valley chapter of the Democratic Socialists of America — the largest socialist organization in the United States — organizing working-class power across our border communities.', $rgvdsa_seed_front_id );
 	update_field( 'field_rgvdsa_hero_cta_primary_label', 'Join DSA', $rgvdsa_seed_front_id );
 	update_field( 'field_rgvdsa_hero_cta_primary_url', 'https://act.dsausa.org/donate/membership', $rgvdsa_seed_front_id );
-	update_field( 'field_rgvdsa_hero_cta_secondary_label', 'Come to a meeting ↓', $rgvdsa_seed_front_id );
-	update_field( 'field_rgvdsa_hero_cta_secondary_url', '#events', $rgvdsa_seed_front_id );
-	update_field( 'field_rgvdsa_hero_badge', 'New here? Start with <strong class="notranslate">RGV-DSA 101</strong> — no experience needed.', $rgvdsa_seed_front_id );
+	// v3 home (06-V3-BRAND-REFRESH.md): subhead under the headline art; the
+	// secondary CTA is the dashed "New member?" box → Get Involved.
+	update_field( 'field_rgvdsa_hero_subhead', 'We’re fighting for the Rio Grande Valley we deserve.', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_hero_cta_secondary_label', 'New member? Start with DSARGV 101. Sign up here', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_hero_cta_secondary_url', '/get-involved/', $rgvdsa_seed_front_id );
 	rgvdsa_seed_log( "home hero copy seeded (#{$rgvdsa_seed_front_id})" );
 
-	// Home sections (Who we are + Get involved steps).
+	// Home sections (Who we are — v3 prototype copy).
 	update_field( 'field_rgvdsa_who_eyebrow', 'Who we are', $rgvdsa_seed_front_id );
-	update_field( 'field_rgvdsa_who_heading', 'We are <span class="notranslate">DSA-RGV</span>', $rgvdsa_seed_front_id );
-	update_field( 'field_rgvdsa_who_p1', 'The RGV is one of the most economically unequal regions in the country — but it doesn’t have to stay that way. As democratic socialists, we’re building working-class power to challenge the dominance of the wealthy and the powerful across our border communities.', $rgvdsa_seed_front_id );
-	update_field( 'field_rgvdsa_who_p2', 'Together, we’re fighting for a Valley where working people have real power, and where everyone can live a dignified life — regardless of where they were born or how they got here.', $rgvdsa_seed_front_id );
-	update_field( 'field_rgvdsa_who_link_label', 'More about our chapter →', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_who_heading', 'We are <span class="notranslate">DSARGV</span>', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_who_p1', 'In the Rio Grande Valley, we’re on the frontlines of fascism. We have a billionaire in our backyard, ICE in our neighborhoods, and jobs that leave us overworked and underpaid.', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_who_p2', 'But it doesn’t have to stay that way.', $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_who_p3', "As democratic socialists, we’re building working class power on multiple fronts so that every person in the valley can live a life with dignity, respect, and solidarity. Organizing our workplaces and organizing our community to make sure our future is for workers and by workers. A better RGV is possible.\nWe’re gonna win.", $rgvdsa_seed_front_id );
+	update_field( 'field_rgvdsa_who_link_label', 'More about our chapter', $rgvdsa_seed_front_id );
 	update_field( 'field_rgvdsa_who_link_url', '/about/', $rgvdsa_seed_front_id );
-	update_field( 'field_rgvdsa_home_involved_eyebrow', 'Get involved', $rgvdsa_seed_front_id );
-	update_field( 'field_rgvdsa_home_involved_heading', 'Three steps to start organizing', $rgvdsa_seed_front_id );
-	update_field( 'field_rgvdsa_home_steps', array(
-		array( 'title' => 'Join DSA', 'body' => 'Become a national DSA member — dues are sliding-scale, and membership automatically connects you to our chapter.', 'link_label' => 'Sign up at dsausa.org →', 'link_url' => 'https://act.dsausa.org/donate/membership' ),
-		array( 'title' => 'Come to RGV-DSA 101', 'body' => 'Our intro session for new and curious folks — what we do, how the chapter works, and how you can plug in. Virtual and in-person options.', 'link_label' => 'Find a session →', 'link_url' => '#events' ),
-		array( 'title' => 'Plug into the work', 'body' => 'Join a committee, get on our WhatsApp, and show up. Members receive an invite to our communication channels after onboarding.', 'link_label' => 'See committees →', 'link_url' => '/get-involved/#committees' ),
-	), $rgvdsa_seed_front_id );
 	rgvdsa_seed_log( "home sections copy seeded (#{$rgvdsa_seed_front_id})" );
 } else {
 	rgvdsa_seed_log( 'WARN: no page_on_front — home hero copy not seeded (assign a static front page)' );
@@ -1108,34 +1104,24 @@ if ( function_exists( 'pll_set_post_language' ) && function_exists( 'pll_save_po
 
 		// 6.9c — Spanish front-page ACF copy (mirrors the EN fields above).
 		if ( $rgvdsa_seed_es_home ) {
-			update_field( 'field_rgvdsa_hero_heading', 'Otro mundo es posible. Lo estamos construyendo en el Valle.', $rgvdsa_seed_es_home );
 			update_field( 'field_rgvdsa_hero_lede', 'Somos el capítulo del Valle del Río Grande de los Socialistas Democráticos de América —la organización socialista más grande de los Estados Unidos— organizando el poder de la clase trabajadora en nuestras comunidades fronterizas.', $rgvdsa_seed_es_home );
 			update_field( 'field_rgvdsa_hero_cta_primary_label', 'Únete al DSA', $rgvdsa_seed_es_home );
 			update_field( 'field_rgvdsa_hero_cta_primary_url', 'https://act.dsausa.org/donate/membership', $rgvdsa_seed_es_home );
-			update_field( 'field_rgvdsa_hero_cta_secondary_label', 'Ven a una reunión ↓', $rgvdsa_seed_es_home );
-			update_field( 'field_rgvdsa_hero_cta_secondary_url', '#events', $rgvdsa_seed_es_home );
-			update_field( 'field_rgvdsa_hero_badge', '¿Nuevo por aquí? Empieza con <strong class="notranslate">RGV-DSA 101</strong> — no se necesita experiencia.', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_hero_subhead', 'Luchamos por el Valle del Río Grande que merecemos.', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_hero_cta_secondary_label', '¿Nuevo miembro? Empieza con DSARGV 101. Inscríbete aquí', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_hero_cta_secondary_url', '/es/participa/', $rgvdsa_seed_es_home );
 
 			update_field( 'field_rgvdsa_who_eyebrow', 'Quiénes somos', $rgvdsa_seed_es_home );
-			update_field( 'field_rgvdsa_who_heading', 'Somos <span class="notranslate">DSA-RGV</span>', $rgvdsa_seed_es_home );
-			update_field( 'field_rgvdsa_who_p1', 'El Valle del Río Grande es una de las regiones con mayor desigualdad económica del país, pero no tiene por qué seguir así. Como socialistas democráticos, construimos poder para la clase trabajadora y desafiamos el dominio de los ricos y poderosos en nuestras comunidades fronterizas.', $rgvdsa_seed_es_home );
-			update_field( 'field_rgvdsa_who_p2', 'Juntos luchamos por un Valle donde la gente trabajadora tenga poder real, y donde todas las personas puedan vivir con dignidad, sin importar dónde nacieron ni cómo llegaron aquí.', $rgvdsa_seed_es_home );
-			update_field( 'field_rgvdsa_who_link_label', 'Más sobre nuestro capítulo →', $rgvdsa_seed_es_home );
+			// v3 who-we-are (Spanish drafts of the prototype copy — pending review, see
+			// the change's open question #3).
+			update_field( 'field_rgvdsa_who_heading', 'Somos <span class="notranslate">DSARGV</span>', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_who_p1', 'En el Valle del Río Grande estamos en la primera línea contra el fascismo. Tenemos a un multimillonario en nuestro patio, a ICE en nuestros vecindarios y empleos que nos dejan sobrecargados y mal pagados.', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_who_p2', 'Pero no tiene por qué seguir así.', $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_who_p3', "Como socialistas democráticos, construimos poder de la clase trabajadora en varios frentes para que cada persona del Valle pueda vivir con dignidad, respeto y solidaridad. Organizamos nuestros lugares de trabajo y nuestra comunidad para asegurar que nuestro futuro sea para y por la clase trabajadora. Un mejor RGV es posible.\nVamos a ganar.", $rgvdsa_seed_es_home );
+			update_field( 'field_rgvdsa_who_link_label', 'Más sobre nuestro capítulo', $rgvdsa_seed_es_home );
 			update_field( 'field_rgvdsa_who_link_url', '/es/acerca-de/', $rgvdsa_seed_es_home );
 
-			update_field( 'field_rgvdsa_home_involved_eyebrow', 'Participa', $rgvdsa_seed_es_home );
-			update_field( 'field_rgvdsa_home_involved_heading', 'Tres pasos para empezar a organizar', $rgvdsa_seed_es_home );
-			update_field( 'field_rgvdsa_home_steps', array(
-				array( 'title' => 'Únete al DSA', 'body' => 'Hazte miembro del DSA nacional —las cuotas son de escala móvil— y tu membresía te conecta automáticamente con nuestro capítulo.', 'link_label' => 'Regístrate en dsausa.org →', 'link_url' => 'https://act.dsausa.org/donate/membership' ),
-				array( 'title' => 'Ven a RGV-DSA 101', 'body' => 'Nuestra sesión introductoria para gente nueva y curiosa: qué hacemos, cómo funciona el capítulo y cómo puedes sumarte. Opciones virtuales y presenciales.', 'link_label' => 'Encuentra una sesión →', 'link_url' => '#events' ),
-				array( 'title' => 'Súmate al trabajo', 'body' => 'Únete a un comité, entra a nuestro WhatsApp y participa. Los miembros reciben una invitación a nuestros canales de comunicación tras la orientación.', 'link_label' => 'Ver comités →', 'link_url' => '/es/participa/#committees' ),
-			), $rgvdsa_seed_es_home );
 
-			// Reuse the English "who we are" illustration on the ES page.
-			$rgvdsa_seed_about_img = get_field( 'about_image', $rgvdsa_seed_front_id, false );
-			if ( $rgvdsa_seed_about_img ) {
-				update_field( 'field_rgvdsa_about_image', $rgvdsa_seed_about_img, $rgvdsa_seed_es_home );
-			}
 			rgvdsa_seed_log( "polylang: es home ACF copy seeded (#{$rgvdsa_seed_es_home})" );
 		}
 	} else {
@@ -1155,18 +1141,27 @@ if ( function_exists( 'pll_set_post_language' ) && function_exists( 'pll_save_po
 		'Committees'             => 'Comités',
 		'Bylaws & Code of Conduct' => 'Estatutos y código de conducta',
 		'FAQ'                    => 'Preguntas frecuentes',
+		// Chrome — skip link + footer bottom bar.
+		'Skip to main content'   => 'Saltar al contenido principal',
+		'Built to be accessible —' => 'Hecho para ser accesible —',
+		'tell us how we can do better.' => 'dinos cómo podemos mejorar.',
+		// Home v3 — art alt text.
+		'A better Rio Grande Valley is possible!' => '¡Un mejor Valle del Río Grande es posible!',
+		'RGV DSA members gathered at a chapter action' => 'Miembros de RGV DSA reunidos en una acción del capítulo',
+		'Map of Starr, Hidalgo, Willacy, and Cameron counties with stars marking chapter activity' => 'Mapa de los condados de Starr, Hidalgo, Willacy y Cameron con estrellas que marcan la actividad del capítulo',
+		'Illustration of a luchador wearing a yellow 956 mask' => 'Ilustración de un luchador con una máscara amarilla 956',
+		// Home v3 — headings, arrow links (no "→": the arrow is an SVG), empty states.
 		'Upcoming events'        => 'Próximos eventos',
-		'Full calendar →'        => 'Calendario completo →',
+		'Full calendar'          => 'Calendario completo',
 		'No events on the books yet' => 'Aún no hay eventos programados',
+		'New meetings and actions land on the %s first — subscribe there and never miss one.' => 'Las nuevas reuniones y acciones aparecen primero en el %s — suscríbete allí y no te pierdas ninguna.',
+		'calendar'               => 'calendario',
 		'View event'             => 'Ver evento',
 		'From the blog'          => 'Del blog',
-		'All posts →'            => 'Todas las publicaciones →',
-		'Read the post →'        => 'Leer la publicación →',
+		'All posts'              => 'Todas las publicaciones',
+		'Read the post'          => 'Leer la publicación',
 		'Posts coming soon'      => 'Publicaciones muy pronto',
 		'The chapter is writing its first dispatches — check back shortly.' => 'El capítulo está escribiendo sus primeras publicaciones — vuelve pronto.',
-		'Follow along:'          => 'Síguenos:',
-		'Email us'               => 'Escríbenos',
-		'Communities we serve'   => 'Comunidades que servimos',
 		// Interior page chrome (page-about / page-get-involved / page.twig).
 		'On this page'           => 'En esta página',
 		'Related'                => 'Relacionado',

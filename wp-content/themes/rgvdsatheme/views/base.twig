@@ -8,13 +8,13 @@
 
 	<body class="{{body_class}}" data-template="base.twig">
 		{{ function('wp_body_open') }}
-		<a class="skip-link absolute -left-[9999px] top-3 z-200 bg-ink px-[18px] py-2.5 text-[0.95rem] font-bold text-cream no-underline focus:left-4" href="#main">Skip to main content</a>
+		<a class="skip-link absolute -left-[9999px] top-3 z-200 rounded-[8px] bg-ink px-[18px] py-2.5 font-sans text-[0.95rem] font-bold text-white no-underline focus:left-4" href="#main">{{ pll__('Skip to main content') }}</a>
 
 		{% set header_props = {
 			joinUrl: chapter.join_url,
 			joinLabel: join_label|default('Join DSA'),
 			aboutLabel: about_label|default('About'),
-			logoUrl: site.theme.link ~ '/static/images/logos/logo-red.png',
+			logoUrl: site.theme.link ~ '/static/images/brand/logo-header.svg',
 			homeUrl: home_url|default(site.url),
 			languages: languages|default([]),
 			currentPath: current_path|default('')
@@ -39,7 +39,10 @@
 
 		{% block footer %}
 			{% set footer_props = {
-				logoUrl: site.theme.link ~ '/static/images/logos/logo-green.png'
+				logoUrl: site.theme.link ~ '/static/images/brand/logo-footer.svg',
+				socials: chapter.socials|default([]),
+				a11yLead: pll__('Built to be accessible —'),
+				a11yLinkLabel: pll__('tell us how we can do better.')
 			} %}
 			{# Omit keys when unset so the Vue fixture defaults hold. #}
 			{% if footer_columns %}

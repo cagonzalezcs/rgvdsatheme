@@ -24,7 +24,7 @@ const date = computed(() => parseISODate(props.event.date));
     <div
       aria-hidden="true"
       class="flex flex-none flex-col items-center justify-center gap-px rounded-[12px] px-2.5 py-2 text-center text-white"
-      :style="{ background: category.color ?? '#1C1917' }"
+      :style="{ background: category.color ?? '#231F20' }"
     >
       <span class="font-display text-[0.66rem] font-bold uppercase tracking-[0.1em]">{{ WEEKDAYS[date.getDay()] }}</span>
       <span class="font-display text-[1.5rem] font-extrabold leading-none">{{ date.getDate() }}</span>
@@ -33,7 +33,7 @@ const date = computed(() => parseISODate(props.event.date));
     <div class="flex min-w-0 flex-col justify-center gap-[5px]">
       <span
         class="self-start rounded-full px-3 py-1 text-[0.72rem] font-bold uppercase tracking-[0.06em] text-white"
-        :style="{ background: category.color ?? '#1C1917' }"
+        :style="{ background: category.color ?? '#231F20' }"
       >
         {{ category.label }}
       </span>

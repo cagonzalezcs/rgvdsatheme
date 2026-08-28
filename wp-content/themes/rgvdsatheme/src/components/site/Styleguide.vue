@@ -53,15 +53,21 @@ import OverlaySections from "@/components/site/styleguide/OverlaySections.vue";
 import DataSections from "@/components/site/styleguide/DataSections.vue";
 
 const brandColors = [
-  { name: "brand-red", hex: "#E9252E", class: "bg-brand-red" },
-  { name: "brand-red-deep", hex: "#9E0B13", class: "bg-brand-red-deep" },
-  { name: "cream", hex: "#FAF4EA", class: "bg-cream" },
-  { name: "ink", hex: "#1C1917", class: "bg-ink" },
+  { name: "brand-red", hex: "#DC1520", class: "bg-brand-red" },
+  { name: "brand-red-deep", hex: "#B5121B", class: "bg-brand-red-deep" },
+  { name: "orange", hex: "#FF4100", class: "bg-orange" },
+  { name: "yellow", hex: "#FFC800", class: "bg-yellow" },
+  { name: "green", hex: "#719655", class: "bg-green" },
+  { name: "green-dark", hex: "#5F813A", class: "bg-green-dark" },
+  { name: "cream", hex: "#F7F5F1", class: "bg-cream" },
+  { name: "off-white", hex: "#F5F2EC", class: "bg-off-white" },
+  { name: "ink", hex: "#231F20", class: "bg-ink" },
+  { name: "ink-footer", hex: "#211E1E", class: "bg-ink-footer" },
   { name: "ink-soft", hex: "#3A352F", class: "bg-ink-soft" },
   { name: "muted-on-ink", hex: "#CFC8BD", class: "bg-muted-on-ink" },
   { name: "muted-on-cream", hex: "#5C544A", class: "bg-muted-on-cream" },
   { name: "muted-2", hex: "#6B6257", class: "bg-muted-2" },
-  { name: "border-muted", hex: "#B7AC9B", class: "bg-border-muted" },
+  { name: "border-muted", hex: "#B9B3A9", class: "bg-border-muted" },
   { name: "divider-cream", hex: "#E3D9C6", class: "bg-divider-cream" },
   { name: "cell-outmonth", hex: "#F0E7D6", class: "bg-cell-outmonth" },
 ];
@@ -135,25 +141,25 @@ const sampleEvents = [
       </h2>
       <div class="space-y-6">
         <p class="font-display text-[clamp(2.3rem,5.8vw,4.4rem)] font-black uppercase leading-[1.08]">
-          Hero H1 — Montserrat 900
+          Hero H1 — Bowlby One
         </p>
         <p class="font-display text-[clamp(2rem,4.8vw,3.4rem)] font-black uppercase leading-[1.1]">
-          Page H1 — Montserrat 900
+          Page H1 — Bowlby One
         </p>
         <p class="font-display text-[clamp(1.8rem,4vw,2.9rem)] font-black uppercase">
-          Section H2 — Montserrat 900
+          Section H2 — Bowlby One
         </p>
         <p class="border-b-[3px] border-ink pb-2.5 font-display text-2xl font-extrabold uppercase">
-          In-content H2 — Montserrat 800 w/ rule
+          In-content H2 — Bowlby One w/ rule
         </p>
         <p class="text-sm font-extrabold uppercase tracking-[0.18em] text-brand-red">
           Eyebrow / kicker — 800, tracked
         </p>
         <p class="max-w-[60ch] text-lg leading-relaxed">
-          Body — Open Sans 400. The Rio Grande Valley deserves an economy and a government that
+          Body — Manifold DSA 500. The Rio Grande Valley deserves an economy and a government that
           put working people first. We organize across four counties.
         </p>
-        <p class="font-display text-[0.95rem] font-semibold">Nav link — Montserrat 600</p>
+        <p class="font-display text-[0.95rem] font-semibold">Nav link — Bowlby One</p>
         <p class="text-xs font-extrabold uppercase tracking-[0.12em]">Micro label — 800 tracked</p>
       </div>
     </section>

@@ -1,175 +1,180 @@
 {% extends "base.twig" %}
 
 {#
-  Home page — v2 (warm/rounded) skin. Hero, counties, events, and blog teasers
-  are WP/ACF-driven (see inc/options.php, inc/events.php, inc/blog.php); the
-  literals below are safe fallbacks for the pre-seed / preview render.
-  Ported from design_handoff_rgvdsa_vue/designs/RGV DSA Home.dc.html.
+  Home page — v3 brand (design_handoff_rgvdsa_vue/06-V3-BRAND-REFRESH.md).
+  Ported from the canonical prototype designs/RGV DSA Home v3.dc.html; the
+  designer's front-page.png is the tie-breaker. Hero copy/CTAs and who-we-are
+  copy are ACF-driven (inc/options.php), events + blog teasers come from
+  inc/events.php / inc/blog.php — every key is always set (possibly empty), so
+  the empty states below own the pre-seed render.
+
+  Sections: hero, who-we-are, upcoming events, from-the-blog, Ponte Trucha CTA.
+  Brand tokens are the theme's semantic set (src/css/tailwind.css); the CTA
+  band's flame geometry lives there too (`.ponte-trucha`).
+
+  Every band carries data-tone (red/cream/ink/orange/green) for the Aa widget's
+  high-contrast mode (useA11ySettings.ts + tailwind.css token swaps).
 #}
 
-{% set show_counties_strip = show_counties_strip|default(true) %}
-{% set event_count = event_count|default(5) %}
-{# calendar_url comes from inc/events.php (rgvdsa_events_calendar_url()). #}
-{% set calendar_url = calendar_url|default('/calendar/') %}
-{# home_events comes from rgvdsa_events_front_page_context() — always set
-   (possibly empty); the empty state below owns the pre-seed render. #}
-{% set home_events = home_events|default([]) %}
-{# counties + hero come from inc/options.php (rgvdsa_chapter_counties / rgvdsa_front_hero). #}
-{% set counties = counties|default([]) %}
-{#
-  blog_featured (map|null) and blog_rows (array) come from
-  rgvdsa_blog_front_page_context() with a raw `cat` slug. Literal class maps
-  keep the Tailwind JIT scanner able to see every category utility.
-#}
-{% set cat_featured_pill = {
-	chapter: 'bg-cat-chapter', poled: 'bg-cat-poled', mutual: 'bg-cat-mutual',
-	labor: 'bg-cat-labor', electoral: 'bg-cat-electoral', social: 'bg-cat-social'
-} %}
-{% set cat_row_pill = {
-	chapter: 'text-cat-chapter border-cat-chapter', poled: 'text-cat-poled border-cat-poled',
-	mutual: 'text-cat-mutual border-cat-mutual', labor: 'text-cat-labor border-cat-labor',
-	electoral: 'text-cat-electoral border-cat-electoral', social: 'text-cat-social border-cat-social'
-} %}
-{% set stripe = 'bg-[repeating-linear-gradient(45deg,var(--color-stripe-v2-a)_0_14px,var(--color-stripe-v2-b)_14px_28px)]' %}
+{% set img = site.theme.link ~ '/static/images/brand' %}
+
+{# Shared class recipes (kept as literals here so the Tailwind scanner sees them). #}
+{% set h2_class = 'm-0 font-display text-[clamp(2rem,3.6vw,3.1rem)] font-normal leading-[1.1]' %}
+{% set arrow_link = 'flex items-center gap-4 text-[1.05rem] font-extrabold uppercase tracking-[0.03em] text-orange no-underline hover:underline hover:underline-offset-4' %}
+{% set stripe = 'bg-[repeating-linear-gradient(45deg,var(--color-stripe-a)_0_14px,var(--color-stripe-b)_14px_28px)]' %}
+{% set card = 'overflow-hidden rounded-[24px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card-hover-lg' %}
 
 {% block content %}
 
-	{# ============ HERO ============ #}
-	<section class="home-hero bg-brand-red px-4 py-14 text-white md:px-6 md:py-20 lg:py-[88px]" data-tone="red">
-		<div class="mx-auto flex max-w-[1140px] flex-col items-start gap-8 md:flex-row md:items-center md:gap-12">
-			<div class="flex w-full flex-none flex-col items-start gap-6 md:w-auto md:flex-[1_1_520px] md:gap-7">
-				<span class="rounded-full bg-white px-[18px] py-[7px] text-[0.85rem] font-bold uppercase tracking-[0.1em] text-red">Rio Grande Valley Democratic Socialists</span>
-				<h1 class="m-0 max-w-[18ch] font-display text-[clamp(2.3rem,5.6vw,4rem)] font-black leading-[1.08] tracking-[-0.01em] [text-wrap:balance]">
-					{{ hero.heading }}
-				</h1>
-				<p class="m-0 max-w-[44ch] text-[1.02rem] font-normal leading-[1.5] md:text-[1.15rem] lg:text-[1.5rem]">
-					{{ hero.lede }}
-				</p>
-				<div class="flex w-full flex-col items-stretch gap-3 md:w-auto md:flex-row md:flex-wrap md:items-center md:gap-3.5">
-					<a href="{{ hero.cta_primary_url }}" target="_blank" rel="noopener"
-						class="w-full rounded-full bg-white px-[34px] py-4 text-center text-[1.05rem] font-bold text-red no-underline shadow-[0_4px_14px_rgba(28,25,23,0.25)] transition-transform hover:-translate-y-px hover:text-red-hover md:w-auto">
-						{{ hero.cta_primary_label }}
-					</a>
-					<a href="{{ hero.cta_secondary_url }}"
-						class="w-full rounded-full bg-ink px-[34px] py-4 text-center text-[1.05rem] font-bold text-white no-underline transition-colors hover:bg-ink-soft md:w-auto">
-						{{ hero.cta_secondary_label }}
-					</a>
-				</div>
-				<span class="rounded-full bg-[rgba(28,25,23,0.85)] px-[18px] py-2 text-[0.95rem]">{{ hero.badge }}</span>
-			</div>
-			<img src="{{ site.theme.link }}/static/images/logos/logo-lg.png" alt="" aria-hidden="true"
-				class="mx-auto block h-auto w-full max-w-[150px] md:max-w-[190px] md:flex-[1_1_360px] lg:max-w-[800px]">
+	{# ============ HERO — photo above the copy on mobile; 50/50 row from 700px ============ #}
+	<section class="home-hero bg-brand-red font-sans" data-tone="red">
+		<div class="relative mx-auto flex w-full max-w-[1300px] flex-col-reverse min-[700px]:flex-row">
+			<div class="relative flex min-w-0 flex-col items-center justify-center gap-7 overflow-hidden px-6 pb-16 pt-[72px] text-center text-white min-[700px]:w-1/2 min-[700px]:flex-none md:gap-[34px] md:px-12 md:pb-[84px] md:pt-[88px]">
+			{# Scattered star art — decorative. #}
+			<img src="{{ img }}/sparkle.svg" alt="" aria-hidden="true" width="42" height="46" class="absolute bottom-6 left-4 w-[30px] -rotate-10 md:bottom-auto md:left-[8%] md:top-[100px] md:w-[34px]">
+			<img src="{{ img }}/star-notch.svg" alt="" aria-hidden="true" width="58" height="74" class="absolute right-4 top-5 w-[44px] rotate-10 md:right-[12%] md:top-[38px] md:w-[52px]">
+			<img src="{{ img }}/star.svg" alt="" aria-hidden="true" width="62" height="71" class="absolute bottom-6 right-4 w-[44px] md:bottom-8 md:right-[12%] md:w-[50px]">
+
+			{# The headline is designer-supplied art (white with layered green 3-D
+			   offset) — CSS recreation proved off-brand. It IS the page <h1>, so the
+			   alt carries the full line (translated for /es/; same art for now — see
+			   the change's open question #1). #}
+			<h1 class="m-0 w-full max-w-[800px]">
+				<img src="{{ img }}/hero-headline.svg" alt="{{ pll__('A better Rio Grande Valley is possible!') }}" width="614" height="189" class="block h-auto w-[min(100%,1280px)] mx-auto">
+			</h1>
+			<p class="m-0 max-w-[34ch] text-[1.2rem] font-semibold leading-[1.4] [text-wrap:balance] md:text-[1.35rem]">{{ hero.subhead }}</p>
+			<a href="{{ hero.cta_primary_url }}" target="_blank" rel="noopener"
+				class="rounded-full bg-white px-11 py-4 font-display text-[1.15rem] font-normal uppercase tracking-[0.04em] text-red no-underline transition-[transform,color] hover:-translate-y-px hover:text-red-hover">
+				{{ hero.cta_primary_label }}
+			</a>
+			<a href="{{ hero.cta_secondary_url }}"
+				class="flex items-center gap-[22px] rounded-[16px] border-2 border-dashed border-yellow px-7 py-[18px] text-left text-white no-underline transition-colors hover:bg-[rgba(255,200,0,0.12)]">
+				<span class="max-w-[22ch] text-[1.25rem] font-bold leading-[1.35]">{{ hero.cta_secondary_label }}</span>
+				{% include 'partials/arrow.twig' with { class: 'h-[22px] w-11 flex-none fill-white' } only %}
+			</a>
+		</div>
+		<div class="min-w-0 min-[700px]:w-1/2 min-[700px]:flex-none min-[700px]:min-h-[480px]">
+			<picture>
+				<source type="image/webp" srcset="{{ img }}/hero-photo.webp 951w, {{ img }}/hero-photo@2x.webp 1902w" sizes="(min-width: 700px) 50vw, 100vw">
+				<img src="{{ img }}/hero-photo.jpg" srcset="{{ img }}/hero-photo.jpg 951w, {{ img }}/hero-photo@2x.jpg 1902w" sizes="(min-width: 700px) 50vw, 100vw"
+					width="951" height="716" alt="{{ pll__('RGV DSA members gathered at a chapter action') }}"
+					class="block h-full w-full object-cover">
+			</picture>
+		</div>
 		</div>
 	</section>
 
-	{# ============ COUNTIES STRIP ============ #}
-	{% if show_counties_strip %}
-		<section id="counties" class="counties-strip bg-ink px-4 py-5 text-white md:px-6" data-tone="ink" aria-label="{{ pll__('Communities we serve') }}">
-			<div class="mx-auto flex max-w-[1200px] flex-wrap justify-center gap-x-[18px] gap-y-2 font-display text-[0.75rem] font-bold uppercase tracking-[0.05em] md:text-[0.92rem]">
-				{% for county in counties %}
-					<span class="notranslate">{{ county }}</span>{% if not loop.last %}<span aria-hidden="true" class="text-brand-red">★</span>{% endif %}
-				{% endfor %}
+	{# ============ WHO WE ARE — county map + right-aligned copy ============ #}
+	<section id="about" class="who-we-are bg-white px-4 pb-16 pt-14 font-sans text-ink md:px-6 md:pb-[76px] md:pt-[84px]" data-tone="cream">
+		<div class="mx-auto grid max-w-[1240px] grid-cols-1 items-center gap-10 md:gap-14 md:[grid-template-columns:minmax(320px,1.15fr)_minmax(300px,1fr)]">
+			{% include 'partials/county-map.twig' with { class: 'block h-auto w-full' } only %}
+			{# who.* comes from inc/options.php (rgvdsa_front_who) — ACF with the prototype copy as defaults. #}
+			<div class="flex flex-col items-start gap-[22px] text-left md:items-end md:text-right">
+				<div class="text-base font-extrabold uppercase tracking-[0.04em] text-orange">{{ who.eyebrow }}</div>
+				<h2 class="{{ h2_class }}">{{ who.heading }}</h2>
+				<p class="m-0 text-[1.22rem] font-bold leading-[1.45]">{{ who.p1 }}</p>
+				<p class="m-0 text-[1.22rem] font-bold leading-[1.45]">{{ who.p2 }}</p>
+				<p class="m-0 text-[1.22rem] font-bold leading-[1.45]">{{ who.p3 }}</p>
+				<a href="{{ who.link_url }}" class="{{ arrow_link }}">
+					{{ who.link_label }}
+					{% include 'partials/arrow.twig' only %}
+				</a>
 			</div>
-		</section>
-	{% endif %}
-
-	{# ============ WHO WE ARE ============ #}
-	<section id="about" class="who-we-are bg-white px-4 py-16 md:px-6 md:py-24" data-tone="cream">
-		<div class="mx-auto grid max-w-[1140px] grid-cols-1 items-center gap-10 md:gap-16 md:[grid-template-columns:minmax(300px,1.1fr)_minmax(280px,0.9fr)]">
-			{# who.* comes from inc/options.php (rgvdsa_front_who) — ACF w/ design-copy defaults. #}
-			<div class="flex flex-col gap-5">
-				<div class="text-[0.82rem] font-bold uppercase tracking-[0.14em] text-red">{{ who.eyebrow }}</div>
-				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">{{ who.heading }}</h2>
-				<p class="m-0 text-[1.08rem] leading-[1.75] text-text-body">
-					{{ who.p1 }}
-				</p>
-				<p class="m-0 text-[1.08rem] leading-[1.75] text-text-body">
-					{{ who.p2 }}
-				</p>
-				<a href="{{ who.link_url }}" class="self-start text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">{{ who.link_label }}</a>
-			</div>
-			{% if about_image %}
-				<figure class="m-0 aspect-[4/3] overflow-hidden rounded-[18px] shadow-photo">
-					<img src="{{ about_image.src }}" alt="{{ about_image.alt }}" class="h-full w-full object-cover">
-				</figure>
-			{% else %}
-				<figure class="m-0 aspect-[4/3] overflow-hidden rounded-[18px] shadow-photo {{ stripe }}" aria-hidden="true"></figure>
-			{% endif %}
 		</div>
 	</section>
 
-	{# ============ UPCOMING EVENTS ============ #}
-	<section id="events" class="upcoming-events bg-off-white px-4 py-14 md:px-6 md:py-[88px]" data-tone="cream">
-		<div class="mx-auto flex max-w-[1140px] flex-col gap-9">
-			<div class="flex flex-wrap items-baseline justify-between gap-4">
-				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">{{ pll__('Upcoming events') }}</h2>
-				<a href="{{ calendar_url }}" class="text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">{{ pll__('Full calendar →') }}</a>
+	{# ============ UPCOMING EVENTS — cream band ============ #}
+	<section id="events" class="upcoming-events bg-cream px-4 pb-16 pt-14 font-sans text-ink md:px-6 md:pb-24 md:pt-[76px]" data-tone="cream">
+		<div class="mx-auto flex max-w-[1240px] flex-col gap-10">
+			<div class="flex flex-wrap items-center justify-between gap-4">
+				<h2 class="{{ h2_class }}">{{ pll__('Upcoming events') }}</h2>
+				<a href="{{ calendar_url }}" class="{{ arrow_link }}">
+					{{ pll__('Full calendar') }}
+					{% include 'partials/arrow.twig' only %}
+				</a>
 			</div>
 			{% if home_events is empty %}
-				<div class="flex flex-col items-center gap-2.5 rounded-[16px] border-2 border-dashed border-border-control px-8 py-12 text-center">
-					<div class="font-display text-[1.2rem] font-bold">{{ pll__('No events on the books yet') }}</div>
-					<p class="m-0 max-w-[48ch] text-base leading-[1.6] text-text-muted">New meetings and actions land on the <a href="{{ calendar_url }}" class="font-bold text-red">calendar</a> first — subscribe there and never miss one.</p>
+				{# Empty state (designer's mock) — renders whenever the query is empty. #}
+				<div class="flex flex-col items-center gap-1 rounded-[20px] border-2 border-dashed border-border-muted px-8 py-16 text-center">
+					<div class="text-[1.25rem] font-bold">{{ pll__('No events on the books yet') }}</div>
+					<p class="m-0 max-w-[42ch] text-[1.25rem] font-medium leading-[1.45]">
+						{{ pll__('New meetings and actions land on the %s first — subscribe there and never miss one.')|format('<a href="' ~ calendar_url ~ '" class="font-bold text-red underline underline-offset-4 hover:text-red-hover">' ~ pll__('calendar') ~ '</a>') }}
+					</p>
+				</div>
+			{% else %}
+				<div class="flex flex-col gap-3">
+					{% for ev in home_events|slice(0, event_count) %}
+						{# Whole row is the tap target on mobile (05 §4 Home); the pill becomes a
+						   visual span at md+ and an inline "View event →" shows on mobile. #}
+						<a href="{{ ev.url|default(calendar_url) }}" aria-label="{{ pll__('View event') }}: {{ ev.title }}"
+							class="group grid grid-cols-[64px_1fr] items-center gap-4 rounded-[16px] bg-white px-[22px] py-[18px] text-ink no-underline shadow-subtle transition-shadow hover:shadow-card md:[grid-template-columns:76px_1fr_auto] md:gap-6">
+							<div aria-hidden="true" class="flex flex-col rounded-[12px] bg-brand-red px-1 py-2.5 text-center text-white">
+								<span class="text-[1.4rem] font-extrabold leading-[1.1]">{{ ev.day }}</span>
+								<span class="text-[0.75rem] font-bold tracking-[0.1em]">{{ ev.month }}</span>
+							</div>
+							<div class="flex flex-col gap-1">
+								<div class="text-[1.18rem] font-bold">{{ ev.title }}</div>
+								<div class="text-base font-medium text-text-muted">{{ ev.when }} · {{ ev.where }}</div>
+								<span class="mt-1 font-display text-[0.85rem] uppercase tracking-[0.03em] text-orange md:hidden">{{ pll__('View event') }} →</span>
+							</div>
+							<span aria-hidden="true"
+								class="hidden whitespace-nowrap rounded-full border-2 border-orange px-5 py-[9px] font-display text-[0.88rem] font-normal uppercase tracking-[0.03em] text-orange transition-colors group-hover:bg-orange group-hover:text-white md:inline-block">
+								{{ pll__('View event') }}
+							</span>
+						</a>
+					{% endfor %}
 				</div>
 			{% endif %}
-			<div class="flex flex-col gap-3">
-				{% for ev in home_events|slice(0, event_count) %}
-					{# Whole row is the tap target on mobile (05 §4 Home); the pill becomes a
-					   visual span at md+ and an inline "View event →" shows on mobile. #}
-					<a href="{{ ev.url|default(calendar_url) }}" aria-label="View event: {{ ev.title }}"
-						class="group grid grid-cols-[64px_1fr] items-center gap-4 rounded-[14px] bg-white px-[22px] py-[18px] text-ink no-underline shadow-subtle transition-shadow hover:shadow-card md:[grid-template-columns:76px_1fr_auto] md:gap-6">
-						<div aria-hidden="true" class="flex flex-col rounded-[12px] bg-brand-red px-1 py-2.5 text-center text-white">
-							<span class="font-display text-[1.4rem] font-extrabold leading-[1.1]">{{ ev.day }}</span>
-							<span class="text-[0.72rem] font-bold tracking-[0.1em]">{{ ev.month }}</span>
-						</div>
-						<div class="flex flex-col gap-1">
-							<div class="text-[1.12rem] font-bold">{{ ev.title }}</div>
-							<div class="text-[0.95rem] text-text-muted">{{ ev.when }} · {{ ev.where }}</div>
-							<span class="mt-1 text-[0.92rem] font-bold text-red md:hidden">{{ pll__('View event') }} →</span>
-						</div>
-						<span aria-hidden="true"
-							class="hidden whitespace-nowrap rounded-full border-2 border-red px-5 py-[9px] text-[0.92rem] font-bold text-red transition-colors group-hover:border-red-hover group-hover:bg-wash md:inline-block">
-							{{ pll__('View event') }}
-						</span>
-					</a>
-				{% endfor %}
-			</div>
 		</div>
 	</section>
 
 	{# ============ FROM THE BLOG ============ #}
-	<section id="blog" class="from-the-blog bg-white px-4 py-14 md:px-6 md:py-[88px]" data-tone="cream">
-		<div class="mx-auto flex max-w-[1140px] flex-col gap-9">
-			<div class="flex flex-wrap items-baseline justify-between gap-4">
-				<h2 class="m-0 font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">{{ pll__('From the blog') }}</h2>
-				<a href="/blog/" class="text-base font-bold text-red no-underline hover:underline hover:underline-offset-4">{{ pll__('All posts →') }}</a>
+	<section id="blog" class="from-the-blog bg-white px-4 pb-16 pt-14 font-sans text-ink md:px-6 md:pb-24 md:pt-[88px]" data-tone="cream">
+		<div class="mx-auto flex max-w-[1240px] flex-col gap-11">
+			<div class="flex flex-wrap items-center justify-between gap-4">
+				<h2 class="{{ h2_class }}">{{ pll__('From the blog') }}</h2>
+				<a href="{{ localize_url('/blog/') }}" class="{{ arrow_link }}">
+					{{ pll__('All posts') }}
+					{% include 'partials/arrow.twig' only %}
+				</a>
 			</div>
+			{#
+			  blog_featured (map|null) and blog_rows (array) come from
+			  rgvdsa_blog_front_page_context(). Chips alternate the two brand chip colors
+			  (green-dark solid on the featured card; green-dark / orange outlines on
+			  the rows) rather than per-category colors — the archive keeps those.
+			#}
 			{% if blog_featured %}
 				<div class="grid grid-cols-1 items-stretch gap-8 md:grid-cols-2 lg:[grid-template-columns:minmax(300px,1.15fr)_minmax(280px,1fr)]">
-					<a href="{{ blog_featured.url }}" class="flex flex-col overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card-hover-lg md:col-span-2 lg:col-span-1">
+					<a href="{{ blog_featured.url }}" class="flex flex-col {{ card }} md:col-span-2 lg:col-span-1">
 						<div class="relative flex aspect-video items-start p-3.5 {% if not blog_featured.image %}{{ stripe }}{% endif %}">
 							{% if blog_featured.image %}
 								<img src="{{ blog_featured.image.src }}" alt="{{ blog_featured.image.alt }}" class="absolute inset-0 h-full w-full object-cover">
 							{% endif %}
-							<span class="relative {{ cat_featured_pill[blog_featured.cat] }} text-white rounded-full px-3.5 py-[5px] text-[0.75rem] font-bold uppercase tracking-[0.06em]">{{ blog_featured.cat_label }}</span>
+							<span class="relative rounded-full bg-green-dark px-3.5 py-[5px] text-[0.75rem] font-bold uppercase tracking-[0.06em] text-white">{{ blog_featured.cat_label }}</span>
 						</div>
 						<div class="flex flex-col gap-2.5 px-7 pb-[30px] pt-[26px]">
-							<span class="text-[0.82rem] font-semibold text-text-muted">{{ blog_featured.date }} · {{ blog_featured.read }}</span>
-							<span class="font-display text-[clamp(1.2rem,2.2vw,1.45rem)] font-extrabold leading-[1.25] [text-wrap:balance]">{{ blog_featured.title }}</span>
-							<span class="text-base leading-[1.65] text-text-muted">{{ blog_featured.excerpt }}</span>
-							<span class="mt-1 text-[0.95rem] font-bold text-red">{{ pll__('Read the post →') }}</span>
+							<span class="text-[0.85rem] font-semibold text-text-muted">{{ blog_featured.date }} · {{ blog_featured.read }}</span>
+							<span class="text-[clamp(1.2rem,2.2vw,1.45rem)] font-extrabold leading-[1.25] [text-wrap:balance]">{{ blog_featured.title }}</span>
+							<span class="text-base leading-[1.55] text-text-muted">{{ blog_featured.excerpt }}</span>
+							<span class="mt-1 flex items-center gap-3 text-[0.95rem] font-extrabold uppercase tracking-[0.03em] text-orange">
+								{{ pll__('Read the post') }}
+								{% include 'partials/arrow.twig' with { class: 'h-4 w-8 flex-none fill-orange' } only %}
+							</span>
 						</div>
 					</a>
-					<div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-1">
+					<div class="grid grid-cols-1 gap-5 md:col-span-2 md:grid-cols-2 lg:col-span-1 lg:grid-cols-1">
 						{% for row in blog_rows %}
-							<a href="{{ row.url }}" class="grid flex-1 grid-cols-[100px_1fr] overflow-hidden rounded-[18px] bg-white text-ink no-underline shadow-card transition-[box-shadow,transform] hover:-translate-y-0.5 hover:shadow-card-hover-lg sm:[grid-template-columns:130px_1fr]">
+							{% set chip = loop.index0 is even ? 'border-green-dark text-green-dark' : 'border-orange text-orange' %}
+							<a href="{{ row.url }}" class="grid flex-1 grid-cols-[100px_1fr] {{ card }} sm:[grid-template-columns:130px_1fr]">
 								{% if row.image %}
 									<span class="min-h-[130px] overflow-hidden"><img src="{{ row.image.src }}" alt="{{ row.image.alt }}" class="h-full w-full object-cover"></span>
 								{% else %}
 									<span aria-hidden="true" class="min-h-[130px] {{ stripe }}"></span>
 								{% endif %}
 								<span class="flex flex-col justify-center gap-[9px] px-6 py-5">
-									<span class="{{ cat_row_pill[row.cat] }} self-start rounded-full border-2 px-3 py-[3px] text-[0.72rem] font-bold uppercase tracking-[0.06em]">{{ row.cat_label }}</span>
-									<span class="font-display text-[1.08rem] font-bold leading-[1.35]">{{ row.title }}</span>
+									<span class="{{ chip }} self-start rounded-full border-2 px-3 py-[3px] text-[0.72rem] font-bold uppercase tracking-[0.06em]">{{ row.cat_label }}</span>
+									<span class="text-[1.1rem] font-bold leading-[1.35]">{{ row.title }}</span>
 									<span class="text-[0.85rem] font-semibold text-text-muted">{{ row.date }}</span>
 								</span>
 							</a>
@@ -177,47 +182,38 @@
 					</div>
 				</div>
 			{% else %}
-				<div class="flex flex-col items-center gap-2.5 rounded-[18px] border border-hairline bg-off-white px-6 py-16 text-center">
-					<span class="font-display text-[1.15rem] font-bold">{{ pll__('Posts coming soon') }}</span>
-					<span class="text-base text-text-muted">{{ pll__('The chapter is writing its first dispatches — check back shortly.') }}</span>
+				<div class="flex flex-col items-center gap-1 rounded-[24px] border-2 border-dashed border-border-muted px-6 py-16 text-center">
+					<span class="text-[1.25rem] font-bold">{{ pll__('Posts coming soon') }}</span>
+					<span class="max-w-[42ch] text-[1.25rem] font-medium leading-[1.45]">{{ pll__('The chapter is writing its first dispatches — check back shortly.') }}</span>
 				</div>
 			{% endif %}
 		</div>
 	</section>
 
-	{# ============ GET INVOLVED STEPS ============ #}
-	<section id="get-involved" class="get-involved-steps bg-ink px-4 py-16 text-white md:px-6 md:py-24" data-tone="ink">
-		<div class="mx-auto flex max-w-[1140px] flex-col gap-12">
-			{# home_involved.* comes from inc/options.php (rgvdsa_front_involved) — ACF w/ design-copy defaults. #}
-			<div class="flex flex-col gap-3.5">
-				<div class="text-[0.82rem] font-bold uppercase tracking-[0.14em] text-pink">{{ home_involved.eyebrow }}</div>
-				<h2 class="m-0 max-w-[20ch] font-display text-[clamp(1.7rem,3.6vw,2.5rem)] font-extrabold leading-[1.15] tracking-[-0.01em]">{{ home_involved.heading }}</h2>
-			</div>
-			<div class="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-7">
-				{% for step in home_involved.steps %}
-					<div class="step-card flex flex-col gap-3 rounded-[18px] bg-ink-card p-7">
-						<div class="font-display text-[1.7rem] font-extrabold text-pink">{{ '%02d'|format(loop.index) }}</div>
-						<div class="text-[1.18rem] font-bold">{{ step.title }}</div>
-						<p class="m-0 text-base leading-[1.65] text-muted-on-ink">{{ step.body }}</p>
-						{% if step.link_label and step.href %}
-							<a href="{{ step.href }}"{% if step.external %} target="_blank" rel="noopener"{% endif %}
-								class="mt-auto self-start text-[0.95rem] font-bold text-white underline underline-offset-4 hover:text-pink">
-								{{ step.link_label }}
-							</a>
-						{% endif %}
-					</div>
-				{% endfor %}
-			</div>
-			<div class="flex flex-col items-stretch gap-3 border-t border-ink-soft pt-8 md:flex-row md:flex-wrap md:items-center md:gap-4">
-				<span class="text-[0.95rem] font-bold text-muted-on-ink">{{ pll__('Follow along:') }}</span>
-				<a href="{{ chapter.instagram_url }}" target="_blank" rel="noopener"
-					class="w-full rounded-full bg-white px-[22px] py-2.5 text-center text-[0.95rem] font-bold text-ink no-underline transition-colors hover:bg-pink md:w-auto">
-					Instagram <span class="notranslate">@dsa_rgv</span>
-				</a>
-				<a href="mailto:{{ chapter.contact_email }}"
-					class="w-full rounded-full border-2 border-[#57534e] px-[21px] py-[9px] text-center text-[0.95rem] font-bold text-white no-underline transition-colors hover:border-white md:w-auto">
-					{{ pll__('Email us') }}
-				</a>
+	{# ============ PONTE TRUCHA CTA — flames + luchador panel ============ #}
+	{#
+	  Geometry is proportional so the composition scales with its container (a
+	  centered 1200px column): the panel wrapper hugs the flames' bottom (left/right 3.2%, bottom 4.1%),
+	  the text column is inset padding-left 44% to clear the luchador. Below
+	  700px the wrapper goes static (pulled up over the flames by the same
+	  offset: panel height 41.1% + 4.1% of the flames' 65.5% height ≈ 43.8% of
+	  the section width) and the text stacks under the panel on a matching
+	  green block instead of shrinking below readable size (handoff gotcha #2).
+	  Flame tiling + band padding: `.ponte-trucha` in src/css/tailwind.css.
+	#}
+	<section class="ponte-trucha relative w-full overflow-hidden bg-white font-sans" data-tone="orange" aria-label="{{ pll__('Join DSA') }}">
+		<div class="relative z-2 mx-auto max-w-[1200px] px-2">
+			<div class="relative mx-[3.2%] min-[700px]:mx-0">
+				<img src="{{ img }}/luchador-panel.svg" alt="{{ pll__('Illustration of a luchador wearing a yellow 956 mask') }}" width="1281" height="563" class="relative z-10 block h-auto w-full">
+				<div class="relative z-0 -mt-[6%] flex flex-col items-center gap-5 rounded-b-[22px] bg-green-panel px-6 pb-8 pt-[calc(6%+20px)] text-center min-[700px]:absolute min-[700px]:inset-0 min-[700px]:z-20 min-[700px]:mt-0 min-[700px]:justify-center min-[700px]:gap-[clamp(12px,3vw,40px)] min-[700px]:rounded-none min-[700px]:bg-transparent min-[700px]:py-0 min-[700px]:pl-[44%] min-[700px]:pr-[5%] min-[700px]:text-right">
+					{# Uppercased in CSS, not retyped: the brush look lives in the caps
+					glyphs and the Spanish source must keep ¡ / !. Same line in both languages. #}
+					<p lang="es" class="m-0 font-brush text-[clamp(2.4rem,8.2vw,6.2rem)] font-normal uppercase leading-none text-white [text-wrap:balance]">¡Ponte trucha sigue la lucha!</p>
+					<a href="{{ chapter.join_url }}" target="_blank" rel="noopener"
+						class="rounded-full bg-orange px-[2.6em] py-[0.8em] font-display text-[clamp(0.8rem,1.3vw,1.1rem)] font-normal uppercase tracking-[0.04em] text-white no-underline transition-[transform,background-color] hover:-translate-y-px hover:bg-orange-hover">
+						{{ pll__('Join DSA') }}
+					</a>
+				</div>
 			</div>
 		</div>
 	</section>

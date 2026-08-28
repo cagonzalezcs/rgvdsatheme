@@ -33,7 +33,7 @@ const embedUrl = computed(() => {
     <div
       v-else
       class="relative flex aspect-video items-center justify-center overflow-hidden rounded-[18px] shadow-media"
-      :class="poster ? '' : 'bg-[repeating-linear-gradient(45deg,var(--color-stripe-v2-a)_0_14px,var(--color-stripe-v2-b)_14px_28px)]'"
+      :class="poster ? '' : 'bg-[repeating-linear-gradient(45deg,var(--color-stripe-a)_0_14px,var(--color-stripe-b)_14px_28px)]'"
     >
       <img v-if="poster" :src="poster" alt="" class="absolute inset-0 size-full object-cover" />
       <button

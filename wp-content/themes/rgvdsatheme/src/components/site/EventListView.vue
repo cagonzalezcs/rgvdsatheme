@@ -15,7 +15,7 @@ const props = defineProps<{
 const emit = defineEmits<{ select: [id: string] }>();
 
 function color(ev: ChapterEvent): string {
-  return props.showCategoryColors ? (categoryById(ev.cat).color ?? "#1C1917") : "#1C1917";
+  return props.showCategoryColors ? (categoryById(ev.cat).color ?? "#231F20") : "#231F20";
 }
 </script>
 

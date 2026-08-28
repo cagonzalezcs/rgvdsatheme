@@ -16,7 +16,7 @@ defineProps<{ address: string; accent: string }>();
     <div
       role="img"
       :aria-label="`Map to ${address}`"
-      class="flex h-[clamp(220px,30vw,320px)] w-full items-center justify-center overflow-hidden rounded-[16px] bg-[repeating-linear-gradient(45deg,var(--color-stripe-v2-a)_0_16px,var(--color-stripe-v2-b)_16px_32px)] shadow-gallery"
+      class="flex h-[clamp(220px,30vw,320px)] w-full items-center justify-center overflow-hidden rounded-[16px] bg-[repeating-linear-gradient(45deg,var(--color-stripe-a)_0_16px,var(--color-stripe-b)_16px_32px)] shadow-gallery"
     >
       <span
         class="rounded-full bg-white px-4 py-2 font-mono text-[0.85rem] font-bold text-text-muted shadow-subtle"

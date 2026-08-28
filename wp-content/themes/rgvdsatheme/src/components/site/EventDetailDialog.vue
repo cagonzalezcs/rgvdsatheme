@@ -24,8 +24,8 @@ const emit = defineEmits<{ close: [] }>();
 
 const color = computed(() =>
   props.event && props.showCategoryColors
-    ? (categoryById(props.event.cat).color ?? "#1C1917")
-    : "#1C1917",
+    ? (categoryById(props.event.cat).color ?? "#231F20")
+    : "#231F20",
 );
 
 const dateLine = computed(() => {

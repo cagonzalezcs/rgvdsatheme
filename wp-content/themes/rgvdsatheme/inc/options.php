@@ -3,7 +3,7 @@
  * Chapter settings + site chrome wiring.
  *
  * Owns: ACF options page (join URL, contact email, socials, EN/ES flag,
- * event count, counties strip, committees repeater), WP menu locations,
+ * event count, counties + committees repeaters), WP menu locations,
  * StarterSite `chapter` context sourcing, and header/footer island props.
  */
 
@@ -93,19 +93,11 @@ add_action(
 						'default_value' => 5,
 					),
 					array(
-						'key'           => 'field_rgvdsa_options_show_counties_strip',
-						'label'         => 'Home: show counties strip',
-						'name'          => 'show_counties_strip',
-						'type'          => 'true_false',
-						'default_value' => 1,
-						'ui'            => 1,
-					),
-					array(
 						'key'          => 'field_rgvdsa_options_counties',
-						'label'        => 'Home: counties strip',
+						'label'        => 'Counties & communities',
 						'name'         => 'counties',
 						'type'         => 'repeater',
-						'instructions' => 'Communities listed in the home counties strip. Leave empty to use the theme defaults.',
+						'instructions' => 'Communities the chapter serves. Not rendered on the v3 home (the county map covers it); kept as chapter data.',
 						'layout'       => 'table',
 						'button_label' => 'Add community',
 						'sub_fields'   => array(
@@ -253,55 +245,24 @@ function rgvdsa_chapter_committees() {
 }
 
 /**
- * Chapter counties/communities for the home strip: ACF options repeater,
- * falling back to the design fixture.
- *
- * @return string[] Community names.
- */
-function rgvdsa_chapter_counties() {
-	// Design fixture (03-DESIGN-SPEC.md § Home — counties strip).
-	$fixture = array(
-		'McAllen', 'Edinburg', 'Brownsville', 'Harlingen', 'Pharr', 'San Juan',
-		'San Benito', 'Raymondville', 'Roma', 'La Joya', 'Rio Grande City',
-		'Zapata', 'La Grulla', 'La Feria', 'Rio Hondo',
-	);
-
-	if ( ! function_exists( 'get_field' ) ) {
-		return $fixture;
-	}
-
-	$rows = get_field( 'counties', 'option' );
-	if ( empty( $rows ) || ! is_array( $rows ) ) {
-		return $fixture;
-	}
-
-	$counties = array();
-	foreach ( $rows as $row ) {
-		$name = trim( (string) ( $row['name'] ?? '' ) );
-		if ( '' !== $name ) {
-			$counties[] = $name;
-		}
-	}
-
-	return $counties ?: $fixture;
-}
-
-/**
  * Home hero copy: front-page ACF group, falling back to the design copy so
  * the section renders before it is seeded. Editors own the canonical copy.
  *
  * @param int $front_id Front page ID (get_option( 'page_on_front' )).
- * @return array{heading:string,lede:string,cta_primary_label:string,cta_primary_url:string,cta_secondary_label:string,cta_secondary_url:string}
+ * @return array{subhead:string,lede:string,cta_primary_label:string,cta_primary_url:string,cta_secondary_label:string,cta_secondary_url:string}
  */
 function rgvdsa_front_hero( $front_id ) {
+	// The on-page <h1> is designer-supplied art (06-V3-BRAND-REFRESH.md), so
+	// there is no heading field; `lede` is the front page's SEO/share
+	// description (inc/seo.php) and is not shown in the hero. `subhead` is the
+	// line under the headline art; the secondary CTA is the dashed box.
 	$defaults = array(
-		'heading'             => 'A better world is possible. We’re building it in the Valley.',
+		'subhead'             => 'We’re fighting for the Rio Grande Valley we deserve.',
 		'lede'                => 'We’re the Rio Grande Valley chapter of the Democratic Socialists of America — the largest socialist organization in the United States — organizing working-class power across our border communities.',
 		'cta_primary_label'   => 'Join DSA',
 		'cta_primary_url'     => 'https://act.dsausa.org/donate/membership',
-		'cta_secondary_label' => 'Come to a meeting ↓',
-		'cta_secondary_url'   => '#events',
-		'badge'               => 'New here? Start with <strong class="notranslate">RGV-DSA 101</strong> — no experience needed.',
+		'cta_secondary_label' => 'New member? Start with DSARGV 101. Sign up here',
+		'cta_secondary_url'   => function_exists( 'rgvdsa_i18n_localize_url' ) ? rgvdsa_i18n_localize_url( '/get-involved/' ) : '/get-involved/',
 	);
 
 	if ( ! function_exists( 'get_field' ) || ! $front_id ) {
@@ -316,9 +277,6 @@ function rgvdsa_front_hero( $front_id ) {
 		}
 	}
 
-	// Rendered unescaped in the Twig (inline markup allowed).
-	$hero['badge'] = wp_kses_post( $hero['badge'] );
-
 	return $hero;
 }
 
@@ -327,16 +285,18 @@ function rgvdsa_front_hero( $front_id ) {
  * falling back to the design copy.
  *
  * @param int $front_id Front page ID.
- * @return array{eyebrow:string,heading:string,p1:string,p2:string,link_label:string,link_url:string}
+ * @return array{eyebrow:string,heading:string,p1:string,p2:string,p3:string,link_label:string,link_url:string}
  */
 function rgvdsa_front_who( $front_id ) {
+	// v3 prototype copy (designs/RGV DSA Home v3.dc.html) — final per the handoff.
 	$defaults = array(
 		'eyebrow'    => 'Who we are',
-		'heading'    => 'We are <span class="notranslate">DSA-RGV</span>',
-		'p1'         => 'The RGV is one of the most economically unequal regions in the country — but it doesn’t have to stay that way. As democratic socialists, we’re building working-class power to challenge the dominance of the wealthy and the powerful across our border communities.',
-		'p2'         => 'Together, we’re fighting for a Valley where working people have real power, and where everyone can live a dignified life — regardless of where they were born or how they got here.',
-		'link_label' => 'More about our chapter →',
-		'link_url'   => '/about/',
+		'heading'    => 'We are <span class="notranslate">DSARGV</span>',
+		'p1'         => 'In the Rio Grande Valley, we’re on the frontlines of fascism. We have a billionaire in our backyard, ICE in our neighborhoods, and jobs that leave us overworked and underpaid.',
+		'p2'         => 'But it doesn’t have to stay that way.',
+		'p3'         => 'As democratic socialists, we’re building working class power on multiple fronts so that every person in the valley can live a life with dignity, respect, and solidarity. Organizing our workplaces and organizing our community to make sure our future is for workers and by workers. A better RGV is possible.<br>We’re gonna win.',
+		'link_label' => 'More about our chapter',
+		'link_url'   => function_exists( 'rgvdsa_i18n_localize_url' ) ? rgvdsa_i18n_localize_url( '/about/' ) : '/about/',
 	);
 
 	if ( ! function_exists( 'get_field' ) || ! $front_id ) {
@@ -351,67 +311,13 @@ function rgvdsa_front_who( $front_id ) {
 		}
 	}
 
-	// Heading is rendered unescaped (inline markup allowed).
+	// Heading + third paragraph are rendered unescaped (inline markup / <br> allowed).
 	$who['heading'] = wp_kses_post( $who['heading'] );
+	$who['p3']      = wp_kses_post( $who['p3'] );
+	// v3 draws the arrow as a shared SVG; strip a trailing "→" editors may have typed.
+	$who['link_label'] = rtrim( $who['link_label'], " \t→" );
 
 	return $who;
-}
-
-/**
- * Front-page "Get involved" section: eyebrow, heading, and the steps
- * repeater, falling back to the design copy. Step numbers are positional
- * (01, 02, …) — computed here, not stored.
- *
- * @param int    $front_id Front page ID.
- * @param string $join_url Chapter join URL (default step 1 href).
- * @return array{eyebrow:string,heading:string,steps:array}
- */
-function rgvdsa_front_involved( $front_id, $join_url ) {
-	$steps = array(
-		array( 'title' => 'Join DSA', 'body' => 'Become a national DSA member — dues are sliding-scale, and membership automatically connects you to our chapter.', 'link_label' => 'Sign up at dsausa.org →', 'href' => $join_url, 'external' => true ),
-		array( 'title' => 'Come to RGV-DSA 101', 'body' => 'Our intro session for new and curious folks — what we do, how the chapter works, and how you can plug in. Virtual and in-person options.', 'link_label' => 'Find a session →', 'href' => '#events', 'external' => false ),
-		array( 'title' => 'Plug into the work', 'body' => 'Join a committee, get on our WhatsApp, and show up. Members receive an invite to our communication channels after onboarding.', 'link_label' => 'See committees →', 'href' => '/get-involved/#committees', 'external' => false ),
-	);
-
-	$involved = array(
-		'eyebrow' => 'Get involved',
-		'heading' => 'Three steps to start organizing',
-	);
-
-	if ( function_exists( 'get_field' ) && $front_id ) {
-		foreach ( array( 'eyebrow', 'heading' ) as $key ) {
-			$value = get_field( 'home_involved_' . $key, $front_id );
-			if ( is_string( $value ) && '' !== trim( $value ) ) {
-				$involved[ $key ] = trim( $value );
-			}
-		}
-
-		$rows = get_field( 'home_steps', $front_id );
-		if ( is_array( $rows ) && $rows ) {
-			$mapped = array();
-			foreach ( $rows as $row ) {
-				$title = trim( (string) ( $row['title'] ?? '' ) );
-				if ( '' === $title ) {
-					continue;
-				}
-				$url      = trim( (string) ( $row['link_url'] ?? '' ) );
-				$mapped[] = array(
-					'title'      => $title,
-					'body'       => trim( (string) ( $row['body'] ?? '' ) ),
-					'link_label' => trim( (string) ( $row['link_label'] ?? '' ) ),
-					'href'       => $url,
-					'external'   => function_exists( 'rgvdsa_pages_external' ) ? rgvdsa_pages_external( $url ) : false,
-				);
-			}
-			if ( $mapped ) {
-				$steps = $mapped;
-			}
-		}
-	}
-
-	$involved['steps'] = $steps;
-
-	return $involved;
 }
 
 /**
@@ -452,76 +358,43 @@ function rgvdsa_newhere_card() {
 }
 
 /**
- * "Who we are" photo: front-page ACF image, returned as { src, alt } or null
- * so the Twig owns the stripe fallback (no fake placeholder caption).
- *
- * @param int $front_id Front page ID (get_option( 'page_on_front' )).
- * @return array{src:string,alt:string}|null
- */
-function rgvdsa_front_about_image( $front_id ) {
-	if ( ! function_exists( 'get_field' ) || ! $front_id ) {
-		return null;
-	}
-
-	$image = get_field( 'about_image', $front_id );
-	if ( empty( $image['url'] ) ) {
-		return null;
-	}
-
-	return array(
-		'src' => $image['url'],
-		'alt' => ! empty( $image['alt'] ) ? $image['alt'] : 'Chapter members organizing in the Rio Grande Valley',
-	);
-}
-
-/**
  * Front page: inject options-driven knobs early (priority 5) so the events
- * domain can read `event_count` / `show_counties_strip` at priority 10.
+ * domain can read `event_count` at priority 10. Receives the front page post
+ * from front-page.php (filter arity 2).
  */
 add_filter(
 	'rgvdsa/context/front_page',
-	function ( $context ) {
-		$event_count         = 5;
-		$show_counties_strip = true;
+	function ( $context, $timber_post = null ) {
+		$event_count = 5;
 
 		if ( function_exists( 'get_field' ) ) {
 			$count = (int) get_field( 'event_count', 'option' );
 			if ( $count >= 1 ) {
 				$event_count = min( 6, $count );
 			}
-
-			$strip = get_field( 'show_counties_strip', 'option' );
-			if ( null !== $strip && '' !== $strip ) {
-				$show_counties_strip = (bool) $strip;
-			}
 		}
 
-		// Read the ACF hero/who/get-involved copy from the CURRENT front page so
-		// Polylang serves the Spanish page's own fields on `/es/`. The queried
-		// object is the front page (EN at `/`, its ES translation at `/es/`);
-		// fall back to the configured English front page.
-		$front_id = get_queried_object_id();
+		// Read the ACF hero/who copy from the CURRENT front page so Polylang
+		// serves the Spanish page's own fields on `/es/` (EN at `/`, its ES
+		// translation at `/es/`); fall back to the configured English front page.
+		$front_id = $timber_post ? (int) $timber_post->ID : (int) get_queried_object_id();
 		if ( ! $front_id ) {
 			$front_id = (int) get_option( 'page_on_front' );
 		}
-		$join_url = isset( $context['chapter']['join_url'] ) ? (string) $context['chapter']['join_url'] : 'https://act.dsausa.org/donate/membership';
 
-		$context['event_count']         = $event_count;
-		$context['show_counties_strip'] = $show_counties_strip;
-		$context['counties']            = rgvdsa_chapter_counties();
-		$context['hero']                = rgvdsa_front_hero( $front_id );
-		$context['about_image']         = rgvdsa_front_about_image( $front_id );
-		$context['who']                 = rgvdsa_front_who( $front_id );
-		$context['home_involved']       = rgvdsa_front_involved( $front_id, $join_url );
+		$context['event_count'] = $event_count;
+		$context['hero']        = rgvdsa_front_hero( $front_id );
+		$context['who']         = rgvdsa_front_who( $front_id );
 
 		return $context;
 	},
-	5
+	5,
+	2
 );
 
 /**
  * Home hero ACF group — lives on the front page so editors own the hero copy
- * and CTAs (rgvdsa_front_hero() reads these; the Twig fixture is the fallback).
+ * and CTAs (rgvdsa_front_hero() reads these; the PHP defaults are the fallback).
  */
 add_action(
 	'acf/init',
@@ -536,17 +409,19 @@ add_action(
 				'title'    => 'Home hero',
 				'fields'   => array(
 					array(
-						'key'   => 'field_rgvdsa_hero_heading',
-						'label' => 'Heading',
-						'name'  => 'hero_heading',
-						'type'  => 'text',
+						'key'          => 'field_rgvdsa_hero_subhead',
+						'label'        => 'Subhead',
+						'name'         => 'hero_subhead',
+						'type'         => 'text',
+						'instructions' => 'One line under the headline artwork. Leave blank for the theme default.',
 					),
 					array(
-						'key'   => 'field_rgvdsa_hero_lede',
-						'label' => 'Lede',
-						'name'  => 'hero_lede',
-						'type'  => 'textarea',
-						'rows'  => 3,
+						'key'          => 'field_rgvdsa_hero_lede',
+						'label'        => 'Lede (search / share description)',
+						'name'         => 'hero_lede',
+						'type'         => 'textarea',
+						'rows'         => 3,
+						'instructions' => 'Used as the home page description in search results and link previews when the site tagline is empty. Not shown in the v3 hero.',
 					),
 					array(
 						'key'   => 'field_rgvdsa_hero_cta_primary_label',
@@ -571,23 +446,7 @@ add_action(
 						'label'        => 'Secondary CTA URL',
 						'name'         => 'hero_cta_secondary_url',
 						'type'         => 'text',
-						'instructions' => 'An in-page anchor (e.g. #events) or a full URL.',
-					),
-					array(
-						'key'          => 'field_rgvdsa_hero_badge',
-						'label'        => 'Badge line',
-						'name'         => 'hero_badge',
-						'type'         => 'text',
-						'instructions' => 'Small pill under the CTAs. Basic HTML (e.g. <strong>) allowed. Leave blank for the theme default.',
-					),
-					array(
-						'key'           => 'field_rgvdsa_about_image',
-						'label'         => 'Who we are photo',
-						'name'          => 'about_image',
-						'type'          => 'image',
-						'return_format' => 'array',
-						'preview_size'  => 'medium',
-						'instructions'  => 'Optional. Shown in the "Who we are" section; a decorative panel renders when empty.',
+						'instructions' => 'Destination of the dashed "New member?" box. A relative path (e.g. /get-involved/), in-page anchor, or full URL.',
 					),
 				),
 				'location' => array(
@@ -640,6 +499,15 @@ add_action(
 						'rows'  => 4,
 					),
 					array(
+						'key'          => 'field_rgvdsa_who_p3',
+						'label'        => 'Third paragraph',
+						'name'         => 'who_p3',
+						'type'         => 'textarea',
+						'rows'         => 5,
+						'new_lines'    => 'br',
+						'instructions' => 'Line breaks are kept.',
+					),
+					array(
 						'key'   => 'field_rgvdsa_who_link_label',
 						'label' => 'Link label',
 						'name'  => 'who_link_label',
@@ -651,61 +519,6 @@ add_action(
 						'name'         => 'who_link_url',
 						'type'         => 'text',
 						'instructions' => 'Full URL, relative path, or #anchor.',
-					),
-					array(
-						'key'   => 'field_rgvdsa_front_tab_involved',
-						'label' => 'Get involved',
-						'type'  => 'tab',
-					),
-					array(
-						'key'   => 'field_rgvdsa_home_involved_eyebrow',
-						'label' => 'Eyebrow',
-						'name'  => 'home_involved_eyebrow',
-						'type'  => 'text',
-					),
-					array(
-						'key'   => 'field_rgvdsa_home_involved_heading',
-						'label' => 'Heading',
-						'name'  => 'home_involved_heading',
-						'type'  => 'text',
-					),
-					array(
-						'key'          => 'field_rgvdsa_home_steps',
-						'label'        => 'Steps',
-						'name'         => 'home_steps',
-						'type'         => 'repeater',
-						'layout'       => 'block',
-						'button_label' => 'Add step',
-						'instructions' => 'Numbered automatically (01, 02, …). Leave empty for the theme defaults.',
-						'sub_fields'   => array(
-							array(
-								'key'      => 'field_rgvdsa_home_steps_title',
-								'label'    => 'Title',
-								'name'     => 'title',
-								'type'     => 'text',
-								'required' => 1,
-							),
-							array(
-								'key'   => 'field_rgvdsa_home_steps_body',
-								'label' => 'Body',
-								'name'  => 'body',
-								'type'  => 'textarea',
-								'rows'  => 3,
-							),
-							array(
-								'key'   => 'field_rgvdsa_home_steps_link_label',
-								'label' => 'Link label',
-								'name'  => 'link_label',
-								'type'  => 'text',
-							),
-							array(
-								'key'          => 'field_rgvdsa_home_steps_link_url',
-								'label'        => 'Link URL',
-								'name'         => 'link_url',
-								'type'         => 'text',
-								'instructions' => 'Full URL, relative path, or #anchor.',
-							),
-						),
 					),
 				),
 				'location' => array(

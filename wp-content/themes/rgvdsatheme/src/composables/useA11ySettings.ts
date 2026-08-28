@@ -56,12 +56,22 @@ function apply(current: A11ySettings): void {
       "*{animation:none !important; transition:none !important} html{scroll-behavior:auto !important}";
   }
   if (current.highContrast) {
-    css += '[data-tone="cream"]{background:#FFFFFF !important; color:#000000 !important}';
-    css += '[data-tone="red"]{background:#9E0B13 !important}';
+    // White/light bands (cream, and the white CTA band tagged `orange`) go pure
+    // white-on-black.
+    css += '[data-tone="cream"],[data-tone="orange"]{background:#FFFFFF !important; color:#000000 !important}';
+    // 06-V3-BRAND-REFRESH.md: red → #B5121B, green-dark → #3F5A23 (same values
+    // as the `html.a11y-contrast` token swaps in tailwind.css).
+    css += '[data-tone="red"]{background:#B5121B !important}';
     css += '[data-tone="ink"]{background:#000000 !important; color:#FFFFFF !important}';
+    css += '[data-tone="green"]{background:#3F5A23 !important}';
     css += "body{background:#FFFFFF}";
   }
   styleEl.textContent = css;
+
+  // Root-class hook for the CSS-variable swaps in tailwind.css
+  // (`html.a11y-contrast { --color-red: … }`) — covers chips, pills and
+  // outlines that consume the brand tokens without being whole `data-tone` bands.
+  document.documentElement.classList.toggle("a11y-contrast", current.highContrast);
 }
 
 export function useA11ySettings() {

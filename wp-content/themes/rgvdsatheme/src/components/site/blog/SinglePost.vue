@@ -35,7 +35,7 @@ if (props.categories && props.categories.length > 0) setCategories(props.categor
 const mode = computed(() => props.bylineMode ?? props.post.bylineMode);
 const isNamed = computed(() => mode.value !== "committee");
 const category = computed(() => postCategoryById(props.post.cat));
-const accent = computed(() => category.value.color ?? "#1C1917");
+const accent = computed(() => category.value.color ?? "#231F20");
 const categoryUrl = computed(() => `${props.blogUrl}?category=${props.post.cat}`);
 
 const authorName = computed(() =>

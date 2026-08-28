@@ -293,8 +293,9 @@ class StarterSite extends Site {
      *
      * Vite content-hashes the filenames (they change every build), so the
      * hashed paths are resolved from dist/manifest.json rather than hard-coded.
-     * Preload only the faces the first paint needs: Open Sans 400 (body) and
-     * Montserrat 700/800 (headings) — over-preloading wastes bandwidth.
+     * Preload only the faces the first paint needs: Manifold DSA 500 (body) /
+     * 700 (emphasis) and Bowlby One (headings, nav, pills) — over-preloading
+     * wastes bandwidth.
      */
     public function preload_fonts() {
         $manifest_path = dirname( __DIR__ ) . '/dist/manifest.json';
@@ -307,7 +308,7 @@ class StarterSite extends Site {
         }
 
         // Source basenames of the faces worth preloading (hash + extension appended by Vite).
-        $wanted   = array( 'OpenSans-Regular', 'Montserrat-Bold', 'Montserrat-ExtraBold' );
+        $wanted   = array( 'BowlbyOne-Regular', 'ManifoldDSA-Medium', 'ManifoldDSA-Bold' );
         $base_url = trailingslashit( get_template_directory_uri() ) . 'dist/';
 
         foreach ( $manifest['src/ts/app.ts']['assets'] as $asset ) {

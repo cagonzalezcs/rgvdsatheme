@@ -49,7 +49,7 @@ const WEEKDAYS_LONG = [
 ];
 
 const category = computed(() => categoryById(props.event.cat));
-const accent = computed(() => category.value.color ?? "#1C1917");
+const accent = computed(() => category.value.color ?? "#231F20");
 const accentSoft = computed(() => hexToRgba(accent.value, 0.1));
 
 const date = computed(() => parseISODate(props.event.date));

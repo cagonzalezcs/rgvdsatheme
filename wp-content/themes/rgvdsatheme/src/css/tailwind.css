@@ -10,86 +10,73 @@
 @import "tw-animate-css";
 
 /* ---------------------------------------------------------------------------
- * Self-hosted fonts (weights per 03-DESIGN-SPEC.md § Typography)
+ * Self-hosted brand faces (06-V3-BRAND-REFRESH.md § Typography).
+ * woff2 converted from the handoff TTF/OTF; no external font requests.
+ * Bowlby One ships 400 only and Manifold DSA 500–900, so `body` sets
+ * `font-synthesis: none` — heavier utilities on Bowlby render the real face
+ * rather than a faux-bold. Jost / Myriad Pro are not shipped (unused).
  * ------------------------------------------------------------------------ */
 @font-face {
-  font-family: "Montserrat";
-  src: url("../../static/fonts/montserrat/Montserrat-Regular.woff2") format("woff2");
+  font-family: "Bowlby One";
+  src: url("../../static/fonts/bowlby-one/BowlbyOne-Regular.woff2") format("woff2");
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
-  font-family: "Montserrat";
-  src: url("../../static/fonts/montserrat/Montserrat-SemiBold.woff2") format("woff2");
+  font-family: "Manifold DSA";
+  src: url("../../static/fonts/manifold-dsa/ManifoldDSA-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Manifold DSA";
+  src: url("../../static/fonts/manifold-dsa/ManifoldDSA-DemiBold.woff2") format("woff2");
   font-weight: 600;
   font-display: swap;
 }
 @font-face {
-  font-family: "Montserrat";
-  src: url("../../static/fonts/montserrat/Montserrat-Bold.woff2") format("woff2");
+  font-family: "Manifold DSA";
+  src: url("../../static/fonts/manifold-dsa/ManifoldDSA-Bold.woff2") format("woff2");
   font-weight: 700;
   font-display: swap;
 }
 @font-face {
-  font-family: "Montserrat";
-  src: url("../../static/fonts/montserrat/Montserrat-ExtraBold.woff2") format("woff2");
-  font-weight: 800;
+  font-family: "Manifold DSA";
+  src: url("../../static/fonts/manifold-dsa/ManifoldDSA-Heavy.woff2") format("woff2");
+  font-weight: 800 900; /* file reports usWeightClass 900; handoff uses 800–900 */
   font-display: swap;
 }
 @font-face {
-  font-family: "Montserrat";
-  src: url("../../static/fonts/montserrat/Montserrat-Black.woff2") format("woff2");
-  font-weight: 900;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Open Sans";
-  src: url("../../static/fonts/open-sans/OpenSans-Regular.woff2") format("woff2");
+  font-family: "Special Season Brush";
+  src: url("../../static/fonts/special-season/SpecialSeason-Brush.woff2") format("woff2");
   font-weight: 400;
   font-display: swap;
 }
-@font-face {
-  font-family: "Open Sans";
-  src: url("../../static/fonts/open-sans/OpenSans-SemiBold.woff2") format("woff2");
-  font-weight: 600;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Open Sans";
-  src: url("../../static/fonts/open-sans/OpenSans-Bold.woff2") format("woff2");
-  font-weight: 700;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Open Sans";
-  src: url("../../static/fonts/open-sans/OpenSans-ExtraBold.woff2") format("woff2");
-  font-weight: 800;
-  font-display: swap;
-}
+
 
 /* ---------------------------------------------------------------------------
  * shadcn semantic variables — brutalist brand mapping (03-DESIGN-SPEC.md)
  * ------------------------------------------------------------------------ */
 :root {
-  --background: #faf4ea; /* mirrored inline in views/html-header.twig (critical bg — keep in sync) */
-  --foreground: #1c1917;
+  --background: #f7f5f1; /* cream — mirrored inline in views/html-header.twig (critical bg — keep in sync) */
+  --foreground: #231f20;
   --card: #ffffff;
-  --card-foreground: #1c1917;
-  --popover: #faf4ea;
-  --popover-foreground: #1c1917;
-  --primary: #e9252e;
-  --primary-foreground: #faf4ea;
-  --secondary: #1c1917;
-  --secondary-foreground: #faf4ea;
-  --muted: #f1e8d8;
+  --card-foreground: #231f20;
+  --popover: #f7f5f1;
+  --popover-foreground: #231f20;
+  --primary: #dc1520;
+  --primary-foreground: #f7f5f1;
+  --secondary: #231f20;
+  --secondary-foreground: #f7f5f1;
+  --muted: #f5f1ea;
   --muted-foreground: #5c544a;
-  --accent: #9e0b13;
+  --accent: #b5121b;
   --accent-foreground: #ffffff;
-  --destructive: #9e0b13;
+  --destructive: #b5121b;
   --destructive-foreground: #ffffff;
-  --border: #1c1917;
-  --input: #1c1917;
-  --ring: #1c1917; /* ink — focus indicator color, per 03-DESIGN-SPEC.md § Accessibility (2.4.7) */
+  --border: #231f20;
+  --input: #231f20;
+  --ring: #231f20; /* ink — focus indicator color, per 03-DESIGN-SPEC.md § Accessibility (2.4.7) */
   --radius: 0px;
 }
 
@@ -123,40 +110,46 @@
 }
 
 @theme {
-  /* brand palette */
-  --color-brand-red: #e9252e;
-  --color-brand-red-deep: #9e0b13;
-  --color-cream: #faf4ea;
-  --color-ink: #1c1917;
+  /* --- Brand palette — v3 values (06-V3-BRAND-REFRESH.md) on the theme's
+     semantic token names. Every page reads these; there is no per-generation
+     namespace. --- */
+  --color-brand-red: #dc1520; /* full-bleed bands (header, hero, date chips). Accessibility-adjusted from the AI file's #EB2028 (4.4:1) → 5.0:1 on white. Never revert. */
+  --color-brand-red-deep: #b5121b; /* hover on red; also the high-contrast swap value */
+  --color-red: #dc1520; /* red text, links, fills on white/cream — 5.0:1 passes AA at every size */
+  --color-red-hover: #b5121b;
+  --color-orange: #ff4100; /* eyebrows, arrow links, outline pills — ~3.5:1 on white: large/bold uppercase only, never body text */
+  --color-orange-hover: #e63a00;
+  --color-yellow: #ffc800; /* stars, dashed CTA border, footer link hover */
+  --color-green: #719655; /* county map, photo duotone */
+  --color-green-dark: #5f813a; /* footer bottom bar, category chips */
+  --color-green-panel: #668043; /* luchador-panel.svg fill — the mobile stack block under the panel must match */
+  --color-flame: #f75414; /* flames-tile.svg fill — painted via CSS mask (see .ponte-trucha) */
+  --color-cream: #f7f5f1; /* alt band background (events) */
+  --color-off-white: #f5f2ec; /* card placeholder tint / alt section background */
+  --color-ink: #231f20; /* body text, dark bands */
+  --color-ink-footer: #211e1e;
   --color-ink-soft: #3a352f;
-  --color-muted-on-ink: #cfc8bd;
-  --color-muted-on-cream: #5c544a;
-  --color-muted-2: #6b6257;
-  --color-border-muted: #b7ac9b;
-  --color-divider-cream: #e3d9c6;
-  --color-cell-outmonth: #f0e7d6;
-  --color-stripe-a: #f1e8d8;
-  --color-stripe-b: #e9dfcc;
-
-  /* --- v2 warm/rounded palette (additive; v1 tokens above stay for un-migrated pages) --- */
-  --color-red: #b01b22; /* deep red — links, red fills, red text on white */
-  --color-red-hover: #8f151b;
+  --color-ink-card: #292420; /* dark card sitting on an ink band */
   --color-pink: #f0908f; /* red accent ON ink bands (eyebrows, hovers) */
   --color-tint: #fdf0ee; /* light red wash — dropdown/nav hover */
   --color-wash: #f7d7d3; /* stronger rose wash — outline-button hover fill */
-  --color-off-white: #f7f5f2; /* alt section background */
-  --color-ink-card: #292420; /* dark card sitting on an ink band */
+  --color-muted-on-ink: #cfc8bd;
+  --color-muted-on-cream: #5c544a;
+  --color-muted-2: #6b6257;
   --color-text-body: #44403c;
-  --color-text-muted: #57534e;
+  --color-text-muted: #57534e; /* event meta, blog dates (7.4:1 on white) */
   --color-text-strong: #292524;
   --color-text-faint: #78716c;
+  --color-border-muted: #b9b3a9; /* empty-state dashed borders */
+  --color-border-control: #d6d0c4; /* inputs, inactive chips/tags */
   --color-hairline: #ece6da; /* 1px hairline on white/cream */
   --color-divider: #f0ede8; /* inner divider in white cards */
-  --color-border-control: #d6d0c4; /* inputs, inactive chips/tags */
-  --color-stripe-v2-a: #f5f1ea;
-  --color-stripe-v2-b: #ece6da;
+  --color-divider-cream: #e3d9c6;
+  --color-cell-outmonth: #f0e7d6;
+  --color-stripe-a: #f5f1ea; /* striped media placeholders */
+  --color-stripe-b: #ece6da;
 
-  /* event category colors — v2 corrected hexes (match 03-DESIGN-SPEC.md; term meta is runtime source) */
+  /* event category colors (match 03-DESIGN-SPEC.md; term meta is runtime source) */
   --color-cat-chapter: #b01b22;
   --color-cat-poled: #33518f;
   --color-cat-mutual: #1b6b40;
@@ -165,8 +158,9 @@
   --color-cat-social: #0a6b74;
 
   /* type */
-  --font-display: "Montserrat", sans-serif;
-  --font-sans: "Open Sans", system-ui, sans-serif;
+  --font-display: "Bowlby One", "Manifold DSA", sans-serif; /* headings, nav, pills */
+  --font-sans: "Manifold DSA", system-ui, sans-serif; /* body: 500 default, 600 subhead, 700 emphasis, 800 eyebrows */
+  --font-brush: "Special Season Brush", cursive; /* CTA brush line — caps only */
 
   /* hard offset shadows — zero blur (v1; kept for un-migrated pages) */
   --shadow-brutal: 5px 5px 0 var(--color-ink);
@@ -175,17 +169,17 @@
   --shadow-brutal-red: 8px 8px 0 var(--color-brand-red);
   --shadow-brutal-lg: 10px 10px 0 var(--color-ink);
 
-  /* v2 soft blurred shadows (03-DESIGN-SPEC.md) */
-  --shadow-card: 0 2px 10px rgba(28, 25, 23, 0.1);
-  --shadow-card-hover: 0 12px 30px rgba(28, 25, 23, 0.16);
-  --shadow-card-hover-lg: 0 14px 34px rgba(28, 25, 23, 0.16);
-  --shadow-subtle: 0 1px 4px rgba(28, 25, 23, 0.07);
-  --shadow-header: 0 2px 14px rgba(28, 25, 23, 0.22);
-  --shadow-popover: 0 14px 36px rgba(28, 25, 23, 0.24);
-  --shadow-featured: 0 8px 28px rgba(28, 25, 23, 0.14);
-  --shadow-photo: 0 10px 30px rgba(28, 25, 23, 0.12);
-  --shadow-media: 0 8px 26px rgba(28, 25, 23, 0.14);
-  --shadow-gallery: 0 4px 18px rgba(28, 25, 23, 0.12);
+  /* soft blurred shadows (ink-tinted) */
+  --shadow-card: 0 2px 10px rgba(35, 31, 32, 0.1);
+  --shadow-card-hover: 0 12px 30px rgba(35, 31, 32, 0.16);
+  --shadow-card-hover-lg: 0 14px 34px rgba(35, 31, 32, 0.16);
+  --shadow-subtle: 0 1px 4px rgba(35, 31, 32, 0.07);
+  --shadow-header: 0 2px 14px rgba(35, 31, 32, 0.22);
+  --shadow-popover: 0 14px 36px rgba(35, 31, 32, 0.24);
+  --shadow-featured: 0 8px 28px rgba(35, 31, 32, 0.14);
+  --shadow-photo: 0 10px 30px rgba(35, 31, 32, 0.12);
+  --shadow-media: 0 8px 26px rgba(35, 31, 32, 0.14);
+  --shadow-gallery: 0 4px 18px rgba(35, 31, 32, 0.12);
 }
 
 @layer base {
@@ -193,8 +187,8 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-synthesis: none; /* Bowlby One is 400-only — never faux-bold it */
   }
-
   /* Global focus indicator — 03-DESIGN-SPEC.md § Accessibility (2.4.7):
      3px ink outline, 2px offset, 6px rounding. --ring is ink.
      shadcn/reka components drive their own ring off --color-ring (also ink),
@@ -214,10 +208,30 @@
      must be re-declared on this scope), while shadcn/reka controls read
      var(--ring) directly. */
   [data-tone="ink"],
-  [data-tone="red"] {
-    --ring: var(--color-cream); /* #faf4ea — shadcn ring/border */
+  [data-tone="red"],
+  [data-tone="green"] {
+    --ring: var(--color-cream); /* #f7f5f1 — shadcn ring/border */
     --color-ring: var(--color-cream); /* native focus outline */
   }
+}
+
+/* ---------------------------------------------------------------------------
+ * High-contrast swaps (06-V3-BRAND-REFRESH.md): red → #B5121B, green-dark →
+ * #3F5A23. useA11ySettings.ts toggles `html.a11y-contrast` alongside the
+ * per-band `[data-tone]` rules it injects; because the brand tokens are declared
+ * in a plain `@theme` block their utilities compile to var() references, so
+ * re-declaring the token here reaches every consumer (bands, chips, pills,
+ * outlines). Unlayered on purpose: must beat the `@theme` :root declaration.
+ * ------------------------------------------------------------------------- */
+html.a11y-contrast {
+  --color-red: #b5121b;
+  --color-brand-red: #b5121b;
+  --primary: #b5121b;
+  --color-red-hover: #8e0e15;
+  --color-brand-red-deep: #8e0e15;
+  --color-green-dark: #3f5a23;
+  /* --color-green-panel / --color-flame stay: they must match the green baked
+     into luchador-panel.svg and are decorative. */
 }
 
 /* WP editor content on interior pages (unlayered so it beats legacy scss) */
@@ -245,7 +259,7 @@
   font-weight: 800;
 }
 .prose-rgv a {
-  color: var(--color-brand-red-deep); /* deep red passes AA 4.5:1 on cream/white; bright #e9252e is 4.02 */
+  color: var(--color-brand-red-deep); /* #b5121b — 7:1 on cream/white */
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 3px;
@@ -309,6 +323,55 @@ html[data-navigating] [data-vaul-overlay] {
 }
 .site-footer {
   view-transition-name: vt-footer;
+}
+
+/* ---------------------------------------------------------------------------
+ * Home — Ponte Trucha CTA band (views/front-page.twig `.ponte-trucha`)
+ *
+ * Flames as a tiled CSS mask so their color is the `--color-flame` token (and
+ * swappable in high contrast). One knob — --flame-w — is the rendered width of
+ * ONE flame tile (flames-tile.svg is a mirrored pair, so the pattern period is
+ * 2× that) and every other measure derives from it, so the band scales
+ * continuously at any viewport:
+ *   tile aspect 1026/1241 = 0.827 → tile height = --flame-w * 0.827
+ *   solid body starts 27% down    → tips height  = --flame-w * 0.27
+ *   drip "valley floor" ~21.5% down → panel top   = --flame-w * 0.215
+ *     (panel overlaps the drip zone so flame tails run behind it, per the mock)
+ * ::after paints the tips (top-aligned, repeat-x, seamless: mirrored tile);
+ * ::before is the solid body from the tips' base down, also covering the art's
+ * transparent side margins. The panel sits in normal flow: padding-top seats it
+ * over the drip tails, padding-bottom leaves body below it.
+ * ------------------------------------------------------------------------- */
+.ponte-trucha {
+  --flame-w: clamp(560px, 60vw, 1150px);
+  --flame-tips: calc(var(--flame-w) * 0.27);
+  padding-top: calc(var(--flame-w) * 0.215);
+  padding-bottom: calc(var(--flame-w) * 0.04);
+}
+.ponte-trucha::before,
+.ponte-trucha::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  background-color: var(--color-flame);
+}
+.ponte-trucha::before {
+  top: var(--flame-tips);
+  bottom: 0;
+}
+.ponte-trucha::after {
+  top: 0;
+  height: calc(var(--flame-w) * 0.827);
+  -webkit-mask: url("../../static/images/brand/flames-tile.svg") top left / calc(var(--flame-w) * 2) auto repeat-x;
+  mask: url("../../static/images/brand/flames-tile.svg") top left / calc(var(--flame-w) * 2) auto repeat-x;
+}
+@media (max-width: 699px) {
+  .ponte-trucha {
+    --flame-w: 560px;
+    padding-top: calc(var(--flame-w) * 0.2);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -31,8 +31,9 @@ withDefaults(
   },
 );
 
+// v3 pill (06-V3-BRAND-REFRESH.md): Bowlby One 0.8rem segments, 4px white track.
 const segmentClass =
-  "cursor-pointer rounded-full border-0 px-3 py-1 text-[0.8rem] font-bold tracking-[0.04em] no-underline";
+  'cursor-pointer rounded-full border-0 px-[13px] py-[11px] font-display text-[0.8rem] leading-none font-normal tracking-[0.04em] no-underline';
 </script>
 
 <template>
@@ -41,8 +42,8 @@ const segmentClass =
     role="group"
     aria-label="Language"
     :class="[
-      'notranslate flex items-center gap-0.5 rounded-full p-[3px]',
-      onLight ? 'bg-off-white' : 'bg-white',
+      'notranslate flex items-center gap-0.5 rounded-full p-1',
+      onLight ? 'bg-cream' : 'bg-white',
     ]"
   >
     <a
@@ -53,7 +54,10 @@ const segmentClass =
       :lang="lang.code"
       :title="lang.name"
       :aria-current="lang.active ? 'true' : undefined"
-      :class="[segmentClass, lang.active ? 'bg-red text-white' : 'bg-transparent text-red']"
+      :class="[
+        segmentClass,
+        lang.active ? 'bg-brand-red text-white' : 'bg-transparent text-red',
+      ]"
     >
       {{ lang.label }}
     </a>
