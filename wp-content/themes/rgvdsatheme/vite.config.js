@@ -4,17 +4,30 @@ import { defineConfig } from "vite";
 import * as fs from "node:fs";
 import { v4wp } from "@kucrut/vite-for-wp";
 import liveReload from "vite-plugin-live-reload";
+import vue from "@vitejs/plugin-vue";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig(({ mode }) => {
+  // eslint-disable-next-line no-undef
   const env = loadEnv(mode, process.cwd(), "");
   return {
     plugins: [
       liveReload(["./**/*.php", "./**/*.twig", "./**/*.html"]),
       v4wp({
-        input: resolve(import.meta.dirname, "src/ts/app.ts"),
+        input: resolve(import.meta.dirname, "src/app.ts"),
         output: resolve(import.meta.dirname, "dist"),
       }),
+      vue(),
+      tailwindcss(),
     ],
+    resolve: {
+      alias: {
+        "@": resolve(import.meta.dirname, "src"),
+      },
+    },
+    build: {
+      chunkSizeWarningLimit: 700,
+    },
     server: {
       host: env.VITE_LOCAL_DEV_HOST || "localhost",
       port: env.VITE_LOCAL_DEV_PORT || 3000,
