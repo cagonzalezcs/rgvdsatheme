@@ -1,0 +1,36 @@
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+
+  &__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 75rem;
+  }
+
+  &__logo {
+    flex-shrink: 0;
+    width: 8.5rem;
+  }
+
+  &-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+}
+
+body.logged-in {
+  .site-header {
+    top: 2rem;
+  }
+}

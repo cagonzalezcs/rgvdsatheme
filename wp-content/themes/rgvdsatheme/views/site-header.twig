@@ -1,7 +1,7 @@
-{% if primary_menu %}
+{% if primary_menu_items %}
 	{%
 		set header_props = {
-			menu: primary_menu
+			menuItems: primary_menu_items
 		}
 	%}
 	<header class="header" data-vue-island="SiteHeader" data-props="{{ header_props|json_encode|e("html_attr") }}">
