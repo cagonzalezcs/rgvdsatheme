@@ -6,7 +6,7 @@ use Kucrut\Vite;
 /**
  * Class StarterSite
  */
-class StarterSite extends Site {
+class RgvDsaSite extends Site {
 	public function __construct() {
 		add_action( 'after_setup_theme', array( $this, 'theme_supports' ) );
 		add_action( 'init', array( $this, 'register_post_types' ) );
@@ -44,7 +44,7 @@ class StarterSite extends Site {
 		$context['foo']   = 'bar';
 		$context['stuff'] = 'I am a value set in your functions.php file';
 		$context['notes'] = 'These values are available everytime you call Timber::context();';
-		$context['menu']  = Timber::get_menu();
+		$context['primary_menu']  = Timber::get_menu('primary');
 		$context['site']  = $this;
 
 		return $context;
@@ -152,7 +152,7 @@ class StarterSite extends Site {
     public function theme_enqueue_scripts() {
         Vite\enqueue_asset(
             dirname( __DIR__ )  . '/dist',
-            'src/ts/app.ts',
+            'src/app.ts',
             [
                 'handle' => 'main-app-script',
                 'in-footer' => true,
