@@ -17,14 +17,14 @@ const props = defineProps<SiteHeaderProps>();
       </a>
       <SiteHeaderNav :menu-items="props.menuItems" />
       <div class="site-header-actions">
-        <div class="site-header-actions__lang-links">
+        <div class="site-header-actions__lang">
           <a
             href="#"
-            class="site-header-actions__lang-link site-header-actions__lang---current"
+            class="site-header-actions__lang-link site-header-actions__lang-link--current"
           >
-            En
+            EN
           </a>
-          <a href="#" class="site-header-actions__lang-link">Es</a>
+          <a href="#" class="site-header-actions__lang-link">ES</a>
         </div>
         <Button variant="secondary">Aa</Button>
         <Button as-child variant="secondary">
