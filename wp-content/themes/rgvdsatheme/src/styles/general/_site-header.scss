@@ -34,14 +34,14 @@
       background: var(--color-white);
       color: var(--primary);
       padding: 0.25rem;
-      border-radius: 2rem;
+      border-radius: calc(infinity * 1px);
       display: flex;
       gap: 0.25rem;
-      font-size: 0.75rem;
+      font-size: 0.875rem;
 
       &-link {
         padding: 0.25rem 0.75rem;
-        border-radius: 2rem;
+        border-radius: calc(infinity * 1px);
 
         &--current {
           background: var(--primary);
