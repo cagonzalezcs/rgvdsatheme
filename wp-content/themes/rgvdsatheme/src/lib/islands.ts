@@ -3,7 +3,7 @@ import { createApp, type App, type Component } from "vue";
 const ISLAND_SELECTOR = "[data-vue-island]";
 
 const registry: Record<string, () => Promise<{ default: Component }>> = {
-  SiteHeader: () => import("@/components/site/SiteHeader.vue"),
+  SiteHeader: () => import("@/components/site/SiteHeader/SiteHeader.vue"),
 };
 
 const apps = new WeakMap<HTMLElement, App>();
