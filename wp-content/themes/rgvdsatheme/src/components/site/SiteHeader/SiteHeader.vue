@@ -1,7 +1,8 @@
 <script lang="ts" setup>
-import { Button } from "@/components/ui/button";
 import SiteHeaderNav from "@/components/site/SiteHeader/SiteHeaderNav.vue";
 import type { SiteHeaderProps } from "@/components/site/SiteHeader/site-header.typings.ts";
+import SiteHeaderActions from "@/components/site/SiteHeader/SiteHeaderActions.vue";
+import SiteHeaderMobileNav from "@/components/site/SiteHeader/SiteHeaderMobileNav.vue";
 
 const props = defineProps<SiteHeaderProps>();
 </script>
@@ -16,21 +17,8 @@ const props = defineProps<SiteHeaderProps>();
         />
       </a>
       <SiteHeaderNav :menu-items="props.menuItems" />
-      <div class="site-header-actions">
-        <div class="site-header-actions__lang">
-          <a
-            href="#"
-            class="site-header-actions__lang-link site-header-actions__lang-link--current"
-          >
-            EN
-          </a>
-          <a href="#" class="site-header-actions__lang-link">ES</a>
-        </div>
-        <Button variant="secondary">Aa</Button>
-        <Button as-child variant="secondary">
-          <a href="https://act.dsausa.org/donate/membership">Join DSA</a>
-        </Button>
-      </div>
+      <SiteHeaderActions />
+      <SiteHeaderMobileNav />
     </div>
   </header>
 </template>
