@@ -1,10 +1,11 @@
 <?php
 
 use Timber\Site;
+use Timber\MenuItem;
 use Kucrut\Vite;
 
 /**
- * Class StarterSite
+ * Class RgvDsaSite
  */
 class RgvDsaSite extends Site {
 	public function __construct() {
@@ -12,7 +13,6 @@ class RgvDsaSite extends Site {
 		add_action( 'init', array( $this, 'register_post_types' ) );
 		add_action( 'init', array( $this, 'register_taxonomies' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'theme_enqueue_scripts' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'theme_enqueue_styles' ) );
 
 		add_filter( 'timber/context', array( $this, 'add_to_context' ) );
 		add_filter( 'timber/twig', array( $this, 'add_to_twig' ) );
@@ -44,7 +44,11 @@ class RgvDsaSite extends Site {
 		$context['foo']   = 'bar';
 		$context['stuff'] = 'I am a value set in your functions.php file';
 		$context['notes'] = 'These values are available everytime you call Timber::context();';
-		$context['primary_menu']  = Timber::get_menu('primary');
+
+        $menu = Timber::get_menu('primary');
+		$context['primary_menu']  = $menu;
+        $context['primary_menu_items'] = $menu ? $this->map_menu_items( $menu->get_items() ) : array();
+
 		$context['site']  = $this;
 
 		return $context;
@@ -102,6 +106,9 @@ class RgvDsaSite extends Site {
 		);
 
 		add_theme_support( 'menus' );
+        register_nav_menus([
+            'primary' => 'Primary Menu',
+        ]);
 	}
 
 	/**
@@ -160,16 +167,22 @@ class RgvDsaSite extends Site {
         );
     }
 
-    /*
-     * Enqueue styles used within the theme
-     */
-     public function theme_enqueue_styles() {
-        wp_enqueue_style(
-            'main-app-stylesheet',
-            get_template_directory_uri() . '/dist/app.css',
-            array(),
-            wp_get_theme()->get( 'Version' ),
-            'all'
-        );
+     private function map_menu_items( array $items ): array {
+         return array_map(
+             fn ( MenuItem $item ) => array(
+                 'id' => $item->id,
+                 'title' => $item->title(),
+                 'url' => $item->link(),
+                 'target' => $item->target(),
+                 'external' => $item->is_external(),
+                 'classes' => array_values( $item->classes ),
+                 'current' => (bool) $item->current,
+                 'currentParent' => (bool) $item->current_item_parent,
+                 'currentAncestor' => (bool) $item->current_item_ancestor,
+                 'level' => $item->level,
+                 'children' => $this->map_menu_items( $item->children() ?: array() ),
+             ),
+             array_values( $items )
+         );
      }
 }

@@ -1,0 +1,141 @@
+@use 'sass-mq' as *;
+@use '../utils/functions' as *;
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+  font-family: var(--font-heading), sans-serif;
+
+  &__wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 82.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  &__logo {
+    flex-shrink: 0;
+    width: 8.5rem;
+  }
+}
+
+body.logged-in {
+  .site-header {
+    top: 2rem;
+  }
+}
+
+.site-header-nav {
+  display: none;
+
+  @include mq($from: tablet) {
+    display: block;
+  }
+
+  &__trigger,
+  &__link {
+    background-color: transparent;
+
+    &:hover,
+    &:focus {
+      color: var(--color-white);
+      background-color: rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  &__trigger[data-state="open"] {
+    color: var(--color-white);
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+
+  &__link {
+    padding: 0.5rem 1rem;
+  }
+
+  &__submenu {
+    font-family: var(--font-sans), sans-serif;
+    min-width: 13.5rem;
+  }
+}
+
+.site-header-actions {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+
+  @include mq($from: tablet) {
+    display: flex;
+  }
+
+  &__lang {
+    background: var(--color-white);
+    color: var(--primary);
+    padding: 0.25rem;
+    border-radius: calc(infinity * 1px);
+    display: flex;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+
+    &-link {
+      padding: 0.25rem 0.75rem;
+      border-radius: calc(infinity * 1px);
+
+      &--current {
+        background: var(--primary);
+        color: var(--color-white);
+      }
+    }
+  }
+}
+
+.site-header-mobile-nav {
+  &__trigger {
+    width: toRem(42);
+    height: toRem(42);
+
+    @include mq($from: tablet) {
+      display: none;
+    }
+  }
+
+  &__content {
+    background-color: var(--primary);
+    border: none;
+    width: 100%;
+    max-width: 100%;
+    font-family: var(--font-heading), sans-serif;
+
+    .site-header-actions {
+      display: flex;
+      justify-content: center;
+    }
+
+    .dialog-close {
+      display: flex;
+      align-items: center;
+      align-content: center;
+      justify-content: center;
+      width: toRem(42);
+      height: toRem(42);
+      border: 1px solid var(--color-white);
+      border-radius: toRem(8);
+      color: var(--color-white);
+      right: 0.5rem;
+
+      svg {
+        width: toRem(20);
+        height: toRem(20);
+      }
+    }
+  }
+}
