@@ -1,6 +1,7 @@
 @use 'variables' as *;
+@use 'sass:math' as *;
 
 @function toRem($value) {
-  $remValue: ($value / $base-px) + rem;
+  $remValue: div($value, $base-px) + rem;
   @return $remValue;
 }

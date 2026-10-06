@@ -70,11 +70,11 @@ body.logged-in {
 
 .site-header-actions {
   display: none;
+  align-items: center;
+  gap: 0.5rem;
 
   @include mq($from: tablet) {
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
   }
 
   &__lang {
@@ -105,6 +105,37 @@ body.logged-in {
 
     @include mq($from: tablet) {
       display: none;
+    }
+  }
+
+  &__content {
+    background-color: var(--primary);
+    border: none;
+    width: 100%;
+    max-width: 100%;
+    font-family: var(--font-heading), sans-serif;
+
+    .site-header-actions {
+      display: flex;
+      justify-content: center;
+    }
+
+    .dialog-close {
+      display: flex;
+      align-items: center;
+      align-content: center;
+      justify-content: center;
+      width: toRem(42);
+      height: toRem(42);
+      border: 1px solid var(--color-white);
+      border-radius: toRem(8);
+      color: var(--color-white);
+      right: 0.5rem;
+
+      svg {
+        width: toRem(20);
+        height: toRem(20);
+      }
     }
   }
 }
