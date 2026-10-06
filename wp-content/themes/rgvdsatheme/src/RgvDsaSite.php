@@ -13,7 +13,6 @@ class RgvDsaSite extends Site {
 		add_action( 'init', array( $this, 'register_post_types' ) );
 		add_action( 'init', array( $this, 'register_taxonomies' ) );
 		add_action( 'wp_enqueue_scripts', array( $this, 'theme_enqueue_scripts' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'theme_enqueue_styles' ) );
 
 		add_filter( 'timber/context', array( $this, 'add_to_context' ) );
 		add_filter( 'timber/twig', array( $this, 'add_to_twig' ) );
@@ -167,19 +166,6 @@ class RgvDsaSite extends Site {
             ]
         );
     }
-
-    /*
-     * Enqueue styles used within the theme
-     */
-     public function theme_enqueue_styles() {
-        wp_enqueue_style(
-            'main-app-stylesheet',
-            get_template_directory_uri() . '/dist/app.css',
-            array(),
-            wp_get_theme()->get( 'Version' ),
-            'all'
-        );
-     }
 
      private function map_menu_items( array $items ): array {
          return array_map(

@@ -1,3 +1,5 @@
+@use 'sass-mq' as *;
+
 .site-header {
   position: fixed;
   top: 0;
@@ -25,31 +27,6 @@
     width: 8.5rem;
   }
 
-  &-actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    &__lang {
-      background: var(--color-white);
-      color: var(--primary);
-      padding: 0.25rem;
-      border-radius: calc(infinity * 1px);
-      display: flex;
-      gap: 0.25rem;
-      font-size: 0.875rem;
-
-      &-link {
-        padding: 0.25rem 0.75rem;
-        border-radius: calc(infinity * 1px);
-
-        &--current {
-          background: var(--primary);
-          color: var(--color-white);
-        }
-      }
-    }
-  }
 }
 
 body.logged-in {
@@ -59,6 +36,12 @@ body.logged-in {
 }
 
 .site-header-nav {
+  display: none;
+
+  @include mq($from: tablet) {
+    display: block;
+  }
+
   &__trigger,
   &__link {
     background-color: transparent;
@@ -82,5 +65,43 @@ body.logged-in {
   &__submenu {
     font-family: var(--font-sans), sans-serif;
     min-width: 13.5rem;
+  }
+}
+
+.site-header-actions {
+  display: none;
+
+  @include mq($from: tablet) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__lang {
+    background: var(--color-white);
+    color: var(--primary);
+    padding: 0.25rem;
+    border-radius: calc(infinity * 1px);
+    display: flex;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+
+    &-link {
+      padding: 0.25rem 0.75rem;
+      border-radius: calc(infinity * 1px);
+
+      &--current {
+        background: var(--primary);
+        color: var(--color-white);
+      }
+    }
+  }
+}
+
+.site-header-mobile-nav {
+  &__trigger {
+    @include mq($from: tablet) {
+      display: none;
+    }
   }
 }
