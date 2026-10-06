@@ -1,0 +1,6 @@
+@use 'variables' as *;
+
+@function toRem($value) {
+  $remValue: ($value / $base-px) + rem;
+  @return $remValue;
+}

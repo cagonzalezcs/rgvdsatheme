@@ -1,4 +1,5 @@
 @use 'sass-mq' as *;
+@use '../utils/functions' as *;
 
 .site-header {
   position: fixed;
@@ -26,7 +27,6 @@
     flex-shrink: 0;
     width: 8.5rem;
   }
-
 }
 
 body.logged-in {
@@ -100,6 +100,9 @@ body.logged-in {
 
 .site-header-mobile-nav {
   &__trigger {
+    width: toRem(42);
+    height: toRem(42);
+
     @include mq($from: tablet) {
       display: none;
     }
